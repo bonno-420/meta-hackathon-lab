@@ -9,16 +9,69 @@ import { fileURLToPath } from "node:url";
 
 const MODEL = "muse-spark-1.3-contributor";
 const BASE_URL = "https://api.meta.ai/v1";
-const PROMPT_VERSION = "fact-extract-v1";
 const INPUT_ID = "FICT-J01";
 const INPUT_VERSION = "v1";
 // D4 rates for muse-spark-1.3-contributor (USD per 1M tokens).
 const RATE_INPUT_PER_1M = 0.10;
 const RATE_OUTPUT_PER_1M = 0.20;
 
+// Step-1 options (loop-006). Defaults preserve the loop-002 behavior.
+// --out-dir <path>  : write run artifacts here instead of loops/loop-002.
+//                     The audited loop-002 records must never be overwritten
+//                     by a rerun (steps v1, audit M5).
+// --prompt v1.1     : use prompt fact-extract-v1.1 (single-factor change:
+//                     unstated items must carry value null, never a string).
+const argv = process.argv.slice(2);
+function argValue(flag) {
+  const i = argv.indexOf(flag);
+  return i >= 0 && i + 1 < argv.length ? argv[i + 1] : null;
+}
+const PROMPT_VERSION = argValue("--prompt") === "v1.1" ? "fact-extract-v1.1" : "fact-extract-v1";
+
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "..");
-const outDir = path.join(root, "loops", "loop-002");
+const outDirArg = argValue("--out-dir");
+const outDir = outDirArg
+  ? (path.isAbsolute(outDirArg) ? outDirArg : path.join(root, outDirArg))
+  : path.join(root, "loops", "loop-002");
+
+// The full FACT key set the extraction prompt requires. Used by the
+// schema-completeness check (gate candidate, steps v1 step 1 item 3).
+const EXPECTED_KEYS = [
+  "employer", "jobId", "workLocation", "employmentType", "contractPeriod",
+  "renewal", "salaryHourly", "monthlyIncomeGuarantee", "workHours",
+  "breakMinutes", "actualHours", "monthlyDaysAssumption", "transport",
+  "transportCap", "housing",
+];
+const ITEM_FIELDS = ["key", "status", "value", "normalized", "sourceLine", "quote"];
+
+// Schema-completeness check: detects missing, extra or duplicate keys and
+// items with missing fields. Returns a verdict object; it does not stop the
+// pipeline by itself (it is recorded as a gate candidate, not a gate).
+function checkSchemaCompleteness(facts) {
+  if (!facts || !Array.isArray(facts.items)) {
+    return { pass: false, reason: "facts.items is not an array", expectedCount: EXPECTED_KEYS.length, actualCount: 0, missingKeys: [...EXPECTED_KEYS], extraKeys: [], duplicateKeys: [], fieldIssues: [] };
+  }
+  const keys = facts.items.map((i) => i && i.key);
+  const missingKeys = EXPECTED_KEYS.filter((k) => !keys.includes(k));
+  const extraKeys = keys.filter((k) => !EXPECTED_KEYS.includes(k));
+  const duplicateKeys = [...new Set(keys.filter((k, i) => keys.indexOf(k) !== i))];
+  const fieldIssues = [];
+  for (const item of facts.items) {
+    if (!item || typeof item !== "object") { fieldIssues.push({ key: null, issue: "item is not an object" }); continue; }
+    for (const f of ITEM_FIELDS) {
+      if (!(f in item)) fieldIssues.push({ key: item.key ?? null, issue: `missing field: ${f}` });
+    }
+    if (item.status !== "stated" && item.status !== "unstated") {
+      fieldIssues.push({ key: item.key ?? null, issue: `invalid status: ${String(item.status)}` });
+    }
+    if (item.status === "stated" && (!item.sourceLine || !item.quote)) {
+      fieldIssues.push({ key: item.key ?? null, issue: "stated item without sourceLine or quote" });
+    }
+  }
+  const pass = missingKeys.length === 0 && extraKeys.length === 0 && duplicateKeys.length === 0 && fieldIssues.length === 0;
+  return { pass, expectedCount: EXPECTED_KEYS.length, actualCount: facts.items.length, missingKeys, extraKeys, duplicateKeys, fieldIssues };
+}
 
 function loadOriginal() {
   const raw = readFileSync(path.join(here, "fict-j01-v1.json"), "utf8");
@@ -34,12 +87,19 @@ const E02_SUMMARY =
   "ソラノ輪具研究所（FICT-J01）の概要: 時給1,700円。勤務時間は09:00〜18:00、休憩60分、実働8時間。交通費は実費支給、月上限10,000円。勤務地は架空の青空実験区A棟。雇用形態は有期契約社員、契約期間は3か月。";
 
 function buildMessages(original) {
+  const isV11 = PROMPT_VERSION === "fact-extract-v1.1";
   const system = [
     "You extract FACTs from a fictional job-posting original.",
     "Rules: use only what the original states. Never invent or complete unstated items.",
     "Mark unstated items with status unstated. For every stated item, cite the source line ID and an exact quote from that line.",
+    // fact-extract-v1.1 single-factor change: the value representation of
+    // unstated items. Loop-002's v1 output put the string "未記載" there;
+    // v1.1 requires JSON null and says so in both the rule and the schema.
+    ...(isV11 ? ["For unstated items, value must be JSON null. Never put a string such as \"未記載\" in value."] : []),
     "Output JSON only, no markdown fences.",
-    'Schema: {"items":[{"key":"...","status":"stated|unstated","value":"...","normalized":null,"sourceLine":"L01","quote":"..."}]}',
+    isV11
+      ? 'Schema: {"items":[{"key":"...","status":"stated|unstated","value":"string or null","normalized":null,"sourceLine":"L01","quote":"..."}]}'
+      : 'Schema: {"items":[{"key":"...","status":"stated|unstated","value":"...","normalized":null,"sourceLine":"L01","quote":"..."}]}',
     "Keys: employer, jobId, workLocation, employmentType, contractPeriod, renewal, salaryHourly, monthlyIncomeGuarantee, workHours, breakMinutes, actualHours, monthlyDaysAssumption, transport, transportCap, housing.",
     "normalized: for salaryHourly and transportCap use the integer yen amount; for breakMinutes and actualHours use numbers; otherwise null.",
   ].join("\n");
@@ -191,7 +251,7 @@ function verifyOffline() {
     { id: "E02-no-generation", pass: e02.generationStarted === false, detail: String(e02.generationStarted) },
   ];
   const pass = checks.every((c) => c.pass);
-  return { mode: "offline-fixture-verification", pass, checks, e01, e02, facts, startedAt, finishedAt: new Date().toISOString(), durationMs: Math.round(performance.now() - t0), retries: 0 };
+  return { mode: "offline-fixture-verification", pass, checks, schemaCheck: checkSchemaCompleteness(facts), e01, e02, facts, startedAt, finishedAt: new Date().toISOString(), durationMs: Math.round(performance.now() - t0), retries: 0 };
 }
 
 async function runLive() {
@@ -271,10 +331,12 @@ async function runLive() {
 
   let e01 = null;
   let e02 = null;
+  let schemaCheck = null;
   if (facts && Array.isArray(facts.items)) {
     const e01Summary = original.lines.map((l) => l.text).join("");
     e01 = reconcile(facts, e01Summary, "E01");
     e02 = reconcile(facts, E02_SUMMARY, "E02");
+    schemaCheck = checkSchemaCompleteness(facts);
   }
 
   return {
@@ -295,6 +357,7 @@ async function runLive() {
     costNote,
     rawContent: content,
     facts,
+    schemaCheck,
     e01,
     e02,
   };
