@@ -1,1 +1,81 @@
-Ly8gUmVwcm9kdWNpYmxlIGNoZWNrcyBmb3Igc3JjL2FwcHJvdmUubWpzIChzdGVwIDIpLgovLyBSdW46IG5vZGUgc3JjL2FwcHJvdmUudGVzdC5tanMgWy0tb3V0IDxwYXRoPl0KLy8gTm8gQVBJIGFjY2Vzcywgbm8gY29zdC4gRXhpdHMgbm9uLXplcm8gaWYgYW55IGV4cGVjdGF0aW9uIGZhaWxzLgppbXBvcnQgeyBjb3B5RmlsZVN5bmMsIG1rZHRlbXBTeW5jLCByZWFkRmlsZVN5bmMsIHdyaXRlRmlsZVN5bmMgfSBmcm9tICJub2RlOmZzIjsKaW1wb3J0IHsgdG1wZGlyIH0gZnJvbSAibm9kZTpvcyI7CmltcG9ydCBwYXRoIGZyb20gIm5vZGU6cGF0aCI7CmltcG9ydCB7IGZpbGVVUkxUb1BhdGggfSBmcm9tICJub2RlOnVybCI7CmltcG9ydCB7IGJ1aWxkQXBwcm92YWxEcmFmdCwgY2hlY2tBcHByb3ZhbFZhbGlkaXR5IH0gZnJvbSAiLi9hcHByb3ZlLm1qcyI7Cgpjb25zdCBoZXJlID0gcGF0aC5kaXJuYW1lKGZpbGVVUkxUb1BhdGgoaW1wb3J0Lm1ldGEudXJsKSk7CmNvbnN0IHJvb3QgPSBwYXRoLnJlc29sdmUoaGVyZSwgIi4uIik7CmNvbnN0IGFyZ3YgPSBwcm9jZXNzLmFyZ3Yuc2xpY2UoMik7CmNvbnN0IG91dElkeCA9IGFyZ3YuaW5kZXhPZigiLS1vdXQiKTsKY29uc3Qgb3V0UGF0aCA9IG91dElkeCA+PSAwID8gYXJndltvdXRJZHggKyAxXSA6IG51bGw7Cgpjb25zdCByZXN1bHRzID0gW107CmZ1bmN0aW9uIGV4cGVjdChpZCwgYWN0dWFsLCB3YW50ZWQpIHsKICByZXN1bHRzLnB1c2goeyBpZCwgcGFzczogYWN0dWFsID09PSB3YW50ZWQsIGV4cGVjdGVkOiB3YW50ZWQsIGFjdHVhbCB9KTsKfQpmdW5jdGlvbiBleHBlY3RUaHJvd3MoaWQsIGZuKSB7CiAgbGV0IHRocmV3ID0gZmFsc2U7CiAgdHJ5IHsgZm4oKTsgfSBjYXRjaCB7IHRocmV3ID0gdHJ1ZTsgfQogIHJlc3VsdHMucHVzaCh7IGlkLCBwYXNzOiB0aHJldywgZXhwZWN0ZWQ6ICJ0aHJvdyIsIGFjdHVhbDogdGhyZXcgPyAidGhyb3ciIDogIm5vLXRocm93IiB9KTsKfQoKY29uc3QgUkVBTCA9IHsKICByb290LAogIG9yaWdpbmFsRmlsZTogInNyYy9maWN0LWowMS12MS5qc29uIiwKICBmYWN0c0ZpbGU6ICJzcmMvZmFjdHMvRklDVC1KMDEtZmFjdHMtdjEuanNvbiIsCiAgbWFuaWZlc3RGaWxlOiAic3JjL2ZhY3RzL0ZJQ1QtSjAxLWZhY3RzLXYxLm1hbmlmZXN0Lmpzb24iLAogIHJlY29uY2lsaWF0aW9uRmlsZTogImxvb3BzL2xvb3AtMDA2L2V4cC12MS4xL2xpdmUtcnVuLmpzb24iLAogIGNoZWNrc0ZpbGU6ICJsb29wcy9sb29wLTAwNi9jaGVjay12ZXJpZmljYXRpb24uanNvbiIsCn07CgovLyBQb3NpdGl2ZTogYSBkcmFmdCBpcyBjcmVhdGVkIGZvciB0aGUgYWRvcHRlZCBGQUNUIHYxIChFMDEgYWdyZWVkKS4KY29uc3QgZHJhZnQgPSBidWlsZEFwcHJvdmFsRHJhZnQoeyAuLi5SRUFMLCBjYXNlSWQ6ICJlMDEiIH0pOwpleHBlY3QoImRyYWZ0LWNyZWF0ZWQiLCBkcmFmdC5zdGF0dXMsICJkcmFmdCIpOwpleHBlY3QoImRyYWZ0LWFwcHJvdmVyLW51bGwiLCBkcmFmdC5hcHByb3ZlciwgbnVsbCk7CmV4cGVjdCgiZHJhZnQtYXBwcm92ZWRBdC1udWxsIiwgZHJhZnQuYXBwcm92ZWRBdCwgbnVsbCk7CmV4cGVjdCgiZHJhZnQtdGFyZ2V0LWZhY3RzLXNoYSIsIGRyYWZ0LnRhcmdldC5mYWN0cy5zaGEyNTYsICIzZGM3ZmJkMTJlNzczYmMxZDliYTcxMWIwY2U3YjM0MzE4MDAzYmUwN2Y1NzgyYmExYzg5MDA0ZTY0MjUzNGVjIik7CmV4cGVjdCgiZHJhZnQtdGFyZ2V0LW9yaWdpbmFsLXNoYSIsIGRyYWZ0LnRhcmdldC5vcmlnaW5hbC5zaGEyNTYsICJhNDQ1NmU5ZjIyOWUyODc3ODYxYWFkMjMyNGJjNzk2NjQxYmZiMDJmMzZkNTdjM2JmNWMzMzlmNGQ5NDYxYTYwIik7CmV4cGVjdCgiZHJhZnQtdW5zdGF0ZWQtaXRlbXMiLCBKU09OLnN0cmluZ2lmeShkcmFmdC5zY29wZS51bnN0YXRlZEl0ZW1zKSwgSlNPTi5zdHJpbmdpZnkoWyJyZW5ld2FsIiwgImhvdXNpbmciXSkpOwoKLy8gTmVnYXRpdmU6IEUwMiBzdG9wcGVkIG9uIGEgY29udHJhZGljdGlvbiwgc28gbm8gZHJhZnQgbWF5IGJlIGNyZWF0ZWQuCmV4cGVjdFRocm93cygiZHJhZnQtcmVmdXNlZC1mb3ItZTAyLWNvbnRyYWRpY3Rpb24iLCAoKSA9PiBidWlsZEFwcHJvdmFsRHJhZnQoeyAuLi5SRUFMLCBjYXNlSWQ6ICJlMDIiIH0pKTsKCi8vIFNjcmF0Y2ggY29waWVzIGZvciB0YW1wZXJpbmcgY2FzZXMuCmNvbnN0IHNjcmF0Y2ggPSBta2R0ZW1wU3luYyhwYXRoLmpvaW4odG1wZGlyKCksICJhcHByb3ZlLXRlc3QtIikpOwpmb3IgKGNvbnN0IFtzcmMsIGRzdF0gb2YgWwogIFsic3JjL2ZpY3QtajAxLXYxLmpzb24iLCAib3JpZy5qc29uIl0sCiAgWyJzcmMvZmFjdHMvRklDVC1KMDEtZmFjdHMtdjEuanNvbiIsICJmYWN0cy5qc29uIl0sCiAgWyJzcmMvZmFjdHMvRklDVC1KMDEtZmFjdHMtdjEubWFuaWZlc3QuanNvbiIsICJtYW5pZmVzdC5qc29uIl0sCiAgWyJsb29wcy9sb29wLTAwNi9leHAtdjEuMS9saXZlLXJ1bi5qc29uIiwgInJ1bi5qc29uIl0sCl0pIHsKICBjb3B5RmlsZVN5bmMocGF0aC5qb2luKHJvb3QsIHNyYyksIHBhdGguam9pbihzY3JhdGNoLCBkc3QpKTsKfQpjb25zdCBTQ1JBVENIID0geyByb290OiBzY3JhdGNoLCBvcmlnaW5hbEZpbGU6ICJvcmlnLmpzb24iLCBmYWN0c0ZpbGU6ICJmYWN0cy5qc29uIiwgbWFuaWZlc3RGaWxlOiAibWFuaWZlc3QuanNvbiIsIHJlY29uY2lsaWF0aW9uRmlsZTogInJ1bi5qc29uIiwgY2hlY2tzRmlsZTogbnVsbCB9OwoKLy8gTmVnYXRpdmU6IGEgdGFtcGVyZWQgRkFDVCBmaWxlIG5vIGxvbmdlciBtYXRjaGVzIHRoZSBtYW5pZmVzdCBoYXNoLgpjb25zdCB0YW1wZXJlZCA9IEpTT04ucGFyc2UocmVhZEZpbGVTeW5jKHBhdGguam9pbihzY3JhdGNoLCAiZmFjdHMuanNvbiIpLCAidXRmOCIpKTsKdGFtcGVyZWQuaXRlbXNbMF0udmFsdWUgPSAi5pS55aSJ44GV44KM44Gf5YCkIjsKd3JpdGVGaWxlU3luYyhwYXRoLmpvaW4oc2NyYXRjaCwgImZhY3RzLmpzb24iKSwgSlNPTi5zdHJpbmdpZnkodGFtcGVyZWQsIG51bGwsIDIpICsgIlxuIiwgInV0ZjgiKTsKZXhwZWN0VGhyb3dzKCJkcmFmdC1yZWZ1c2VkLWZvci1mYWN0cy1oYXNoLW1pc21hdGNoIiwgKCkgPT4gYnVpbGRBcHByb3ZhbERyYWZ0KHsgLi4uU0NSQVRDSCwgY2FzZUlkOiAiZTAxIiB9KSk7CgovLyBWYWxpZGl0eTogcmVzdG9yZSB0aGUgc2NyYXRjaCBmYWN0cywgZmluYWxpemUgYSBjb3B5IG9mIHRoZSBkcmFmdCwgYW5kCi8vIGNoZWNrIGl0IGFnYWluc3QgdGhlIHJlYWwgZmlsZXMgKHZhbGlkKSwgdGhlbiBhZ2FpbnN0IHRoZSB0YW1wZXJlZAovLyBzY3JhdGNoIGZhY3RzIChpbnZhbGlkKS4KY29weUZpbGVTeW5jKHBhdGguam9pbihyb290LCAic3JjL2ZhY3RzL0ZJQ1QtSjAxLWZhY3RzLXYxLmpzb24iKSwgcGF0aC5qb2luKHNjcmF0Y2gsICJmYWN0cy5qc29uIikpOwpjb25zdCBmaW5hbGl6ZWQgPSB7IC4uLmRyYWZ0LCBzdGF0dXM6ICJhcHByb3ZlZCIsIGFwcHJvdmVyOiAiTm9yaWthenUgSGFyYWRh77yI5pys5Lq677yJIiwgYXBwcm92ZWRBdDogIjIwMjYtMTAtMjdUMDA6MDA6MDArMDk6MDAiIH07CmNvbnN0IHZhbGlkUmVhbCA9IGNoZWNrQXBwcm92YWxWYWxpZGl0eShmaW5hbGl6ZWQsIHsgcm9vdCwgb3JpZ2luYWxGaWxlOiBSRUFMLm9yaWdpbmFsRmlsZSwgZmFjdHNGaWxlOiBSRUFMLmZhY3RzRmlsZSB9KTsKZXhwZWN0KCJ2YWxpZGl0eS10cnVlLWZvci11bnRvdWNoZWQtZmlsZXMiLCB2YWxpZFJlYWwudmFsaWQsIHRydWUpOwp3cml0ZUZpbGVTeW5jKHBhdGguam9pbihzY3JhdGNoLCAiZmFjdHMuanNvbiIpLCBKU09OLnN0cmluZ2lmeSh0YW1wZXJlZCwgbnVsbCwgMikgKyAiXG4iLCAidXRmOCIpOwpjb25zdCB2YWxpZFRhbXBlcmVkID0gY2hlY2tBcHByb3ZhbFZhbGlkaXR5KGZpbmFsaXplZCwgeyByb290OiBzY3JhdGNoLCBvcmlnaW5hbEZpbGU6ICJvcmlnLmpzb24iLCBmYWN0c0ZpbGU6ICJmYWN0cy5qc29uIiB9KTsKZXhwZWN0KCJ2YWxpZGl0eS1mYWxzZS1mb3ItdGFtcGVyZWQtZmFjdHMiLCB2YWxpZFRhbXBlcmVkLnZhbGlkLCBmYWxzZSk7CmV4cGVjdCgidmFsaWRpdHktcmVhc29uLXByZXNlbnQiLCB0eXBlb2YgdmFsaWRUYW1wZXJlZC5yZWFzb24sICJzdHJpbmciKTsKCmNvbnN0IHBhc3MgPSByZXN1bHRzLmV2ZXJ5KChyKSA9PiByLnBhc3MpOwpjb25zdCByZWNvcmQgPSB7IHRlc3RGaWxlOiAic3JjL2FwcHJvdmUudGVzdC5tanMiLCB0YXJnZXQ6ICJzcmMvYXBwcm92ZS5tanMiLCBwYXNzLCByZXN1bHRzLCBydW5BdDogbmV3IERhdGUoKS50b0lTT1N0cmluZygpIH07CmNvbnNvbGUubG9nKEpTT04uc3RyaW5naWZ5KHJlY29yZCwgbnVsbCwgMikpOwppZiAob3V0UGF0aCkgd3JpdGVGaWxlU3luYyhvdXRQYXRoLCBKU09OLnN0cmluZ2lmeShyZWNvcmQsIG51bGwsIDIpICsgIlxuIiwgInV0ZjgiKTsKaWYgKCFwYXNzKSBwcm9jZXNzLmV4aXRDb2RlID0gMTsK
+// Reproducible checks for src/approve.mjs (step 2).
+// Run: node src/approve.test.mjs [--out <path>]
+// No API access, no cost. Exits non-zero if any expectation fails.
+import { copyFileSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { buildApprovalDraft, checkApprovalValidity } from "./approve.mjs";
+
+const here = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(here, "..");
+const argv = process.argv.slice(2);
+const outIdx = argv.indexOf("--out");
+const outPath = outIdx >= 0 ? argv[outIdx + 1] : null;
+
+const results = [];
+function expect(id, actual, wanted) {
+  results.push({ id, pass: actual === wanted, expected: wanted, actual });
+}
+function expectThrows(id, fn) {
+  let threw = false;
+  try { fn(); } catch { threw = true; }
+  results.push({ id, pass: threw, expected: "throw", actual: threw ? "throw" : "no-throw" });
+}
+
+const REAL = {
+  root,
+  originalFile: "src/fict-j01-v1.json",
+  factsFile: "src/facts/FICT-J01-facts-v1.json",
+  manifestFile: "src/facts/FICT-J01-facts-v1.manifest.json",
+  reconciliationFile: "loops/loop-006/exp-v1.1/live-run.json",
+  checksFile: "loops/loop-006/check-verification.json",
+};
+
+// Positive: a draft is created for the adopted FACT v1 (E01 agreed).
+const draft = buildApprovalDraft({ ...REAL, caseId: "e01" });
+expect("draft-created", draft.status, "draft");
+expect("draft-approver-null", draft.approver, null);
+expect("draft-approvedAt-null", draft.approvedAt, null);
+expect("draft-target-facts-sha", draft.target.facts.sha256, "3dc7fbd12e773bc1d9ba711b0ce7b34318003be07f5782ba1c89004e642534ec");
+expect("draft-target-original-sha", draft.target.original.sha256, "a4456e9f229e2877861aad2324bc796641bfb02f36d57c3bf5c339f4d9461a60");
+expect("draft-unstated-items", JSON.stringify(draft.scope.unstatedItems), JSON.stringify(["renewal", "housing"]));
+
+// Negative: E02 stopped on a contradiction, so no draft may be created.
+expectThrows("draft-refused-for-e02-contradiction", () => buildApprovalDraft({ ...REAL, caseId: "e02" }));
+
+// Scratch copies for tampering cases.
+const scratch = mkdtempSync(path.join(tmpdir(), "approve-test-"));
+for (const [src, dst] of [
+  ["src/fict-j01-v1.json", "orig.json"],
+  ["src/facts/FICT-J01-facts-v1.json", "facts.json"],
+  ["src/facts/FICT-J01-facts-v1.manifest.json", "manifest.json"],
+  ["loops/loop-006/exp-v1.1/live-run.json", "run.json"],
+]) {
+  copyFileSync(path.join(root, src), path.join(scratch, dst));
+}
+const SCRATCH = { root: scratch, originalFile: "orig.json", factsFile: "facts.json", manifestFile: "manifest.json", reconciliationFile: "run.json", checksFile: null };
+
+// Negative: a tampered FACT file no longer matches the manifest hash.
+const tampered = JSON.parse(readFileSync(path.join(scratch, "facts.json"), "utf8"));
+tampered.items[0].value = "改変された値";
+writeFileSync(path.join(scratch, "facts.json"), JSON.stringify(tampered, null, 2) + "\n", "utf8");
+expectThrows("draft-refused-for-facts-hash-mismatch", () => buildApprovalDraft({ ...SCRATCH, caseId: "e01" }));
+
+// Validity: restore the scratch facts, finalize a copy of the draft, and
+// check it against the real files (valid), then against the tampered
+// scratch facts (invalid).
+copyFileSync(path.join(root, "src/facts/FICT-J01-facts-v1.json"), path.join(scratch, "facts.json"));
+const finalized = { ...draft, status: "approved", approver: "Norikazu Harada（本人）", approvedAt: "2026-10-27T00:00:00+09:00" };
+const validReal = checkApprovalValidity(finalized, { root, originalFile: REAL.originalFile, factsFile: REAL.factsFile });
+expect("validity-true-for-untouched-files", validReal.valid, true);
+writeFileSync(path.join(scratch, "facts.json"), JSON.stringify(tampered, null, 2) + "\n", "utf8");
+const validTampered = checkApprovalValidity(finalized, { root: scratch, originalFile: "orig.json", factsFile: "facts.json" });
+expect("validity-false-for-tampered-facts", validTampered.valid, false);
+expect("validity-reason-present", typeof validTampered.reason, "string");
+
+const pass = results.every((r) => r.pass);
+const record = { testFile: "src/approve.test.mjs", target: "src/approve.mjs", pass, results, runAt: new Date().toISOString() };
+console.log(JSON.stringify(record, null, 2));
+if (outPath) writeFileSync(outPath, JSON.stringify(record, null, 2) + "\n", "utf8");
+if (!pass) process.exitCode = 1;
