@@ -1,1 +1,150 @@
-Ly8gU3RlcCAyIChhcHByb3ZhbCk6IGJ1aWxkIGFuIGFwcHJvdmFsIGRyYWZ0IGZvciBhIGZpeGVkIEZBQ1Qgc2V0IGFuZAovLyBjaGVjayBhbiBhcHByb3ZhbCdzIHZhbGlkaXR5LiBGaWN0aW9uYWwgZGF0YSBvbmx5LgovLwovLyBUaGUgYXBwcm92YWwgaXRzZWxmIGlzIGEgaHVtYW4gYWN0LiBUaGlzIHRvb2wgb25seSBwcmVwYXJlcyB0aGUgZHJhZnQKLy8gKGFwcHJvdmVyIGFuZCBhcHByb3ZlZEF0IHN0YXkgbnVsbCkgYW5kIHJ1bnMgdGhlIG1lY2hhbmljYWwgZ3VhcmRzOgovLyAtIGJvdGggZmlsZXMnIHNoYTI1NiAoRjEgZGVmaW5pdGlvbjogdGhlIGJ5dGVzIGFzIHN0b3JlZCwgVVRGLTgvTEYpIG11c3QKLy8gICBtYXRjaCB0aGUgRkFDVCBtYW5pZmVzdCBiZWZvcmUgYSBkcmFmdCBpcyBjcmVhdGVkOwovLyAtIG5vIGRyYWZ0IGlzIGNyZWF0ZWQgd2hlbiB0aGUgcmVjb25jaWxpYXRpb24gc3RvcHBlZCBvbiBhIGNvbnRyYWRpY3Rpb24KLy8gICAoRy1JTlYtMzogdGhlcmUgaXMgbm8gImlnbm9yZSB0aGUgd2FybmluZyIgYXBwcm92YWwpOwovLyAtIHZhbGlkaXR5IG9mIGFuIGV4aXN0aW5nIGFwcHJvdmFsIGlzIGp1ZGdlZCBieSByZWNvbXB1dGluZyBib3RoIGhhc2hlcy4KCmltcG9ydCB7IHJlYWRGaWxlU3luYywgd3JpdGVGaWxlU3luYyB9IGZyb20gIm5vZGU6ZnMiOwppbXBvcnQgeyBjcmVhdGVIYXNoIH0gZnJvbSAibm9kZTpjcnlwdG8iOwppbXBvcnQgcGF0aCBmcm9tICJub2RlOnBhdGgiOwppbXBvcnQgeyBmaWxlVVJMVG9QYXRoLCBwYXRoVG9GaWxlVVJMIH0gZnJvbSAibm9kZTp1cmwiOwoKZXhwb3J0IGZ1bmN0aW9uIHNoYTI1NkZpbGUoZmlsZVBhdGgpIHsKICByZXR1cm4gY3JlYXRlSGFzaCgic2hhMjU2IikudXBkYXRlKHJlYWRGaWxlU3luYyhmaWxlUGF0aCkpLmRpZ2VzdCgiaGV4Iik7Cn0KCmZ1bmN0aW9uIGxvYWRKc29uKHApIHsKICByZXR1cm4gSlNPTi5wYXJzZShyZWFkRmlsZVN5bmMocCwgInV0ZjgiKSk7Cn0KCi8vIEJ1aWxkIGFuIGFwcHJvdmFsIGRyYWZ0IChzdGF0dXMgImRyYWZ0IiwgYXBwcm92ZXIvYXBwcm92ZWRBdCBudWxsKS4KLy8gVGhyb3dzIHdoZW4gYSBndWFyZCBmYWlsczsgaW4gdGhhdCBjYXNlIG5vIGRyYWZ0IGV4aXN0cy4KZXhwb3J0IGZ1bmN0aW9uIGJ1aWxkQXBwcm92YWxEcmFmdCh7IHJvb3QsIG9yaWdpbmFsRmlsZSwgZmFjdHNGaWxlLCBtYW5pZmVzdEZpbGUsIHJlY29uY2lsaWF0aW9uRmlsZSwgY2FzZUlkLCBjaGVja3NGaWxlIH0pIHsKICBjb25zdCBtYW5pZmVzdCA9IGxvYWRKc29uKHBhdGguam9pbihyb290LCBtYW5pZmVzdEZpbGUpKTsKICBjb25zdCBvcmlnaW5hbFNoYSA9IHNoYTI1NkZpbGUocGF0aC5qb2luKHJvb3QsIG9yaWdpbmFsRmlsZSkpOwogIGNvbnN0IGZhY3RzU2hhID0gc2hhMjU2RmlsZShwYXRoLmpvaW4ocm9vdCwgZmFjdHNGaWxlKSk7CiAgaWYgKG9yaWdpbmFsU2hhICE9PSBtYW5pZmVzdC5vcmlnaW5hbC5zaGEyNTYpIHsKICAgIHRocm93IG5ldyBFcnJvcihgb3JpZ2luYWwgaGFzaCBtaXNtYXRjaDogY29tcHV0ZWQgJHtvcmlnaW5hbFNoYX0sIG1hbmlmZXN0ICR7bWFuaWZlc3Qub3JpZ2luYWwuc2hhMjU2fS4gRHJhZnQgbm90IGNyZWF0ZWQuYCk7CiAgfQogIGlmIChmYWN0c1NoYSAhPT0gbWFuaWZlc3Quc2hhMjU2KSB7CiAgICB0aHJvdyBuZXcgRXJyb3IoYGZhY3RzIGhhc2ggbWlzbWF0Y2g6IGNvbXB1dGVkICR7ZmFjdHNTaGF9LCBtYW5pZmVzdCAke21hbmlmZXN0LnNoYTI1Nn0uIERyYWZ0IG5vdCBjcmVhdGVkLmApOwogIH0KCiAgY29uc3QgcnVuID0gbG9hZEpzb24ocGF0aC5qb2luKHJvb3QsIHJlY29uY2lsaWF0aW9uRmlsZSkpOwogIGNvbnN0IHJlYyA9IHJ1bltjYXNlSWRdOwogIGlmICghcmVjKSB0aHJvdyBuZXcgRXJyb3IoYHJlY29uY2lsaWF0aW9uIGNhc2UgJHtjYXNlSWR9IG5vdCBmb3VuZCBpbiAke3JlY29uY2lsaWF0aW9uRmlsZX0uIERyYWZ0IG5vdCBjcmVhdGVkLmApOwogIGlmIChyZWMuc3RvcHBlZEF0UmVjb25jaWxpYXRpb24gfHwgU3RyaW5nKHJlYy52ZXJkaWN0KS5pbmNsdWRlcygi5YGc5q2iIikpIHsKICAgIHRocm93IG5ldyBFcnJvcihgcmVjb25jaWxpYXRpb24gJHtjYXNlSWR9IHN0b3BwZWQgKCR7cmVjLnZlcmRpY3R9KS4gQXBwcm92YWwgaXMgaW1wb3NzaWJsZSBmb3IgYSBjb250cmFkaWN0ZWQgdGFyZ2V0LiBEcmFmdCBub3QgY3JlYXRlZC5gKTsKICB9CgogIGNvbnN0IGZhY3RzID0gbG9hZEpzb24ocGF0aC5qb2luKHJvb3QsIGZhY3RzRmlsZSkpOwogIGNvbnN0IHVuc3RhdGVkSXRlbXMgPSBmYWN0cy5pdGVtcy5maWx0ZXIoKGkpID0+IGkuc3RhdHVzID09PSAidW5zdGF0ZWQiKS5tYXAoKGkpID0+IGkua2V5KTsKCiAgbGV0IHZlcmJhdGltTm90ZSA9ICLmnKrnorroqo0iOwogIGlmIChjaGVja3NGaWxlKSB7CiAgICBjb25zdCBjaGVja3MgPSBsb2FkSnNvbihwYXRoLmpvaW4ocm9vdCwgY2hlY2tzRmlsZSkpOwogICAgaWYgKGNoZWNrcy52ZXJiYXRpbUFkb3B0ZWQgJiYgY2hlY2tzLnZlcmJhdGltQWRvcHRlZC5wYXNzKSB7CiAgICAgIHZlcmJhdGltTm90ZSA9IGBwYXNz77yIJHtjaGVja3NGaWxlfeOAgSR7Y2hlY2tzLnZlcmJhdGltQWRvcHRlZC5jaGVja2VkfeS7tu+8iWA7CiAgICB9CiAgfQoKICByZXR1cm4gewogICAgYXBwcm92YWxJZDogYCR7bWFuaWZlc3Qub3JpZ2luYWwuaWR9LWFwcHJvdmFsLTFgLAogICAgc3RhdHVzOiAiZHJhZnQiLAogICAgYXBwcm92ZXI6IG51bGwsCiAgICBhcHByb3ZlZEF0OiBudWxsLAogICAgdGFyZ2V0OiB7CiAgICAgIG9yaWdpbmFsOiB7IGlkOiBtYW5pZmVzdC5vcmlnaW5hbC5pZCwgdmVyc2lvbjogbWFuaWZlc3Qub3JpZ2luYWwudmVyc2lvbiwgZmlsZTogb3JpZ2luYWxGaWxlLCBzaGEyNTY6IG9yaWdpbmFsU2hhIH0sCiAgICAgIGZhY3RzOiB7IGZhY3RzSWQ6IGZhY3RzLmZhY3RzSWQsIGZhY3RzVmVyc2lvbjogZmFjdHMuZmFjdHNWZXJzaW9uLCBmaWxlOiBmYWN0c0ZpbGUsIHNoYTI1NjogZmFjdHNTaGEgfSwKICAgIH0sCiAgICBiYXNpczogewogICAgICByZWNvbmNpbGlhdGlvbjogYCR7cmVjb25jaWxpYXRpb25GaWxlfSDjga4gJHtjYXNlSWR977yIJHtyZWMudmVyZGljdH3vvIlgLAogICAgICBzY2hlbWFDaGVjazogcnVuLnNjaGVtYUNoZWNrICYmIHJ1bi5zY2hlbWFDaGVjay5wYXNzID8gYHBhc3PvvIgke3JlY29uY2lsaWF0aW9uRmlsZX3vvIlgIDogIuacqueiuuiqjSIsCiAgICAgIHZlcmJhdGltQ2hlY2s6IHZlcmJhdGltTm90ZSwKICAgIH0sCiAgICBzY29wZTogewogICAgICBjb3ZlcnM6ICJzdGF0ZWQg6aCF55uu44Gu44G/IiwKICAgICAgdW5zdGF0ZWRJdGVtcywKICAgICAgdW5zdGF0ZWROb3RlOiAi5pyq6KiY6LyJ44Gv5pyq6KiY6LyJ44Go44GX44Gm6KGo56S644Gr5q6L44GX44CB5om/6KqN44Gu5a++6LGh44Gr5ZCr44KB44Gq44GEIiwKICAgICAgZWZmZWN0OiAi5bel56iLM++8iOeUn+aIkO+8ieOBruWFpeWKm+OBqOOBl+OBpuS9v+eUqOOBp+OBjeOCi+OBk+OBqOOAguWGjeaknOiovOOBruWQiOagvOOBr+WFrOmWi+ioseWPr+OBp+OBr+OBquOBhO+8iEctSU5WLTTvvIkiLAogICAgfSwKICAgIHZhbGlkaXR5OiB7CiAgICAgIHJ1bGU6ICLljp/mnKzjgb7jgZ/jga8gRkFDVCDjga4gc2hhMjU2IOOBjOacrOiomOmMsuOBqOeVsOOBquOCjOOBsOeEoeWKueOBqOOBl+OAgeeFp+WQiOOBi+OCieOChOOCiuebtOOBmSIsCiAgICAgIGludmFsaWRhdGVkOiBmYWxzZSwKICAgICAgaW52YWxpZGF0ZWRSZWFzb246IG51bGwsCiAgICB9LAogIH07Cn0KCi8vIEp1ZGdlIHdoZXRoZXIgYW4gYXBwcm92YWwgaXMgc3RpbGwgdmFsaWQgYWdhaW5zdCB0aGUgY3VycmVudCBmaWxlcy4KLy8gVXNlZCBoZXJlIGFuZCBieSBzdGVwIDQgKHJlLXZlcmlmaWNhdGlvbikuCmV4cG9ydCBmdW5jdGlvbiBjaGVja0FwcHJvdmFsVmFsaWRpdHkoYXBwcm92YWwsIHsgcm9vdCwgb3JpZ2luYWxGaWxlLCBmYWN0c0ZpbGUgfSkgewogIGNvbnN0IGNoZWNrcyA9IFtdOwogIGNvbnN0IG9TaGEgPSBzaGEyNTZGaWxlKHBhdGguam9pbihyb290LCBvcmlnaW5hbEZpbGUpKTsKICBjaGVja3MucHVzaCh7IHRhcmdldDogIm9yaWdpbmFsIiwgZmlsZTogb3JpZ2luYWxGaWxlLCBleHBlY3RlZDogYXBwcm92YWwudGFyZ2V0Lm9yaWdpbmFsLnNoYTI1NiwgYWN0dWFsOiBvU2hhLCBtYXRjaDogb1NoYSA9PT0gYXBwcm92YWwudGFyZ2V0Lm9yaWdpbmFsLnNoYTI1NiB9KTsKICBjb25zdCBmU2hhID0gc2hhMjU2RmlsZShwYXRoLmpvaW4ocm9vdCwgZmFjdHNGaWxlKSk7CiAgY2hlY2tzLnB1c2goeyB0YXJnZXQ6ICJmYWN0cyIsIGZpbGU6IGZhY3RzRmlsZSwgZXhwZWN0ZWQ6IGFwcHJvdmFsLnRhcmdldC5mYWN0cy5zaGEyNTYsIGFjdHVhbDogZlNoYSwgbWF0Y2g6IGZTaGEgPT09IGFwcHJvdmFsLnRhcmdldC5mYWN0cy5zaGEyNTYgfSk7CiAgY29uc3QgdmFsaWQgPSBjaGVja3MuZXZlcnkoKGMpID0+IGMubWF0Y2gpOwogIHJldHVybiB7CiAgICB2YWxpZCwKICAgIGFwcHJvdmFsSWQ6IGFwcHJvdmFsLmFwcHJvdmFsSWQsCiAgICBzdGF0dXM6IGFwcHJvdmFsLnN0YXR1cywKICAgIGNoZWNrcywKICAgIHJlYXNvbjogdmFsaWQgPyBudWxsIDogIuWOn+acrOOBvuOBn+OBryBGQUNUIOOBruODj+ODg+OCt+ODpeOBjOaJv+iqjeiomOmMsuOBqOeVsOOBquOCi+OBn+OCgeeEoeWKueOAgueFp+WQiOOBi+OCieOChOOCiuebtOOBmSIsCiAgfTsKfQoKZnVuY3Rpb24gYXJnVmFsdWUoYXJndiwgZmxhZykgewogIGNvbnN0IGkgPSBhcmd2LmluZGV4T2YoZmxhZyk7CiAgcmV0dXJuIGkgPj0gMCAmJiBpICsgMSA8IGFyZ3YubGVuZ3RoID8gYXJndltpICsgMV0gOiBudWxsOwp9CgpmdW5jdGlvbiBtYWluKCkgewogIGNvbnN0IGhlcmUgPSBwYXRoLmRpcm5hbWUoZmlsZVVSTFRvUGF0aChpbXBvcnQubWV0YS51cmwpKTsKICBjb25zdCByb290ID0gcGF0aC5yZXNvbHZlKGhlcmUsICIuLiIpOwogIGNvbnN0IGFyZ3YgPSBwcm9jZXNzLmFyZ3Yuc2xpY2UoMik7CiAgY29uc3QgY21kID0gYXJndlswXTsKICBpZiAoY21kID09PSAiZHJhZnQiKSB7CiAgICBjb25zdCBkcmFmdCA9IGJ1aWxkQXBwcm92YWxEcmFmdCh7CiAgICAgIHJvb3QsCiAgICAgIG9yaWdpbmFsRmlsZTogYXJnVmFsdWUoYXJndiwgIi0tb3JpZ2luYWwiKSwKICAgICAgZmFjdHNGaWxlOiBhcmdWYWx1ZShhcmd2LCAiLS1mYWN0cyIpLAogICAgICBtYW5pZmVzdEZpbGU6IGFyZ1ZhbHVlKGFyZ3YsICItLW1hbmlmZXN0IiksCiAgICAgIHJlY29uY2lsaWF0aW9uRmlsZTogYXJnVmFsdWUoYXJndiwgIi0tcmVjb25jaWxpYXRpb24iKSwKICAgICAgY2FzZUlkOiAoYXJnVmFsdWUoYXJndiwgIi0tY2FzZSIpIHx8ICJlMDEiKS50b0xvd2VyQ2FzZSgpLAogICAgICBjaGVja3NGaWxlOiBhcmdWYWx1ZShhcmd2LCAiLS1jaGVja3MiKSwKICAgIH0pOwogICAgY29uc3Qgb3V0ID0gYXJnVmFsdWUoYXJndiwgIi0tb3V0Iik7CiAgICBpZiAob3V0KSB3cml0ZUZpbGVTeW5jKHBhdGguam9pbihyb290LCBvdXQpLCBKU09OLnN0cmluZ2lmeShkcmFmdCwgbnVsbCwgMikgKyAiXG4iLCAidXRmOCIpOwogICAgY29uc29sZS5sb2coSlNPTi5zdHJpbmdpZnkoZHJhZnQsIG51bGwsIDIpKTsKICAgIHJldHVybjsKICB9CiAgaWYgKGNtZCA9PT0gImNoZWNrIikgewogICAgY29uc3QgYXBwcm92YWwgPSBsb2FkSnNvbihwYXRoLmpvaW4ocm9vdCwgYXJnVmFsdWUoYXJndiwgIi0tYXBwcm92YWwiKSkpOwogICAgY29uc3QgcmVzdWx0ID0gY2hlY2tBcHByb3ZhbFZhbGlkaXR5KGFwcHJvdmFsLCB7CiAgICAgIHJvb3QsCiAgICAgIG9yaWdpbmFsRmlsZTogYXJnVmFsdWUoYXJndiwgIi0tb3JpZ2luYWwiKSwKICAgICAgZmFjdHNGaWxlOiBhcmdWYWx1ZShhcmd2LCAiLS1mYWN0cyIpLAogICAgfSk7CiAgICBjb25zb2xlLmxvZyhKU09OLnN0cmluZ2lmeShyZXN1bHQsIG51bGwsIDIpKTsKICAgIGlmICghcmVzdWx0LnZhbGlkKSBwcm9jZXNzLmV4aXRDb2RlID0gMTsKICAgIHJldHVybjsKICB9CiAgY29uc29sZS5lcnJvcigidXNhZ2U6IGFwcHJvdmUubWpzIGRyYWZ0IC0tb3JpZ2luYWwgPGY+IC0tZmFjdHMgPGY+IC0tbWFuaWZlc3QgPGY+IC0tcmVjb25jaWxpYXRpb24gPGY+IFstLWNhc2UgRTAxXSBbLS1jaGVja3MgPGY+XSBbLS1vdXQgPGY+XSB8IGFwcHJvdmUubWpzIGNoZWNrIC0tYXBwcm92YWwgPGY+IC0tb3JpZ2luYWwgPGY+IC0tZmFjdHMgPGY+Iik7CiAgcHJvY2Vzcy5leGl0Q29kZSA9IDI7Cn0KCmNvbnN0IGludm9rZWREaXJlY3RseSA9IHByb2Nlc3MuYXJndlsxXSAmJiBpbXBvcnQubWV0YS51cmwgPT09IHBhdGhUb0ZpbGVVUkwocHJvY2Vzcy5hcmd2WzFdKS5ocmVmOwppZiAoaW52b2tlZERpcmVjdGx5KSB7CiAgdHJ5IHsKICAgIG1haW4oKTsKICB9IGNhdGNoIChlcnIpIHsKICAgIGNvbnNvbGUuZXJyb3IoU3RyaW5nKGVyciAmJiBlcnIubWVzc2FnZSA/IGVyci5tZXNzYWdlIDogZXJyKSk7CiAgICBwcm9jZXNzLmV4aXRDb2RlID0gMTsKICB9Cn0K
+// Step 2 (approval): build an approval draft for a fixed FACT set and
+// check an approval's validity. Fictional data only.
+//
+// The approval itself is a human act. This tool only prepares the draft
+// (approver and approvedAt stay null) and runs the mechanical guards:
+// - both files' sha256 (F1 definition: the bytes as stored, UTF-8/LF) must
+//   match the FACT manifest before a draft is created;
+// - no draft is created when the reconciliation stopped on a contradiction
+//   (G-INV-3: there is no "ignore the warning" approval);
+// - validity of an existing approval is judged by recomputing both hashes.
+
+import { readFileSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+
+export function sha256File(filePath) {
+  return createHash("sha256").update(readFileSync(filePath)).digest("hex");
+}
+
+function loadJson(p) {
+  return JSON.parse(readFileSync(p, "utf8"));
+}
+
+// Build an approval draft (status "draft", approver/approvedAt null).
+// Throws when a guard fails; in that case no draft exists.
+export function buildApprovalDraft({ root, originalFile, factsFile, manifestFile, reconciliationFile, caseId, checksFile }) {
+  const manifest = loadJson(path.join(root, manifestFile));
+  const originalSha = sha256File(path.join(root, originalFile));
+  const factsSha = sha256File(path.join(root, factsFile));
+  if (originalSha !== manifest.original.sha256) {
+    throw new Error(`original hash mismatch: computed ${originalSha}, manifest ${manifest.original.sha256}. Draft not created.`);
+  }
+  if (factsSha !== manifest.sha256) {
+    throw new Error(`facts hash mismatch: computed ${factsSha}, manifest ${manifest.sha256}. Draft not created.`);
+  }
+
+  const run = loadJson(path.join(root, reconciliationFile));
+  const rec = run[caseId];
+  if (!rec) throw new Error(`reconciliation case ${caseId} not found in ${reconciliationFile}. Draft not created.`);
+  if (rec.stoppedAtReconciliation || String(rec.verdict).includes("停止")) {
+    throw new Error(`reconciliation ${caseId} stopped (${rec.verdict}). Approval is impossible for a contradicted target. Draft not created.`);
+  }
+
+  const facts = loadJson(path.join(root, factsFile));
+  const unstatedItems = facts.items.filter((i) => i.status === "unstated").map((i) => i.key);
+
+  let verbatimNote = "未確認";
+  if (checksFile) {
+    const checks = loadJson(path.join(root, checksFile));
+    if (checks.verbatimAdopted && checks.verbatimAdopted.pass) {
+      verbatimNote = `pass（${checksFile}、${checks.verbatimAdopted.checked}件）`;
+    }
+  }
+
+  return {
+    approvalId: `${manifest.original.id}-approval-1`,
+    status: "draft",
+    approver: null,
+    approvedAt: null,
+    target: {
+      original: { id: manifest.original.id, version: manifest.original.version, file: originalFile, sha256: originalSha },
+      facts: { factsId: facts.factsId, factsVersion: facts.factsVersion, file: factsFile, sha256: factsSha },
+    },
+    basis: {
+      reconciliation: `${reconciliationFile} の ${caseId}（${rec.verdict}）`,
+      schemaCheck: run.schemaCheck && run.schemaCheck.pass ? `pass（${reconciliationFile}）` : "未確認",
+      verbatimCheck: verbatimNote,
+    },
+    scope: {
+      covers: "stated 項目のみ",
+      unstatedItems,
+      unstatedNote: "未記載は未記載として表示に残し、承認の対象に含めない",
+      effect: "工程3（生成）の入力として使用できること。再検証の合格は公開許可ではない（G-INV-4）",
+    },
+    validity: {
+      rule: "原本または FACT の sha256 が本記録と異なれば無効とし、照合からやり直す",
+      invalidated: false,
+      invalidatedReason: null,
+    },
+  };
+}
+
+// Judge whether an approval is still valid against the current files.
+// Used here and by step 4 (re-verification).
+export function checkApprovalValidity(approval, { root, originalFile, factsFile }) {
+  const checks = [];
+  const oSha = sha256File(path.join(root, originalFile));
+  checks.push({ target: "original", file: originalFile, expected: approval.target.original.sha256, actual: oSha, match: oSha === approval.target.original.sha256 });
+  const fSha = sha256File(path.join(root, factsFile));
+  checks.push({ target: "facts", file: factsFile, expected: approval.target.facts.sha256, actual: fSha, match: fSha === approval.target.facts.sha256 });
+  const valid = checks.every((c) => c.match);
+  return {
+    valid,
+    approvalId: approval.approvalId,
+    status: approval.status,
+    checks,
+    reason: valid ? null : "原本または FACT のハッシュが承認記録と異なるため無効。照合からやり直す",
+  };
+}
+
+function argValue(argv, flag) {
+  const i = argv.indexOf(flag);
+  return i >= 0 && i + 1 < argv.length ? argv[i + 1] : null;
+}
+
+function main() {
+  const here = path.dirname(fileURLToPath(import.meta.url));
+  const root = path.resolve(here, "..");
+  const argv = process.argv.slice(2);
+  const cmd = argv[0];
+  if (cmd === "draft") {
+    const draft = buildApprovalDraft({
+      root,
+      originalFile: argValue(argv, "--original"),
+      factsFile: argValue(argv, "--facts"),
+      manifestFile: argValue(argv, "--manifest"),
+      reconciliationFile: argValue(argv, "--reconciliation"),
+      caseId: (argValue(argv, "--case") || "e01").toLowerCase(),
+      checksFile: argValue(argv, "--checks"),
+    });
+    const out = argValue(argv, "--out");
+    if (out) writeFileSync(path.join(root, out), JSON.stringify(draft, null, 2) + "\n", "utf8");
+    console.log(JSON.stringify(draft, null, 2));
+    return;
+  }
+  if (cmd === "check") {
+    const approval = loadJson(path.join(root, argValue(argv, "--approval")));
+    const result = checkApprovalValidity(approval, {
+      root,
+      originalFile: argValue(argv, "--original"),
+      factsFile: argValue(argv, "--facts"),
+    });
+    console.log(JSON.stringify(result, null, 2));
+    if (!result.valid) process.exitCode = 1;
+    return;
+  }
+  console.error("usage: approve.mjs draft --original <f> --facts <f> --manifest <f> --reconciliation <f> [--case E01] [--checks <f>] [--out <f>] | approve.mjs check --approval <f> --original <f> --facts <f>");
+  process.exitCode = 2;
+}
+
+const invokedDirectly = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+if (invokedDirectly) {
+  try {
+    main();
+  } catch (err) {
+    console.error(String(err && err.message ? err.message : err));
+    process.exitCode = 1;
+  }
+}
