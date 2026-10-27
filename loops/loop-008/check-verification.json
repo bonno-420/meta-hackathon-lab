@@ -1,0 +1,147 @@
+{
+  "testFile": "src/generate.test.mjs",
+  "target": "src/generate.mjs",
+  "pass": true,
+  "results": [
+    {
+      "id": "input-approved-allowed",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "input-draft-validity-recomputes-true",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "input-draft-refused",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "input-draft-refused-reason",
+      "pass": true,
+      "expected": "approval-not-approved",
+      "actual": "approval-not-approved"
+    },
+    {
+      "id": "input-tampered-facts-refused",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "input-tampered-facts-reason",
+      "pass": true,
+      "expected": "approval-invalid",
+      "actual": "approval-invalid"
+    },
+    {
+      "id": "input-tampered-facts-redo-note",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "input-e02-refused",
+      "pass": true,
+      "expected": "refused",
+      "actual": "refused"
+    },
+    {
+      "id": "input-e02-refused-reason",
+      "pass": true,
+      "expected": "approval-missing",
+      "actual": "approval-missing"
+    },
+    {
+      "id": "input-e02-api-not-called",
+      "pass": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "id": "gen-stub-flow-generated",
+      "pass": true,
+      "expected": "generated",
+      "actual": "generated"
+    },
+    {
+      "id": "gen-stub-flow-api-called",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "gen-grounding-pass-on-faithful-output",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "gen-grounding-detects-unstated-assertion",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "gen-grounding-detects-unstated-assertion-names-it",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "gen-grounding-detects-fabricated-amount",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "gen-grounding-detects-fabricated-amount-names-it",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "gen-grounding-detects-unknown-factkey",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "gen-grounding-detects-unknown-factkey-names-it",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "gen-grounding-detects-unknown-sourceline",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "gen-grounding-detects-unknown-sourceline-names-it",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "gen-grounding-detects-ungrounded-sentence",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "gen-grounding-detects-ungrounded-sentence-names-it",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    }
+  ],
+  "note": "生成系のケースはモデル呼び出しをスタブ化しており、実 API は呼んでいない。実生成はテストと分けて1回だけ実行し、loops/loop-008/generation-run.json に記録する。",
+  "runAt": "2026-10-27T13:44:25.614Z"
+}
