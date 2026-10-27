@@ -1,7 +1,7 @@
 # AGENTS.md — Meta Hackathon Lab
 
 ## Mission
-Use this repository as the isolated workspace for Meta hackathon experiments and autonomous app development led by Muse Bot (the coordinating Muse; see the project rules below and decision D9).
+Use this repository as the isolated workspace for Meta hackathon experiments and autonomous app development led by Muse Bot (the coordinating Muse; see the project rules below and decision D9, which is a proposal under audit and not yet in effect — until D9 is accepted, the model assignment in D4 remains in force).
 
 ## Working rules
 - Work only inside this repository. Do not inspect, modify, move, or copy files from unrelated folders unless the user explicitly asks.
@@ -54,9 +54,9 @@ Use this repository as the isolated workspace for Meta hackathon experiments and
 
 ## モデルと記録
 
-- モデルと役割の割当は D4（`docs/decisions/D4-model-assignment.md`）と D9（`docs/decisions/D9-muse-bot-led-operation.md`）に従う。割当の変更は `docs/model-selection.md` の台帳に記録を貯めてから判断する
-- できる限り Meta のプロダクトで作る。推論は Meta Model API のモデルを使い、Muse Code など Meta の開発基盤も優先する。利便性が大きく落ちる場合に限り Codex / OpenCode を使い、その場合は `docs/model-selection.md` に理由を残す
-- 駆動主体は Muse Bot（統括）であり、調査・設計・実装・記録を自ら行う（D9）。Codex / OpenCode は、Muse Bot の環境で実行できない作業に限るフォールバックとし、使う場合は台帳に理由を残す。外部セッションを使う場合は、必ずこのリポジトリのフォルダ内で起動する（別フォルダで起動するとファイルを読めない）
+- モデルと役割の割当は D4（`docs/decisions/D4-model-assignment.md`）と D9（`docs/decisions/D9-muse-bot-led-operation.md`）に従う。割当の変更は `docs/model-selection.md` の台帳に記録を貯めてから判断する（D9 は提案中であり、監査と本人の受け入れまでは D4 の現行方針が有効である）
+- できる限り Meta のプロダクトで作る。推論は Meta Model API のモデルを使う
+- 駆動主体は Muse Bot（統括）であり、調査・設計・実装・記録を自ら行う（D9、提案中。受け入れまでは D4 の現行方針が有効）。Codex / OpenCode は、Muse Bot の環境で実行できない作業に限るフォールバックとし、使う場合は台帳に理由を残す。外部セッションを使う場合は、必ずこのリポジトリのフォルダ内で起動する（別フォルダで起動するとファイルを読めない）
 - パスごとに、入力（文脈パックの版）、使用モデル、プロンプト版、成果物、監査結果と差し戻し理由、トークン量、実費、所要時間を `loops/loop-NNN/` に記録する
 - 再現性検証（同一条件の再実行）と改善実験（主要な変更は原則1要因だけ）を区別して記録する
 
