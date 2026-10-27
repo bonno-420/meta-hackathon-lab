@@ -1,1 +1,62 @@
-IyDmib/oqo3oqJjpjLLjga7mp5jlvI8gdjHvvIjlt6XnqIsy44Gu5YmN5o+Q77yJCgotIOeKtuaFizog5rG65a6a5riI44G/77yIMjAyNi0xMC0yN+OAgee1seaLrOOBruanmOW8j+ahiOOCkuacrOS6uuOBjOaOoeeUqOOAguOCueODhuODg+ODlyB2MSDjga7lrprjgoHvvIgxMC8yOSDmnJ3vvInjgYvjgonliY3lgJLjgZfjgafmsbrlrprjgZfjgZ/vvIkKLSDmoLnmi6A6IOOCueODhuODg+ODlyB2MSDlt6XnqIsy77yI5om/6KqN44Gv6KiY6Yyy44G444Gu6KiY5YWl44CB55+b55u+44GM44GC44KM44Gw5om/6KqN5LiN5Y+v44CB54mI44GM5aSJ44KP44KM44Gw54Sh5Yq577yJ44CB5Z+65pys6Kit6KiIIHYxLjEg44GuIEctSU5WLTPjg7tHLUlOVi0044CB5bel56iLMeebo+afu+OBrueUs+OBl+mAgeOCiu+8iOe1hOOCkuaMh+OBmeWNmOS4gOOBruW9ouW8j+OCkuWFiOOBq+WbuuWumuOBmeOCi+OBk+OBqO+8iQoKIyMgMS4g5om/6KqN5a++6LGh44Gu5oyH5ZCN5b2i5byP77yI5Y2Y5LiA5b2i5byP77yJCgrmib/oqo3jga/jgIzljp/mnKzniYjjgaggRkFDVCDniYjjga7ntYTjgI3jgpLjgIHjg5XjgqHjgqTjg6vlkI3jgajjg4/jg4Pjgrfjg6XvvIhGMSDjgaflrprnvqnjgZfjgZ8gR2l0IOODkOOCpOODiOWIl+ODu0xGIOOBriBzaGEyNTbvvInjgafmjIflkI3jgZnjgovjgILmlofnq6DkuK3jg7voqJjpjLLkuK3jga7ooajoqJjjgoLjgZPjga7lvaLjgavntbHkuIDjgZnjgovjgIIKCi0g5a6M5YWo5b2iOiBgRklDVC1KMDEg5Y6f5pysIHYx77yIc3JjL2ZpY3QtajAxLXYxLmpzb27jgIFzaGEyNTYgYTQ0NTZlOWbigKZhNjDvvInDlyBGQUNUIHYx77yIc3JjL2ZhY3RzL0ZJQ1QtSjAxLWZhY3RzLXYxLmpzb27jgIFzaGEyNTYgM2RjN2ZiZDHigKYzNGVj77yJYAotIOefree4ruW9ou+8iOWQjOS4gOaWh+abuOWGheOBp+WujOWFqOW9ouOCkuekuuOBl+OBn+W+jO+8iTogYEZJQ1QtSjAxIOWOn+acrCB2MSDDlyBGQUNUIHYxYAoKIyMgMi4g572u44GN5aC05omA44Go5q2j5pysCgotIOaJv+iqjeiomOmMsuOBryBGQUNUIOODleOCoeOCpOODq+OBq+mao+aOpeOBleOBm+OCizogYHNyYy9mYWN0cy9GSUNULUowMS1mYWN0cy12MS5hcHByb3ZhbC5qc29uYO+8iEZBQ1Qg54mI44GU44Go44Gr5pyA5aSnMeOBpO+8iQotIOato+acrOOBryBKU09O44CC5Lq66ZaT5Y+v6Kqt44Gq6Lui6KiY44Gv5bel56iLMuOBruWun+ihjOiomOmMsu+8iGxvb3BzL2xvb3AtMDA377yJ5YG044Gr572u44GPCgojIyAzLiDjg5XjgqPjg7zjg6vjg4nlrprnvqkKCmBgYGpzb24KewogICJhcHByb3ZhbElkIjogIkZJQ1QtSjAxLWFwcHJvdmFsLTEiLAogICJhcHByb3ZlciI6ICJOb3Jpa2F6dSBIYXJhZGHvvIjmnKzkurrvvIkiLAogICJhcHByb3ZlZEF0IjogIjxJU08gODYwMT4iLAogICJ0YXJnZXQiOiB7CiAgICAib3JpZ2luYWwiOiB7ICJpZCI6ICJGSUNULUowMSIsICJ2ZXJzaW9uIjogInYxIiwgImZpbGUiOiAic3JjL2ZpY3QtajAxLXYxLmpzb24iLCAic2hhMjU2IjogImE0NDU2ZTlmMjI5ZTI4Nzc4NjFhYWQyMzI0YmM3OTY2NDFiZmIwMmYzNmQ1N2MzYmY1YzMzOWY0ZDk0NjFhNjAiIH0sCiAgICAiZmFjdHMiOiB7ICJmYWN0c0lkIjogIkZJQ1QtSjAxLWZhY3RzIiwgImZhY3RzVmVyc2lvbiI6IDEsICJmaWxlIjogInNyYy9mYWN0cy9GSUNULUowMS1mYWN0cy12MS5qc29uIiwgInNoYTI1NiI6ICIzZGM3ZmJkMTJlNzczYmMxZDliYTcxMWIwY2U3YjM0MzE4MDAzYmUwN2Y1NzgyYmExYzg5MDA0ZTY0MjUzNGVjIiB9CiAgfSwKICAiYmFzaXMiOiB7CiAgICAicmVjb25jaWxpYXRpb24iOiAibG9vcHMvbG9vcC0wMDYvZXhwLXYxLjEvbGl2ZS1ydW4uanNvbiDjga4gZTAx77yI5LiA6Ie077yI5Lq66ZaT5om/6KqN5b6F44Gh77yJ77yJIiwKICAgICJzY2hlbWFDaGVjayI6ICJwYXNz77yIbG9vcHMvbG9vcC0wMDYvY2hlY2stdmVyaWZpY2F0aW9uLmpzb27vvIkiLAogICAgInZlcmJhdGltQ2hlY2siOiAicGFzc++8iOWQjOS4iuOAgTE15Lu277yJIgogIH0sCiAgInNjb3BlIjogewogICAgImNvdmVycyI6ICJzdGF0ZWQg6aCF55uu44Gu44G/IiwKICAgICJ1bnN0YXRlZEl0ZW1zIjogWyJyZW5ld2FsIiwgImhvdXNpbmciXSwKICAgICJ1bnN0YXRlZE5vdGUiOiAi5pyq6KiY6LyJ44Gv5pyq6KiY6LyJ44Go44GX44Gm6KGo56S644Gr5q6L44GX44CB5om/6KqN44Gu5a++6LGh44Gr5ZCr44KB44Gq44GEIiwKICAgICJlZmZlY3QiOiAi5bel56iLM++8iOeUn+aIkO+8ieOBruWFpeWKm+OBqOOBl+OBpuS9v+eUqOOBp+OBjeOCi+OBk+OBqOOAguWGjeaknOiovOOBruWQiOagvOOBr+WFrOmWi+ioseWPr+OBp+OBr+OBquOBhO+8iEctSU5WLTTvvIkiCiAgfSwKICAidmFsaWRpdHkiOiB7CiAgICAicnVsZSI6ICLljp/mnKzjgb7jgZ/jga8gRkFDVCDjga4gc2hhMjU2IOOBjOacrOiomOmMsuOBqOeVsOOBquOCjOOBsOeEoeWKueOBqOOBl+OAgeeFp+WQiOOBi+OCieOChOOCiuebtOOBmSIsCiAgICAiaW52YWxpZGF0ZWQiOiBmYWxzZSwKICAgICJpbnZhbGlkYXRlZFJlYXNvbiI6IG51bGwKICB9Cn0KYGBgCgojIyA0LiDmib/oqo3kuI3lj6/jga7mnaHku7bvvIjmp5jlvI/jg6zjg5njg6vjga7msbrjgb7jgorvvIkKCi0g54Wn5ZCI44GM44CM5YGc5q2i77yI55+b55u+44GC44KK77yJ44CN44Gu5a++6LGh44Gr44Gv5om/6KqN6KiY6Yyy44KS5L2c44KJ44Gq44GE44CC44CM6K2m5ZGK44KS54Sh6KaW44GZ44KL5om/6KqN44CN44Gr44GC44Gf44KL5YiG5bKQ44Gv5qeY5byP44Gr44KC5a6f6KOF44Gr44KC6Kit44GR44Gq44GE77yIRy1JTlYtM++8iQotIOaJv+iqjeOBruS9nOaIkOaZguOBr+OAgeWvvuixoTLjg5XjgqHjgqTjg6vjga4gc2hhMjU2IOOCkuWGjeioiOeul+OBl+OAgW1hbmlmZXN0IOOBiuOCiOOBs+acrOiomOmMsuOBruaMh+WQjeOBqOS4gOiHtOOBmeOCi+OBk+OBqOOCkuWFiOOBq+eiuuiqjeOBmeOCi+OAguS4gOiHtOOBl+OBquOBkeOCjOOBsOaJv+iqjeOCkuS9nOaIkOOBl+OBquOBhAoKIyMgNS4g5bel56iLMuOBruWun+ijheOBuOOBruimgeaxgu+8iOOCueODhuODg+ODlyB2MSDjga7lrozkuobmnaHku7Yz54K544Gr5a++5b+c77yJCgoxLiDmraPluLjns7s6IOaJv+iqjeOCkuS9nOOCi+Wwj+OBleOBqumBk+WFt++8iOOCueOCr+ODquODl+ODiO+8ieOBp+OAgeODj+ODg+OCt+ODpeeFp+WQiCDihpIg54Wn5ZCI57WQ5p6c44GM44CM5LiA6Ie044CN44Gn44GC44KL44GT44Go44Gu56K66KqNIOKGkiDmib/oqo0gSlNPTiDjga7kvZzmiJDjgb7jgafjgpLooYzjgYYKMi4g55+b55u+57O7OiDnn5vnm77jga7jgYLjgosgRkFDVO+8iOODhuOCueODiOeUqOOBq+eUqOaEj+OBmeOCi++8ieOBp+OBr+aJv+iqjeOBjOS9nOaIkOOBp+OBjeOBquOBhOOBk+OBqOOCkuWun+ihjOiomOmMsuOBq+aui+OBmQozLiDniYjlpInmm7Tns7s6IOePvuWcqOOBrjLjg5XjgqHjgqTjg6vjga7jg4/jg4Pjgrfjg6Xjgajmib/oqo3oqJjpjLLjgpLmr5TjgbnjgabmnInlirnjg7vnhKHlirnjgpLliKTlrprjgZnjgovplqLmlbDjgpLnlKjmhI/jgZfjgIFGQUNUIOOBruOCs+ODlOODvOOCkuaUueWkieOBl+OBn+OCseODvOOCueOBp+eEoeWKueOBqOWIpOWumuOBp+OBjeOCi+OBk+OBqOOCkuaui+OBmeOAguOBk+OBruWIpOWumuOBr+W3peeoizTvvIjlho3mpJzoqLzvvInjgYvjgonjgoLkvb/jgYYKCiMjIDYuIOaui+OBmeacquaxugoKLSDmib/oqo3jga7jgIzlj5bjgormtojjgZfjgI3vvIjmnKzkurrjgYzmmI7npLrnmoTjgavmkqTlm57jgZnjgovmk43kvZzvvInjgpLmp5jlvI/jgavlkKvjgoHjgovjgYvjgILmnKzmoYjjgafjga/nhKHlirnljJbjga7jgb/jgafotrPjgorjgovjgajjgZfjgablkKvjgoHjgabjgYTjgarjgYQKLSDlr77osaHjgYzlopfjgYjjgZ/loLTlkIjvvIhGSUNULUowMiDku6XlvozvvInjga4gYXBwcm92YWxJZCDjga7pgKPnlaropo/liYcK
+# 承認記録の様式 v1（工程2の前提）
+
+- 状態: 決定済み（2026-10-27、統括の様式案を本人が採用。ステップ v1 の定め（10/29 朝）から前倒しで決定した）
+- 根拠: ステップ v1 工程2（承認は記録への記入、矛盾があれば承認不可、版が変われば無効）、基本設計 v1.1 の G-INV-3・G-INV-4、工程1監査の申し送り（組を指す単一の形式を先に固定すること）
+
+## 1. 承認対象の指名形式（単一形式）
+
+承認は「原本版と FACT 版の組」を、ファイル名とハッシュ（F1 で定義した Git バイト列・LF の sha256）で指名する。文章中・記録中の表記もこの形に統一する。
+
+- 完全形: `FICT-J01 原本 v1（src/fict-j01-v1.json、sha256 a4456e9f…a60）× FACT v1（src/facts/FICT-J01-facts-v1.json、sha256 3dc7fbd1…34ec）`
+- 短縮形（同一文書内で完全形を示した後）: `FICT-J01 原本 v1 × FACT v1`
+
+## 2. 置き場所と正本
+
+- 承認記録は FACT ファイルに隣接させる: `src/facts/FICT-J01-facts-v1.approval.json`（FACT 版ごとに最大1つ）
+- 正本は JSON。人間可読な転記は工程2の実行記録（loops/loop-007）側に置く
+
+## 3. フィールド定義
+
+```json
+{
+  "approvalId": "FICT-J01-approval-1",
+  "approver": "Norikazu Harada（本人）",
+  "approvedAt": "<ISO 8601>",
+  "target": {
+    "original": { "id": "FICT-J01", "version": "v1", "file": "src/fict-j01-v1.json", "sha256": "a4456e9f229e2877861aad2324bc796641bfb02f36d57c3bf5c339f4d9461a60" },
+    "facts": { "factsId": "FICT-J01-facts", "factsVersion": 1, "file": "src/facts/FICT-J01-facts-v1.json", "sha256": "3dc7fbd12e773bc1d9ba711b0ce7b34318003be07f5782ba1c89004e642534ec" }
+  },
+  "basis": {
+    "reconciliation": "loops/loop-006/exp-v1.1/live-run.json の e01（一致（人間承認待ち））",
+    "schemaCheck": "pass（loops/loop-006/check-verification.json）",
+    "verbatimCheck": "pass（同上、15件）"
+  },
+  "scope": {
+    "covers": "stated 項目のみ",
+    "unstatedItems": ["renewal", "housing"],
+    "unstatedNote": "未記載は未記載として表示に残し、承認の対象に含めない",
+    "effect": "工程3（生成）の入力として使用できること。再検証の合格は公開許可ではない（G-INV-4）"
+  },
+  "validity": {
+    "rule": "原本または FACT の sha256 が本記録と異なれば無効とし、照合からやり直す",
+    "invalidated": false,
+    "invalidatedReason": null
+  }
+}
+```
+
+## 4. 承認不可の条件（様式レベルの決まり）
+
+- 照合が「停止（矛盾あり）」の対象には承認記録を作らない。「警告を無視する承認」にあたる分岐は様式にも実装にも設けない（G-INV-3）
+- 承認の作成時は、対象2ファイルの sha256 を再計算し、manifest および本記録の指名と一致することを先に確認する。一致しなければ承認を作成しない
+
+## 5. 工程2の実装への要求（ステップ v1 の完了条件3点に対応）
+
+1. 正常系: 承認を作る小さな道具（スクリプト）で、ハッシュ照合 → 照合結果が「一致」であることの確認 → 承認 JSON の作成までを行う
+2. 矛盾系: 矛盾のある FACT（テスト用に用意する）では承認が作成できないことを実行記録に残す
+3. 版変更系: 現在の2ファイルのハッシュと承認記録を比べて有効・無効を判定する関数を用意し、FACT のコピーを改変したケースで無効と判定できることを残す。この判定は工程4（再検証）からも使う
+
+## 6. 残す未決
+
+- 承認の「取り消し」（本人が明示的に撤回する操作）を様式に含めるか。本案では無効化のみで足りるとして含めていない
+- 対象が増えた場合（FICT-J02 以後）の approvalId の連番規則
