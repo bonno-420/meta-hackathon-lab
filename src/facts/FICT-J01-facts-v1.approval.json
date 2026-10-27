@@ -1,0 +1,39 @@
+{
+  "approvalId": "FICT-J01-approval-1",
+  "status": "approved",
+  "approver": "Norikazu Harada（本人）",
+  "approvedAt": "2026-10-27T19:58:09+09:00",
+  "target": {
+    "original": {
+      "id": "FICT-J01",
+      "version": "v1",
+      "file": "src/fict-j01-v1.json",
+      "sha256": "a4456e9f229e2877861aad2324bc796641bfb02f36d57c3bf5c339f4d9461a60"
+    },
+    "facts": {
+      "factsId": "FICT-J01-facts",
+      "factsVersion": 1,
+      "file": "src/facts/FICT-J01-facts-v1.json",
+      "sha256": "3dc7fbd12e773bc1d9ba711b0ce7b34318003be07f5782ba1c89004e642534ec"
+    }
+  },
+  "basis": {
+    "reconciliation": "loops/loop-006/exp-v1.1/live-run.json の e01（一致（人間承認待ち））",
+    "schemaCheck": "pass（loops/loop-006/exp-v1.1/live-run.json）",
+    "verbatimCheck": "pass（loops/loop-006/check-verification.json、15件）"
+  },
+  "scope": {
+    "covers": "stated 項目のみ",
+    "unstatedItems": [
+      "renewal",
+      "housing"
+    ],
+    "unstatedNote": "未記載は未記載として表示に残し、承認の対象に含めない",
+    "effect": "工程3（生成）の入力として使用できること。再検証の合格は公開許可ではない（G-INV-4）"
+  },
+  "validity": {
+    "rule": "原本または FACT の sha256 が本記録と異なれば無効とし、照合からやり直す",
+    "invalidated": false,
+    "invalidatedReason": null
+  }
+}

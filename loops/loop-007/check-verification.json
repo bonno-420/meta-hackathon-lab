@@ -1,0 +1,74 @@
+{
+  "testFile": "src/approve.test.mjs",
+  "target": "src/approve.mjs",
+  "pass": true,
+  "results": [
+    {
+      "id": "draft-created",
+      "pass": true,
+      "expected": "draft",
+      "actual": "draft"
+    },
+    {
+      "id": "draft-approver-null",
+      "pass": true,
+      "expected": null,
+      "actual": null
+    },
+    {
+      "id": "draft-approvedAt-null",
+      "pass": true,
+      "expected": null,
+      "actual": null
+    },
+    {
+      "id": "draft-target-facts-sha",
+      "pass": true,
+      "expected": "3dc7fbd12e773bc1d9ba711b0ce7b34318003be07f5782ba1c89004e642534ec",
+      "actual": "3dc7fbd12e773bc1d9ba711b0ce7b34318003be07f5782ba1c89004e642534ec"
+    },
+    {
+      "id": "draft-target-original-sha",
+      "pass": true,
+      "expected": "a4456e9f229e2877861aad2324bc796641bfb02f36d57c3bf5c339f4d9461a60",
+      "actual": "a4456e9f229e2877861aad2324bc796641bfb02f36d57c3bf5c339f4d9461a60"
+    },
+    {
+      "id": "draft-unstated-items",
+      "pass": true,
+      "expected": "[\"renewal\",\"housing\"]",
+      "actual": "[\"renewal\",\"housing\"]"
+    },
+    {
+      "id": "draft-refused-for-e02-contradiction",
+      "pass": true,
+      "expected": "throw",
+      "actual": "throw"
+    },
+    {
+      "id": "draft-refused-for-facts-hash-mismatch",
+      "pass": true,
+      "expected": "throw",
+      "actual": "throw"
+    },
+    {
+      "id": "validity-true-for-untouched-files",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "validity-false-for-tampered-facts",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "validity-reason-present",
+      "pass": true,
+      "expected": "string",
+      "actual": "string"
+    }
+  ],
+  "runAt": "2026-10-27T10:56:39.052Z"
+}
