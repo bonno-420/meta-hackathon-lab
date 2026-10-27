@@ -5,7 +5,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { performance } from "node:perf_hooks";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const MODEL = "muse-spark-1.3-contributor";
 const BASE_URL = "https://api.meta.ai/v1";
@@ -48,7 +48,7 @@ const ITEM_FIELDS = ["key", "status", "value", "normalized", "sourceLine", "quot
 // Schema-completeness check: detects missing, extra or duplicate keys and
 // items with missing fields. Returns a verdict object; it does not stop the
 // pipeline by itself (it is recorded as a gate candidate, not a gate).
-function checkSchemaCompleteness(facts) {
+export function checkSchemaCompleteness(facts) {
   if (!facts || !Array.isArray(facts.items)) {
     return { pass: false, reason: "facts.items is not an array", expectedCount: EXPECTED_KEYS.length, actualCount: 0, missingKeys: [...EXPECTED_KEYS], extraKeys: [], duplicateKeys: [], fieldIssues: [] };
   }
@@ -73,7 +73,28 @@ function checkSchemaCompleteness(facts) {
   return { pass, expectedCount: EXPECTED_KEYS.length, actualCount: facts.items.length, missingKeys, extraKeys, duplicateKeys, fieldIssues };
 }
 
-function loadOriginal() {
+// Quote-verbatim check: every item's sourceLine must exist in the original
+// and its quote must be an exact substring of that line's text. This is a
+// separate check from schema completeness (different inputs, different
+// question), per the step-1 audit (F2).
+export function checkQuoteVerbatim(facts, original) {
+  const lines = new Map(original.lines.map((l) => [l.id, l.text]));
+  const issues = [];
+  if (!facts || !Array.isArray(facts.items)) {
+    return { pass: false, reason: "facts.items is not an array", checked: 0, issues };
+  }
+  for (const item of facts.items) {
+    const line = lines.get(item.sourceLine);
+    if (line === undefined) {
+      issues.push({ key: item.key ?? null, issue: `sourceLine not found: ${String(item.sourceLine)}` });
+    } else if (typeof item.quote !== "string" || !line.includes(item.quote)) {
+      issues.push({ key: item.key ?? null, issue: "quote is not a verbatim substring of the source line" });
+    }
+  }
+  return { pass: issues.length === 0, checked: facts.items.length, issues };
+}
+
+export function loadOriginal() {
   const raw = readFileSync(path.join(here, "fict-j01-v1.json"), "utf8");
   return JSON.parse(raw);
 }
@@ -118,7 +139,7 @@ function promptText() {
 
 // Hand-derived fixture from FICT-J01 v1. Used ONLY for offline logic
 // verification. This is not model output.
-function fixtureFacts() {
+export function fixtureFacts() {
   return {
     source: "fixture-hand-derived-from-FICT-J01-v1",
     items: [
@@ -275,6 +296,7 @@ async function runLive() {
       usage: null,
       costUsd: null,
       costNote: "未記録（API未実行のため推定しない）",
+      schemaCheck: { ...checkSchemaCompleteness(null), reason: "no extraction output" },
     };
   }
 
@@ -309,6 +331,7 @@ async function runLive() {
       usage: body && body.usage ? body.usage : null,
       costUsd: null,
       costNote: "未記録（エラー応答のため算出しない。Billing実績との突合が必要）",
+      schemaCheck: { ...checkSchemaCompleteness(null), reason: "no extraction output" },
     };
   }
 
@@ -331,12 +354,19 @@ async function runLive() {
 
   let e01 = null;
   let e02 = null;
-  let schemaCheck = null;
+  // F2 reachability: the schema check result is always recorded. When the
+  // extraction output cannot be parsed, the check itself is recorded as
+  // failed with the reason, never left null.
+  let schemaCheck;
+  if (facts) {
+    schemaCheck = checkSchemaCompleteness(facts);
+  } else {
+    schemaCheck = { ...checkSchemaCompleteness(null), reason: "extraction output was not valid JSON" };
+  }
   if (facts && Array.isArray(facts.items)) {
     const e01Summary = original.lines.map((l) => l.text).join("");
     e01 = reconcile(facts, e01Summary, "E01");
     e02 = reconcile(facts, E02_SUMMARY, "E02");
-    schemaCheck = checkSchemaCompleteness(facts);
   }
 
   return {
@@ -386,7 +416,11 @@ async function main() {
   if (live.status === "api-error" || live.status === "parse-error") process.exitCode = 1;
 }
 
-main().catch((err) => {
-  console.error(String(err && err.stack ? err.stack : err));
-  process.exitCode = 1;
-});
+// Run only when executed directly, so tests can import the checks (F2).
+const invokedDirectly = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+if (invokedDirectly) {
+  main().catch((err) => {
+    console.error(String(err && err.stack ? err.stack : err));
+    process.exitCode = 1;
+  });
+}

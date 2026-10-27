@@ -3,10 +3,12 @@
   "factsId": "FICT-J01-facts",
   "factsVersion": 1,
   "sha256": "3dc7fbd12e773bc1d9ba711b0ce7b34318003be07f5782ba1c89004e642534ec",
+  "hashDefinition": "sha256 の対象は Git に保存されたバイト列（UTF-8、改行は LF）とする。.gitattributes で対象ファイルの eol=lf を固定するため、チェックアウトしたファイルのバイト列も同一になる。再現手順は、対象ファイルのバイト列をそのまま sha256 すること（改行変換を行うツールを使わない）",
   "original": {
     "id": "FICT-J01",
     "version": "v1",
-    "sourceFile": "src/fict-j01-v1.json"
+    "sourceFile": "src/fict-j01-v1.json",
+    "sha256": "a4456e9f229e2877861aad2324bc796641bfb02f36d57c3bf5c339f4d9461a60"
   },
   "extraction": {
     "promptVersion": "fact-extract-v1.1",

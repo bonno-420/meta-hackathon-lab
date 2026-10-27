@@ -1,0 +1,85 @@
+{
+  "testFile": "src/extract-and-check.test.mjs",
+  "target": "src/extract-and-check.mjs",
+  "pass": true,
+  "results": [
+    {
+      "id": "schema-positive-fixture",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "schema-negative-missing-key",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "schema-negative-missing-key-names-housing",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "schema-negative-duplicate-key",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "schema-negative-duplicate-names-employer",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "schema-negative-missing-field",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "schema-negative-items-not-array",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "schema-negative-null-facts",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "verbatim-positive-adopted-facts",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "verbatim-checked-15-items",
+      "pass": true,
+      "expected": 15,
+      "actual": 15
+    },
+    {
+      "id": "verbatim-negative-fabricated-quote",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "verbatim-negative-unknown-line",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    }
+  ],
+  "verbatimAdopted": {
+    "pass": true,
+    "checked": 15,
+    "issues": []
+  },
+  "runAt": "2026-10-27T09:02:53.423Z"
+}
