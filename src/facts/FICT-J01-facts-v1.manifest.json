@@ -1,0 +1,25 @@
+{
+  "factsFile": "src/facts/FICT-J01-facts-v1.json",
+  "factsId": "FICT-J01-facts",
+  "factsVersion": 1,
+  "sha256": "3dc7fbd12e773bc1d9ba711b0ce7b34318003be07f5782ba1c89004e642534ec",
+  "original": {
+    "id": "FICT-J01",
+    "version": "v1",
+    "sourceFile": "src/fict-j01-v1.json"
+  },
+  "extraction": {
+    "promptVersion": "fact-extract-v1.1",
+    "model": "muse-spark-1.3-contributor",
+    "sourceRun": "loops/loop-006/exp-v1.1/live-run.json",
+    "runStartedAt": "2026-10-27T08:32:28.889Z",
+    "schemaCheckPass": true,
+    "e01Verdict": "一致（人間承認待ち）",
+    "e02Verdict": "停止（矛盾あり）"
+  },
+  "versioningRule": "FACT版は採用のたびに+1する。原本版・プロンプト版・モデルのいずれかが変わって再抽出したら新しいFACT版を別ファイルで作り、旧版は上書きしない。工程2（承認）は原本版とFACT版の組を指名して行う。",
+  "adoptedBy": "Muse Bot（統括）",
+  "adoptedAt": "2026-10-27",
+  "adoptionBasis": "スキーマ完全性チェック合格、引用15件すべて原本行の逐語部分文字列であることを機械確認、E01・E02の判定が期待と一致、未記載項目のvalueがnullに統一されたこと（exp-002）。",
+  "approvalStatus": "未承認（工程2の人間承認はまだ行われていない）"
+}
