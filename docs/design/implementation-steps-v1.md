@@ -1,7 +1,7 @@
 # 実装工程（確定版 v1）
 
 - 作成: 2026-10-27（設計ライン）
-- 状態: 確定版。再監査（管理ライン、修正箇所に限定）と受け入れ判定（統括と本人）を経て有効とする
+- 状態: 確定版（受け入れ済み、有効）。再監査（監理ライン、修正箇所に限定）で合格し、統括と本人による受け入れを経て有効となった
 - 対象: 統合デモ（D1）の完成と提出までに必要な開発工程
 - 前提の正本: `docs/project-instruction-v1.md`、`docs/design/basic-design-v1.1.md`、`docs/roadmap-v1.md`、決定 D1–D8
 - 改訂元: `docs/design/implementation-steps-draft.md`（ドラフト）と監査 `docs/design/implementation-steps-review.md`（判定「修正」、論点 S1–S12）。ドラフトと監査レポートは本書では書き換えない
