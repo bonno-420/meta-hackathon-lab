@@ -10,3 +10,5 @@
 - 実装: `checkSchemaCompleteness`（`src/extract-and-check.mjs`）。実行結果は live-run.json の `schemaCheck` に記録される。現時点では合否を記録するだけで、パイプラインを止める力は持たせていない
 - 検証の実績: ループ6で肯定側（実API 2回の出力と fixture が合格）と否定側（キー欠落・重複・フィールド欠落・非配列の4通りで不合格を検出）の両方を確認済み
 - 状態: 候補（未昇格）。昇格の判断は、工程2以降で実際に食い止める場面が出るかを見てからでよいというのが統括の見立て。判断は本人
+
+引用の逐語性（sourceLine の実在と quote がその行の逐語部分文字列であること）は本候補の対象外である。逐語性は別のチェック（src/extract-and-check.mjs の checkQuoteVerbatim）で扱い、結果は loops/loop-006/check-verification.json に残す（工程1監査 F2 による切り分け）

@@ -58,3 +58,21 @@
 
 - 本記録一式は監理ラインの監査を受ける（依頼文は `docs/prompts/step1-audit-brief.md`）。受け入れは統括と本人が行う
 - 工程2（承認）は FACT 版 `FICT-J01-facts-v1` を対象に設計する。承認記録の様式はロードマップの宿題どおり 10/29 朝に先に決める
+
+## 監査修正の適用（F1・F2）
+
+- 適用日: 2026-10-27。監理ラインの監査（`docs/design/step1-review.md`、判定「修正」）の修正事項 F1・F2 に対する適用作業。指示文は `docs/prompts/step1-fix-brief.md`。live API は実行していない（追加費用なし）。`loops/loop-002` には触れていない
+- 開始時点の HEAD: `c356c9e6b55ddb74aefe09a5ec68eb4aa9f17a86`（`main` を `git fetch` で確認し、開始時点で `origin/main` と一致、作業ツリー clean であった）
+- 変更ファイルと変更内容:
+  - `docs/prompts/step1-fix-brief.md`（新規）: 本修正の指示文自体を保存した
+  - `.gitattributes`（新規）: `src/fict-j01-v1.json` と `src/facts/*.json` に `text eol=lf` を固定した（F1）
+  - `src/facts/FICT-J01-facts-v1.manifest.json`: トップレベルに `hashDefinition`（sha256 の対象は Git に保存されたバイト列（UTF-8、改行は LF）とする旨と再現手順）を追加し、`original` に `sha256`（`a4456e9f229e2877861aad2324bc796641bfb02f36d57c3bf5c339f4d9461a60`）を追加した。既存の facts 側 `sha256`（`3dc7fbd1…`）は変更していない。manifest 自体はハッシュ対象ではない（F1）
+  - `src/extract-and-check.mjs`: `pathToFileURL` を import に追加し、`loadOriginal`・`fixtureFacts`・`checkSchemaCompleteness` に `export` を付け、引用逐語性チェック `checkQuoteVerbatim` を追加した。`runLive` では抽出結果の形によらず `schemaCheck` が常時記録されるよう直し（解析不能時は理由つきで不合格として記録）、早期 return（blocked・api-error）にも `schemaCheck`（理由 `no extraction output` つきで不合格）を追加した。ファイル末尾の `main()` 無条件実行を、直接実行時のみのガードに置き換えた（F2）
+  - `src/extract-and-check.test.mjs`（新規）: スキーマ完全性の肯定・否定ケースと引用逐語性の肯定・否定ケースを再実行できるテスト。API アクセスなし
+  - `loops/loop-006/check-verification.json`（新規）: 上記テストの実行結果の記録（下記）
+  - `loops/loop-006/gate-candidate-schema-completeness.md`: 末尾に、引用の逐語性は本候補の対象外であり別チェック（`checkQuoteVerbatim`）で扱い結果は `check-verification.json` に残す旨を追記した（F2）
+  - `loops/loop-006/run-record.md`: 本節を追記した
+  - `loops/INDEX.md`: ループ6行を、見出しと同じ3列（ループ／内容／記録の所在）に直した。監査状態の文面は変えていない（受け入れ時に更新する）
+- テスト結果: `node src/extract-and-check.test.mjs --out loops/loop-006/check-verification.json` を実行し、全12件 pass、終了コード 0 であった（`check-verification.json` の `results` 12件すべて `pass: true`、全体 `pass: true`）。内訳はスキーマ完全性8件（肯定1・否定5パターンの検証を含む）と引用逐語性4件（採用 FACT 15件の合格、捏造引用の不合格、存在しない行 L99 の不合格を含む）であり、採用 FACT の逐語性チェックは `checked: 15`、`issues: []` で合格した。回帰確認として `node src/extract-and-check.mjs --verify-offline --out-dir <リポジトリ外の一時フォルダ>` も実行し、従来の6件すべて pass、終了コード 0 であった
+- ハッシュ照合の結果（F1）: 対象2ファイルを再チェックアウト（`git ls-files --eol` で両方とも `i/lf w/lf attr/text eol=lf`）したうえで実測した。`src/facts/FICT-J01-facts-v1.json` は実ファイル・git blob ともに sha256 が `3dc7fbd12e773bc1d9ba711b0ce7b34318003be07f5782ba1c89004e642534ec`（3,282バイト）で manifest 記載値と一致した。`src/fict-j01-v1.json`（原本）は実ファイル・git blob ともに sha256 が `a4456e9f229e2877861aad2324bc796641bfb02f36d57c3bf5c339f4d9461a60`（854バイト）で manifest に追加した値と一致した。両ファイルとも実ファイルのバイト列と git blob は同一であった
+- 本節の数値はすべて本作業で実行して得た実測であり、推測で埋めた箇所はない。修正の完了判定は行わない（再監査は監理ラインが行う）
