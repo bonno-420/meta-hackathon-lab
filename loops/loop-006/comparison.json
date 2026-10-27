@@ -1,0 +1,256 @@
+{
+  "comparedAt": "2026-10-27",
+  "baseline": "loops/loop-002/live-run.json",
+  "reproducibility": {
+    "runs": {
+      "loop002": {
+        "status": "completed",
+        "promptVersion": "fact-extract-v1",
+        "model": "muse-spark-1.3-contributor",
+        "durationMs": 44876,
+        "usage": {
+          "completion_tokens": 6264,
+          "prompt_tokens": 362,
+          "total_tokens": 6626,
+          "completion_tokens_details": {
+            "reasoning_tokens": 5587
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "costUsd": 0.0012890000000000002,
+        "schemaCheck": null,
+        "e01Verdict": "一致（人間承認待ち）",
+        "e02Verdict": "停止（矛盾あり）",
+        "unstatedValues": {
+          "renewal": "未記載",
+          "housing": "未記載"
+        }
+      },
+      "loop006repro": {
+        "status": "completed",
+        "promptVersion": "fact-extract-v1",
+        "model": "muse-spark-1.3-contributor",
+        "durationMs": 51703,
+        "usage": {
+          "completion_tokens": 6162,
+          "prompt_tokens": 362,
+          "total_tokens": 6524,
+          "completion_tokens_details": {
+            "reasoning_tokens": 5557
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "costUsd": 0.0012686000000000002,
+        "schemaCheck": {
+          "pass": true,
+          "expectedCount": 15,
+          "actualCount": 15,
+          "missingKeys": [],
+          "extraKeys": [],
+          "duplicateKeys": [],
+          "fieldIssues": []
+        },
+        "e01Verdict": "一致（人間承認待ち）",
+        "e02Verdict": "停止（矛盾あり）",
+        "unstatedValues": {
+          "renewal": "",
+          "housing": ""
+        }
+      }
+    },
+    "factComparison": {
+      "identicalItems": 7,
+      "totalKeys": 15,
+      "diffs": [
+        {
+          "key": "actualHours",
+          "fieldDiffs": {
+            "quote": [
+              "勤務時間は09:00〜18:00、休憩60分、実働8時間。",
+              "実働8時間"
+            ]
+          }
+        },
+        {
+          "key": "breakMinutes",
+          "fieldDiffs": {
+            "quote": [
+              "勤務時間は09:00〜18:00、休憩60分、実働8時間。",
+              "休憩60分"
+            ]
+          }
+        },
+        {
+          "key": "housing",
+          "fieldDiffs": {
+            "value": [
+              "未記載",
+              ""
+            ]
+          }
+        },
+        {
+          "key": "monthlyIncomeGuarantee",
+          "fieldDiffs": {
+            "value": [
+              "月収は保証しない",
+              "保証しない"
+            ]
+          }
+        },
+        {
+          "key": "renewal",
+          "fieldDiffs": {
+            "value": [
+              "未記載",
+              ""
+            ]
+          }
+        },
+        {
+          "key": "transport",
+          "fieldDiffs": {
+            "quote": [
+              "交通費は実費支給、月上限10,000円。",
+              "交通費は実費支給"
+            ]
+          }
+        },
+        {
+          "key": "transportCap",
+          "fieldDiffs": {
+            "quote": [
+              "交通費は実費支給、月上限10,000円。",
+              "月上限10,000円。"
+            ]
+          }
+        },
+        {
+          "key": "workHours",
+          "fieldDiffs": {
+            "quote": [
+              "勤務時間は09:00〜18:00、休憩60分、実働8時間。",
+              "勤務時間は09:00〜18:00"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "experimentV11": {
+    "runs": {
+      "reproV1": {
+        "status": "completed",
+        "promptVersion": "fact-extract-v1",
+        "model": "muse-spark-1.3-contributor",
+        "durationMs": 51703,
+        "usage": {
+          "completion_tokens": 6162,
+          "prompt_tokens": 362,
+          "total_tokens": 6524,
+          "completion_tokens_details": {
+            "reasoning_tokens": 5557
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "costUsd": 0.0012686000000000002,
+        "schemaCheck": {
+          "pass": true,
+          "expectedCount": 15,
+          "actualCount": 15,
+          "missingKeys": [],
+          "extraKeys": [],
+          "duplicateKeys": [],
+          "fieldIssues": []
+        },
+        "e01Verdict": "一致（人間承認待ち）",
+        "e02Verdict": "停止（矛盾あり）",
+        "unstatedValues": {
+          "renewal": "",
+          "housing": ""
+        }
+      },
+      "expV11": {
+        "status": "completed",
+        "promptVersion": "fact-extract-v1.1",
+        "model": "muse-spark-1.3-contributor",
+        "durationMs": 44524,
+        "usage": {
+          "completion_tokens": 5504,
+          "prompt_tokens": 388,
+          "total_tokens": 5892,
+          "completion_tokens_details": {
+            "reasoning_tokens": 4892
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "costUsd": 0.0011396,
+        "schemaCheck": {
+          "pass": true,
+          "expectedCount": 15,
+          "actualCount": 15,
+          "missingKeys": [],
+          "extraKeys": [],
+          "duplicateKeys": [],
+          "fieldIssues": []
+        },
+        "e01Verdict": "一致（人間承認待ち）",
+        "e02Verdict": "停止（矛盾あり）",
+        "unstatedValues": {
+          "renewal": null,
+          "housing": null
+        }
+      }
+    },
+    "factComparison": {
+      "identicalItems": 11,
+      "totalKeys": 15,
+      "diffs": [
+        {
+          "key": "housing",
+          "fieldDiffs": {
+            "value": [
+              "",
+              null
+            ]
+          }
+        },
+        {
+          "key": "renewal",
+          "fieldDiffs": {
+            "value": [
+              "",
+              null
+            ]
+          }
+        },
+        {
+          "key": "transportCap",
+          "fieldDiffs": {
+            "value": [
+              "10,000円",
+              "月上限10,000円"
+            ]
+          }
+        },
+        {
+          "key": "workHours",
+          "fieldDiffs": {
+            "quote": [
+              "勤務時間は09:00〜18:00",
+              "勤務時間は09:00〜18:00、"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
