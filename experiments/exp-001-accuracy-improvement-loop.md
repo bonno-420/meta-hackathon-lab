@@ -1,6 +1,6 @@
 # 実験 exp-001: 精度改善ループとオーケストレーションの目標達成率
 
-- 状態: 設計済み（実施はループ2の live 実行から）
+- 状態: 実施中（第1回完了）
 - 関連: `docs/decisions/D3-minimal-proof-scope.md`、`docs/decisions/D4-model-assignment.md`、`docs/model-selection.md`、`docs/prompts/loop2-implementation.md`
 
 ## 目的
@@ -38,4 +38,6 @@
 
 | 回 | 日付 | 対象パス | 実施者 | 監査判定 | 差し戻し | 自己検出 | コスト | 時間 | 変更した1要因 |
 |---|---|---|---|---|---|---|---|---|---|
-| （未実施） | | | | | | | | | |
+| 1 | 2026-10-27 | ループ2 live 実行（FACT抽出＋E01・E02） | 実装: Wonder／抽出: Spark 1.3 Contributor | 合格 | 0 | 観察事項1件を自己申告（未記載 value の表現） | $0.001289（算出値） | 44.9 秒 | なし（初回）。次回候補: プロンプトで未記載の value を null と明示 |
+
+第1回時点の集計: 目標達成率 1/1。ただし実施者構成は既定（サブ実施→Wonder監査）ではなく、Wonder が直接実施した例外回である点に注意。
