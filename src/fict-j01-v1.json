@@ -1,0 +1,15 @@
+{
+  "id": "FICT-J01",
+  "version": "v1",
+  "kind": "fictional-original",
+  "source": "docs/prompts/loop2-implementation.md",
+  "note": "Fictional data only. Do not supplement unstated items.",
+  "lines": [
+    { "id": "L01", "text": "企業名は架空のソラノ輪具研究所。求人番号は FICT-J01。勤務地は架空の青空実験区A棟。" },
+    { "id": "L02", "text": "雇用形態は有期契約社員。契約期間は3か月。更新の有無は未記載。" },
+    { "id": "L03", "text": "給与は時給1,500円。月収は保証しない。" },
+    { "id": "L04", "text": "勤務時間は09:00〜18:00、休憩60分、実働8時間。月20日勤務は試算用の仮定。" },
+    { "id": "L05", "text": "交通費は実費支給、月上限10,000円。" },
+    { "id": "L06", "text": "寮の有無と費用は未記載。" }
+  ]
+}

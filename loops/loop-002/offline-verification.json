@@ -1,0 +1,147 @@
+{
+  "mode": "offline-fixture-verification",
+  "pass": true,
+  "checks": [
+    {
+      "id": "E01-no-stop",
+      "pass": true,
+      "detail": "一致（人間承認待ち）"
+    },
+    {
+      "id": "E01-unstated-renewal-housing",
+      "pass": true,
+      "detail": "renewal,housing"
+    },
+    {
+      "id": "E01-no-generation",
+      "pass": true,
+      "detail": "false"
+    },
+    {
+      "id": "E02-stop",
+      "pass": true,
+      "detail": "停止（矛盾あり）"
+    },
+    {
+      "id": "E02-salary-1500-vs-1700",
+      "pass": true,
+      "detail": "[{\"field\":\"給与（時給）\",\"factValue\":\"時給1,500円\",\"factSource\":\"L03「給与は時給1,500円。」\",\"summaryValue\":\"時給1,700円\",\"summarySnippet\":\"時給1,700円\"}]"
+    },
+    {
+      "id": "E02-no-generation",
+      "pass": true,
+      "detail": "false"
+    }
+  ],
+  "e01": {
+    "caseId": "E01",
+    "stage": "照合",
+    "verdict": "一致（人間承認待ち）",
+    "stoppedAtReconciliation": false,
+    "generationStarted": false,
+    "generationNote": "生成工程は作らない。人間承認前には生成を開始しない。",
+    "matched": [
+      {
+        "field": "給与（時給）",
+        "value": "時給1,500円",
+        "source": "L03"
+      },
+      {
+        "field": "勤務時間",
+        "value": "09:00〜18:00",
+        "source": "L04"
+      },
+      {
+        "field": "交通費（月上限）",
+        "value": "月上限10,000円",
+        "source": "L05"
+      }
+    ],
+    "contradictions": [],
+    "unstated": [
+      {
+        "key": "renewal",
+        "source": "L02",
+        "quote": "更新の有無は未記載。"
+      },
+      {
+        "key": "housing",
+        "source": "L06",
+        "quote": "寮の有無と費用は未記載。"
+      }
+    ],
+    "claims": {
+      "salaryHourly": {
+        "value": 1500,
+        "snippet": "時給1,500円"
+      },
+      "workHours": {
+        "value": "09:00〜18:00",
+        "snippet": "09:00〜18:00"
+      },
+      "transportCap": {
+        "value": 10000,
+        "snippet": "月上限10,000円"
+      }
+    }
+  },
+  "e02": {
+    "caseId": "E02",
+    "stage": "照合",
+    "verdict": "停止（矛盾あり）",
+    "stoppedAtReconciliation": true,
+    "generationStarted": false,
+    "generationNote": "生成工程は作らない。人間承認前には生成を開始しない。",
+    "matched": [
+      {
+        "field": "勤務時間",
+        "value": "09:00〜18:00",
+        "source": "L04"
+      },
+      {
+        "field": "交通費（月上限）",
+        "value": "月上限10,000円",
+        "source": "L05"
+      }
+    ],
+    "contradictions": [
+      {
+        "field": "給与（時給）",
+        "factValue": "時給1,500円",
+        "factSource": "L03「給与は時給1,500円。」",
+        "summaryValue": "時給1,700円",
+        "summarySnippet": "時給1,700円"
+      }
+    ],
+    "unstated": [
+      {
+        "key": "renewal",
+        "source": "L02",
+        "quote": "更新の有無は未記載。"
+      },
+      {
+        "key": "housing",
+        "source": "L06",
+        "quote": "寮の有無と費用は未記載。"
+      }
+    ],
+    "claims": {
+      "salaryHourly": {
+        "value": 1700,
+        "snippet": "時給1,700円"
+      },
+      "workHours": {
+        "value": "09:00〜18:00",
+        "snippet": "09:00〜18:00"
+      },
+      "transportCap": {
+        "value": 10000,
+        "snippet": "月上限10,000円"
+      }
+    }
+  },
+  "startedAt": "2026-10-27T05:17:20.232Z",
+  "finishedAt": "2026-10-27T05:17:20.243Z",
+  "durationMs": 10,
+  "retries": 0
+}

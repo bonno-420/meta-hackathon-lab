@@ -1,0 +1,125 @@
+{
+  "source": "fixture-hand-derived-from-FICT-J01-v1",
+  "items": [
+    {
+      "key": "employer",
+      "status": "stated",
+      "value": "ソラノ輪具研究所",
+      "normalized": null,
+      "sourceLine": "L01",
+      "quote": "企業名は架空のソラノ輪具研究所。"
+    },
+    {
+      "key": "jobId",
+      "status": "stated",
+      "value": "FICT-J01",
+      "normalized": null,
+      "sourceLine": "L01",
+      "quote": "求人番号は FICT-J01。"
+    },
+    {
+      "key": "workLocation",
+      "status": "stated",
+      "value": "青空実験区A棟",
+      "normalized": null,
+      "sourceLine": "L01",
+      "quote": "勤務地は架空の青空実験区A棟。"
+    },
+    {
+      "key": "employmentType",
+      "status": "stated",
+      "value": "有期契約社員",
+      "normalized": null,
+      "sourceLine": "L02",
+      "quote": "雇用形態は有期契約社員。"
+    },
+    {
+      "key": "contractPeriod",
+      "status": "stated",
+      "value": "3か月",
+      "normalized": null,
+      "sourceLine": "L02",
+      "quote": "契約期間は3か月。"
+    },
+    {
+      "key": "renewal",
+      "status": "unstated",
+      "value": null,
+      "normalized": null,
+      "sourceLine": "L02",
+      "quote": "更新の有無は未記載。"
+    },
+    {
+      "key": "salaryHourly",
+      "status": "stated",
+      "value": "時給1,500円",
+      "normalized": 1500,
+      "sourceLine": "L03",
+      "quote": "給与は時給1,500円。"
+    },
+    {
+      "key": "monthlyIncomeGuarantee",
+      "status": "stated",
+      "value": "保証しない",
+      "normalized": null,
+      "sourceLine": "L03",
+      "quote": "月収は保証しない。"
+    },
+    {
+      "key": "workHours",
+      "status": "stated",
+      "value": "09:00〜18:00",
+      "normalized": null,
+      "sourceLine": "L04",
+      "quote": "勤務時間は09:00〜18:00"
+    },
+    {
+      "key": "breakMinutes",
+      "status": "stated",
+      "value": "60分",
+      "normalized": 60,
+      "sourceLine": "L04",
+      "quote": "休憩60分"
+    },
+    {
+      "key": "actualHours",
+      "status": "stated",
+      "value": "8時間",
+      "normalized": 8,
+      "sourceLine": "L04",
+      "quote": "実働8時間"
+    },
+    {
+      "key": "monthlyDaysAssumption",
+      "status": "stated",
+      "value": "月20日勤務（試算用の仮定）",
+      "normalized": null,
+      "sourceLine": "L04",
+      "quote": "月20日勤務は試算用の仮定。"
+    },
+    {
+      "key": "transport",
+      "status": "stated",
+      "value": "実費支給",
+      "normalized": null,
+      "sourceLine": "L05",
+      "quote": "交通費は実費支給"
+    },
+    {
+      "key": "transportCap",
+      "status": "stated",
+      "value": "月上限10,000円",
+      "normalized": 10000,
+      "sourceLine": "L05",
+      "quote": "月上限10,000円。"
+    },
+    {
+      "key": "housing",
+      "status": "unstated",
+      "value": null,
+      "normalized": null,
+      "sourceLine": "L06",
+      "quote": "寮の有無と費用は未記載。"
+    }
+  ]
+}
