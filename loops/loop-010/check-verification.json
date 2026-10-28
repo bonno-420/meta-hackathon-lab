@@ -1,0 +1,315 @@
+{
+  "testFile": "src/run-demo.test.mjs",
+  "target": "src/run-demo.mjs",
+  "pass": true,
+  "results": [
+    {
+      "id": "demo-facts-textual-diff-agrees",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "demo-facts-textual-diff-recorded",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "demo-facts-substantive-diff-disagrees",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "demo-facts-substantive-diff-names-salary",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "demo-approval-stage-pass",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "demo-approval-stage-validity",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "demo-e01-extraction-e01-verdict",
+      "pass": true,
+      "expected": "一致（人間承認待ち）",
+      "actual": "一致（人間承認待ち）"
+    },
+    {
+      "id": "demo-e01-not-stopped",
+      "pass": true,
+      "expected": null,
+      "actual": null
+    },
+    {
+      "id": "demo-e01-approval-pass",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "demo-e01-generation-called-once",
+      "pass": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "id": "demo-e01-generation-status",
+      "pass": true,
+      "expected": "generated",
+      "actual": "generated"
+    },
+    {
+      "id": "demo-e01-verification-mechanical-pass",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "demo-e01-verdict-pending-human",
+      "pass": true,
+      "expected": "pending-human-confirmation",
+      "actual": "pending-human-confirmation"
+    },
+    {
+      "id": "demo-e01-status-pending-human",
+      "pass": true,
+      "expected": "pending-human-confirmation",
+      "actual": "pending-human-confirmation"
+    },
+    {
+      "id": "demo-e01-preview-not-executed",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "demo-e02-stopped-at-reconciliation",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "demo-e02-verdict-stop",
+      "pass": true,
+      "expected": "停止（矛盾あり）",
+      "actual": "停止（矛盾あり）"
+    },
+    {
+      "id": "demo-e02-contradiction-names-salary",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "demo-e02-approval-not-executed",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "demo-e02-generation-not-executed",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "demo-e02-verification-not-executed",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "demo-e02-preview-not-executed",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "demo-costs-category-product",
+      "pass": true,
+      "expected": "製品実行",
+      "actual": "製品実行"
+    },
+    {
+      "id": "demo-costs-total-known-from-stubs",
+      "pass": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "id": "demo-human-verdict-pass",
+      "pass": true,
+      "expected": "pass",
+      "actual": "pass"
+    },
+    {
+      "id": "demo-human-status-pass",
+      "pass": true,
+      "expected": "pass",
+      "actual": "pass"
+    },
+    {
+      "id": "demo-human-preview-still-not-executed-in-mechanical-run",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "demo-stop-e01-stopped-at-reconciliation",
+      "pass": true,
+      "expected": "reconciliation",
+      "actual": "reconciliation"
+    },
+    {
+      "id": "demo-stop-e01-generation-not-called",
+      "pass": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "id": "demo-stop-e01-generation-not-executed",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "demo-stop-e01-verification-not-executed",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "demo-stop-facts-disagreement-stopped-at",
+      "pass": true,
+      "expected": "facts-comparison",
+      "actual": "facts-comparison"
+    },
+    {
+      "id": "demo-stop-facts-disagreement-generation-not-called",
+      "pass": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "id": "demo-identity-facts-swapped-stops-before-generation",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "demo-identity-facts-swapped-generation-not-called",
+      "pass": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "id": "demo-identity-facts-swapped-stopped-at-approval",
+      "pass": true,
+      "expected": "approval",
+      "actual": "approval"
+    },
+    {
+      "id": "demo-identity-facts-swapped-reason-invalid",
+      "pass": true,
+      "expected": "approval-invalid",
+      "actual": "approval-invalid"
+    },
+    {
+      "id": "demo-preview-tampered-verification-fails",
+      "pass": true,
+      "expected": "fail",
+      "actual": "fail"
+    },
+    {
+      "id": "demo-preview-refused-for-failed-verification",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "demo-preview-refused-for-pending-verdict",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "demo-preview-pending-verdict-status",
+      "pass": true,
+      "expected": "pending-human-confirmation",
+      "actual": "pending-human-confirmation"
+    },
+    {
+      "id": "demo-preview-generated-for-pass-verdict",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "demo-preview-sentences-byte-match",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "demo-preview-sentence-count-markers",
+      "pass": true,
+      "expected": 7,
+      "actual": 7
+    },
+    {
+      "id": "demo-preview-shows-unstated",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "demo-preview-shows-e02-stop",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "demo-preview-effect-preview-only",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "demo-preview-write-pass-generated",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "demo-preview-write-pass-file-exists",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "demo-preview-write-pending-refused",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "demo-preview-write-pending-no-file",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    }
+  ],
+  "note": "統合とプレビューのケースは API を呼ぶ工程をスタブ化しており、実 API は呼んでいない。ライブの統合実行はテストと分けて1回だけ実行し、loops/loop-010/run-result.json に記録する。プレビューの生成ケースは一時フォルダへの書き出しであり、site/ への生成とデプロイは人間確認の確定後に別段階で行う",
+  "runAt": "2026-10-28T01:59:13.842Z"
+}
