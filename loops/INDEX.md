@@ -12,3 +12,4 @@
 | 6 | 工程1（抽出・照合の仕上げ） | `loops/loop-006/run-record.md`、`docs/design/step1-review.md`、`docs/design/step1-rereview.md`（監査合格・受け入れ済み、2026-10-27） |
 | 7 | 工程2（承認） | `loops/loop-007/run-record.md`、`docs/design/step2-review.md`（監査合格・受け入れ済み、2026-10-27） |
 | 8 | 工程3（生成） | `loops/loop-008/run-record.md`、`docs/design/step3-review.md`（監査合格・受け入れ済み、2026-10-27） |
+| 9 | 工程4（再検証） | `loops/loop-009/run-record.md`、`docs/design/step4-review.md`（監査合格・受け入れ済み、2026-10-28） |
