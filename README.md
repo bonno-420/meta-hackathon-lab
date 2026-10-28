@@ -45,6 +45,7 @@ The records themselves are the evidence:
 - [docs/decisions/](docs/decisions/) — decision records (D1–D11).
 - [experiments/](experiments/) — experiment records, including accuracy and audit-model comparisons.
 - [docs/design/overall-audit-20261028.md](docs/design/overall-audit-20261028.md) — the project-wide audit before submission work began, with open items listed.
+- [docs/design/overall-audit-20261028-r2.md](docs/design/overall-audit-20261028-r2.md) — the follow-up audit (round 2, Spark): closure of the first audit's items confirmed, submission shape verified.
 
 ## 6. Running it
 
