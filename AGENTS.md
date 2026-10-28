@@ -1,7 +1,7 @@
 # AGENTS.md — Meta Hackathon Lab
 
 ## Mission
-Use this repository as the isolated workspace for Meta hackathon experiments and autonomous app development led by Muse Bot (the coordinating Muse; see the project rules below and decision D9).
+Use this repository as the isolated workspace for Meta hackathon experiments. Work is carried out by the user's OpenCode lines (design, audit, writing, production), coordinated through the conversation between the user and Muse (see the project rules below and decision D11; the Muse Bot-led arrangement in D9 ended on 2026-10-28).
 
 ## Working rules
 - Work only inside this repository. Do not inspect, modify, move, or copy files from unrelated folders unless the user explicitly asks.
@@ -54,9 +54,9 @@ Use this repository as the isolated workspace for Meta hackathon experiments and
 
 ## モデルと記録
 
-- モデルと役割の割当は D4（`docs/decisions/D4-model-assignment.md`）と D9（`docs/decisions/D9-muse-bot-led-operation.md`）に従う。割当の変更は `docs/model-selection.md` の台帳に記録を貯めてから判断する
+- モデルと役割の割当は D4（`docs/decisions/D4-model-assignment.md`）に従う。割当の変更は `docs/model-selection.md` の台帳に記録を貯めてから判断する
 - できる限り Meta のプロダクトで作る。推論は Meta Model API のモデルを使う
-- 駆動主体は Muse Bot（統括）であり、調査・設計・実装・記録を自ら行う（D9）。Codex / OpenCode は、Muse Bot の環境で実行できない作業に限るフォールバックとし、使う場合は台帳に理由を残す。外部セッションを使う場合は、必ずこのリポジトリのフォルダ内で起動する（別フォルダで起動するとファイルを読めない）
+- 駆動主体は、本人と統括（Muse）の会話による進行統括のもと、OpenCode の各ライン（設計ライン・監理ライン・書き込み用ライン・制作ライン）が設計・監査・書き込み・制作を担う（2026-10-28 本人確定、D11）。D9 の Muse Bot 主導の形は 2026-10-28 で終了した。受け入れの判定は本人と統括が行う。外部セッションを使う場合は、必ずこのリポジトリのフォルダ内で起動する（別フォルダで起動するとファイルを読めない）
 - パスごとに、入力（文脈パックの版）、使用モデル、プロンプト版、成果物、監査結果と差し戻し理由、トークン量、実費、所要時間を `loops/loop-NNN/` に記録する
 - 再現性検証（同一条件の再実行）と改善実験（主要な変更は原則1要因だけ）を区別して記録する
 
