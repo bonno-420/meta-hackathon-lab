@@ -1,2 +1,2 @@
 # meta-hackathon-lab
-Public workspace for Meta hackathon experiments and autonomous app development led by Muse Bot (per decision D9).
+Public workspace for the Meta Global AI Developer Hackathon (Indie track, solo). An AI development/execution platform that designs, builds, audits, and improves its own process, demonstrated by a job-posting fact-checking workflow for editorial staff (fictional data only). Development is carried out by OpenCode lines under coordination between the user and Muse (per decision D11). Full README is prepared in step 6 (submission work).
