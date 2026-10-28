@@ -1,0 +1,261 @@
+{
+  "testFile": "src/verify.test.mjs",
+  "target": "src/verify.mjs",
+  "pass": true,
+  "results": [
+    {
+      "id": "verify-normal-identity-pass",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "verify-normal-grounding-pass",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "verify-normal-grounding-checked",
+      "pass": true,
+      "expected": 7,
+      "actual": 7
+    },
+    {
+      "id": "verify-normal-grounding-not-skipped",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "verify-normal-mechanical-pass",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "verify-normal-verdict-pending-without-human",
+      "pass": true,
+      "expected": "pending-human-confirmation",
+      "actual": "pending-human-confirmation"
+    },
+    {
+      "id": "verify-normal-human-pending",
+      "pass": true,
+      "expected": "pending",
+      "actual": "pending"
+    },
+    {
+      "id": "verify-normal-human-sentences-unfilled",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "verify-verdict-pass-with-human-ok",
+      "pass": true,
+      "expected": "pass",
+      "actual": "pass"
+    },
+    {
+      "id": "verify-verdict-pass-effect-preview-only",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "verify-verdict-fail-with-human-mismatch",
+      "pass": true,
+      "expected": "fail",
+      "actual": "fail"
+    },
+    {
+      "id": "verify-verdict-fail-with-human-mismatch-category",
+      "pass": true,
+      "expected": "human-confirmation",
+      "actual": "human-confirmation"
+    },
+    {
+      "id": "verify-tamper-amount-identity-pass",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "verify-tamper-amount-detected",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "verify-tamper-amount-names-it",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "verify-tamper-amount-verdict-fail",
+      "pass": true,
+      "expected": "fail",
+      "actual": "fail"
+    },
+    {
+      "id": "verify-tamper-amount-verdict-category",
+      "pass": true,
+      "expected": "grounding",
+      "actual": "grounding"
+    },
+    {
+      "id": "verify-tamper-unstated-detected",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "verify-tamper-unstated-names-it",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "verify-tamper-unstated-verdict-fail",
+      "pass": true,
+      "expected": "fail",
+      "actual": "fail"
+    },
+    {
+      "id": "verify-tamper-unknown-factkey-detected",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "verify-tamper-unknown-factkey-names-it",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "verify-tamper-unknown-sourceline-detected",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "verify-tamper-unknown-sourceline-names-it",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "verify-tamper-ungrounded-detected",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "verify-tamper-ungrounded-names-it",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "verify-identity-facts-swapped-fails",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "verify-identity-facts-swapped-hash-check-fails",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "verify-identity-facts-swapped-grounding-skipped",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "verify-identity-facts-swapped-verdict-fail",
+      "pass": true,
+      "expected": "fail",
+      "actual": "fail"
+    },
+    {
+      "id": "verify-identity-facts-swapped-verdict-category",
+      "pass": true,
+      "expected": "input-identity",
+      "actual": "input-identity"
+    },
+    {
+      "id": "verify-identity-draft-validity-recomputes-true",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "verify-identity-draft-fails",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "verify-identity-draft-status-check-fails",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "verify-identity-draft-generation-input-reason",
+      "pass": true,
+      "expected": "approval-not-approved",
+      "actual": "approval-not-approved"
+    },
+    {
+      "id": "verify-identity-draft-grounding-skipped",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "verify-identity-draft-verdict-category",
+      "pass": true,
+      "expected": "input-identity",
+      "actual": "input-identity"
+    },
+    {
+      "id": "verify-identity-draft-direct-fails",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "verify-identity-approval-id-mismatch-fails",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "verify-identity-approval-id-check-fails",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "verify-identity-approval-id-grounding-skipped",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "verify-identity-approval-id-verdict-category",
+      "pass": true,
+      "expected": "input-identity",
+      "actual": "input-identity"
+    }
+  ],
+  "note": "再検証の道具は API を呼ばないため、テストもすべてオフラインで再現可能である。改変ケースは固定ファイルを書き換えず、クローンまたは一時フォルダのコピーで行う。人間の確認（意味の対応）はテストでは合成した完了形で判定関数だけを検証し、実生成物に対する人間確認そのものは loops/loop-009/verification-result.json では未記入のまま残す",
+  "runAt": "2026-10-27T23:21:27.898Z"
+}
