@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>架空の求人 LP プレビュー（デモ）</title>
+<style>
+body { font-family: sans-serif; margin: 2rem; line-height: 1.7; color: #222; }
+.lp-sentence { margin: 0.4rem 0; }
+table { border-collapse: collapse; }
+td, th { border: 1px solid #999; padding: 0.3rem 0.6rem; vertical-align: top; }
+.notice { border: 1px solid #999; padding: 0.6rem 1rem; }
+</style>
+</head>
+<body>
+<header>
+<p class="notice">これは架空の求人だけを使うデモのプレビューです。実在の求人ではありません。再検証の合格はデモ内プレビューの許可までであり、公開の許可ではありません。</p>
+<h1>架空の求人 LP プレビュー</h1>
+</header>
+<main>
+<section id="lp">
+<h2>LP 本文</h2>
+      <p class="lp-sentence" data-sentence="0">企業名は架空のソラノ輪具研究所で、求人番号はFICT-J01。</p>
+      <p class="lp-sentence" data-sentence="1">勤務地は架空の青空実験区A棟。</p>
+      <p class="lp-sentence" data-sentence="2">雇用形態は有期契約社員で、契約期間3か月。</p>
+      <p class="lp-sentence" data-sentence="3">更新の有無は未記載。</p>
+      <p class="lp-sentence" data-sentence="4">給与は時給1,500円で、月収は保証しない。</p>
+      <p class="lp-sentence" data-sentence="5">勤務時間は09:00〜18:00で、休憩60分、実働8時間。</p>
+      <p class="lp-sentence" data-sentence="6">月20日勤務は試算用の仮定である。</p>
+      <p class="lp-sentence" data-sentence="7">交通費は実費支給で、月上限10,000円。</p>
+      <p class="lp-sentence" data-sentence="8">寮の有無と費用は未記載。</p>
+</section>
+<section id="verification">
+<h2>検証パネル</h2>
+<p>承認: FICT-J01-approval-1（status: approved、承認日時: 2026-10-27T19:58:09+09:00、有効性の再計算: valid: true）。入力同一性: pass。根拠検査: pass（9文、issues 0件）。人間の確認（意味の対応）: completed（確認者: 統括（Muse）＋本人、確認日時: 2026-10-28T11:09:00+09:00、全9文）。最終判定: pass（デモ内プレビューの許可までであり、公開の許可ではない（G-INV-4））</p>
+<table>
+<thead><tr><th>#</th><th>文</th><th>factKeys</th><th>sourceLines</th></tr></thead>
+<tbody>
+        <tr><td>1</td><td>企業名は架空のソラノ輪具研究所で、求人番号はFICT-J01。</td><td>employer, jobId</td><td>L01</td></tr>
+        <tr><td>2</td><td>勤務地は架空の青空実験区A棟。</td><td>workLocation</td><td>L01</td></tr>
+        <tr><td>3</td><td>雇用形態は有期契約社員で、契約期間3か月。</td><td>employmentType, contractPeriod</td><td>L02</td></tr>
+        <tr><td>4</td><td>更新の有無は未記載。</td><td>renewal</td><td>L02</td></tr>
+        <tr><td>5</td><td>給与は時給1,500円で、月収は保証しない。</td><td>salaryHourly, monthlyIncomeGuarantee</td><td>L03</td></tr>
+        <tr><td>6</td><td>勤務時間は09:00〜18:00で、休憩60分、実働8時間。</td><td>workHours, breakMinutes, actualHours</td><td>L04</td></tr>
+        <tr><td>7</td><td>月20日勤務は試算用の仮定である。</td><td>monthlyDaysAssumption</td><td>L04</td></tr>
+        <tr><td>8</td><td>交通費は実費支給で、月上限10,000円。</td><td>transport, transportCap</td><td>L05</td></tr>
+        <tr><td>9</td><td>寮の有無と費用は未記載。</td><td>housing</td><td>L06</td></tr>
+</tbody>
+</table>
+<p>未記載項目の扱い: 更新の有無は未記載。寮は未記載。未記載は未記載として表示に残し、承認の対象に含めない。</p>
+</section>
+<section id="e02">
+<h2>E02 の停止表示</h2>
+<p>E02 は照合で停止した（停止（矛盾あり））。承認・生成・再検証・プレビューは実行していない。停止理由: 給与（時給）: FACT 時給1,500円（L03「給与は時給1,500円。」）に対し、要約は 時給1,700円。これは生成物ではなく、停止の記録の表示である。</p>
+</section>
+<section id="about">
+<h2>プロジェクト説明</h2>
+<p>このデモは、架空の求人の原本から FACT を抽出・照合し、人間の承認を経て LP 文を生成し、生成とは独立に再検証する流れを示す。記録の正本は GitHub リポジトリにある: <a href="https://github.com/bonno-420/meta-hackathon-lab">https://github.com/bonno-420/meta-hackathon-lab</a></p>
+</section>
+</main>
+</body>
+</html>

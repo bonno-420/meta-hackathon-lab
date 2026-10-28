@@ -177,9 +177,9 @@
     "skipReason": null
   },
   "humanConfirmation": {
-    "status": "pending",
-    "confirmer": null,
-    "confirmedAt": null,
+    "status": "completed",
+    "confirmer": "統括（Muse）＋本人",
+    "confirmedAt": "2026-10-28T11:09:00+09:00",
     "sentences": [
       {
         "sentence": 0,
@@ -191,8 +191,8 @@
         "sourceLines": [
           "L01"
         ],
-        "result": null,
-        "detail": null
+        "result": "対応あり",
+        "detail": "文が使っている項目（employer・jobId）と factKeys・sourceLines（L01）の対応を確認した。根拠に付いていない項目の使用はなく、未記載項目（renewal・housing）への言及はない。公開や申込の受付と読める表現の混入はない"
       },
       {
         "sentence": 1,
@@ -203,8 +203,8 @@
         "sourceLines": [
           "L01"
         ],
-        "result": null,
-        "detail": null
+        "result": "対応あり",
+        "detail": "文が使っている項目（workLocation）と factKeys・sourceLines（L01）の対応を確認した。根拠に付いていない項目の使用はなく、未記載項目（renewal・housing）への言及はない。公開や申込の受付と読める表現の混入はない"
       },
       {
         "sentence": 2,
@@ -216,8 +216,8 @@
         "sourceLines": [
           "L02"
         ],
-        "result": null,
-        "detail": null
+        "result": "対応あり",
+        "detail": "文が使っている項目（employmentType・contractPeriod）と factKeys・sourceLines（L02）の対応を確認した。契約期間3か月の数量表現が FACT の値と意味のうえで一致する。根拠に付いていない項目の使用はなく、未記載項目（renewal・housing）への言及はない。公開や申込の受付と読める表現の混入はない"
       },
       {
         "sentence": 3,
@@ -228,8 +228,8 @@
         "sourceLines": [
           "L02"
         ],
-        "result": null,
-        "detail": null
+        "result": "対応あり",
+        "detail": "文が使っている項目（renewal）と factKeys・sourceLines（L02）の対応を確認した。未記載項目について、未記載であることだけを述べており、値の断定はない。根拠に付いていない項目の使用はない。公開や申込の受付と読める表現の混入はない"
       },
       {
         "sentence": 4,
@@ -241,8 +241,8 @@
         "sourceLines": [
           "L03"
         ],
-        "result": null,
-        "detail": null
+        "result": "対応あり",
+        "detail": "文が使っている項目（salaryHourly・monthlyIncomeGuarantee）と factKeys・sourceLines（L03）の対応を確認した。「月収は保証しない」の否定が保持され、保証と読める表現になっていない。根拠に付いていない項目の使用はなく、未記載項目（renewal・housing）への言及はない。公開や申込の受付と読める表現の混入はない"
       },
       {
         "sentence": 5,
@@ -255,8 +255,8 @@
         "sourceLines": [
           "L04"
         ],
-        "result": null,
-        "detail": null
+        "result": "対応あり",
+        "detail": "文が使っている項目（workHours・breakMinutes・actualHours）と factKeys・sourceLines（L04）の対応を確認した。根拠に付いていない項目の使用はなく、未記載項目（renewal・housing）への言及はない。公開や申込の受付と読める表現の混入はない"
       },
       {
         "sentence": 6,
@@ -267,8 +267,8 @@
         "sourceLines": [
           "L04"
         ],
-        "result": null,
-        "detail": null
+        "result": "対応あり",
+        "detail": "文が使っている項目（monthlyDaysAssumption）と factKeys・sourceLines（L04）の対応を確認した。「月20日勤務は試算用の仮定である」の仮定が保持され、月収の金額提示はない。根拠に付いていない項目の使用はなく、未記載項目（renewal・housing）への言及はない。公開や申込の受付と読める表現の混入はない"
       },
       {
         "sentence": 7,
@@ -280,8 +280,8 @@
         "sourceLines": [
           "L05"
         ],
-        "result": null,
-        "detail": null
+        "result": "対応あり",
+        "detail": "文が使っている項目（transport・transportCap）と factKeys・sourceLines（L05）の対応を確認した。月上限10,000円の数量表現が FACT の値と意味のうえで一致する。根拠に付いていない項目の使用はなく、未記載項目（renewal・housing）への言及はない。公開や申込の受付と読める表現の混入はない"
       },
       {
         "sentence": 8,
@@ -292,20 +292,20 @@
         "sourceLines": [
           "L06"
         ],
-        "result": null,
-        "detail": null
+        "result": "対応あり",
+        "detail": "文が使っている項目（housing）と factKeys・sourceLines（L06）の対応を確認した。未記載項目について、未記載であることだけを述べており、値の断定はない。根拠に付いていない項目の使用はない。公開や申込の受付と読める表現の混入はない"
       }
     ],
     "note": "機械検査で覆えない意味の対応（文が使っている項目と factKeys・sourceLines の対応、期間・個数などの数量表現、否定・条件の反転、公開・申込と読める表現の混入）は人間の確認に残る。全文の確認が終わるまで再検証は合格にならない"
   },
   "mechanicalPass": true,
   "verdict": {
-    "status": "pending-human-confirmation",
-    "pass": false,
+    "status": "pass",
+    "pass": true,
     "mechanicalPass": true,
-    "category": "human-confirmation",
-    "reason": "機械検査（入力同一性と根拠検査の再実行）は pass したが、人間の確認（意味の対応）が未完了のため、再検証の合格は未確定である",
-    "effect": "未確定。合格となった場合の効果はデモ内プレビューの許可までであり、公開の許可ではない（G-INV-4）"
+    "category": null,
+    "reason": "入力同一性、根拠検査の再実行、人間の確認（意味の対応）の3点すべてが満たされたため合格とする",
+    "effect": "デモ内プレビューの許可までであり、公開の許可ではない（G-INV-4）"
   },
   "apiCalled": false,
   "costUsd": 0,

@@ -70,6 +70,9 @@ export function buildPreview({ generation, verification, facts, e02, repoUrl }) 
   const human = verification.humanConfirmation && verification.humanConfirmation.status === "completed"
     ? `completed（確認者: ${verification.humanConfirmation.confirmer ?? "未記録"}、確認日時: ${verification.humanConfirmation.confirmedAt ?? "未記録"}、全${verification.humanConfirmation.sentences ? verification.humanConfirmation.sentences.length : 0}文）`
     : "未完了";
+  const approvalInfo = verification.inputIdentity && verification.inputIdentity.approval
+    ? `${verification.inputIdentity.approval.approvalId ?? "未記録"}（status: ${verification.inputIdentity.approval.status ?? "未記録"}、承認日時: ${verification.inputIdentity.approval.approvedAt ?? "未記録"}、有効性の再計算: ${verification.inputIdentity.validity && verification.inputIdentity.validity.valid ? "valid: true" : "valid: false"}）`
+    : "未記録";
   const e02Verdict = e02 && e02.verdict ? e02.verdict : "停止（矛盾あり）";
   const e02Reasons = e02 && Array.isArray(e02.contradictions) && e02.contradictions.length > 0
     ? e02.contradictions.map((c) => `${c.field}: FACT ${c.factValue}（${c.factSource}）に対し、要約は ${c.summaryValue}`).join("。")
@@ -101,7 +104,7 @@ ${lpBody}
 </section>
 <section id="verification">
 <h2>検証パネル</h2>
-<p>入力同一性: ${escapeHtml(identity)}。根拠検査: ${escapeHtml(grounding)}。人間の確認（意味の対応）: ${escapeHtml(human)}。最終判定: ${escapeHtml(verdictText(verification))}</p>
+<p>承認: ${escapeHtml(approvalInfo)}。入力同一性: ${escapeHtml(identity)}。根拠検査: ${escapeHtml(grounding)}。人間の確認（意味の対応）: ${escapeHtml(human)}。最終判定: ${escapeHtml(verdictText(verification))}</p>
 <table>
 <thead><tr><th>#</th><th>文</th><th>factKeys</th><th>sourceLines</th></tr></thead>
 <tbody>

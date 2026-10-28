@@ -93,3 +93,37 @@
 - 第2段階では、その結果を `loops/loop-010/verification-result.json` の人間確認の節に記入して最終判定を確定し、合格の場合にだけ `site/` へプレビューを生成して公開前チェックを行い、新規のハッカソン専用プロジェクト（MJ のゾーン・DNS・既存プロジェクトには触れず、カスタムドメインは追加しない）にデプロイする。公開 URL は第2段階の記録に残す
 - シナリオ記録（`loops/loop-010/scenario-record.md`）は下書きであり、固定は 2026-10-31 に行う（L-006）
 - 本記録一式は監理ラインの監査を受ける。受け入れは統括と本人が行う
+
+## 第2段階: 人間確認の確定、プレビュー生成、公開前チェック、デプロイ（追記: 2026-10-28）
+
+### 人間確認の完了と最終判定の確定
+
+- 確認者: 統括（Muse）＋本人
+- 確認時刻: 2026-10-28 11:09 JST（`verification-result.json` には `2026-10-28T11:09:00+09:00` として記録した）
+- 結果: 対象9文すべて「対応あり」（対応）とした。文が使っている項目と factKeys・sourceLines の対応、根拠に付いていない項目の使用がないこと、未記載項目（renewal・housing）は未記載であることだけを述べていること、数量表現の意味の一致、「月収は保証しない」の否定の保持、「月20日勤務は試算用の仮定である」の仮定の保持、公開や申込の受付と読める表現の混入がないことを、文ごとの detail として `loops/loop-010/verification-result.json` の `humanConfirmation.sentences` に記録した（status: completed）
+- 最終判定: **合格（pass）** に確定した。根拠は再検証側で得た3点のみである: 入力同一性 pass、根拠検査の再実行 pass（9文、issues なし）、人間の確認で9文すべて対応あり。生成物の改変はしていない（生成物の sha256 は `12e71778517639a4d1ab4f95656672eccd012cdc867009815dfa600dd86f675c` のまま）。判定関数 `decideVerdict` で再導出し、記録した verdict と一致することを確認した
+- 効果: デモ内プレビューの許可までであり、公開の許可ではない（G-INV-4）。この記載は `verification-result.json` の `verdict.effect` とプレビューの表示の両方で維持した
+
+### プレビューの生成
+
+- 実行引数（逐語）: `node src/build-preview.mjs --generation loops/loop-010/generated-lp-v1.json --verification loops/loop-010/verification-result.json --facts src/facts/FICT-J01-facts-v1.json --run-result loops/loop-010/run-result.json --out-dir site` -> `site/index.html` を生成した（生成器が verdict の pass を自身で確認した場合にだけ生成する）
+- 構成: LP 本文（生成物の9文をそのまま、生成物の順序どおり）、検証パネル（承認 `FICT-J01-approval-1` の status・承認日時・有効性の再計算 `valid: true`、入力同一性、根拠検査、人間の確認、最終判定と効果、文ごとの factKeys・sourceLines、未記載項目は未記載とする表示）、E02 の停止表示（生成物ではなく停止の記録の表示）、プロジェクト説明と GitHub リポジトリへのリンク
+- 生成にあたって `src/build-preview.mjs` に加えた変更は、検証パネルに承認の結果を表示することと、公開向けに承認者の個人名を HTML に出さないことだけであり、LP 本文の文は変えていない。テストは `node src/run-demo.test.mjs --out C:\Users\norik\AppData\Local\Temp\opencode\loop010-stage2-check2.json`（リポジトリ外の一時出力）で再実行し、51/51 pass を再確認した
+
+### 公開前チェック
+
+- `loops/loop-010/pre-publication-check.md` に記録した。全項目 pass である: (a) 架空の求人であることの明示、(b) 実データ・秘密情報・未確定の主張がなく、実在の企業名・個人情報・連絡先が含まれないこと（メールアドレス、電話番号、承認者の個人名のいずれも HTML にないことを機械走査で確認）、(c) 再検証の合格を公開承認と読める表現にしていないこと、(d) LP 本文の9文が生成物とバイト一致すること、(e) E02 が停止表示のままであること
+- 1つでも満たさなければ公開しない定めに対し、すべて満たしたためデプロイに進んだ
+
+### デプロイ
+
+- Cloudflare Pages の新規プロジェクト（ハッカソン専用）を作成し、`site/` をデプロイした。プロジェクト名: `meta-hackathon-lab-demo`。作成前にプロジェクト一覧が空であることを確認し、既存プロジェクトは存在しなかった
+- 実行引数（逐語）: `npx --yes wrangler pages project create meta-hackathon-lab-demo --production-branch main --force`（初回の作成は、現行 wrangler の委譲を避けて従来の Pages に直接作るための `--force` 指定。プロジェクト作成のみに使った）、続いて `npx --yes wrangler pages deploy site --project-name meta-hackathon-lab-demo --branch main` -> デプロイ完了
+- 公開 URL: `https://meta-hackathon-lab-demo.pages.dev/`（デプロイ固有 URL は `https://5ed067b6.meta-hackathon-lab-demo.pages.dev`）。デプロイ後に公開 URL へアクセスし、LP 本文9文、検証パネル、E02 の停止表示、プロジェクト説明が表示されることを確認した。プロジェクトのドメインは `meta-hackathon-lab-demo.pages.dev` のみである
+- MJ の環境には触れていない: MJ（mj-staff.co.jp）のゾーン・DNS・既存のプロジェクトや Worker への変更は行っておらず、カスタムドメインは追加していない。デプロイ先は新規プロジェクトのみである
+- プレビューの生成とデプロイに API 費用は発生していない。統合実行の実費は第1段階の記録（D5 の製品実行、合計 $0.0018187 の算出値）のままで、追加はない
+
+### 第2段階の記録の更新範囲
+
+- `loops/loop-010/verification-result.json`（人間確認の記入と最終判定の確定）、`site/index.html`、`loops/loop-010/pre-publication-check.md`（新規）、本ファイルと `loops/loop-010/scenario-record.md`（場面7を実績に更新。シナリオ自体は下書きのまま）、`src/build-preview.mjs`（検証パネルの承認表示と個人名を出さない変更）
+- 生成物（`loops/loop-010/generated-lp-v1.json`）と統合実行の記録（`run-result.json`）は変更していない。問題が見つかった場合はデプロイせずに止める定めに対し、問題は見つからなかった
