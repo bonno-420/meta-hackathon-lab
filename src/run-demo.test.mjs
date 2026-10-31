@@ -9,8 +9,8 @@ import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, writeFi
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildPreview, writePreview } from "./build-preview.mjs";
-import { checkApprovalStage, compareFactSets, runDemo } from "./run-demo.mjs";
+import { buildPreview, checkPreviewPairing, writePreview } from "./build-preview.mjs";
+import { checkApprovalStage, compareFactSets, liveDeps, runDemo } from "./run-demo.mjs";
 import { runVerification } from "./verify.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -209,6 +209,41 @@ expect("demo-preview-write-pass-file-exists", existsSync(path.join(previewScratc
 const writtenPending = writePreview({ root: previewScratch, generationFile: "loops/loop-008/generated-lp-v1.json", verificationFile: "verification-pending.json", factsFile: REAL.factsFile, outDir: "site-pending" });
 expect("demo-preview-write-pending-refused", writtenPending.generated, false);
 expect("demo-preview-write-pending-no-file", existsSync(path.join(previewScratch, "site-pending", "index.html")), false);
+
+// --- T4 (design A-4): with a PASS verification, tampering one sentence
+// of the generation file refuses the preview, and an existing file is
+// not overwritten. ---
+const tamperScratch = mkdtempSync(path.join(tmpdir(), "run-demo-preview-t4-"));
+mkdirSync(path.join(tamperScratch, "loops", "loop-008"), { recursive: true });
+mkdirSync(path.join(tamperScratch, "src", "facts"), { recursive: true });
+copyFileSync(path.join(root, "loops/loop-008/generated-lp-v1.json"), path.join(tamperScratch, "loops/loop-008/generated-lp-v1.json"));
+copyFileSync(path.join(root, REAL.factsFile), path.join(tamperScratch, REAL.factsFile));
+writeFileSync(path.join(tamperScratch, "verification-pass.json"), JSON.stringify(passVerification, null, 2) + "\n", "utf8");
+const sentinelT4 = "<!-- existing preview must be kept -->\n";
+mkdirSync(path.join(tamperScratch, "site-t4"), { recursive: true });
+writeFileSync(path.join(tamperScratch, "site-t4", "index.html"), sentinelT4, "utf8");
+const tamperedOnDisk = JSON.parse(readFileSync(path.join(tamperScratch, "loops/loop-008/generated-lp-v1.json"), "utf8"));
+tamperedOnDisk.sentences = tamperedOnDisk.sentences.map((s) => s.text.includes("1,500円") ? { ...s, text: s.text.replace("1,500円", "1,700円") } : s);
+writeFileSync(path.join(tamperScratch, "loops/loop-008/generated-lp-v1.json"), JSON.stringify(tamperedOnDisk, null, 2) + "\n", "utf8");
+const tamperedWrite = writePreview({ root: tamperScratch, generationFile: "loops/loop-008/generated-lp-v1.json", verificationFile: "verification-pass.json", factsFile: REAL.factsFile, outDir: "site-t4" });
+expect("demo-t4-tampered-generation-no-preview", tamperedWrite.generated, false);
+expect("demo-t4-existing-file-not-overwritten", readFileSync(path.join(tamperScratch, "site-t4", "index.html"), "utf8"), sentinelT4);
+
+// --- T5 (design A-4): a verification targeting one generation file
+// cannot be used with a different generation file. ---
+const otherScratch = mkdtempSync(path.join(tmpdir(), "run-demo-preview-t5-"));
+mkdirSync(path.join(otherScratch, "loops", "loop-008"), { recursive: true });
+mkdirSync(path.join(otherScratch, "loops", "loop-010"), { recursive: true });
+mkdirSync(path.join(otherScratch, "src", "facts"), { recursive: true });
+copyFileSync(path.join(root, "loops/loop-008/generated-lp-v1.json"), path.join(otherScratch, "loops/loop-008/generated-lp-v1.json"));
+copyFileSync(path.join(root, "loops/loop-010/generated-lp-v1.json"), path.join(otherScratch, "loops/loop-010/generated-lp-v1.json"));
+copyFileSync(path.join(root, REAL.factsFile), path.join(otherScratch, REAL.factsFile));
+writeFileSync(path.join(otherScratch, "verification-pass.json"), JSON.stringify(passVerification, null, 2) + "\n", "utf8");
+const otherWrite = writePreview({ root: otherScratch, generationFile: "loops/loop-010/generated-lp-v1.json", verificationFile: "verification-pass.json", factsFile: REAL.factsFile, outDir: "site-t5" });
+expect("demo-t5-other-generation-file-no-preview", otherWrite.generated, false);
+expect("demo-t5-other-generation-file-no-file", existsSync(path.join(otherScratch, "site-t5", "index.html")), false);
+const pairingOk = checkPreviewPairing({ root: previewScratch, generationFile: "loops/loop-008/generated-lp-v1.json", generation: realGeneration, verification: passVerification });
+expect("demo-pairing-check-pass-on-matching-pair", pairingOk.ok, true);
 
 const pass = results.every((r) => r.pass);
 const record = {

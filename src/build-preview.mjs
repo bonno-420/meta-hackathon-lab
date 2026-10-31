@@ -12,6 +12,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { sha256File } from "./approve.mjs";
 
 function loadJson(p) {
   return JSON.parse(readFileSync(p, "utf8"));
@@ -128,8 +129,39 @@ ${panelRows}
   return { generated: true, reason: null, html };
 }
 
+// Pairing check (design A-2): the displayed generation must be the one
+// the verification targeted. Compares (a) the generation file's current
+// sha256 (F1) with the verification's target.generationSha256, (b) the
+// generation's sentence count with target.sentenceCount, and (c) the
+// verification's target.generationFile with the given generation file
+// (repository-relative, slash-separated). Any mismatch refuses.
+export function checkPreviewPairing({ root, generationFile, generation, verification }) {
+  const target = verification && verification.target ? verification.target : {};
+  const normalize = (p) => (p ? String(p).split(path.sep).join("/") : null);
+  const expectedFile = normalize(target.generationFile);
+  const givenFile = normalize(generationFile);
+  if (!expectedFile || expectedFile !== givenFile) {
+    return { ok: false, reason: `プレビューを生成しない: 検証結果の対象ファイル（${expectedFile ?? "なし"}）と渡された生成ファイル（${givenFile ?? "なし"}）が一致しない`, expectedFile, givenFile };
+  }
+  let actualSha256 = null;
+  try {
+    actualSha256 = sha256File(path.join(root, generationFile));
+  } catch (e) {
+    return { ok: false, reason: `プレビューを生成しない: 生成ファイルのハッシュが読めない（${String(e && e.message ? e.message : e)}）`, expectedFile, givenFile };
+  }
+  if (!target.generationSha256 || actualSha256 !== target.generationSha256) {
+    return { ok: false, reason: "プレビューを生成しない: 生成ファイルの現在のハッシュが検証結果の対象と一致しない（生成文が差し替えられた可能性がある）", expectedFile, givenFile, actualSha256 };
+  }
+  const count = generation && Array.isArray(generation.sentences) ? generation.sentences.length : null;
+  if (typeof target.sentenceCount !== "number" || count !== target.sentenceCount) {
+    return { ok: false, reason: `プレビューを生成しない: 生成物の文数（${count ?? "不明"}）が検証結果の対象（${target.sentenceCount ?? "不明"}文）と一致しない`, expectedFile, givenFile };
+  }
+  return { ok: true, reason: null, expectedFile, givenFile, actualSha256 };
+}
+
 // File-based wrapper. Writes outDir/index.html only when the verdict is
-// pass; otherwise writes nothing and reports the refusal.
+// pass AND the generation is the verified one; otherwise writes nothing
+// (an existing file is never overwritten on refusal) and reports why.
 export function writePreview({ root, generationFile, verificationFile, factsFile, outDir, e02, repoUrl }) {
   const generation = loadJson(path.join(root, generationFile));
   const verification = loadJson(path.join(root, verificationFile));
@@ -137,6 +169,10 @@ export function writePreview({ root, generationFile, verificationFile, factsFile
   const built = buildPreview({ generation, verification, facts, e02, repoUrl });
   if (!built.generated) {
     return { generated: false, reason: built.reason, outFile: null };
+  }
+  const pairing = checkPreviewPairing({ root, generationFile, generation, verification });
+  if (!pairing.ok) {
+    return { generated: false, reason: pairing.reason, outFile: null };
   }
   const outPath = path.join(root, outDir);
   mkdirSync(outPath, { recursive: true });
