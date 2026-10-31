@@ -14,7 +14,7 @@
 // created here; the fixed FACT v1 approval record is only re-checked.
 
 import { execFile } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { performance } from "node:perf_hooks";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -343,37 +343,87 @@ function parseLastJson(text) {
   try { return JSON.parse(text.slice(start)); } catch { return null; }
 }
 
-export function liveDeps({ root, outDir, generationFile }) {
+// Freshness and exit-code handling (design A-3). Before spawning a
+// child, its output files are removed; after a non-zero exit the
+// previous files are never read (a failure is never reported as a
+// success on the basis of leftover files). After exit 0 the run
+// record must have been written anew, and a "generated"/"completed"
+// status additionally requires its artifact file to exist. Costs stay
+// unrecorded on failure (never estimated).
+function removeIfExists(absPath) {
+  try {
+    rmSync(absPath, { force: true });
+  } catch {
+    // Missing file or removal failure: the post-run existence check
+    // decides. Never throw here.
+  }
+}
+
+function childErrorResult(stage, exitCode) {
+  return {
+    status: "child-error",
+    reason: `子プロセスが終了コード ${exitCode} で失敗したため、後段を実行しない（前回の実行記録や生成ファイルは使わない）`,
+    exitCode,
+    apiCalled: false,
+    usage: null,
+    costUsd: null,
+    costNote: "未記録（子プロセスが失敗したため推定しない）",
+  };
+}
+
+export function liveDeps({ root, outDir, generationFile, run }) {
   const here = path.dirname(fileURLToPath(import.meta.url));
   const extractionOutDir = path.join(outDir, "extraction");
+  const runner = run ?? runNode;
   return {
     extract: async () => {
-      const run = await runNode([path.join(here, "extract-and-check.mjs"), "--prompt", "v1.1", "--out-dir", extractionOutDir]);
       const liveFile = path.join(root, extractionOutDir, "live-run.json");
-      if (existsSync(liveFile)) return loadJson(liveFile);
-      return { status: "blocked", reason: parseLastJson(run.stdout)?.reason ?? "抽出の実行記録が得られなかった", facts: null, schemaCheck: null, e01: null, e02: null, usage: null, costUsd: null };
+      removeIfExists(liveFile);
+      const ran = await runner([path.join(here, "extract-and-check.mjs"), "--prompt", "v1.1", "--out-dir", extractionOutDir]);
+      if (ran.exitCode !== 0) {
+        return { ...childErrorResult("extraction", ran.exitCode), facts: null, schemaCheck: null, e01: null, e02: null };
+      }
+      if (!existsSync(liveFile)) {
+        return {
+          ...childErrorResult("extraction", ran.exitCode),
+          status: "stale-output",
+          reason: `子プロセスは終了コード 0 で終わったが、実行記録ファイル ${normalizePath(path.join(extractionOutDir, "live-run.json"))} が今回の実行で更新されなかったため、成功として扱わない`,
+          facts: null, schemaCheck: null, e01: null, e02: null,
+        };
+      }
+      return loadJson(liveFile);
     },
     generate: async ({ originalFile, factsFile, approvalFile }) => {
       const genAbs = path.join(root, generationFile);
       const runOutRel = path.join(outDir, "generation-run.json");
-      const run = await runNode([path.join(here, "generate.mjs"), "--approval", approvalFile, "--original", originalFile, "--facts", factsFile, "--out", generationFile, "--run-out", runOutRel]);
       const runOutAbs = path.join(root, runOutRel);
-      if (existsSync(runOutAbs)) {
-        const record = loadJson(runOutAbs);
-        const generation = existsSync(genAbs) && record.status === "generated" ? loadJson(genAbs) : null;
-        return { ...record, generation };
+      removeIfExists(runOutAbs);
+      removeIfExists(genAbs);
+      const ran = await runner([path.join(here, "generate.mjs"), "--approval", approvalFile, "--original", originalFile, "--facts", factsFile, "--out", generationFile, "--run-out", runOutRel]);
+      if (ran.exitCode !== 0) {
+        return { ...childErrorResult("generation", ran.exitCode), generation: null, grounding: null };
       }
-      const printed = parseLastJson(run.stdout);
-      return {
-        status: printed && printed.status ? printed.status : "blocked",
-        reason: printed && printed.reason ? printed.reason : "生成の実行記録が得られなかった",
-        apiCalled: false,
-        usage: null,
-        costUsd: null,
-        costNote: "未記録（生成が実行されなかったため推定しない）",
-        generation: null,
-        grounding: null,
-      };
+      if (!existsSync(runOutAbs)) {
+        return {
+          ...childErrorResult("generation", ran.exitCode),
+          status: "stale-output",
+          reason: `子プロセスは終了コード 0 で終わったが、実行記録ファイル ${normalizePath(runOutRel)} が今回の実行で更新されなかったため、成功として扱わない`,
+          generation: null, grounding: null,
+        };
+      }
+      const record = loadJson(runOutAbs);
+      if (record.status === "generated") {
+        if (!existsSync(genAbs)) {
+          return {
+            ...childErrorResult("generation", ran.exitCode),
+            status: "stale-output",
+            reason: "生成の実行記録は generated だが、生成ファイルが今回の実行で書かれていないため、成功として扱わない",
+            generation: null, grounding: null,
+          };
+        }
+        return { ...record, generation: loadJson(genAbs) };
+      }
+      return { ...record, generation: null };
     },
   };
 }

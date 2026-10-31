@@ -245,6 +245,45 @@ expect("demo-t5-other-generation-file-no-file", existsSync(path.join(otherScratc
 const pairingOk = checkPreviewPairing({ root: previewScratch, generationFile: "loops/loop-008/generated-lp-v1.json", generation: realGeneration, verification: passVerification });
 expect("demo-pairing-check-pass-on-matching-pair", pairingOk.ok, true);
 
+// --- T6 (design A-4): when the generation child fails, leftover files
+// from a previous run are not treated as a success. ---
+const t6Root = mkdtempSync(path.join(tmpdir(), "run-demo-t6-"));
+mkdirSync(path.join(t6Root, "out"), { recursive: true });
+writeFileSync(path.join(t6Root, "out", "generation-run.json"), JSON.stringify({ status: "generated", grounding: { pass: true } }), "utf8");
+writeFileSync(path.join(t6Root, "out", "gen.json"), JSON.stringify({ sentences: [] }), "utf8");
+const t6Deps = liveDeps({ root: t6Root, outDir: "out", generationFile: "out/gen.json", run: async () => ({ exitCode: 1, stdout: "", stderr: "boom" }) });
+const t6Run = await t6Deps.generate({ originalFile: "x", factsFile: "y", approvalFile: "z" });
+expect("demo-t6-child-failure-not-generated", t6Run.status === "generated", false);
+expect("demo-t6-child-failure-no-generation", t6Run.generation, null);
+expect("demo-t6-child-failure-exit-code", t6Run.exitCode, 1);
+
+// --- T7 (design A-4): exit code 0 without a rewritten run record is
+// not treated as a success either. Previous files are prepared as in
+// T6, so the pre-fix code (read leftovers) would report success here. ---
+const t7Root = mkdtempSync(path.join(tmpdir(), "run-demo-t7-"));
+mkdirSync(path.join(t7Root, "out"), { recursive: true });
+writeFileSync(path.join(t7Root, "out", "generation-run.json"), JSON.stringify({ status: "generated", grounding: { pass: true } }), "utf8");
+writeFileSync(path.join(t7Root, "out", "gen.json"), JSON.stringify({ sentences: [] }), "utf8");
+const t7Deps = liveDeps({ root: t7Root, outDir: "out", generationFile: "out/gen.json", run: async () => ({ exitCode: 0, stdout: "", stderr: "" }) });
+const t7Run = await t7Deps.generate({ originalFile: "x", factsFile: "y", approvalFile: "z" });
+expect("demo-t7-stale-record-not-generated", t7Run.status === "generated", false);
+expect("demo-t7-stale-record-status", t7Run.status, "stale-output");
+expect("demo-t7-stale-record-no-generation", t7Run.generation, null);
+
+// --- T8 (design A-4): the extraction side behaves the same. The run
+// record is live-run.json and success requires a completed status. ---
+const t8Root = mkdtempSync(path.join(tmpdir(), "run-demo-t8-"));
+mkdirSync(path.join(t8Root, "out", "extraction"), { recursive: true });
+writeFileSync(path.join(t8Root, "out", "extraction", "live-run.json"), JSON.stringify({ status: "completed", e01: null, e02: null }), "utf8");
+const t8DepsFail = liveDeps({ root: t8Root, outDir: "out", generationFile: "out/gen.json", run: async () => ({ exitCode: 1, stdout: "", stderr: "boom" }) });
+const t8Fail = await t8DepsFail.extract();
+expect("demo-t8-extract-child-failure-not-completed", t8Fail.status === "completed", false);
+expect("demo-t8-extract-child-failure-exit-code", t8Fail.exitCode, 1);
+const t8DepsStale = liveDeps({ root: t8Root, outDir: "out", generationFile: "out/gen.json", run: async () => ({ exitCode: 0, stdout: "", stderr: "" }) });
+const t8Stale = await t8DepsStale.extract();
+expect("demo-t8-extract-stale-not-completed", t8Stale.status === "completed", false);
+expect("demo-t8-extract-stale-record-status", t8Stale.status, "stale-output");
+
 const pass = results.every((r) => r.pass);
 const record = {
   testFile: "src/run-demo.test.mjs",
