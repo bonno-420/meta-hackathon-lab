@@ -180,7 +180,15 @@ export function checkInputIdentity({ root, generation, approval, originalFile, f
 // results: input identity, the re-run grounding result, and the human
 // confirmation. The generation's own status and the generation step's
 // declared values are never consulted.
-export function decideVerdict({ inputIdentity, grounding, humanConfirmation }) {
+//
+// The confirmation record is bound to the inspected generation (design
+// A-1): its sentences must match the generation's sentences in count
+// and in text, position by position. A confirmation for unrelated
+// sentences can no longer pass. The generation must be passed in;
+// without it the confirmation cannot pass (fail closed). The
+// factKeys/sourceLines correspondence itself stays a human matter and
+// is not mechanically checked (L-026).
+export function decideVerdict({ inputIdentity, grounding, humanConfirmation, generation }) {
   if (!inputIdentity || !inputIdentity.pass) {
     return {
       status: "fail",
@@ -217,6 +225,54 @@ export function decideVerdict({ inputIdentity, grounding, humanConfirmation }) {
       mechanicalPass: true,
       category: "human-confirmation",
       reason: "人間の確認（意味の対応）で未確認の文が残っているため、再検証の合格は未確定である",
+      effect: "未確定。合格となった場合の効果はデモ内プレビューの許可までであり、公開の許可ではない（G-INV-4）",
+    };
+  }
+  // Bind the confirmation to the inspected generation (design A-1).
+  // Without the generation the confirmation cannot pass (fail closed).
+  const generationSentences = generation && Array.isArray(generation.sentences) ? generation.sentences : null;
+  if (!generationSentences) {
+    return {
+      status: "fail",
+      pass: false,
+      category: "human-confirmation",
+      reason: "確認対象の生成物が渡されていないため、人間の確認を合格と判定しない（fail closed）。工程3への差し戻し扱いとする",
+      effect: "なし（デモ内プレビューは許可しない）",
+    };
+  }
+  if (sentences.length !== generationSentences.length) {
+    return {
+      status: "fail",
+      pass: false,
+      category: "human-confirmation",
+      reason: `確認記録の文数（${sentences.length}）が生成物の文数（${generationSentences.length}）と一致しないため不合格にする。工程3への差し戻し扱いとする`,
+      effect: "なし（デモ内プレビューは許可しない）",
+    };
+  }
+  const unbound = [];
+  sentences.forEach((s, idx) => {
+    const g = generationSentences[idx];
+    const gText = g && typeof g.text === "string" ? g.text : null;
+    if (!s || s.text !== gText) unbound.push(idx);
+  });
+  if (unbound.length > 0) {
+    return {
+      status: "fail",
+      pass: false,
+      category: "human-confirmation",
+      reason: `確認記録の文（位置 ${unbound.join("、")}）が生成物の文と一致しないため不合格にする。工程3への差し戻し扱いとする`,
+      effect: "なし（デモ内プレビューは許可しない）",
+    };
+  }
+  // The confirmation is bound to the generation. Its成立 also requires
+  // the confirmer and the confirmation date (L-024).
+  if (!humanConfirmation.confirmer || !humanConfirmation.confirmedAt) {
+    return {
+      status: "pending-human-confirmation",
+      pass: false,
+      mechanicalPass: true,
+      category: "human-confirmation",
+      reason: "人間の確認（意味の対応）に確認者または確認日時が記入されていないため、再検証の合格は未確定である",
       effect: "未確定。合格となった場合の効果はデモ内プレビューの許可までであり、公開の許可ではない（G-INV-4）",
     };
   }
@@ -276,7 +332,7 @@ export function runVerification({ root, generationFile, approvalFile, originalFi
   }
 
   const human = humanConfirmation ?? buildHumanConfirmationTemplate(generationObj);
-  const verdict = decideVerdict({ inputIdentity, grounding, humanConfirmation: human });
+  const verdict = decideVerdict({ inputIdentity, grounding, humanConfirmation: human, generation: generationObj });
   const mechanicalPass = inputIdentity.pass && !grounding.skipped && grounding.pass;
 
   let generationSha256 = null;

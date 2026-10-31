@@ -56,14 +56,47 @@ const humanAllOk = {
   confirmedAt: "2026-10-28T00:00:00+09:00",
   sentences: generation.sentences.map((s, idx) => ({ sentence: idx, text: s.text, factKeys: s.factKeys, sourceLines: s.sourceLines, result: "対応あり", detail: null })),
 };
-const verdictHumanOk = decideVerdict({ inputIdentity: normal.inputIdentity, grounding: normal.grounding, humanConfirmation: humanAllOk });
+const verdictHumanOk = decideVerdict({ inputIdentity: normal.inputIdentity, grounding: normal.grounding, humanConfirmation: humanAllOk, generation });
 expect("verify-verdict-pass-with-human-ok", verdictHumanOk.status, "pass");
 expect("verify-verdict-pass-effect-preview-only", String(verdictHumanOk.effect).includes("デモ内プレビューの許可まで"), true);
 const humanMismatch = clone(humanAllOk);
 humanMismatch.sentences[1].result = "不一致: 契約期間の数量表現が FACT と対応しない";
-const verdictHumanNg = decideVerdict({ inputIdentity: normal.inputIdentity, grounding: normal.grounding, humanConfirmation: humanMismatch });
+const verdictHumanNg = decideVerdict({ inputIdentity: normal.inputIdentity, grounding: normal.grounding, humanConfirmation: humanMismatch, generation });
 expect("verify-verdict-fail-with-human-mismatch", verdictHumanNg.status, "fail");
 expect("verify-verdict-fail-with-human-mismatch-category", verdictHumanNg.category, "human-confirmation");
+expect("verify-verdict-fail-with-human-mismatch-reason-mentions-human", String(verdictHumanNg.reason).includes("人間の確認"), true);
+
+// --- T1 (design A-4): a completed confirmation for unrelated sentences
+// (all "対応あり") must not pass. ---
+const unrelatedHuman = {
+  status: "completed",
+  confirmer: "test",
+  confirmedAt: "2026-10-28T00:00:00+09:00",
+  sentences: [{ sentence: 0, text: "この文は生成物と無関係である。", factKeys: ["employer"], sourceLines: ["L01"], result: "対応あり", detail: null }],
+};
+const verdictUnrelated = decideVerdict({ inputIdentity: normal.inputIdentity, grounding: normal.grounding, humanConfirmation: unrelatedHuman, generation });
+expect("verify-t1-unrelated-confirmation-not-pass", verdictUnrelated.pass, false);
+expect("verify-t1-unrelated-confirmation-status", verdictUnrelated.status, "fail");
+expect("verify-t1-unrelated-confirmation-category", verdictUnrelated.category, "human-confirmation");
+
+// --- T2 (design A-4): a confirmation whose sentence count differs from
+// the generation (even with a matching prefix) must not pass. ---
+const shortHuman = clone(humanAllOk);
+shortHuman.sentences = shortHuman.sentences.slice(0, shortHuman.sentences.length - 1);
+const verdictShort = decideVerdict({ inputIdentity: normal.inputIdentity, grounding: normal.grounding, humanConfirmation: shortHuman, generation });
+expect("verify-t2-count-mismatch-not-pass", verdictShort.pass, false);
+expect("verify-t2-count-mismatch-status", verdictShort.status, "fail");
+expect("verify-t2-count-mismatch-category", verdictShort.category, "human-confirmation");
+expect("verify-t2-count-mismatch-reason-names-counts", String(verdictShort.reason).includes(String(generation.sentences.length)), true);
+
+// --- T3 (design A-4, migration): the loop-010 generation with its fixed
+// confirmation record still passes under the new binding. ---
+const loop010Generation = JSON.parse(readFileSync(path.join(root, "loops/loop-010/generated-lp-v1.json"), "utf8"));
+const loop010Verification = JSON.parse(readFileSync(path.join(root, "loops/loop-010/verification-result.json"), "utf8"));
+const verdictLoop010 = decideVerdict({ inputIdentity: normal.inputIdentity, grounding: normal.grounding, humanConfirmation: loop010Verification.humanConfirmation, generation: loop010Generation });
+expect("verify-t3-loop010-migration-pass", verdictLoop010.status, "pass");
+const loop010Run = runVerification({ root, generationFile: "loops/loop-010/generated-lp-v1.json", approvalFile: REAL.approvalFile, humanConfirmation: loop010Verification.humanConfirmation });
+expect("verify-t3-loop010-run-verdict-pass", loop010Run.verdict.status, "pass");
 
 // --- Tamper detection: a rewritten amount is caught by the re-run. ---
 const amountTampered = clone(generation);
