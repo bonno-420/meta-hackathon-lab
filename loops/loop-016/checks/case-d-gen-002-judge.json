@@ -1,0 +1,22 @@
+{
+  "case": "C-D",
+  "gen": "002",
+  "model": "muse-spark-1.3-contributor",
+  "usage": {
+    "completion_tokens": 3681,
+    "prompt_tokens": 4466,
+    "total_tokens": 8147,
+    "completion_tokens_details": {
+      "reasoning_tokens": 3274
+    },
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "contentLength": 1039,
+  "pairsFiles": [
+    "pair-01-trial2-note.md",
+    "pair-02-loop012-loop013.md",
+    "pair-03-cA-folded.md"
+  ]
+}

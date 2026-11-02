@@ -1,0 +1,152 @@
+{
+  "generatedAt": "2026-11-02T07:15:45.176Z",
+  "startedAt": "2026-11-02T07:15:31.568Z",
+  "model": "meta-models/muse-spark-open-1026",
+  "baseUrl": "https://inference.baseten.co/v1",
+  "language": "EN",
+  "case": {
+    "id": "C-F",
+    "label": "Casual Retail Seasonal Sales Associate (fictitious, EN-only)",
+    "caseFile": "loops/loop-016/cases/case-F.json"
+  },
+  "provisionalLimit": {
+    "max_tokens": 12000,
+    "temperature": 0.4
+  },
+  "insightsApplied": [
+    "001.md",
+    "002.md",
+    "003.md",
+    "004.md",
+    "005.md",
+    "006.md"
+  ],
+  "researchApplied": [
+    "common.md",
+    "case-f.md"
+  ],
+  "researchVersion": "v1.0 (2026-11-02)",
+  "ok": true,
+  "error": null,
+  "usage": {
+    "prompt_tokens": 6652,
+    "completion_tokens": 4367,
+    "total_tokens": 11019,
+    "prompt_tokens_details": {
+      "audio_tokens": 0,
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": 3233,
+      "audio_tokens": 0,
+      "reasoning_tokens": 4047,
+      "rejected_prediction_tokens": 4712
+    }
+  },
+  "usageSummary": {
+    "prompt_tokens": 6652,
+    "completion_tokens": 4367,
+    "total_tokens": 11019
+  },
+  "generation": {
+    "sentences": [
+      {
+        "text": "Crestline Outdoor is hiring a Seasonal Sales Associate (casual, storefront) in Nagoya, Sakae district.",
+        "factKeys": [
+          "company",
+          "role",
+          "location"
+        ],
+        "sourceLines": [
+          "L01",
+          "L02",
+          "L03"
+        ]
+      },
+      {
+        "text": "This is a Casual / seasonal position.",
+        "factKeys": [
+          "employmentType"
+        ],
+        "sourceLines": [
+          "L04"
+        ]
+      },
+      {
+        "text": "The term is 6 weeks: 2026-12-01 to 2027-01-11, fixed term with no extension beyond the end date.",
+        "factKeys": [
+          "term"
+        ],
+        "sourceLines": [
+          "L06"
+        ]
+      },
+      {
+        "text": "You will earn Hourly 1,300 JPY.",
+        "factKeys": [
+          "pay"
+        ],
+        "sourceLines": [
+          "L05"
+        ]
+      },
+      {
+        "text": "You will work 3-5 days/week, 4-7 hours/day; weekends preferred.",
+        "factKeys": [
+          "workHours"
+        ],
+        "sourceLines": [
+          "L07"
+        ]
+      },
+      {
+        "text": "Commuter pass up to 8,000 JPY/month is provided.",
+        "factKeys": [
+          "commute"
+        ],
+        "sourceLines": [
+          "L08"
+        ]
+      },
+      {
+        "text": "Training includes 1-day orientation + floor buddy week 1.",
+        "factKeys": [
+          "training"
+        ],
+        "sourceLines": [
+          "L09"
+        ]
+      },
+      {
+        "text": "Staff discount 20% during term, uniform provided is included.",
+        "factKeys": [
+          "perks"
+        ],
+        "sourceLines": [
+          "L10"
+        ]
+      },
+      {
+        "text": "Apply this week to start on 2026-12-01 for the 6 weeks: 2026-12-01 to 2027-01-11 seasonal term.",
+        "factKeys": [
+          "term"
+        ],
+        "sourceLines": [
+          "L06"
+        ]
+      }
+    ]
+  },
+  "conformance": {
+    "pass": true,
+    "checked": 9,
+    "issues": []
+  },
+  "prose": {
+    "checked": 9,
+    "totalFindings": 0,
+    "needsFixCount": 0,
+    "findings": []
+  },
+  "cost": "未記録（残量が確認できないため）"
+}

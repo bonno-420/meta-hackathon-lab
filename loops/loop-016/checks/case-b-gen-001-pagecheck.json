@@ -1,0 +1,792 @@
+{
+  "case": "C-B",
+  "gen": "001",
+  "source": "loops/loop-016/previews/case-B-gen-001-complete.html",
+  "generatedAt": "2026-11-02T07:30:30.651Z",
+  "tool": "loop16-pagecheck.mjs",
+  "version": "1.1-candidate (T1-T5 + P6)",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7,
+    "heroP6": 6
+  },
+  "summary": {
+    "duplicates": 17,
+    "duplicateSentencesTotalOccurrences": 42,
+    "verificationHits": 10,
+    "verificationGroups": 10,
+    "recordExposureGroups": 11,
+    "recordExposureHits": 45,
+    "headingMismatch": 1,
+    "heroP6Present": 0,
+    "heroP6Missing": 2
+  },
+  "duplication": [
+    {
+      "example": "Harborview General Hospital is hiring for Registered Nurse (full-time, general ward) in Yokohama, Minato Mirai area.",
+      "normalized": "harborview general hospital is hiring for registered nurse (full-time, general ward) in yokohama, minato mirai area.",
+      "count": 4,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Harborview General Hospital is hiring for Registered Nurse (full-time, general ward) in Yokohama, Minato Mirai area."
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Harborview General Hospital is hiring for Registered Nurse (full-time, general ward) in Yokohama, Minato Mirai area."
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Harborview General Hospital is hiring for Registered Nurse (full-time, general ward) in Yokohama, Minato Mirai area."
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "Harborview General Hospital is hiring for Registered Nurse (full-time, general ward) in Yokohama, Minato Mirai area."
+        }
+      ]
+    },
+    {
+      "example": "〔company,role,location / L01,L02,L03〕",
+      "normalized": "〔company,role,location / l01,l02,l03〕",
+      "count": 4,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔company,role,location / L01,L02,L03〕"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔company,role,location / L01,L02,L03〕"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔company,role,location / L01,L02,L03〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "〔company,role,location / L01,L02,L03〕"
+        }
+      ]
+    },
+    {
+      "example": "You will join a 12-nurse ward with dedicated handover lead and receive Two paid training days per year + quarterly skills workshop.",
+      "normalized": "you will join a 12-nurse ward with dedicated handover lead and receive two paid training days per year + quarterly skills workshop.",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "You will join a 12-nurse ward with dedicated handover lead and receive Two paid training days per year + quarterly skills workshop."
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "You will join a 12-nurse ward with dedicated handover lead and receive Two paid training days per year + quarterly skills workshop."
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "You will join a 12-nurse ward with dedicated handover lead and receive Two paid training days per year + quarterly skills workshop."
+        }
+      ]
+    },
+    {
+      "example": "This is a Full-time (permanent) position with Annual 5,200,000 JPY.",
+      "normalized": "this is a full-time (permanent) position with annual 5,200,000 jpy.",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "This is a Full-time (permanent) position with Annual 5,200,000 JPY."
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "This is a Full-time (permanent) position with Annual 5,200,000 JPY."
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "This is a Full-time (permanent) position with Annual 5,200,000 JPY."
+        }
+      ]
+    },
+    {
+      "example": "〔employmentType,salary / L04,L05〕",
+      "normalized": "〔employmenttype,salary / l04,l05〕",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔employmentType,salary / L04,L05〕"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔employmentType,salary / L04,L05〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "〔employmentType,salary / L04,L05〕"
+        }
+      ]
+    },
+    {
+      "example": "〔team,training / L09,L08〕",
+      "normalized": "〔team,training / l09,l08〕",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔team,training / L09,L08〕"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔team,training / L09,L08〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "〔team,training / L09,L08〕"
+        }
+      ]
+    },
+    {
+      "example": "Benefits include Health insurance, 12 paid days from month 7, childcare support desk on site.",
+      "normalized": "benefits include health insurance, 12 paid days from month 7, childcare support desk on site.",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Benefits include Health insurance, 12 paid days from month 7, childcare support desk on site."
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "Benefits include Health insurance, 12 paid days from month 7, childcare support desk on site."
+        }
+      ]
+    },
+    {
+      "example": "The workplace is 8-min walk from Sakuragicho Station; commuter pass reimbursed in full.",
+      "normalized": "the workplace is 8-min walk from sakuragicho station; commuter pass reimbursed in full.",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "The workplace is 8-min walk from Sakuragicho Station; commuter pass reimbursed in full."
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "The workplace is 8-min walk from Sakuragicho Station; commuter pass reimbursed in full."
+        }
+      ]
+    },
+    {
+      "example": "Working hours are Day shift 08:30-17:00, 5 days/week; no scheduled night duty.",
+      "normalized": "working hours are day shift 08:30-17:00, 5 days/week; no scheduled night duty.",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Working hours are Day shift 08:30-17:00, 5 days/week; no scheduled night duty."
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "Working hours are Day shift 08:30-17:00, 5 days/week; no scheduled night duty."
+        }
+      ]
+    },
+    {
+      "example": "Registered Nurse (full-time, general ward)",
+      "normalized": "registered nurse (full-time, general ward)",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Registered Nurse — General Ward",
+          "snippet": "Registered Nurse (full-time, general ward)"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Registered Nurse (full-time, general ward)"
+        }
+      ]
+    },
+    {
+      "example": "Harborview General Hospital",
+      "normalized": "harborview general hospital",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Registered Nurse — General Ward",
+          "snippet": "Harborview General Hospital"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Harborview General Hospital"
+        }
+      ]
+    },
+    {
+      "example": "Yokohama, Minato Mirai area",
+      "normalized": "yokohama, minato mirai area",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Registered Nurse — General Ward",
+          "snippet": "Yokohama, Minato Mirai area"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Yokohama, Minato Mirai area"
+        }
+      ]
+    },
+    {
+      "example": "Full-time (permanent)",
+      "normalized": "full-time (permanent)",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Registered Nurse — General Ward",
+          "snippet": "Full-time (permanent)"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Full-time (permanent)"
+        }
+      ]
+    },
+    {
+      "example": "0, no text in image",
+      "normalized": "0, no text in image",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "0, no text in image"
+        },
+        {
+          "sectionId": "location",
+          "heading": "Place &amp; Access 勤務地",
+          "snippet": "0, no text in image"
+        }
+      ]
+    },
+    {
+      "example": "〔workHours / L06〕",
+      "normalized": "〔workhours / l06〕",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔workHours / L06〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "〔workHours / L06〕"
+        }
+      ]
+    },
+    {
+      "example": "〔benefits / L10〕",
+      "normalized": "〔benefits / l10〕",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔benefits / L10〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "〔benefits / L10〕"
+        }
+      ]
+    },
+    {
+      "example": "〔commute / L07〕",
+      "normalized": "〔commute / l07〕",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔commute / L07〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "〔commute / L07〕"
+        }
+      ]
+    }
+  ],
+  "verificationPhrases": [
+    {
+      "phrase": "What this means",
+      "lang": "EN",
+      "source": "C-A real highlight box",
+      "note": "P2 verification phrase",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "context": "k on site. 〔benefits / L10〕 What this means: Read the sentences above as",
+          "phrase": "What this means"
+        }
+      ]
+    },
+    {
+      "phrase": "numbers stay exactly as stated",
+      "lang": "EN",
+      "source": "C-A real",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "context": "ounding or reinterpretation — numbers stay exactly as stated in the FACTs. Image: work sc",
+          "phrase": "numbers stay exactly as stated"
+        }
+      ]
+    },
+    {
+      "phrase": "as stated in the FACT",
+      "lang": "EN",
+      "source": "C-A real",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "context": "tation — numbers stay exactly as stated in the FACTs. Image: work scene — muse-i",
+          "phrase": "as stated in the FACT"
+        }
+      ]
+    },
+    {
+      "phrase": "Read the sentences above as the full conditions",
+      "lang": "EN",
+      "source": "C-A real",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "context": "fits / L10〕 What this means: Read the sentences above as the full conditions. No rounding or reinterpretat",
+          "phrase": "Read the sentences above as the full conditions"
+        }
+      ]
+    },
+    {
+      "phrase": "No rounding or reinterpretation",
+      "lang": "EN",
+      "source": "C-A real",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "context": "above as the full conditions. No rounding or reinterpretation — numbers stay exactly as sta",
+          "phrase": "No rounding or reinterpretation"
+        }
+      ]
+    },
+    {
+      "phrase": "All facts below are the only stated facts",
+      "lang": "EN",
+      "source": "C-A must block",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "header",
+          "heading": "Registered Nurse — General Ward",
+          "context": "This is a fictional posting. All facts below are the only stated facts (L01–L02–L03–L04–L05–L06–L07–",
+          "phrase": "All facts below are the only stated facts"
+        }
+      ]
+    },
+    {
+      "phrase": "Do not invent",
+      "lang": "EN",
+      "source": "case-A mustNot",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "header",
+          "heading": "Registered Nurse — General Ward",
+          "context": "L04–L05–L06–L07–L08–L09–L10). Do not invent shift allowances Do not add n",
+          "phrase": "Do not invent"
+        }
+      ]
+    },
+    {
+      "phrase": "Each cites its fact keys and source lines verbatim",
+      "lang": "EN",
+      "source": "C-A about lead",
+      "note": "P2/P3",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "n C-B gen-001 (6 sentences). Each cites its fact keys and source lines verbatim. company Harborview General",
+          "phrase": "Each cites its fact keys and source lines verbatim"
+        }
+      ]
+    },
+    {
+      "phrase": "All conditions above are from the",
+      "lang": "EN",
+      "source": "CTA block",
+      "note": "P2 meta",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "context": "area Full-time (permanent) All conditions above are from the 6 sentences of C-B gen-001. N",
+          "phrase": "All conditions above are from the"
+        }
+      ]
+    },
+    {
+      "phrase": "No new facts are added",
+      "lang": "EN",
+      "source": "CTA block",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "context": "e 6 sentences of C-B gen-001. No new facts are added. Apply with license copy - r",
+          "phrase": "No new facts are added"
+        }
+      ]
+    }
+  ],
+  "recordExposure": [
+    {
+      "pattern": "fact keys",
+      "note": "小文字変種",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "(6 sentences). Each cites its fact keys and source lines verbatim. c",
+          "pattern": "fact keys"
+        }
+      ]
+    },
+    {
+      "pattern": "Target audience",
+      "note": "企画メモ露出",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "k on site. 〔benefits / L10〕 Target audience (fixed before generation): Li",
+          "pattern": "Target audience"
+        }
+      ]
+    },
+    {
+      "pattern": "Persona:",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "t and salary as fixed facts.. Persona: Maya, 31, RN 4 years suburban",
+          "pattern": "Persona:"
+        }
+      ]
+    },
+    {
+      "pattern": "Persona",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "t and salary as fixed facts.. Persona: Maya, 31, RN 4 years suburba",
+          "pattern": "Persona"
+        }
+      ]
+    },
+    {
+      "pattern": "Insights applied",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "Checks commute/shifts first.. Insights applied: 001.md.",
+          "pattern": "Insights applied"
+        }
+      ]
+    },
+    {
+      "pattern": "Insights",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "Checks commute/shifts first.. Insights applied: 001.md.",
+          "pattern": "Insights"
+        }
+      ]
+    },
+    {
+      "pattern": "Appeal:",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "es in urban general hospital. Appeal: Structured handover and funde",
+          "pattern": "Appeal:"
+        }
+      ]
+    },
+    {
+      "pattern": "CTA:",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "header",
+          "heading": "Registered Nurse — General Ward",
+          "context": "wances Do not add night duty. CTA: Apply with license copy - rep",
+          "pattern": "CTA:"
+        }
+      ]
+    },
+    {
+      "pattern": "〔",
+      "note": "引用記号自体（企画では出さない）",
+      "count": 16,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "Yokohama, Minato Mirai area. 〔company,role,location / L01,L0",
+          "pattern": "〔"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "context": "Yokohama, Minato Mirai area. 〔company,role,location / L01,L0",
+          "pattern": "〔"
+        }
+      ]
+    },
+    {
+      "pattern": "〕",
+      "note": "",
+      "count": 16,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "ny,role,location / L01,L02,L03〕 role Harborview General Hos",
+          "pattern": "〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "context": "ny,role,location / L01,L02,L03〕 S2 This is a Full-time (per",
+          "pattern": "〕"
+        }
+      ]
+    },
+    {
+      "pattern": "L01",
+      "note": "sourceLineコード露出（本文中）",
+      "count": 5,
+      "hits": [
+        {
+          "sectionId": "header",
+          "heading": "Registered Nurse — General Ward",
+          "context": "ow are the only stated facts (L01–L02–L03–L04–L05–L06–L07–L08–L",
+          "pattern": "L01"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "ea. 〔company,role,location / L01,L02,L03〕 role Harborview Ge",
+          "pattern": "L01"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "context": "ea. 〔company,role,location / L01,L02,L03〕 S2 This is a Full-",
+          "pattern": "L01"
+        }
+      ]
+    }
+  ],
+  "headingMismatch": [
+    {
+      "sectionId": "conditions",
+      "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+      "foundKeys": [
+        "company",
+        "role",
+        "location",
+        "employmentType",
+        "salary",
+        "workHours",
+        "commute",
+        "team",
+        "training",
+        "benefits"
+      ],
+      "allowedKeys": [
+        "salary",
+        "pay",
+        "workHours",
+        "employmentType",
+        "wage",
+        "annual",
+        "hourly"
+      ],
+      "unexpectedKeys": [
+        "company",
+        "role",
+        "location",
+        "commute",
+        "team",
+        "training",
+        "benefits"
+      ],
+      "rule": "Pay",
+      "description": ""
+    }
+  ],
+  "allSections": [
+    {
+      "id": "header",
+      "heading": "Registered Nurse — General Ward",
+      "foundKeys": []
+    },
+    {
+      "id": "about",
+      "heading": "The Basics 募集の基本",
+      "foundKeys": [
+        "company",
+        "role",
+        "location",
+        "employmentType",
+        "salary",
+        "workHours",
+        "commute",
+        "team",
+        "training",
+        "benefits"
+      ]
+    },
+    {
+      "id": "conditions",
+      "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+      "foundKeys": [
+        "company",
+        "role",
+        "location",
+        "employmentType",
+        "salary",
+        "workHours",
+        "commute",
+        "team",
+        "training",
+        "benefits"
+      ]
+    },
+    {
+      "id": "location",
+      "heading": "Place &amp; Access 勤務地",
+      "foundKeys": []
+    },
+    {
+      "id": "check",
+      "heading": "Check Before You Apply 応募前の確認",
+      "foundKeys": []
+    },
+    {
+      "id": "lp-memo",
+      "heading": "Memo このLPへのメモ（ブラウザ保存）",
+      "foundKeys": []
+    }
+  ],
+  "heroP6": {
+    "present": false,
+    "heroText": "Full-time · Yokohama, Minato Mirai Registered Nurse — General Ward For licensed nurses who want a larger day-shift team with clear handover and paid training. Shifts and pay are fixed facts — no night duty is scheduled. This is a fictional posting. All facts below are the only stated facts (L01–L02–L03–L04–L05–L06–L07–L08–L09–L10). Do not invent shift allowances Do not add night duty. CTA: Apply w",
+    "checks": [
+      {
+        "pattern": "/08:30-17:00/i",
+        "found": false,
+        "context": ""
+      },
+      {
+        "pattern": "/Day shift/i",
+        "found": false,
+        "context": ""
+      }
+    ],
+    "missing": [
+      "/08:30-17:00/i",
+      "/Day shift/i"
+    ],
+    "label": "Day shift 08:30-17:00",
+    "note": "candidate — permanence requires owner approval"
+  }
+}

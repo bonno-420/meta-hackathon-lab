@@ -1,0 +1,166 @@
+{
+  "generatedAt": "2026-11-02T07:13:09.845Z",
+  "startedAt": "2026-11-02T07:12:47.967Z",
+  "model": "meta-models/muse-spark-open-1026",
+  "baseUrl": "https://inference.baseten.co/v1",
+  "language": "EN",
+  "case": {
+    "id": "C-A",
+    "label": "Full-time SaaS Software Engineer (fictitious, EN-only)",
+    "caseFile": "loops/loop-016/cases/case-A.json"
+  },
+  "provisionalLimit": {
+    "max_tokens": 8000,
+    "temperature": 0.4
+  },
+  "insightsApplied": [
+    "001.md",
+    "002.md",
+    "003.md",
+    "004.md",
+    "005.md",
+    "006.md"
+  ],
+  "researchApplied": [
+    "common.md",
+    "case-a.md"
+  ],
+  "researchVersion": "v1.0 (2026-11-02)",
+  "ok": true,
+  "error": null,
+  "usage": {
+    "prompt_tokens": 6782,
+    "completion_tokens": 6788,
+    "total_tokens": 13570,
+    "prompt_tokens_details": {
+      "audio_tokens": 0,
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": 4941,
+      "audio_tokens": 0,
+      "reasoning_tokens": 6427,
+      "rejected_prediction_tokens": 7995
+    }
+  },
+  "usageSummary": {
+    "prompt_tokens": 6782,
+    "completion_tokens": 6788,
+    "total_tokens": 13570
+  },
+  "generation": {
+    "sentences": [
+      {
+        "text": "Northbridge Labs is hiring for its SaaS product team.",
+        "factKeys": [
+          "company"
+        ],
+        "sourceLines": [
+          "L01"
+        ]
+      },
+      {
+        "text": "This opening is for a Software Engineer (full-time, SaaS product team).",
+        "factKeys": [
+          "role"
+        ],
+        "sourceLines": [
+          "L02"
+        ]
+      },
+      {
+        "text": "You would join on a Full-time (permanent) basis.",
+        "factKeys": [
+          "employmentType"
+        ],
+        "sourceLines": [
+          "L04"
+        ]
+      },
+      {
+        "text": "We offer an annual salary of 4,800,000 JPY.",
+        "factKeys": [
+          "salary"
+        ],
+        "sourceLines": [
+          "L05"
+        ]
+      },
+      {
+        "text": "You will work Mon-Fri, 10:00-18:30 (flex core 11:00-16:00).",
+        "factKeys": [
+          "workHours"
+        ],
+        "sourceLines": [
+          "L06"
+        ]
+      },
+      {
+        "text": "The office is located in Osaka, Umeda district.",
+        "factKeys": [
+          "location"
+        ],
+        "sourceLines": [
+          "L03"
+        ]
+      },
+      {
+        "text": "The office is a 5-min walk from Umeda Station; commuter pass reimbursed in full.",
+        "factKeys": [
+          "commute"
+        ],
+        "sourceLines": [
+          "L07"
+        ]
+      },
+      {
+        "text": "You will join an 8-person product team (4 engineers, 2 designers, 2 PMs).",
+        "factKeys": [
+          "team"
+        ],
+        "sourceLines": [
+          "L09"
+        ]
+      },
+      {
+        "text": "You will receive 3-month onboarding with dedicated mentor and weekly code review.",
+        "factKeys": [
+          "training"
+        ],
+        "sourceLines": [
+          "L08"
+        ]
+      },
+      {
+        "text": "You will receive Health insurance, 10 paid days from month 7, laptop provided.",
+        "factKeys": [
+          "benefits"
+        ],
+        "sourceLines": [
+          "L10"
+        ]
+      },
+      {
+        "text": "Apply with your resume for a casual first interview for this Software Engineer (full-time, SaaS product team) position.",
+        "factKeys": [
+          "role"
+        ],
+        "sourceLines": [
+          "L02"
+        ]
+      }
+    ]
+  },
+  "conformance": {
+    "pass": true,
+    "checked": 11,
+    "issues": []
+  },
+  "prose": {
+    "checked": 11,
+    "totalFindings": 0,
+    "needsFixCount": 0,
+    "findings": []
+  },
+  "cost": "未記録（残量が確認できないため）"
+}

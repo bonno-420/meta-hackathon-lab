@@ -1,0 +1,58 @@
+{
+  "id": "T-A",
+  "label": "企画精度を見る群（架空）",
+  "note": "架空の求人題材。原本にない情報は補完しない。開始時に sha256 を run-record.md の入力版へ記録する",
+  "plan": {
+    "targetAudience": "二十代前半、接客経験あり、安定した勤務地を希望する層",
+    "appeal": "研修制度とシフトの柔軟性を前面に出す。給与は固定の事実どおりに述べる"
+  },
+  "facts": [
+    {
+      "key": "company",
+      "value": "架空の小売企業「サンライズマート」",
+      "sourceLine": "L01"
+    },
+    {
+      "key": "role",
+      "value": "販売スタッフ（レジ・品出し）",
+      "sourceLine": "L02"
+    },
+    {
+      "key": "location",
+      "value": "東京都世田谷区",
+      "sourceLine": "L03"
+    },
+    {
+      "key": "employmentType",
+      "value": "アルバイト",
+      "sourceLine": "L04"
+    },
+    {
+      "key": "hourlyWage",
+      "value": "1,250円",
+      "sourceLine": "L05"
+    },
+    {
+      "key": "workHours",
+      "value": "週3日〜、1日4時間〜",
+      "sourceLine": "L06"
+    },
+    {
+      "key": "transport",
+      "value": "交通費支給（月1万円まで）",
+      "sourceLine": "L07"
+    },
+    {
+      "key": "training",
+      "value": "入社時研修3日間あり",
+      "sourceLine": "L08"
+    },
+    {
+      "key": "shiftSystem",
+      "value": "シフト自己申告制（月ごと）",
+      "sourceLine": "L09"
+    }
+  ],
+  "sourceFingerprint": "FICT-TA-v1-20261101",
+  "constraints": "未記載の福利厚生・昇給・正社員登用の有無は創作しない。数値は上記 facts どおりに述べる"
+}

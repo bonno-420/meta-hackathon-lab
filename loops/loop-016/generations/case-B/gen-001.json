@@ -1,0 +1,119 @@
+{
+  "generatedAt": "2026-11-01T14:36:00.035Z",
+  "startedAt": "2026-11-01T14:35:49.128Z",
+  "model": "meta-models/muse-spark-open-1026",
+  "baseUrl": "https://inference.baseten.co/v1",
+  "language": "EN",
+  "case": {
+    "id": "C-B",
+    "label": "Full-time Healthcare Registered Nurse (fictitious, EN-only)",
+    "caseFile": "loops/loop-016/cases/case-B.json"
+  },
+  "provisionalLimit": {
+    "max_tokens": 8000,
+    "temperature": 0.4
+  },
+  "insightsApplied": [
+    "001.md"
+  ],
+  "ok": true,
+  "error": null,
+  "usage": {
+    "prompt_tokens": 1415,
+    "completion_tokens": 3520,
+    "total_tokens": 4935,
+    "prompt_tokens_details": {
+      "audio_tokens": 0,
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": 2756,
+      "audio_tokens": 0,
+      "reasoning_tokens": 3263,
+      "rejected_prediction_tokens": 2592
+    }
+  },
+  "usageSummary": {
+    "prompt_tokens": 1415,
+    "completion_tokens": 3520,
+    "total_tokens": 4935
+  },
+  "generation": {
+    "sentences": [
+      {
+        "text": "Harborview General Hospital is hiring for Registered Nurse (full-time, general ward) in Yokohama, Minato Mirai area.",
+        "factKeys": [
+          "company",
+          "role",
+          "location"
+        ],
+        "sourceLines": [
+          "L01",
+          "L02",
+          "L03"
+        ]
+      },
+      {
+        "text": "This is a Full-time (permanent) position with Annual 5,200,000 JPY.",
+        "factKeys": [
+          "employmentType",
+          "salary"
+        ],
+        "sourceLines": [
+          "L04",
+          "L05"
+        ]
+      },
+      {
+        "text": "Working hours are Day shift 08:30-17:00, 5 days/week; no scheduled night duty.",
+        "factKeys": [
+          "workHours"
+        ],
+        "sourceLines": [
+          "L06"
+        ]
+      },
+      {
+        "text": "The workplace is 8-min walk from Sakuragicho Station; commuter pass reimbursed in full.",
+        "factKeys": [
+          "commute"
+        ],
+        "sourceLines": [
+          "L07"
+        ]
+      },
+      {
+        "text": "You will join a 12-nurse ward with dedicated handover lead and receive Two paid training days per year + quarterly skills workshop.",
+        "factKeys": [
+          "team",
+          "training"
+        ],
+        "sourceLines": [
+          "L09",
+          "L08"
+        ]
+      },
+      {
+        "text": "Benefits include Health insurance, 12 paid days from month 7, childcare support desk on site.",
+        "factKeys": [
+          "benefits"
+        ],
+        "sourceLines": [
+          "L10"
+        ]
+      }
+    ]
+  },
+  "conformance": {
+    "pass": true,
+    "checked": 6,
+    "issues": []
+  },
+  "prose": {
+    "checked": 6,
+    "totalFindings": 0,
+    "needsFixCount": 0,
+    "findings": []
+  },
+  "cost": "未記録（残量が確認できないため）"
+}

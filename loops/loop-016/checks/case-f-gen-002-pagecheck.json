@@ -1,0 +1,820 @@
+{
+  "case": "C-F",
+  "gen": "002",
+  "source": "loops/loop-016/previews/case-F-gen-002-complete.html",
+  "generatedAt": "2026-11-02T07:17:50.303Z",
+  "tool": "loop16-pagecheck.mjs",
+  "version": "1.0-candidate",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7
+  },
+  "summary": {
+    "duplicates": 21,
+    "duplicateSentencesTotalOccurrences": 47,
+    "verificationHits": 10,
+    "verificationGroups": 10,
+    "recordExposureGroups": 11,
+    "recordExposureHits": 51,
+    "headingMismatch": 1
+  },
+  "duplication": [
+    {
+      "example": "Crestline Outdoor is hiring a Seasonal Sales Associate (casual, storefront) in Nagoya, Sakae district.",
+      "normalized": "crestline outdoor is hiring a seasonal sales associate (casual, storefront) in nagoya, sakae district.",
+      "count": 4,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Crestline Outdoor is hiring a Seasonal Sales Associate (casual, storefront) in Nagoya, Sakae district."
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Crestline Outdoor is hiring a Seasonal Sales Associate (casual, storefront) in Nagoya, Sakae district."
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Crestline Outdoor is hiring a Seasonal Sales Associate (casual, storefront) in Nagoya, Sakae district."
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "Crestline Outdoor is hiring a Seasonal Sales Associate (casual, storefront) in Nagoya, Sakae district."
+        }
+      ]
+    },
+    {
+      "example": "〔company,role,location / L01,L02,L03〕",
+      "normalized": "〔company,role,location / l01,l02,l03〕",
+      "count": 4,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔company,role,location / L01,L02,L03〕"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔company,role,location / L01,L02,L03〕"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔company,role,location / L01,L02,L03〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "〔company,role,location / L01,L02,L03〕"
+        }
+      ]
+    },
+    {
+      "example": "〔term / L06〕",
+      "normalized": "〔term / l06〕",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔term / L06〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "〔term / L06〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "〔term / L06〕"
+        }
+      ]
+    },
+    {
+      "example": "The term is 6 weeks: 2026-12-01 to 2027-01-11, fixed term with no extension beyond the end date.",
+      "normalized": "the term is 6 weeks: 2026-12-01 to 2027-01-11, fixed term with no extension beyond the end date.",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "The term is 6 weeks: 2026-12-01 to 2027-01-11, fixed term with no extension beyond the end date."
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "The term is 6 weeks: 2026-12-01 to 2027-01-11, fixed term with no extension beyond the end date."
+        }
+      ]
+    },
+    {
+      "example": "You will work 3-5 days/week, 4-7 hours/day; weekends preferred.",
+      "normalized": "you will work 3-5 days/week, 4-7 hours/day; weekends preferred.",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "You will work 3-5 days/week, 4-7 hours/day; weekends preferred."
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "You will work 3-5 days/week, 4-7 hours/day; weekends preferred."
+        }
+      ]
+    },
+    {
+      "example": "Staff discount 20% during term, uniform provided is included.",
+      "normalized": "staff discount 20% during term, uniform provided is included.",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Staff discount 20% during term, uniform provided is included."
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "Staff discount 20% during term, uniform provided is included."
+        }
+      ]
+    },
+    {
+      "example": "Training includes 1-day orientation + floor buddy week 1.",
+      "normalized": "training includes 1-day orientation + floor buddy week 1.",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Training includes 1-day orientation + floor buddy week 1."
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "Training includes 1-day orientation + floor buddy week 1."
+        }
+      ]
+    },
+    {
+      "example": "Commuter pass up to 8,000 JPY/month is provided.",
+      "normalized": "commuter pass up to 8,000 jpy/month is provided.",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Commuter pass up to 8,000 JPY/month is provided."
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "Commuter pass up to 8,000 JPY/month is provided."
+        }
+      ]
+    },
+    {
+      "example": "Seasonal Sales Associate (casual, storefront)",
+      "normalized": "seasonal sales associate (casual, storefront)",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Seasonal Sales Associate — 6 Weeks",
+          "snippet": "Seasonal Sales Associate (casual, storefront)"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Seasonal Sales Associate (casual, storefront)"
+        }
+      ]
+    },
+    {
+      "example": "This is a Casual / seasonal position.",
+      "normalized": "this is a casual / seasonal position.",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "This is a Casual / seasonal position."
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "This is a Casual / seasonal position."
+        }
+      ]
+    },
+    {
+      "example": "You will earn Hourly 1,300 JPY.",
+      "normalized": "you will earn hourly 1,300 jpy.",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "You will earn Hourly 1,300 JPY."
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "You will earn Hourly 1,300 JPY."
+        }
+      ]
+    },
+    {
+      "example": "Nagoya, Sakae district",
+      "normalized": "nagoya, sakae district",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Seasonal Sales Associate — 6 Weeks",
+          "snippet": "Nagoya, Sakae district"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Nagoya, Sakae district"
+        }
+      ]
+    },
+    {
+      "example": "〔employmentType / L04〕",
+      "normalized": "〔employmenttype / l04〕",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔employmentType / L04〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "〔employmentType / L04〕"
+        }
+      ]
+    },
+    {
+      "example": "0, no text in image",
+      "normalized": "0, no text in image",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "0, no text in image"
+        },
+        {
+          "sectionId": "location",
+          "heading": "Place &amp; Access 勤務地",
+          "snippet": "0, no text in image"
+        }
+      ]
+    },
+    {
+      "example": "Crestline Outdoor",
+      "normalized": "crestline outdoor",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Seasonal Sales Associate — 6 Weeks",
+          "snippet": "Crestline Outdoor"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Crestline Outdoor"
+        }
+      ]
+    },
+    {
+      "example": "Casual / seasonal",
+      "normalized": "casual / seasonal",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Seasonal Sales Associate — 6 Weeks",
+          "snippet": "Casual / seasonal"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Casual / seasonal"
+        }
+      ]
+    },
+    {
+      "example": "〔workHours / L07〕",
+      "normalized": "〔workhours / l07〕",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔workHours / L07〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "〔workHours / L07〕"
+        }
+      ]
+    },
+    {
+      "example": "〔training / L09〕",
+      "normalized": "〔training / l09〕",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔training / L09〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "〔training / L09〕"
+        }
+      ]
+    },
+    {
+      "example": "〔commute / L08〕",
+      "normalized": "〔commute / l08〕",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔commute / L08〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "〔commute / L08〕"
+        }
+      ]
+    },
+    {
+      "example": "〔perks / L10〕",
+      "normalized": "〔perks / l10〕",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔perks / L10〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "〔perks / L10〕"
+        }
+      ]
+    },
+    {
+      "example": "〔pay / L05〕",
+      "normalized": "〔pay / l05〕",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "〔pay / L05〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "〔pay / L05〕"
+        }
+      ]
+    }
+  ],
+  "verificationPhrases": [
+    {
+      "phrase": "What this means",
+      "lang": "EN",
+      "source": "C-A real highlight box",
+      "note": "P2 verification phrase",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "context": "seasonal term. 〔term / L06〕 What this means: Read the sentences above as",
+          "phrase": "What this means"
+        }
+      ]
+    },
+    {
+      "phrase": "numbers stay exactly as stated",
+      "lang": "EN",
+      "source": "C-A real",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "context": "ounding or reinterpretation — numbers stay exactly as stated in the FACTs. Image: work sc",
+          "phrase": "numbers stay exactly as stated"
+        }
+      ]
+    },
+    {
+      "phrase": "as stated in the FACT",
+      "lang": "EN",
+      "source": "C-A real",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "context": "tation — numbers stay exactly as stated in the FACTs. Image: work scene — muse-i",
+          "phrase": "as stated in the FACT"
+        }
+      ]
+    },
+    {
+      "phrase": "Read the sentences above as the full conditions",
+      "lang": "EN",
+      "source": "C-A real",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "context": "term / L06〕 What this means: Read the sentences above as the full conditions. No rounding or reinterpretat",
+          "phrase": "Read the sentences above as the full conditions"
+        }
+      ]
+    },
+    {
+      "phrase": "No rounding or reinterpretation",
+      "lang": "EN",
+      "source": "C-A real",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "context": "above as the full conditions. No rounding or reinterpretation — numbers stay exactly as sta",
+          "phrase": "No rounding or reinterpretation"
+        }
+      ]
+    },
+    {
+      "phrase": "All facts below are the only stated facts",
+      "lang": "EN",
+      "source": "C-A must block",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "header",
+          "heading": "Seasonal Sales Associate — 6 Weeks",
+          "context": "This is a fictional posting. All facts below are the only stated facts (L01–L02–L03–L04–L05–L06–L07–",
+          "phrase": "All facts below are the only stated facts"
+        }
+      ]
+    },
+    {
+      "phrase": "Do not invent",
+      "lang": "EN",
+      "source": "case-A mustNot",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "header",
+          "heading": "Seasonal Sales Associate — 6 Weeks",
+          "context": "t imply extension beyond term Do not invent bonus. CTA: Apply this week -",
+          "phrase": "Do not invent"
+        }
+      ]
+    },
+    {
+      "phrase": "Each cites its fact keys and source lines verbatim",
+      "lang": "EN",
+      "source": "C-A about lead",
+      "note": "P2/P3",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "n C-F gen-002 (9 sentences). Each cites its fact keys and source lines verbatim. company Crestline Outdoor",
+          "phrase": "Each cites its fact keys and source lines verbatim"
+        }
+      ]
+    },
+    {
+      "phrase": "All conditions above are from the",
+      "lang": "EN",
+      "source": "CTA block",
+      "note": "P2 meta",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "context": "district Casual / seasonal All conditions above are from the 9 sentences of C-F gen-002. N",
+          "phrase": "All conditions above are from the"
+        }
+      ]
+    },
+    {
+      "phrase": "No new facts are added",
+      "lang": "EN",
+      "source": "CTA block",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "context": "e 9 sentences of C-F gen-002. No new facts are added. Apply this week - start dat",
+          "phrase": "No new facts are added"
+        }
+      ]
+    }
+  ],
+  "recordExposure": [
+    {
+      "pattern": "fact keys",
+      "note": "小文字変種",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "(9 sentences). Each cites its fact keys and source lines verbatim. c",
+          "pattern": "fact keys"
+        }
+      ]
+    },
+    {
+      "pattern": "Target audience",
+      "note": "企画メモ露出",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "is included. 〔perks / L10〕 Target audience (fixed before generation): St",
+          "pattern": "Target audience"
+        }
+      ]
+    },
+    {
+      "pattern": "Persona:",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "ut do not inflate hours/pay.. Persona: Haru, 21, university student",
+          "pattern": "Persona:"
+        }
+      ]
+    },
+    {
+      "pattern": "Persona",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "ut do not inflate hours/pay.. Persona: Haru, 21, university student",
+          "pattern": "Persona"
+        }
+      ]
+    },
+    {
+      "pattern": "Insights applied",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": ". Checks term and pay first.. Insights applied: 001.md, 002.md, 003.md, 004.",
+          "pattern": "Insights applied"
+        }
+      ]
+    },
+    {
+      "pattern": "Insights",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": ". Checks term and pay first.. Insights applied: 001.md, 002.md, 003.",
+          "pattern": "Insights"
+        }
+      ]
+    },
+    {
+      "pattern": "Appeal:",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "t high-energy seasonal stint. Appeal: Fixed seasonal term and day-b",
+          "pattern": "Appeal:"
+        }
+      ]
+    },
+    {
+      "pattern": "CTA:",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "header",
+          "heading": "Seasonal Sales Associate — 6 Weeks",
+          "context": "ond term Do not invent bonus. CTA: Apply this week - start date",
+          "pattern": "CTA:"
+        }
+      ]
+    },
+    {
+      "pattern": "〔",
+      "note": "引用記号自体（企画では出さない）",
+      "count": 19,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": ") in Nagoya, Sakae district. 〔company,role,location / L01,L0",
+          "pattern": "〔"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "context": ") in Nagoya, Sakae district. 〔company,role,location / L01,L0",
+          "pattern": "〔"
+        }
+      ]
+    },
+    {
+      "pattern": "〕",
+      "note": "",
+      "count": 19,
+      "hits": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "ny,role,location / L01,L02,L03〕 role Crestline Outdoor is h",
+          "pattern": "〕"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "context": "ny,role,location / L01,L02,L03〕 S2 This is a Casual / seaso",
+          "pattern": "〕"
+        }
+      ]
+    },
+    {
+      "pattern": "L01",
+      "note": "sourceLineコード露出（本文中）",
+      "count": 5,
+      "hits": [
+        {
+          "sectionId": "header",
+          "heading": "Seasonal Sales Associate — 6 Weeks",
+          "context": "ow are the only stated facts (L01–L02–L03–L04–L05–L06–L07–L08–L",
+          "pattern": "L01"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "context": "ct. 〔company,role,location / L01,L02,L03〕 role Crestline Out",
+          "pattern": "L01"
+        },
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "context": "ct. 〔company,role,location / L01,L02,L03〕 S2 This is a Casua",
+          "pattern": "L01"
+        }
+      ]
+    }
+  ],
+  "headingMismatch": [
+    {
+      "sectionId": "conditions",
+      "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+      "foundKeys": [
+        "company",
+        "role",
+        "location",
+        "employmentType",
+        "term",
+        "pay",
+        "workHours",
+        "commute",
+        "training",
+        "perks"
+      ],
+      "allowedKeys": [
+        "salary",
+        "pay",
+        "workHours",
+        "employmentType",
+        "wage",
+        "annual",
+        "hourly"
+      ],
+      "unexpectedKeys": [
+        "company",
+        "role",
+        "location",
+        "term",
+        "commute",
+        "training",
+        "perks"
+      ],
+      "rule": "Pay",
+      "description": ""
+    }
+  ],
+  "allSections": [
+    {
+      "id": "header",
+      "heading": "Seasonal Sales Associate — 6 Weeks",
+      "foundKeys": []
+    },
+    {
+      "id": "about",
+      "heading": "The Basics 募集の基本",
+      "foundKeys": [
+        "company",
+        "role",
+        "location",
+        "employmentType",
+        "pay",
+        "term",
+        "workHours",
+        "commute",
+        "training",
+        "perks"
+      ]
+    },
+    {
+      "id": "conditions",
+      "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+      "foundKeys": [
+        "company",
+        "role",
+        "location",
+        "employmentType",
+        "term",
+        "pay",
+        "workHours",
+        "commute",
+        "training",
+        "perks"
+      ]
+    },
+    {
+      "id": "location",
+      "heading": "Place &amp; Access 勤務地",
+      "foundKeys": []
+    },
+    {
+      "id": "check",
+      "heading": "Check Before You Apply 応募前の確認",
+      "foundKeys": []
+    },
+    {
+      "id": "lp-memo",
+      "heading": "Memo このLPへのメモ（ブラウザ保存）",
+      "foundKeys": []
+    }
+  ]
+}

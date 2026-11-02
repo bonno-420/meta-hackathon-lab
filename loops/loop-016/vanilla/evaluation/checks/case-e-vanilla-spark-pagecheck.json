@@ -1,0 +1,110 @@
+{
+  "case": "C-E",
+  "variant": "vanilla-spark",
+  "gen": "vanilla-spark",
+  "source": "vanilla/spark/case-e.html",
+  "generatedAt": "2026-11-02T11:57:23.416Z",
+  "tool": "eval-phase-012.mjs phase2 pagecheck adapted",
+  "version": "1.1-candidate (T1-T5+P6) adapted for vanilla",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API. For vanilla HTML with different structure, missing checks are marked applicable=false and not forced.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7,
+    "heroP6": 6
+  },
+  "summary": {
+    "duplicates": 2,
+    "duplicateSentencesTotalOccurrences": 4,
+    "verificationHits": 0,
+    "verificationGroups": 0,
+    "recordExposureGroups": 0,
+    "recordExposureHits": 0,
+    "headingMismatch": 0,
+    "heroP6Present": 1,
+    "heroP6Missing": 0,
+    "applicabilityNotes": []
+  },
+  "applicability": {
+    "sectionsDetected": 2,
+    "hasHeroTag": false,
+    "hasSections": true,
+    "headingCheckApplicable": false,
+    "note": "standard"
+  },
+  "duplication": [
+    {
+      "example": "Cafe Crew (part-time, short hours)",
+      "normalized": "cafe crew (part-time, short hours)",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "section-no-id",
+          "heading": "memo",
+          "snippet": "Cafe Crew (part-time, short hours)"
+        },
+        {
+          "sectionId": "section-no-id",
+          "heading": "memo",
+          "snippet": "Cafe Crew (part-time, short hours)"
+        }
+      ]
+    },
+    {
+      "example": "Hourly 1,250 JPY",
+      "normalized": "hourly 1,250 jpy",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "section-no-id",
+          "heading": "memo",
+          "snippet": "Hourly 1,250 JPY"
+        },
+        {
+          "sectionId": "section-no-id",
+          "heading": "memo",
+          "snippet": "Hourly 1,250 JPY"
+        }
+      ]
+    }
+  ],
+  "verificationPhrases": [],
+  "recordExposure": [],
+  "headingMismatch": [],
+  "allSections": [
+    {
+      "id": "section-no-id",
+      "heading": "memo",
+      "foundKeys": []
+    },
+    {
+      "id": "section-no-id",
+      "heading": "memo",
+      "foundKeys": []
+    }
+  ],
+  "heroP6": {
+    "present": true,
+    "heroText": "Morningside Coffee — Cafe Crew (part-time, short hours) | Setagaya, Futako-Tamagawa Morningside Coffee Setagaya, Futako-Tamagawa Part-time Now hiring — Part-time, short hours Cafe Crew (part-time, short hours) Morningside Coffee — Setagaya, Futako-Tamagawa Hourly 1,250 JPY From 3 hours / day 2–4 days / week No experience required Work options: 08:00–11:00 or 11:00–14:00 Pay Hourly 1,250 JPY Employ",
+    "checks": [
+      {
+        "pattern": "/3 hours/i",
+        "found": true,
+        "context": "amagawa Hourly 1,250 JPY From 3 hours / day 2–4 days / week No experience requir"
+      },
+      {
+        "pattern": "/08:00-11:00/i",
+        "found": true,
+        "context": "om 3 hours/day, 2-4 days/week 08:00-11:00 or 11:00-14:00 3-day onboarding with b"
+      },
+      {
+        "pattern": "/Futako-Tamagawa/i",
+        "found": true,
+        "context": "ime, short hours) | Setagaya, Futako-Tamagawa Morningside Coffee Setagaya, Futak"
+      }
+    ],
+    "missing": [],
+    "label": "From 3 hours + Futako-Tamagawa",
+    "applicability": "no hero tag — used fallback (vanilla structure may differ)"
+  }
+}

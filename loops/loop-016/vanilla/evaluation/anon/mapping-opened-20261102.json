@@ -1,0 +1,64 @@
+{
+  "generatedAt": "2026-11-02T12:00:11.237Z",
+  "note": "sealed mapping — do not open until reviews complete. X/Y/Z per case are random assignments of [vanilla-wonder, vanilla-spark, pipeline-gen-005].",
+  "cases": {
+    "C-A": {
+      "X": "pipeline-gen-005",
+      "Y": "vanilla-wonder",
+      "Z": "vanilla-spark"
+    },
+    "C-B": {
+      "X": "vanilla-wonder",
+      "Y": "vanilla-spark",
+      "Z": "pipeline-gen-005"
+    },
+    "C-C": {
+      "X": "vanilla-wonder",
+      "Y": "pipeline-gen-005",
+      "Z": "vanilla-spark"
+    },
+    "C-D": {
+      "X": "vanilla-wonder",
+      "Y": "pipeline-gen-005",
+      "Z": "vanilla-spark"
+    },
+    "C-E": {
+      "X": "vanilla-wonder",
+      "Y": "vanilla-spark",
+      "Z": "pipeline-gen-005"
+    },
+    "C-F": {
+      "X": "vanilla-spark",
+      "Y": "vanilla-wonder",
+      "Z": "pipeline-gen-005"
+    }
+  },
+  "reverse": {
+    "pipeline-gen-005": {
+      "C-A": "X",
+      "C-B": "Z",
+      "C-C": "Y",
+      "C-D": "Y",
+      "C-E": "Z",
+      "C-F": "Z"
+    },
+    "vanilla-wonder": {
+      "C-A": "Y",
+      "C-B": "X",
+      "C-C": "X",
+      "C-D": "X",
+      "C-E": "X",
+      "C-F": "Y"
+    },
+    "vanilla-spark": {
+      "C-A": "Z",
+      "C-B": "Y",
+      "C-C": "Z",
+      "C-D": "Z",
+      "C-E": "Y",
+      "C-F": "X"
+    }
+  },
+  "openedAt": "2026-11-02T12:17:18.196Z",
+  "noteOpened": "Seal opened after all judge and blind reviews completed. This file records the true mapping for reporting."
+}

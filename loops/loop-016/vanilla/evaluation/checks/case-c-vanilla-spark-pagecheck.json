@@ -1,0 +1,67 @@
+{
+  "case": "C-C",
+  "variant": "vanilla-spark",
+  "gen": "vanilla-spark",
+  "source": "vanilla/spark/case-c.html",
+  "generatedAt": "2026-11-02T11:57:23.055Z",
+  "tool": "eval-phase-012.mjs phase2 pagecheck adapted",
+  "version": "1.1-candidate (T1-T5+P6) adapted for vanilla",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API. For vanilla HTML with different structure, missing checks are marked applicable=false and not forced.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7,
+    "heroP6": 6
+  },
+  "summary": {
+    "duplicates": 0,
+    "duplicateSentencesTotalOccurrences": 0,
+    "verificationHits": 0,
+    "verificationGroups": 0,
+    "recordExposureGroups": 0,
+    "recordExposureHits": 0,
+    "headingMismatch": 0,
+    "heroP6Present": 1,
+    "heroP6Missing": 1,
+    "applicabilityNotes": []
+  },
+  "applicability": {
+    "sectionsDetected": 1,
+    "hasHeroTag": false,
+    "hasSections": false,
+    "headingCheckApplicable": false,
+    "note": "standard"
+  },
+  "duplication": [],
+  "verificationPhrases": [],
+  "recordExposure": [],
+  "headingMismatch": [],
+  "allSections": [
+    {
+      "id": "header",
+      "heading": "Everfield &amp; Co. Brand Specialist (12-month fixed-term contract)",
+      "foundKeys": []
+    }
+  ],
+  "heroP6": {
+    "present": true,
+    "heroText": "Fictitious posting — Tokyo, Shibuya Everfield & Co. Brand Specialist (12-month fixed-term contract) Facts below are the only stated facts from the posting sheet dated 2026-11-02.",
+    "checks": [
+      {
+        "pattern": "/12 months/i",
+        "found": false,
+        "context": ""
+      },
+      {
+        "pattern": "/Contract/i",
+        "found": true,
+        "context": "ecialist (12-month fixed-term contract) Facts below are the only stated facts fr"
+      }
+    ],
+    "missing": [
+      "/12 months/i"
+    ],
+    "label": "Contract 12 months",
+    "applicability": "no hero tag — used fallback (vanilla structure may differ)"
+  }
+}

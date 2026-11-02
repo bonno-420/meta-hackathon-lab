@@ -1,0 +1,70 @@
+﻿{
+    "id":  "C-B",
+    "label":  "Full-time Healthcare Registered Nurse (fictitious, EN-only)",
+    "employmentType":  "full-time",
+    "industry":  "Healthcare",
+    "role":  "Registered Nurse",
+    "note":  "Fictitious. Facts authored in English; no JA embedded. Hash this file at start and record in run-record.",
+    "plan":  {
+                 "cta":  "Apply with license copy - reply within 3 business days",
+                 "mustNot":  [
+                                 "Do not invent shift allowances",
+                                 "Do not add night duty"
+                             ],
+                 "targetAudience":  "Licensed nurses seeking stable day-shift roles in urban general hospital",
+                 "appeal":  "Structured handover and funded training first; shift and salary as fixed facts.",
+                 "persona":  "Maya, 31, RN 4 years suburban clinic. Wants larger team, clear handover, paid training. Checks commute/shifts first."
+             },
+    "facts":  [
+                  {
+                      "key":  "company",
+                      "value":  "Harborview General Hospital",
+                      "sourceLine":  "L01"
+                  },
+                  {
+                      "key":  "role",
+                      "value":  "Registered Nurse (full-time, general ward)",
+                      "sourceLine":  "L02"
+                  },
+                  {
+                      "key":  "location",
+                      "value":  "Yokohama, Minato Mirai area",
+                      "sourceLine":  "L03"
+                  },
+                  {
+                      "key":  "employmentType",
+                      "value":  "Full-time (permanent)",
+                      "sourceLine":  "L04"
+                  },
+                  {
+                      "key":  "salary",
+                      "value":  "Annual 5,200,000 JPY",
+                      "sourceLine":  "L05"
+                  },
+                  {
+                      "key":  "workHours",
+                      "value":  "Day shift 08:30-17:00, 5 days/week; no scheduled night duty",
+                      "sourceLine":  "L06"
+                  },
+                  {
+                      "key":  "commute",
+                      "value":  "8-min walk from Sakuragicho Station; commuter pass reimbursed in full",
+                      "sourceLine":  "L07"
+                  },
+                  {
+                      "key":  "training",
+                      "value":  "Two paid training days per year + quarterly skills workshop",
+                      "sourceLine":  "L08"
+                  },
+                  {
+                      "key":  "team",
+                      "value":  "12-nurse ward with dedicated handover lead",
+                      "sourceLine":  "L09"
+                  },
+                  {
+                      "key":  "benefits",
+                      "value":  "Health insurance, 12 paid days from month 7, childcare support desk on site",
+                      "sourceLine":  "L10"
+                  }
+              ]
+}

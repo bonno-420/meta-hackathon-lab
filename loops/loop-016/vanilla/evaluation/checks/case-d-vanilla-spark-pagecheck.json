@@ -1,0 +1,65 @@
+{
+  "case": "C-D",
+  "variant": "vanilla-spark",
+  "gen": "vanilla-spark",
+  "source": "vanilla/spark/case-d.html",
+  "generatedAt": "2026-11-02T11:57:23.217Z",
+  "tool": "eval-phase-012.mjs phase2 pagecheck adapted",
+  "version": "1.1-candidate (T1-T5+P6) adapted for vanilla",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API. For vanilla HTML with different structure, missing checks are marked applicable=false and not forced.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7,
+    "heroP6": 6
+  },
+  "summary": {
+    "duplicates": 0,
+    "duplicateSentencesTotalOccurrences": 0,
+    "verificationHits": 0,
+    "verificationGroups": 0,
+    "recordExposureGroups": 0,
+    "recordExposureHits": 0,
+    "headingMismatch": 0,
+    "heroP6Present": 1,
+    "heroP6Missing": 0,
+    "applicabilityNotes": []
+  },
+  "applicability": {
+    "sectionsDetected": 1,
+    "hasHeroTag": false,
+    "hasSections": true,
+    "headingCheckApplicable": false,
+    "note": "standard"
+  },
+  "duplication": [],
+  "verificationPhrases": [],
+  "recordExposure": [],
+  "headingMismatch": [],
+  "allSections": [
+    {
+      "id": "section-no-id",
+      "heading": "memo",
+      "foundKeys": []
+    }
+  ],
+  "heroP6": {
+    "present": true,
+    "heroText": "Warehouse Associate (Picking and Packing) in Kawaguchi, Saitama | Apex Work Partners Apex Work Partners Dispatching agency Warehouse Associate — Picking and Packing Work in Kawaguchi, Saitama. 3–5 days/week, you choose. Dispatched position via Apex Work Partners at a client distribution center in Saitama, Kawaguchi. No forklift license required. Hourly 1,400 JPY Mon–Fri 09:00–17:30 3-5 days/week s",
+    "checks": [
+      {
+        "pattern": "/Apex Work Partners/i",
+        "found": true,
+        "context": "king) in Kawaguchi, Saitama | Apex Work Partners Apex Work Partners Dispatching"
+      },
+      {
+        "pattern": "/Saitama/i",
+        "found": true,
+        "context": "ng and Packing) in Kawaguchi, Saitama | Apex Work Partners Apex Work Partners Di"
+      }
+    ],
+    "missing": [],
+    "label": "Apex Work Partners + Saitama Kawaguchi",
+    "applicability": "no hero tag — used fallback (vanilla structure may differ)"
+  }
+}

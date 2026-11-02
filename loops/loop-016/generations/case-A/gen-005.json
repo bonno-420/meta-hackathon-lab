@@ -1,0 +1,172 @@
+{
+  "generatedAt": "2026-11-02T11:37:36.402Z",
+  "startedAt": "2026-11-02T10:51:50.000Z",
+  "model": "meta-models/muse-spark-open-1026",
+  "baseUrl": "https://inference.baseten.co/v1",
+  "language": "EN",
+  "case": {
+    "id": "C-A",
+    "label": "Full-time SaaS Software Engineer (fictitious, EN-only)",
+    "caseFile": "loops/loop-016/cases/case-A.json"
+  },
+  "provisionalLimit": {
+    "max_tokens": 12000,
+    "temperature": 0.4,
+    "note": "gen-005 reuses gen-004 sentences verbatim, Baseten 0"
+  },
+  "insightsApplied": [
+    "001.md",
+    "002.md",
+    "003.md",
+    "004.md",
+    "005.md",
+    "006.md",
+    "007.md",
+    "008.md",
+    "009.md",
+    "010.md",
+    "011.md",
+    "012.md"
+  ],
+  "researchApplied": [
+    "common.md",
+    "case-a.md"
+  ],
+  "researchVersion": "v1.0 (2026-11-02)",
+  "reflectionApplied": [
+    "loops/loop-016/reflection-memos/2026-11-02-reflection-v-next-gen004.md"
+  ],
+  "reflectionVersion": "v-next-gen004 (2026-11-02)",
+  "reflectionReason": null,
+  "ok": true,
+  "error": null,
+  "usage": {
+    "prompt_tokens": 12701,
+    "completion_tokens": 4535,
+    "total_tokens": 17236,
+    "prompt_tokens_details": {
+      "audio_tokens": 0,
+      "cached_tokens": 3712
+    },
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": 3380,
+      "audio_tokens": 0,
+      "reasoning_tokens": 4143,
+      "rejected_prediction_tokens": 4712
+    }
+  },
+  "usageSummary": {
+    "prompt_tokens": 12701,
+    "completion_tokens": 4535,
+    "total_tokens": 17236
+  },
+  "generation": {
+    "sentences": [
+      {
+        "text": "Northbridge Labs is hiring a Software Engineer (full-time, SaaS product team) in Osaka, Umeda district.",
+        "factKeys": [
+          "company",
+          "role",
+          "location"
+        ],
+        "sourceLines": [
+          "L01",
+          "L02",
+          "L03"
+        ]
+      },
+      {
+        "text": "This position is Full-time (permanent) with stable on-site work.",
+        "factKeys": [
+          "employmentType"
+        ],
+        "sourceLines": [
+          "L04"
+        ]
+      },
+      {
+        "text": "The role offers Annual 4,800,000 JPY as the fixed annual amount for this position.",
+        "factKeys": [
+          "salary"
+        ],
+        "sourceLines": [
+          "L05"
+        ]
+      },
+      {
+        "text": "Working hours are Mon-Fri, 10:00-18:30 (flex core 11:00-16:00), where 11:00-16:00 is the core time to be available and the remaining hours can be adjusted within the band.",
+        "factKeys": [
+          "workHours"
+        ],
+        "sourceLines": [
+          "L06"
+        ]
+      },
+      {
+        "text": "The office is a 5-min walk from Umeda Station; commuter pass reimbursed in full, so the commute is short and straightforward.",
+        "factKeys": [
+          "commute"
+        ],
+        "sourceLines": [
+          "L07"
+        ]
+      },
+      {
+        "text": "You will join an 8-person product team (4 engineers, 2 designers, 2 PMs) with a steady team rhythm.",
+        "factKeys": [
+          "team"
+        ],
+        "sourceLines": [
+          "L09"
+        ]
+      },
+      {
+        "text": "Support includes 3-month onboarding with dedicated mentor and weekly code review to build your work step by step.",
+        "factKeys": [
+          "training"
+        ],
+        "sourceLines": [
+          "L08"
+        ]
+      },
+      {
+        "text": "Benefits include Health insurance, 10 paid days from month 7, laptop provided as listed.",
+        "factKeys": [
+          "benefits"
+        ],
+        "sourceLines": [
+          "L10"
+        ]
+      },
+      {
+        "text": "Apply with your resume for a casual first interview for the Software Engineer (full-time, SaaS product team) role at Northbridge Labs.",
+        "factKeys": [
+          "company",
+          "role"
+        ],
+        "sourceLines": [
+          "L01",
+          "L02"
+        ]
+      }
+    ]
+  },
+  "conformance": {
+    "pass": true,
+    "checked": 9,
+    "issues": []
+  },
+  "prose": {
+    "checked": 9,
+    "totalFindings": 0,
+    "needsFixCount": 0,
+    "findings": []
+  },
+  "cost": "未記録（残量が確認できないため）",
+  "templateApplied": "gen-005 S1+S2 (value-chip + single-placement)",
+  "templateVersion": "gen-005",
+  "templateSource": "loops/loop-016/generations/case-A/gen-004.json",
+  "basetenConsumed": 0,
+  "gen": "005",
+  "note": "gen-005: sentences verbatim from gen-004, assembly only S1+S2, Baseten 0"
+}

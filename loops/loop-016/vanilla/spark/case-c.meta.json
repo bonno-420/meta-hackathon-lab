@@ -1,0 +1,33 @@
+{
+  "generatedAt": "2026-11-02T07:09:10.922Z",
+  "startedAt": "2026-11-02T07:08:54.051Z",
+  "model": "muse-spark-1.3",
+  "modelKey": "spark",
+  "case": "C",
+  "caseId": "C-C",
+  "caseLabel": "Contract Marketing Brand Specialist 12-month (fictitious, EN-only)",
+  "promptPath": "loops/loop-016/vanilla/prompt-v1.0.md",
+  "promptVersion": "v1.0",
+  "promptLength": 1660,
+  "ticketPath": "vanilla/inputs/case-c.md",
+  "ticketHash": "ce2bc2d04a67d1aae4ff0373810d6cd0c8a172c767e7b5276e90a130e0b3d554",
+  "sourceCasePath": "cases/case-C.json",
+  "sourceCaseHash": "ce2bc2d04a67d1aae4ff0373810d6cd0c8a172c767e7b5276e90a130e0b3d554",
+  "keySource": "env:MODEL_API_KEY",
+  "usage": {
+    "completion_tokens": 2742,
+    "prompt_tokens": 490,
+    "total_tokens": 3232,
+    "completion_tokens_details": {
+      "reasoning_tokens": 1784
+    },
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "usageSummary": "prompt 490 / completion 2742 / total 3232",
+  "quota": "Meta API (vanilla contrast, not Baseten)",
+  "images": "previews/images/case-C-{hero,work,place}.webp (gen-001, shared across models)",
+  "htmlPath": "vanilla/spark/case-c.html",
+  "htmlLength": 3110
+}

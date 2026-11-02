@@ -1,0 +1,170 @@
+{
+  "generatedAt": "2026-11-02T11:37:36.416Z",
+  "startedAt": "2026-11-02T10:54:25.115Z",
+  "model": "meta-models/muse-spark-open-1026",
+  "baseUrl": "https://inference.baseten.co/v1",
+  "language": "EN",
+  "case": {
+    "id": "C-E",
+    "label": "Part-time Cafe Crew short hours (fictitious, EN-only)",
+    "caseFile": "loops/loop-016/cases/case-E.json"
+  },
+  "provisionalLimit": {
+    "max_tokens": 12000,
+    "temperature": 0.4,
+    "note": "gen-005 reuses gen-004 sentences verbatim, Baseten 0"
+  },
+  "insightsApplied": [
+    "001.md",
+    "002.md",
+    "003.md",
+    "004.md",
+    "005.md",
+    "006.md",
+    "007.md",
+    "008.md",
+    "009.md",
+    "010.md",
+    "011.md",
+    "012.md"
+  ],
+  "researchApplied": [
+    "common.md",
+    "case-e.md"
+  ],
+  "researchVersion": "v1.0 (2026-11-02)",
+  "reflectionApplied": [
+    "loops/loop-016/reflection-memos/2026-11-02-reflection-v-next-gen004.md"
+  ],
+  "reflectionVersion": "v-next-gen004 (2026-11-02)",
+  "reflectionReason": null,
+  "ok": true,
+  "error": null,
+  "usage": {
+    "prompt_tokens": 12507,
+    "completion_tokens": 9488,
+    "total_tokens": 21995,
+    "prompt_tokens_details": {
+      "audio_tokens": 0,
+      "cached_tokens": 12416
+    },
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": 6860,
+      "audio_tokens": 0,
+      "reasoning_tokens": 9184,
+      "rejected_prediction_tokens": 11543
+    }
+  },
+  "usageSummary": {
+    "prompt_tokens": 12507,
+    "completion_tokens": 9488,
+    "total_tokens": 21995
+  },
+  "generation": {
+    "sentences": [
+      {
+        "text": "Morningside Coffee is hiring Cafe Crew (part-time, short hours) in Setagaya, Futako-Tamagawa.",
+        "factKeys": [
+          "company",
+          "role",
+          "location"
+        ],
+        "sourceLines": [
+          "L01",
+          "L02",
+          "L03"
+        ]
+      },
+      {
+        "text": "This is a Part-time position.",
+        "factKeys": [
+          "employmentType"
+        ],
+        "sourceLines": [
+          "L04"
+        ]
+      },
+      {
+        "text": "You can work From 3 hours/day, 2-4 days/week; 08:00-11:00 or 11:00-14:00.",
+        "factKeys": [
+          "workHours"
+        ],
+        "sourceLines": [
+          "L06"
+        ]
+      },
+      {
+        "text": "The cafe is a 2-min walk from Futako-Tamagawa Station; pass up to 10,000 JPY/month.",
+        "factKeys": [
+          "commute"
+        ],
+        "sourceLines": [
+          "L07"
+        ]
+      },
+      {
+        "text": "You will earn Hourly 1,250 JPY.",
+        "factKeys": [
+          "pay"
+        ],
+        "sourceLines": [
+          "L05"
+        ]
+      },
+      {
+        "text": "Training includes 3-day onboarding with buddy; no experience required.",
+        "factKeys": [
+          "training"
+        ],
+        "sourceLines": [
+          "L08"
+        ]
+      },
+      {
+        "text": "You will join a 6-person cafe team with shared shift board.",
+        "factKeys": [
+          "team"
+        ],
+        "sourceLines": [
+          "L09"
+        ]
+      },
+      {
+        "text": "Staff drink free on shift is included.",
+        "factKeys": [
+          "benefits"
+        ],
+        "sourceLines": [
+          "L10"
+        ]
+      },
+      {
+        "text": "Quick apply for Cafe Crew (part-time, short hours) with no resume; casual chat first.",
+        "factKeys": [
+          "role"
+        ],
+        "sourceLines": [
+          "L02"
+        ]
+      }
+    ]
+  },
+  "conformance": {
+    "pass": true,
+    "checked": 9,
+    "issues": []
+  },
+  "prose": {
+    "checked": 9,
+    "totalFindings": 0,
+    "needsFixCount": 0,
+    "findings": []
+  },
+  "cost": "未記録（残量が確認できないため）",
+  "templateApplied": "gen-005 S1+S2 (value-chip + single-placement)",
+  "templateVersion": "gen-005",
+  "templateSource": "loops/loop-016/generations/case-E/gen-004.json",
+  "basetenConsumed": 0,
+  "gen": "005",
+  "note": "gen-005: sentences verbatim from gen-004, assembly only S1+S2, Baseten 0"
+}

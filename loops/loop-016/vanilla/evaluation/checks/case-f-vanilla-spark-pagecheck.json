@@ -1,0 +1,70 @@
+{
+  "case": "C-F",
+  "variant": "vanilla-spark",
+  "gen": "vanilla-spark",
+  "source": "vanilla/spark/case-f.html",
+  "generatedAt": "2026-11-02T11:57:23.611Z",
+  "tool": "eval-phase-012.mjs phase2 pagecheck adapted",
+  "version": "1.1-candidate (T1-T5+P6) adapted for vanilla",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API. For vanilla HTML with different structure, missing checks are marked applicable=false and not forced.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7,
+    "heroP6": 6
+  },
+  "summary": {
+    "duplicates": 0,
+    "duplicateSentencesTotalOccurrences": 0,
+    "verificationHits": 0,
+    "verificationGroups": 0,
+    "recordExposureGroups": 0,
+    "recordExposureHits": 0,
+    "headingMismatch": 0,
+    "heroP6Present": 1,
+    "heroP6Missing": 0,
+    "applicabilityNotes": []
+  },
+  "applicability": {
+    "sectionsDetected": 2,
+    "hasHeroTag": false,
+    "hasSections": true,
+    "headingCheckApplicable": false,
+    "note": "standard"
+  },
+  "duplication": [],
+  "verificationPhrases": [],
+  "recordExposure": [],
+  "headingMismatch": [],
+  "allSections": [
+    {
+      "id": "section-no-id",
+      "heading": "At a glance",
+      "foundKeys": []
+    },
+    {
+      "id": "section-no-id",
+      "heading": "Posting details",
+      "foundKeys": []
+    }
+  ],
+  "heroP6": {
+    "present": true,
+    "heroText": "Crestline Outdoor — Seasonal Sales Associate (Nagoya, Sakae district) Crestline Outdoor Nagoya, Sakae district &bull; Casual / seasonal Seasonal — 6 weeks: 2026-12-01 to 2027-01-11 Seasonal Sales Associate (casual, storefront) Storefront seasonal role in Nagoya, Sakae district. Facts below are from the posting only. Hourly 1,300 JPY 3–5 days/week, 4–7 hours/day Weekends preferred Pay Hourly 1,300 ",
+    "checks": [
+      {
+        "pattern": "/2026-12-01/i",
+        "found": true,
+        "context": "seasonal Seasonal — 6 weeks: 2026-12-01 to 2027-01-11 Seasonal Sales Associate"
+      },
+      {
+        "pattern": "/6 weeks/i",
+        "found": true,
+        "context": "Casual / seasonal Seasonal — 6 weeks: 2026-12-01 to 2027-01-11 Seasonal Sales A"
+      }
+    ],
+    "missing": [],
+    "label": "6 weeks: 2026-12-01 to 2027-01-11",
+    "applicability": "no hero tag — used fallback (vanilla structure may differ)"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "case": "C-C",
+  "variant": "vanilla-spark",
+  "model": "muse-spark-1.3-contributor",
+  "usage": {
+    "completion_tokens": 3444,
+    "prompt_tokens": 3353,
+    "total_tokens": 6797,
+    "completion_tokens_details": {
+      "reasoning_tokens": 3055
+    },
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "contentLength": 873,
+  "source": "vanilla/spark/case-c.html",
+  "attempt": 1
+}

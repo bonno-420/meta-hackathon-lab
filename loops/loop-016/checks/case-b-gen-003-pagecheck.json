@@ -1,0 +1,252 @@
+{
+  "case": "C-B",
+  "gen": "003",
+  "source": "loops/loop-016/previews/case-B-gen-003-complete.html",
+  "generatedAt": "2026-11-02T07:35:32.638Z",
+  "tool": "loop16-pagecheck.mjs",
+  "version": "1.1-candidate (T1-T5 + P6)",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7,
+    "heroP6": 6
+  },
+  "summary": {
+    "duplicates": 7,
+    "duplicateSentencesTotalOccurrences": 17,
+    "verificationHits": 2,
+    "verificationGroups": 2,
+    "recordExposureGroups": 0,
+    "recordExposureHits": 0,
+    "headingMismatch": 0,
+    "heroP6Present": 1,
+    "heroP6Missing": 0
+  },
+  "duplication": [
+    {
+      "example": "Registered Nurse (full-time, general ward)",
+      "normalized": "registered nurse (full-time, general ward)",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Registered Nurse (full-time, general ward)",
+          "snippet": "Registered Nurse (full-time, general ward)"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Registered Nurse (full-time, general ward)"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Registered Nurse (full-time, general ward)"
+        }
+      ]
+    },
+    {
+      "example": "Yokohama, Minato Mirai area",
+      "normalized": "yokohama, minato mirai area",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Registered Nurse (full-time, general ward)",
+          "snippet": "Yokohama, Minato Mirai area"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Yokohama, Minato Mirai area"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Yokohama, Minato Mirai area"
+        }
+      ]
+    },
+    {
+      "example": "Full-time (permanent)",
+      "normalized": "full-time (permanent)",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Registered Nurse (full-time, general ward)",
+          "snippet": "Full-time (permanent)"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Full-time (permanent)"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Full-time (permanent)"
+        }
+      ]
+    },
+    {
+      "example": "Day shift 08:30-17:00, 5 days/week; no scheduled night duty",
+      "normalized": "day shift 08:30-17:00, 5 days/week; no scheduled night duty",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Registered Nurse (full-time, general ward)",
+          "snippet": "Day shift 08:30-17:00, 5 days/week; no scheduled night duty"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Day shift 08:30-17:00, 5 days/week; no scheduled night duty"
+        }
+      ]
+    },
+    {
+      "example": "Harborview General Hospital",
+      "normalized": "harborview general hospital",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Harborview General Hospital"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Harborview General Hospital"
+        }
+      ]
+    },
+    {
+      "example": "Annual 5,200,000 JPY",
+      "normalized": "annual 5,200,000 jpy",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Registered Nurse (full-time, general ward)",
+          "snippet": "Annual 5,200,000 JPY"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Annual 5,200,000 JPY"
+        }
+      ]
+    },
+    {
+      "example": "0, no text in image",
+      "normalized": "0, no text in image",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "0, no text in image"
+        },
+        {
+          "sectionId": "location",
+          "heading": "Place &amp; Access 勤務地",
+          "snippet": "0, no text in image"
+        }
+      ]
+    }
+  ],
+  "verificationPhrases": [
+    {
+      "phrase": "All conditions above are from the",
+      "lang": "EN",
+      "source": "CTA block",
+      "note": "P2 meta",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "context": "area Full-time (permanent) All conditions above are from the 11 sentences of C-B gen-003.",
+          "phrase": "All conditions above are from the"
+        }
+      ]
+    },
+    {
+      "phrase": "No new facts are added",
+      "lang": "EN",
+      "source": "CTA block",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "context": "11 sentences of C-B gen-003. No new facts are added. Apply with license copy - r",
+          "phrase": "No new facts are added"
+        }
+      ]
+    }
+  ],
+  "recordExposure": [],
+  "headingMismatch": [],
+  "allSections": [
+    {
+      "id": "header",
+      "heading": "Registered Nurse (full-time, general ward)",
+      "foundKeys": []
+    },
+    {
+      "id": "about",
+      "heading": "The Basics 募集の基本",
+      "foundKeys": []
+    },
+    {
+      "id": "conditions",
+      "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+      "foundKeys": []
+    },
+    {
+      "id": "location",
+      "heading": "Place &amp; Access 勤務地",
+      "foundKeys": []
+    },
+    {
+      "id": "team",
+      "heading": "Team &amp; Support チーム・サポート",
+      "foundKeys": []
+    },
+    {
+      "id": "check",
+      "heading": "Check Before You Apply 応募前の確認",
+      "foundKeys": []
+    },
+    {
+      "id": "lp-memo",
+      "heading": "Memo このLPへのメモ（ブラウザ保存）",
+      "foundKeys": []
+    }
+  ],
+  "heroP6": {
+    "present": true,
+    "heroText": "Full-time (permanent) · Yokohama, Minato Mirai area Registered Nurse (full-time, general ward) Structured handover and funded training first; shift and salary as fixed facts. — Day shift 08:30-17:00, 5 days/week; no scheduled night duty This is a fictional posting for Full-time Healthcare Registered Nurse (fictitious, EN-only). No application function. Full-time (permanent) Day shift 08:30-17:00, ",
+    "checks": [
+      {
+        "pattern": "/08:30-17:00/i",
+        "found": true,
+        "context": "y as fixed facts. — Day shift 08:30-17:00, 5 days/week; no scheduled night duty"
+      },
+      {
+        "pattern": "/Day shift/i",
+        "found": true,
+        "context": "and salary as fixed facts. — Day shift 08:30-17:00, 5 days/week; no scheduled n"
+      }
+    ],
+    "missing": [],
+    "label": "Day shift 08:30-17:00",
+    "note": "candidate — permanence requires owner approval"
+  }
+}

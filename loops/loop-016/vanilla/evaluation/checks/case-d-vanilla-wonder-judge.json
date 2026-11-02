@@ -1,0 +1,19 @@
+{
+  "case": "C-D",
+  "variant": "vanilla-wonder",
+  "model": "muse-spark-1.3-contributor",
+  "usage": {
+    "completion_tokens": 6812,
+    "prompt_tokens": 4244,
+    "total_tokens": 11056,
+    "completion_tokens_details": {
+      "reasoning_tokens": 6342
+    },
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "contentLength": 1241,
+  "source": "vanilla/wonder/case-d.html",
+  "attempt": 1
+}

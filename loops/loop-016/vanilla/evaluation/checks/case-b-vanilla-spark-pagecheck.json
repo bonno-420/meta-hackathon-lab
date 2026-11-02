@@ -1,0 +1,280 @@
+{
+  "case": "C-B",
+  "variant": "vanilla-spark",
+  "gen": "vanilla-spark",
+  "source": "vanilla/spark/case-b.html",
+  "generatedAt": "2026-11-02T11:57:22.839Z",
+  "tool": "eval-phase-012.mjs phase2 pagecheck adapted",
+  "version": "1.1-candidate (T1-T5+P6) adapted for vanilla",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API. For vanilla HTML with different structure, missing checks are marked applicable=false and not forced.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7,
+    "heroP6": 6
+  },
+  "summary": {
+    "duplicates": 11,
+    "duplicateSentencesTotalOccurrences": 27,
+    "verificationHits": 0,
+    "verificationGroups": 0,
+    "recordExposureGroups": 0,
+    "recordExposureHits": 0,
+    "headingMismatch": 0,
+    "heroP6Present": 1,
+    "heroP6Missing": 0,
+    "applicabilityNotes": [
+      "vanilla HTML has no <section id> — duplication/heading checks are fallback single-section; heading mismatch not applicable"
+    ]
+  },
+  "applicability": {
+    "sectionsDetected": 1,
+    "hasHeroTag": false,
+    "hasSections": false,
+    "headingCheckApplicable": false,
+    "note": "vanilla HTML has no <section id> — duplication/heading checks are fallback single-section; heading mismatch not applicable"
+  },
+  "duplication": [
+    {
+      "example": "Harborview General Hospital",
+      "normalized": "harborview general hospital",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Harborview General Hospital"
+        },
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Harborview General Hospital"
+        },
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Harborview General Hospital"
+        }
+      ]
+    },
+    {
+      "example": "Full-time (permanent)",
+      "normalized": "full-time (permanent)",
+      "count": 4,
+      "occurrences": [
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Full-time (permanent)"
+        },
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Full-time (permanent)"
+        },
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Full-time (permanent)"
+        },
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Full-time (permanent)"
+        }
+      ]
+    },
+    {
+      "example": "Annual 5,200,000 JPY",
+      "normalized": "annual 5,200,000 jpy",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Annual 5,200,000 JPY"
+        },
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Annual 5,200,000 JPY"
+        },
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Annual 5,200,000 JPY"
+        }
+      ]
+    },
+    {
+      "example": "Registered Nurse (full-time, general ward)",
+      "normalized": "registered nurse (full-time, general ward)",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Registered Nurse (full-time, general ward)"
+        },
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Registered Nurse (full-time, general ward)"
+        }
+      ]
+    },
+    {
+      "example": "Yokohama, Minato Mirai area",
+      "normalized": "yokohama, minato mirai area",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Yokohama, Minato Mirai area"
+        },
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Yokohama, Minato Mirai area"
+        }
+      ]
+    },
+    {
+      "example": "Employment type",
+      "normalized": "employment type",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Employment type"
+        },
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Employment type"
+        }
+      ]
+    },
+    {
+      "example": "Work hours",
+      "normalized": "work hours",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Work hours"
+        },
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Work hours"
+        }
+      ]
+    },
+    {
+      "example": "Day shift 08:30-17:00, 5 days/week; no scheduled night duty",
+      "normalized": "day shift 08:30-17:00, 5 days/week; no scheduled night duty",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Day shift 08:30-17:00, 5 days/week; no scheduled night duty"
+        },
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Day shift 08:30-17:00, 5 days/week; no scheduled night duty"
+        }
+      ]
+    },
+    {
+      "example": "12-nurse ward with dedicated handover lead",
+      "normalized": "12-nurse ward with dedicated handover lead",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "12-nurse ward with dedicated handover lead"
+        },
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "12-nurse ward with dedicated handover lead"
+        },
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "12-nurse ward with dedicated handover lead"
+        }
+      ]
+    },
+    {
+      "example": "8-min walk from Sakuragicho Station; commuter pass reimbursed in full",
+      "normalized": "8-min walk from sakuragicho station; commuter pass reimbursed in full",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "8-min walk from Sakuragicho Station; commuter pass reimbursed in full"
+        },
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "8-min walk from Sakuragicho Station; commuter pass reimbursed in full"
+        }
+      ]
+    },
+    {
+      "example": "Two paid training days per year + quarterly skills workshop",
+      "normalized": "two paid training days per year + quarterly skills workshop",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Two paid training days per year + quarterly skills workshop"
+        },
+        {
+          "sectionId": "body",
+          "heading": "Body (no sections detected — vanilla structure)",
+          "snippet": "Two paid training days per year + quarterly skills workshop"
+        }
+      ]
+    }
+  ],
+  "verificationPhrases": [],
+  "recordExposure": [],
+  "headingMismatch": [],
+  "allSections": [
+    {
+      "id": "body",
+      "heading": "Body (no sections detected — vanilla structure)",
+      "foundKeys": []
+    }
+  ],
+  "heroP6": {
+    "present": true,
+    "heroText": "Registered Nurse (full-time, general ward) - Harborview General Hospital Harborview General Hospital Full-time (permanent) Yokohama, Minato Mirai area &bull; General Ward Registered Nurse (full-time, general ward) Full-time (permanent) Annual 5,200,000 JPY Day shift 08:30–17:00 At a glance Company Harborview General Hospital Role Registered Nurse (full-time, general ward) Location Yokohama, Minato",
+    "checks": [
+      {
+        "pattern": "/08:30-17:00/i",
+        "found": true,
+        "context": "pattern Work hours Day shift 08:30-17:00, 5 days/week; no scheduled night duty"
+      },
+      {
+        "pattern": "/Day shift/i",
+        "found": true,
+        "context": "rmanent) Annual 5,200,000 JPY Day shift 08:30–17:00 At a glance Company Harborvi"
+      }
+    ],
+    "missing": [],
+    "label": "Day shift 08:30-17:00",
+    "applicability": "no hero tag — used fallback (vanilla structure may differ)"
+  }
+}

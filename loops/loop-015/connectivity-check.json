@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-11-01T11:03:53.791Z",
+  "model": "meta-models/muse-spark-open-1026",
+  "baseUrl": "https://inference.baseten.co/v1",
+  "ok": true,
+  "error": null,
+  "keySource": "env:BASETEN_API_KEY",
+  "usage": {
+    "prompt_tokens": 146,
+    "completion_tokens": 16,
+    "total_tokens": 162,
+    "prompt_tokens_details": {
+      "audio_tokens": 0,
+      "cached_tokens": 128
+    },
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": 9,
+      "audio_tokens": 0,
+      "reasoning_tokens": 12,
+      "rejected_prediction_tokens": 33
+    }
+  },
+  "rawResponseSnippet": "{\"id\":\"chatcmpl-e729f0813cca41df9c38c831e3fc035f\",\"choices\":[{\"index\":0,\"message\":{\"content\":null,\"role\":\"assistant\",\"reasoning_content\":\"User says \\\"ping\\\". Respond with pong? Probably friendly.\"},\"finish_reason\":\"length\"}],\"created\":1793531035,\"model\":\"meta-models/muse-spark-open-1026\",\"object\":\"chat.completion\",\"usage\":{\"prompt_tokens\":146,\"completion_tokens\":16,\"total_tokens\":162,\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":128},\"completion_tokens_details\":{\"accepted_prediction_",
+  "cost": "未記録（残量が確認できないため）",
+  "note": "この疎通確認の呼び出しは K2 の世代数と総呼び出し数には含めない（実施ブリーフの定め）"
+}

@@ -1,0 +1,170 @@
+{
+  "generatedAt": "2026-11-02T07:31:58.696Z",
+  "startedAt": "2026-11-02T07:14:56.189Z",
+  "model": "meta-models/muse-spark-open-1026",
+  "baseUrl": "https://inference.baseten.co/v1",
+  "language": "EN",
+  "case": {
+    "id": "C-D",
+    "label": "Dispatched Warehouse Associate via agency (fictitious, EN-only)",
+    "caseFile": "loops/loop-016/cases/case-D.json"
+  },
+  "provisionalLimit": {
+    "max_tokens": 12000,
+    "temperature": 0.4
+  },
+  "insightsApplied": [
+    "001.md",
+    "002.md",
+    "003.md",
+    "004.md",
+    "005.md",
+    "006.md"
+  ],
+  "researchApplied": [
+    "common.md",
+    "case-d.md"
+  ],
+  "researchVersion": "v1.0 (2026-11-02)",
+  "ok": true,
+  "error": null,
+  "usage": {
+    "prompt_tokens": 6669,
+    "completion_tokens": 3759,
+    "total_tokens": 10428,
+    "prompt_tokens_details": {
+      "audio_tokens": 0,
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": 2858,
+      "audio_tokens": 0,
+      "reasoning_tokens": 3419,
+      "rejected_prediction_tokens": 3456
+    }
+  },
+  "usageSummary": {
+    "prompt_tokens": 6669,
+    "completion_tokens": 3759,
+    "total_tokens": 10428
+  },
+  "generation": {
+    "sentences": [
+      {
+        "text": "You will work as Warehouse Associate (picking and packing).",
+        "factKeys": [
+          "role"
+        ],
+        "sourceLines": [
+          "L03"
+        ]
+      },
+      {
+        "text": "You will be employed by Apex Work Partners (dispatching agency).",
+        "factKeys": [
+          "employer"
+        ],
+        "sourceLines": [
+          "L01"
+        ]
+      },
+      {
+        "text": "You will work at Client distribution center in Saitama, Kawaguchi.",
+        "factKeys": [
+          "worksite"
+        ],
+        "sourceLines": [
+          "L02"
+        ]
+      },
+      {
+        "text": "This position is Dispatched (agency employed, client site).",
+        "factKeys": [
+          "employmentType"
+        ],
+        "sourceLines": [
+          "L04"
+        ]
+      },
+      {
+        "text": "You will earn Hourly 1,400 JPY.",
+        "factKeys": [
+          "pay"
+        ],
+        "sourceLines": [
+          "L05"
+        ]
+      },
+      {
+        "text": "You can work Mon-Fri, 09:00-17:30, 3-5 days/week selectable.",
+        "factKeys": [
+          "workHours"
+        ],
+        "sourceLines": [
+          "L06"
+        ]
+      },
+      {
+        "text": "You can use Shuttle from Kawaguchi Station; pass up to 10,000 JPY/month.",
+        "factKeys": [
+          "commute"
+        ],
+        "sourceLines": [
+          "L07"
+        ]
+      },
+      {
+        "text": "You will have Agency coordinator on site twice/week + phone support on shift days.",
+        "factKeys": [
+          "support"
+        ],
+        "sourceLines": [
+          "L08"
+        ]
+      },
+      {
+        "text": "You will join a 10-person team with buddy pairing week 1.",
+        "factKeys": [
+          "team"
+        ],
+        "sourceLines": [
+          "L09"
+        ]
+      },
+      {
+        "text": "You can apply with No forklift license; able to stand/lift up to 15 kg.",
+        "factKeys": [
+          "requirements"
+        ],
+        "sourceLines": [
+          "L10"
+        ]
+      },
+      {
+        "text": "Register with Apex Work Partners (dispatching agency) for a site tour before assignment.",
+        "factKeys": [
+          "employer"
+        ],
+        "sourceLines": [
+          "L01"
+        ]
+      }
+    ]
+  },
+  "conformance": {
+    "pass": true,
+    "checked": 11,
+    "issues": []
+  },
+  "prose": {
+    "checked": 11,
+    "totalFindings": 0,
+    "needsFixCount": 0,
+    "findings": []
+  },
+  "cost": "未記録（残量が確認できないため）",
+  "templateApplied": "T1-T5 gen-003 (2026-11-02)",
+  "templateVersion": "gen-003 T1 hero-first-check + T2 double-post fix + T3 verify block remove + T4 record label remove + T5 heading align",
+  "templateSource": "gen-002 sentences reused verbatim (no Baseten)",
+  "basetenConsumed": 0
+}

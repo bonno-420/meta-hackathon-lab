@@ -1,0 +1,178 @@
+{
+  "case": "C-A",
+  "variant": "vanilla-wonder",
+  "gen": "vanilla-wonder",
+  "source": "vanilla/wonder/case-a.html",
+  "generatedAt": "2026-11-02T11:57:22.661Z",
+  "tool": "eval-phase-012.mjs phase2 pagecheck adapted",
+  "version": "1.1-candidate (T1-T5+P6) adapted for vanilla",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API. For vanilla HTML with different structure, missing checks are marked applicable=false and not forced.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7,
+    "heroP6": 6
+  },
+  "summary": {
+    "duplicates": 5,
+    "duplicateSentencesTotalOccurrences": 10,
+    "verificationHits": 0,
+    "verificationGroups": 0,
+    "recordExposureGroups": 0,
+    "recordExposureHits": 0,
+    "headingMismatch": 0,
+    "heroP6Present": 1,
+    "heroP6Missing": 1,
+    "applicabilityNotes": []
+  },
+  "applicability": {
+    "sectionsDetected": 6,
+    "hasHeroTag": false,
+    "hasSections": true,
+    "headingCheckApplicable": false,
+    "note": "standard"
+  },
+  "duplication": [
+    {
+      "example": "Osaka, Umeda district",
+      "normalized": "osaka, umeda district",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "glance",
+          "heading": "Everything stated, in one place.",
+          "snippet": "Osaka, Umeda district"
+        },
+        {
+          "sectionId": "benefits",
+          "heading": "Clear pay. Stated benefits.",
+          "snippet": "Osaka, Umeda district"
+        }
+      ]
+    },
+    {
+      "example": "Employment type",
+      "normalized": "employment type",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "glance",
+          "heading": "Everything stated, in one place.",
+          "snippet": "Employment type"
+        },
+        {
+          "sectionId": "benefits",
+          "heading": "Clear pay. Stated benefits.",
+          "snippet": "Employment type"
+        }
+      ]
+    },
+    {
+      "example": "Annual salary",
+      "normalized": "annual salary",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "glance",
+          "heading": "Everything stated, in one place.",
+          "snippet": "Annual salary"
+        },
+        {
+          "sectionId": "benefits",
+          "heading": "Clear pay. Stated benefits.",
+          "snippet": "ANNUAL SALARY"
+        }
+      ]
+    },
+    {
+      "example": "Work hours",
+      "normalized": "work hours",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "glance",
+          "heading": "Everything stated, in one place.",
+          "snippet": "Work hours"
+        },
+        {
+          "sectionId": "benefits",
+          "heading": "Clear pay. Stated benefits.",
+          "snippet": "Work hours"
+        }
+      ]
+    },
+    {
+      "example": "Annual 4,800,000 JPY",
+      "normalized": "annual 4,800,000 jpy",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "benefits",
+          "heading": "Clear pay. Stated benefits.",
+          "snippet": "Annual 4,800,000 JPY"
+        },
+        {
+          "sectionId": "benefits",
+          "heading": "Clear pay. Stated benefits.",
+          "snippet": "Annual 4,800,000 JPY"
+        }
+      ]
+    }
+  ],
+  "verificationPhrases": [],
+  "recordExposure": [],
+  "headingMismatch": [],
+  "allSections": [
+    {
+      "id": "glance",
+      "heading": "Everything stated, in one place.",
+      "foundKeys": []
+    },
+    {
+      "id": "working",
+      "heading": "Mon–Fri, with a clear flex core in the middle.",
+      "foundKeys": []
+    },
+    {
+      "id": "location",
+      "heading": "Umeda, five minutes from the station.",
+      "foundKeys": []
+    },
+    {
+      "id": "team",
+      "heading": "8 people. One product team.",
+      "foundKeys": []
+    },
+    {
+      "id": "onboarding",
+      "heading": "3 months, with a mentor beside you.",
+      "foundKeys": []
+    },
+    {
+      "id": "benefits",
+      "heading": "Clear pay. Stated benefits.",
+      "foundKeys": []
+    }
+  ],
+  "heroP6": {
+    "present": true,
+    "heroText": "```html Software Engineer — Northbridge Labs | Osaka, Umeda N Northbridge Labs At a glance Working hours Location Team Onboarding Benefits Fictitious posting Northbridge Labs • Osaka, Umeda district Software Engineer SaaS product team. A full-time, permanent role in Umeda — with a dedicated mentor, weekly code review, and an 8-person product team around you from the start. ¥4,800,000 / year Full-t",
+    "checks": [
+      {
+        "pattern": "/4,?800,?000/i",
+        "found": true,
+        "context": "m around you from the start. ¥4,800,000 / year Full-time (permanent) Mon–Fri · 1"
+      },
+      {
+        "pattern": "/Annual/i",
+        "found": false,
+        "context": ""
+      }
+    ],
+    "missing": [
+      "/Annual/i"
+    ],
+    "label": "Annual 4,800,000 JPY",
+    "applicability": "no hero tag — used fallback (vanilla structure may differ)"
+  }
+}

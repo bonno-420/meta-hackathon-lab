@@ -1,0 +1,18 @@
+{
+  "case": "C-D",
+  "anonLabel": "X",
+  "model": "muse-spark-1.3-contributor",
+  "usage": {
+    "completion_tokens": 2929,
+    "prompt_tokens": 1736,
+    "total_tokens": 4665,
+    "completion_tokens_details": {
+      "reasoning_tokens": 2481
+    },
+    "prompt_tokens_details": {
+      "cached_tokens": 1649
+    }
+  },
+  "contentLength": 1833,
+  "attempt": 1
+}

@@ -1,0 +1,70 @@
+﻿{
+    "id":  "C-C",
+    "label":  "Contract Marketing Brand Specialist 12-month (fictitious, EN-only)",
+    "employmentType":  "contract",
+    "industry":  "Consumer goods",
+    "role":  "Brand Specialist (12-month contract)",
+    "note":  "Fictitious. Facts authored in English; no JA embedded. Hash this file at start and record in run-record.",
+    "plan":  {
+                 "cta":  "Apply with one portfolio link - contract term in first screen",
+                 "mustNot":  [
+                                 "Do not imply permanent employment",
+                                 "Do not invent conversion guarantee"
+                             ],
+                 "targetAudience":  "Mid-career marketers preferring time-boxed contract with renewal checkpoint",
+                 "appeal":  "Explicit 12-month term and renewal review; campaign ownership over perks.",
+                 "persona":  "Jordan, 29, 4 years brand partnerships. Wants defined scope and portfolio piece. Scans contract length first."
+             },
+    "facts":  [
+                  {
+                      "key":  "company",
+                      "value":  "Everfield \u0026 Co.",
+                      "sourceLine":  "L01"
+                  },
+                  {
+                      "key":  "role",
+                      "value":  "Brand Specialist (12-month fixed-term contract)",
+                      "sourceLine":  "L02"
+                  },
+                  {
+                      "key":  "location",
+                      "value":  "Tokyo, Shibuya",
+                      "sourceLine":  "L03"
+                  },
+                  {
+                      "key":  "employmentType",
+                      "value":  "Contract, 12 months",
+                      "sourceLine":  "L04"
+                  },
+                  {
+                      "key":  "salary",
+                      "value":  "Monthly 380,000 JPY",
+                      "sourceLine":  "L05"
+                  },
+                  {
+                      "key":  "workHours",
+                      "value":  "Mon-Fri, 10:00-19:00, avg 2 days remote/week",
+                      "sourceLine":  "L06"
+                  },
+                  {
+                      "key":  "commute",
+                      "value":  "Commuter pass up to 15,000 JPY/month",
+                      "sourceLine":  "L07"
+                  },
+                  {
+                      "key":  "contractTerms",
+                      "value":  "Renewal review at month 11; no automatic conversion",
+                      "sourceLine":  "L08"
+                  },
+                  {
+                      "key":  "team",
+                      "value":  "6-person brand team, reports to Brand Lead",
+                      "sourceLine":  "L09"
+                  },
+                  {
+                      "key":  "benefits",
+                      "value":  "Health insurance, 10 paid days from month 4, ownership of 2 launches",
+                      "sourceLine":  "L10"
+                  }
+              ]
+}

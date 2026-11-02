@@ -1,0 +1,166 @@
+{
+  "generatedAt": "2026-11-02T07:14:32.313Z",
+  "startedAt": "2026-11-02T07:14:08.927Z",
+  "model": "meta-models/muse-spark-open-1026",
+  "baseUrl": "https://inference.baseten.co/v1",
+  "language": "EN",
+  "case": {
+    "id": "C-B",
+    "label": "Full-time Healthcare Registered Nurse (fictitious, EN-only)",
+    "caseFile": "loops/loop-016/cases/case-B.json"
+  },
+  "provisionalLimit": {
+    "max_tokens": 12000,
+    "temperature": 0.4
+  },
+  "insightsApplied": [
+    "001.md",
+    "002.md",
+    "003.md",
+    "004.md",
+    "005.md",
+    "006.md"
+  ],
+  "researchApplied": [
+    "common.md",
+    "case-b.md"
+  ],
+  "researchVersion": "v1.0 (2026-11-02)",
+  "ok": true,
+  "error": null,
+  "usage": {
+    "prompt_tokens": 6583,
+    "completion_tokens": 7333,
+    "total_tokens": 13916,
+    "prompt_tokens_details": {
+      "audio_tokens": 0,
+      "cached_tokens": 6528
+    },
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": 5328,
+      "audio_tokens": 0,
+      "reasoning_tokens": 6978,
+      "rejected_prediction_tokens": 8707
+    }
+  },
+  "usageSummary": {
+    "prompt_tokens": 6583,
+    "completion_tokens": 7333,
+    "total_tokens": 13916
+  },
+  "generation": {
+    "sentences": [
+      {
+        "text": "Harborview General Hospital is hiring for its general ward.",
+        "factKeys": [
+          "company"
+        ],
+        "sourceLines": [
+          "L01"
+        ]
+      },
+      {
+        "text": "The role is Registered Nurse (full-time, general ward).",
+        "factKeys": [
+          "role"
+        ],
+        "sourceLines": [
+          "L02"
+        ]
+      },
+      {
+        "text": "The workplace is in Yokohama, Minato Mirai area.",
+        "factKeys": [
+          "location"
+        ],
+        "sourceLines": [
+          "L03"
+        ]
+      },
+      {
+        "text": "You will work on a Full-time (permanent) basis.",
+        "factKeys": [
+          "employmentType"
+        ],
+        "sourceLines": [
+          "L04"
+        ]
+      },
+      {
+        "text": "We offer an annual salary of 5,200,000 JPY.",
+        "factKeys": [
+          "salary"
+        ],
+        "sourceLines": [
+          "L05"
+        ]
+      },
+      {
+        "text": "Your schedule will be Day shift 08:30-17:00, 5 days/week; no scheduled night duty.",
+        "factKeys": [
+          "workHours"
+        ],
+        "sourceLines": [
+          "L06"
+        ]
+      },
+      {
+        "text": "The hospital is an 8-min walk from Sakuragicho Station; commuter pass reimbursed in full.",
+        "factKeys": [
+          "commute"
+        ],
+        "sourceLines": [
+          "L07"
+        ]
+      },
+      {
+        "text": "You will join a 12-nurse ward with dedicated handover lead.",
+        "factKeys": [
+          "team"
+        ],
+        "sourceLines": [
+          "L09"
+        ]
+      },
+      {
+        "text": "The position includes Two paid training days per year + quarterly skills workshop.",
+        "factKeys": [
+          "training"
+        ],
+        "sourceLines": [
+          "L08"
+        ]
+      },
+      {
+        "text": "Benefits include Health insurance, 12 paid days from month 7, childcare support desk on site.",
+        "factKeys": [
+          "benefits"
+        ],
+        "sourceLines": [
+          "L10"
+        ]
+      },
+      {
+        "text": "Apply for the Registered Nurse (full-time, general ward) position with a copy of your license and you will receive a reply within 3 business days.",
+        "factKeys": [
+          "role"
+        ],
+        "sourceLines": [
+          "L02"
+        ]
+      }
+    ]
+  },
+  "conformance": {
+    "pass": true,
+    "checked": 11,
+    "issues": []
+  },
+  "prose": {
+    "checked": 11,
+    "totalFindings": 0,
+    "needsFixCount": 0,
+    "findings": []
+  },
+  "cost": "未記録（残量が確認できないため）"
+}

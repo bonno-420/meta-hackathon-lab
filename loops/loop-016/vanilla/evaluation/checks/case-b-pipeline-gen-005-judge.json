@@ -1,0 +1,19 @@
+{
+  "case": "C-B",
+  "variant": "pipeline-gen-005",
+  "model": "muse-spark-1.3-contributor",
+  "usage": {
+    "completion_tokens": 6128,
+    "prompt_tokens": 4089,
+    "total_tokens": 10217,
+    "completion_tokens_details": {
+      "reasoning_tokens": 5641
+    },
+    "prompt_tokens_details": {
+      "cached_tokens": 4081
+    }
+  },
+  "contentLength": 1156,
+  "source": "previews/case-B-gen-005-complete.html",
+  "attempt": 1
+}

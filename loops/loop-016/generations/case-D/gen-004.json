@@ -1,0 +1,163 @@
+{
+  "generatedAt": "2026-11-02T10:53:08.339Z",
+  "startedAt": "2026-11-02T10:52:52.317Z",
+  "model": "meta-models/muse-spark-open-1026",
+  "baseUrl": "https://inference.baseten.co/v1",
+  "language": "EN",
+  "case": {
+    "id": "C-D",
+    "label": "Dispatched Warehouse Associate via agency (fictitious, EN-only)",
+    "caseFile": "loops/loop-016/cases/case-D.json"
+  },
+  "provisionalLimit": {
+    "max_tokens": 12000,
+    "temperature": 0.4
+  },
+  "insightsApplied": [
+    "001.md",
+    "002.md",
+    "003.md",
+    "004.md",
+    "005.md",
+    "006.md",
+    "007.md",
+    "008.md",
+    "009.md",
+    "010.md",
+    "011.md",
+    "012.md"
+  ],
+  "researchApplied": [
+    "common.md",
+    "case-d.md"
+  ],
+  "researchVersion": "v1.0 (2026-11-02)",
+  "reflectionApplied": [
+    "loops/loop-016/reflection-memos/2026-11-02-reflection-v-next-gen004.md"
+  ],
+  "reflectionVersion": "v-next-gen004 (2026-11-02)",
+  "reflectionReason": null,
+  "ok": true,
+  "error": null,
+  "usage": {
+    "prompt_tokens": 12548,
+    "completion_tokens": 5122,
+    "total_tokens": 17670,
+    "prompt_tokens_details": {
+      "audio_tokens": 0,
+      "cached_tokens": 3584
+    },
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": 3857,
+      "audio_tokens": 0,
+      "reasoning_tokens": 4759,
+      "rejected_prediction_tokens": 4998
+    }
+  },
+  "usageSummary": {
+    "prompt_tokens": 12548,
+    "completion_tokens": 5122,
+    "total_tokens": 17670
+  },
+  "generation": {
+    "sentences": [
+      {
+        "text": "You will be employed by Apex Work Partners (dispatching agency) on a Dispatched (agency employed, client site) basis.",
+        "factKeys": [
+          "employer",
+          "employmentType"
+        ],
+        "sourceLines": [
+          "L01",
+          "L04"
+        ]
+      },
+      {
+        "text": "You will work at the Client distribution center in Saitama, Kawaguchi as a Warehouse Associate (picking and packing).",
+        "factKeys": [
+          "worksite",
+          "role"
+        ],
+        "sourceLines": [
+          "L02",
+          "L03"
+        ]
+      },
+      {
+        "text": "No forklift license; able to stand/lift up to 15 kg is the requirement for this picking and packing work, which involves standing and lifting.",
+        "factKeys": [
+          "requirements"
+        ],
+        "sourceLines": [
+          "L10"
+        ]
+      },
+      {
+        "text": "Shifts are Mon-Fri, 09:00-17:30, 3-5 days/week selectable, with the specific days coordinated through the agency each week.",
+        "factKeys": [
+          "workHours"
+        ],
+        "sourceLines": [
+          "L06"
+        ]
+      },
+      {
+        "text": "You will earn Hourly 1,400 JPY for time worked on assignment.",
+        "factKeys": [
+          "pay"
+        ],
+        "sourceLines": [
+          "L05"
+        ]
+      },
+      {
+        "text": "Access is by Shuttle from Kawaguchi Station; pass up to 10,000 JPY/month is available within the stated cap.",
+        "factKeys": [
+          "commute"
+        ],
+        "sourceLines": [
+          "L07"
+        ]
+      },
+      {
+        "text": "Support is provided by an Agency coordinator on site twice/week + phone support on shift days.",
+        "factKeys": [
+          "support"
+        ],
+        "sourceLines": [
+          "L08"
+        ]
+      },
+      {
+        "text": "You will join a 10-person team with buddy pairing week 1 to learn the workflow.",
+        "factKeys": [
+          "team"
+        ],
+        "sourceLines": [
+          "L09"
+        ]
+      },
+      {
+        "text": "To proceed, register with Apex Work Partners (dispatching agency) for a site tour before assignment.",
+        "factKeys": [
+          "employer"
+        ],
+        "sourceLines": [
+          "L01"
+        ]
+      }
+    ]
+  },
+  "conformance": {
+    "pass": true,
+    "checked": 9,
+    "issues": []
+  },
+  "prose": {
+    "checked": 9,
+    "totalFindings": 0,
+    "needsFixCount": 0,
+    "findings": []
+  },
+  "cost": "未記録（残量が確認できないため）"
+}

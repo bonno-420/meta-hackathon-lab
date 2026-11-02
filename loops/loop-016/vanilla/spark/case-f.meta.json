@@ -1,0 +1,33 @@
+{
+  "generatedAt": "2026-11-02T07:10:28.057Z",
+  "startedAt": "2026-11-02T07:09:59.864Z",
+  "model": "muse-spark-1.3",
+  "modelKey": "spark",
+  "case": "F",
+  "caseId": "C-F",
+  "caseLabel": "Casual Retail Seasonal Sales Associate (fictitious, EN-only)",
+  "promptPath": "loops/loop-016/vanilla/prompt-v1.0.md",
+  "promptVersion": "v1.0",
+  "promptLength": 1607,
+  "ticketPath": "vanilla/inputs/case-f.md",
+  "ticketHash": "d60b77ba695931b8a6d7a4793c186251df8e75aa6d05b64cca5e6b10066074d5",
+  "sourceCasePath": "cases/case-F.json",
+  "sourceCaseHash": "d60b77ba695931b8a6d7a4793c186251df8e75aa6d05b64cca5e6b10066074d5",
+  "keySource": "env:MODEL_API_KEY",
+  "usage": {
+    "completion_tokens": 3695,
+    "prompt_tokens": 483,
+    "total_tokens": 4178,
+    "completion_tokens_details": {
+      "reasoning_tokens": 1834
+    },
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "usageSummary": "prompt 483 / completion 3695 / total 4178",
+  "quota": "Meta API (vanilla contrast, not Baseten)",
+  "images": "previews/images/case-F-{hero,work,place}.webp (gen-001, shared across models)",
+  "htmlPath": "vanilla/spark/case-f.html",
+  "htmlLength": 5783
+}

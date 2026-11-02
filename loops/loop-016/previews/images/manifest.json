@@ -1,0 +1,261 @@
+{
+  "generatedAt": "2026-11-01T14:45:34.579Z",
+  "model": "muse-image-1.0",
+  "endpoint": "https://api.meta.ai/v1/images/generations",
+  "images": [
+    {
+      "id": "case-A-hero",
+      "case": "A",
+      "file": "images/case-A-hero.webp",
+      "prompt": "Modern tech office building entrance in Osaka Umeda district, morning sunlight, clean glass facade, young professionals walking in, calm urban business atmosphere, photorealistic, wide angle, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 613874,
+      "usage": {
+        "input_tokens": 15937,
+        "output_tokens": 1180,
+        "total_tokens": 17117
+      }
+    },
+    {
+      "id": "case-A-work",
+      "case": "A",
+      "file": "images/case-A-work.webp",
+      "prompt": "Two young software engineers doing code review together at a bright modern office desk, laptop screen blurred, mentor pointing kindly, natural daylight, supportive teamwork, photorealistic, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 387934,
+      "usage": {
+        "input_tokens": 18259,
+        "output_tokens": 1845,
+        "total_tokens": 20104
+      }
+    },
+    {
+      "id": "case-A-place",
+      "case": "A",
+      "file": "images/case-A-place.webp",
+      "prompt": "Quiet pleasant business street in Osaka Umeda district, daytime, modern buildings and trees, clean sidewalk, calm morning commute scene, photorealistic, wide shot, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 1047100,
+      "usage": {
+        "input_tokens": 22854,
+        "output_tokens": 1907,
+        "total_tokens": 24761
+      }
+    },
+    {
+      "id": "case-B-hero",
+      "case": "B",
+      "file": "images/case-B-hero.webp",
+      "prompt": "Bright modern general hospital entrance in Yokohama Minato Mirai area, daytime, welcoming building with greenery, soft sunlight, calm clean atmosphere, photorealistic, wide angle, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 1030866,
+      "usage": {
+        "input_tokens": 10144,
+        "output_tokens": 979,
+        "total_tokens": 11123
+      }
+    },
+    {
+      "id": "case-B-work",
+      "case": "B",
+      "file": "images/case-B-work.webp",
+      "prompt": "Two nurses doing structured handover at a bright hospital ward station, charts blurred, focused professional teamwork, warm daylight, photorealistic, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 316822,
+      "usage": {
+        "input_tokens": 18277,
+        "output_tokens": 1901,
+        "total_tokens": 20178
+      }
+    },
+    {
+      "id": "case-B-place",
+      "case": "B",
+      "file": "images/case-B-place.webp",
+      "prompt": "Pleasant residential street near Yokohama Minato Mirai, daytime, tree-lined road with apartment buildings, calm family neighborhood, soft daylight, photorealistic, wide shot, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 1162074,
+      "usage": {
+        "input_tokens": 15544,
+        "output_tokens": 1069,
+        "total_tokens": 16613
+      }
+    },
+    {
+      "id": "case-C-hero",
+      "case": "C",
+      "file": "images/case-C-hero.webp",
+      "prompt": "Modern creative office building in Tokyo Shibuya, daytime, stylish glass entrance with plants, young professionals entering, energetic business atmosphere, photorealistic, wide angle, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 832404,
+      "usage": {
+        "input_tokens": 18942,
+        "output_tokens": 2399,
+        "total_tokens": 21341
+      }
+    },
+    {
+      "id": "case-C-work",
+      "case": "C",
+      "file": "images/case-C-work.webp",
+      "prompt": "Small brand team meeting around a table with blank mood boards, diverse young marketers discussing campaign, bright creative office, daylight, photorealistic, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 427902,
+      "usage": {
+        "input_tokens": 10223,
+        "output_tokens": 1077,
+        "total_tokens": 11300
+      }
+    },
+    {
+      "id": "case-C-place",
+      "case": "C",
+      "file": "images/case-C-place.webp",
+      "prompt": "Bright daytime street in Tokyo Shibuya with modern shops and trees, clean sidewalk, lively but calm commercial area, photorealistic, wide shot, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 843596,
+      "usage": {
+        "input_tokens": 28251,
+        "output_tokens": 2715,
+        "total_tokens": 30966
+      }
+    },
+    {
+      "id": "case-D-hero",
+      "case": "D",
+      "file": "images/case-D-hero.webp",
+      "prompt": "Modern logistics distribution center exterior in Saitama Kawaguchi, daytime, clean warehouse building with truck yard, clear sky, orderly industrial site, photorealistic, wide angle, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 894090,
+      "usage": {
+        "input_tokens": 40193,
+        "output_tokens": 3573,
+        "total_tokens": 43766
+      }
+    },
+    {
+      "id": "case-D-work",
+      "case": "D",
+      "file": "images/case-D-work.webp",
+      "prompt": "Warehouse associate with buddy picking small parcels on shelves in a bright distribution center, safety vest, orderly aisles, daylight from skylights, photorealistic, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 517342,
+      "usage": {
+        "input_tokens": 27363,
+        "output_tokens": 2116,
+        "total_tokens": 29479
+      }
+    },
+    {
+      "id": "case-D-place",
+      "case": "D",
+      "file": "images/case-D-place.webp",
+      "prompt": "Quiet suburban road in Saitama Kawaguchi with shuttle bus stop and greenery, daytime, clean industrial-residential mix, photorealistic, wide shot, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 1052812,
+      "usage": {
+        "input_tokens": 16396,
+        "output_tokens": 1104,
+        "total_tokens": 17500
+      }
+    },
+    {
+      "id": "case-E-hero",
+      "case": "E",
+      "file": "images/case-E-hero.webp",
+      "prompt": "Cozy small coffee shop storefront in Setagaya Futako-Tamagawa, morning sunlight, wooden facade with plants, warm inviting entrance, photorealistic, wide angle, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 996352,
+      "usage": {
+        "input_tokens": 28290,
+        "output_tokens": 2476,
+        "total_tokens": 30766
+      }
+    },
+    {
+      "id": "case-E-work",
+      "case": "E",
+      "file": "images/case-E-work.webp",
+      "prompt": "Friendly cafe staff showing a new part-time crew member how to brew coffee at a bright counter, morning light, warm supportive atmosphere, photorealistic, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 458302,
+      "usage": {
+        "input_tokens": 18349,
+        "output_tokens": 1956,
+        "total_tokens": 20305
+      }
+    },
+    {
+      "id": "case-E-place",
+      "case": "E",
+      "file": "images/case-E-place.webp",
+      "prompt": "Pleasant station-front street in Futako-Tamagawa Tokyo, morning, clean shops and trees, calm commuter scene, photorealistic, wide shot, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 887090,
+      "usage": {
+        "input_tokens": 47490,
+        "output_tokens": 2715,
+        "total_tokens": 50205
+      }
+    },
+    {
+      "id": "case-F-hero",
+      "case": "F",
+      "file": "images/case-F-hero.webp",
+      "prompt": "Bright outdoor goods retail storefront in Nagoya Sakae district, daytime, clean display windows with jackets and tents blurred, welcoming entrance, photorealistic, wide angle, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 519636,
+      "usage": {
+        "input_tokens": 28477,
+        "output_tokens": 2683,
+        "total_tokens": 31160
+      }
+    },
+    {
+      "id": "case-F-work",
+      "case": "F",
+      "file": "images/case-F-work.webp",
+      "prompt": "Young seasonal sales associate learning floor tasks from a buddy in a bright outdoor store, daytime, friendly guidance, photorealistic, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 472218,
+      "usage": {
+        "input_tokens": 10191,
+        "output_tokens": 1046,
+        "total_tokens": 11237
+      }
+    },
+    {
+      "id": "case-F-place",
+      "case": "F",
+      "file": "images/case-F-place.webp",
+      "prompt": "Lively shopping street in Nagoya Sakae district, daytime, modern storefronts and trees, clean wide sidewalk, photorealistic, wide shot, no text, no numbers, no logos",
+      "size": "1024x1024",
+      "mime": "image/webp",
+      "bytes": 862162,
+      "usage": {
+        "input_tokens": 25225,
+        "output_tokens": 1909,
+        "total_tokens": 27134
+      }
+    }
+  ],
+  "totalInput": 400405,
+  "totalOutput": 34650
+}

@@ -1,0 +1,183 @@
+{
+  "case": "C-E",
+  "variant": "vanilla-wonder",
+  "gen": "vanilla-wonder",
+  "source": "vanilla/wonder/case-e.html",
+  "generatedAt": "2026-11-02T11:57:23.413Z",
+  "tool": "eval-phase-012.mjs phase2 pagecheck adapted",
+  "version": "1.1-candidate (T1-T5+P6) adapted for vanilla",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API. For vanilla HTML with different structure, missing checks are marked applicable=false and not forced.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7,
+    "heroP6": 6
+  },
+  "summary": {
+    "duplicates": 5,
+    "duplicateSentencesTotalOccurrences": 12,
+    "verificationHits": 0,
+    "verificationGroups": 0,
+    "recordExposureGroups": 0,
+    "recordExposureHits": 0,
+    "headingMismatch": 0,
+    "heroP6Present": 1,
+    "heroP6Missing": 1,
+    "applicabilityNotes": []
+  },
+  "applicability": {
+    "sectionsDetected": 4,
+    "hasHeroTag": false,
+    "hasSections": true,
+    "headingCheckApplicable": false,
+    "note": "standard"
+  },
+  "duplication": [
+    {
+      "example": "08:00–11:00",
+      "normalized": "08:00-11:00",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "shifts",
+          "heading": "Choose a 3-hour slot.",
+          "snippet": "08:00–11:00"
+        },
+        {
+          "sectionId": "shifts",
+          "heading": "Choose a 3-hour slot.",
+          "snippet": "08:00–11:00"
+        }
+      ]
+    },
+    {
+      "example": "3 hours / day · 2–4 days / week",
+      "normalized": "3 hours / day · 2-4 days / week",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "shifts",
+          "heading": "Choose a 3-hour slot.",
+          "snippet": "3 hours / day · 2–4 days / week"
+        },
+        {
+          "sectionId": "shifts",
+          "heading": "Choose a 3-hour slot.",
+          "snippet": "3 hours / day · 2–4 days / week"
+        }
+      ]
+    },
+    {
+      "example": "Onboarding",
+      "normalized": "onboarding",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "start",
+          "heading": "No experience required. You won’t start alone.",
+          "snippet": "Onboarding"
+        },
+        {
+          "sectionId": "start",
+          "heading": "No experience required. You won’t start alone.",
+          "snippet": "Onboarding"
+        },
+        {
+          "sectionId": "start",
+          "heading": "No experience required. You won’t start alone.",
+          "snippet": "Onboarding"
+        }
+      ]
+    },
+    {
+      "example": "with buddy",
+      "normalized": "with buddy",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "start",
+          "heading": "No experience required. You won’t start alone.",
+          "snippet": "with buddy"
+        },
+        {
+          "sectionId": "start",
+          "heading": "No experience required. You won’t start alone.",
+          "snippet": "with buddy"
+        },
+        {
+          "sectionId": "start",
+          "heading": "No experience required. You won’t start alone.",
+          "snippet": "with buddy"
+        }
+      ]
+    },
+    {
+      "example": "Staff drink free on shift",
+      "normalized": "staff drink free on shift",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "location",
+          "heading": "2 minutes from the station.",
+          "snippet": "Staff drink free on shift"
+        },
+        {
+          "sectionId": "details",
+          "heading": "Everything stated in the posting.",
+          "snippet": "Staff drink free on shift"
+        }
+      ]
+    }
+  ],
+  "verificationPhrases": [],
+  "recordExposure": [],
+  "headingMismatch": [],
+  "allSections": [
+    {
+      "id": "shifts",
+      "heading": "Choose a 3-hour slot.",
+      "foundKeys": []
+    },
+    {
+      "id": "start",
+      "heading": "No experience required. You won’t start alone.",
+      "foundKeys": []
+    },
+    {
+      "id": "location",
+      "heading": "2 minutes from the station.",
+      "foundKeys": []
+    },
+    {
+      "id": "details",
+      "heading": "Everything stated in the posting.",
+      "foundKeys": []
+    }
+  ],
+  "heroP6": {
+    "present": true,
+    "heroText": "Morningside Coffee — Cafe Crew (Part-time, Short Hours) | Futako-Tamagawa ☕ Morningside Coffee Setagaya · Futako-Tamagawa Shifts Getting Started Location Job Details Part-Time · Short Hours Morningside Coffee — Now Introducing This Role Cafe Crew, in just 3 hours a day. A part-time, short-hours Cafe Crew role in Setagaya, Futako-Tamagawa — 2–4 days a week , in the morning or at midday. Hourly 1,25",
+    "checks": [
+      {
+        "pattern": "/3 hours/i",
+        "found": true,
+        "context": "This Role Cafe Crew, in just 3 hours a day. A part-time, short-hours Cafe Crew"
+      },
+      {
+        "pattern": "/08:00-11:00/i",
+        "found": false,
+        "context": ""
+      },
+      {
+        "pattern": "/Futako-Tamagawa/i",
+        "found": true,
+        "context": "ew (Part-time, Short Hours) | Futako-Tamagawa ☕ Morningside Coffee Setagaya · Fu"
+      }
+    ],
+    "missing": [
+      "/08:00-11:00/i"
+    ],
+    "label": "From 3 hours + Futako-Tamagawa",
+    "applicability": "no hero tag — used fallback (vanilla structure may differ)"
+  }
+}

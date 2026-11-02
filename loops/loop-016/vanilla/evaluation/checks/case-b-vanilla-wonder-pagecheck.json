@@ -1,0 +1,105 @@
+{
+  "case": "C-B",
+  "variant": "vanilla-wonder",
+  "gen": "vanilla-wonder",
+  "source": "vanilla/wonder/case-b.html",
+  "generatedAt": "2026-11-02T11:57:22.837Z",
+  "tool": "eval-phase-012.mjs phase2 pagecheck adapted",
+  "version": "1.1-candidate (T1-T5+P6) adapted for vanilla",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API. For vanilla HTML with different structure, missing checks are marked applicable=false and not forced.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7,
+    "heroP6": 6
+  },
+  "summary": {
+    "duplicates": 1,
+    "duplicateSentencesTotalOccurrences": 2,
+    "verificationHits": 0,
+    "verificationGroups": 0,
+    "recordExposureGroups": 0,
+    "recordExposureHits": 0,
+    "headingMismatch": 0,
+    "heroP6Present": 1,
+    "heroP6Missing": 1,
+    "applicabilityNotes": []
+  },
+  "applicability": {
+    "sectionsDetected": 5,
+    "hasHeroTag": false,
+    "hasSections": true,
+    "headingCheckApplicable": false,
+    "note": "standard"
+  },
+  "duplication": [
+    {
+      "example": "Yokohama, Minato Mirai area",
+      "normalized": "yokohama, minato mirai area",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "location",
+          "heading": "Minato Mirai, 8 minutes from the station.",
+          "snippet": "Yokohama, Minato Mirai area"
+        },
+        {
+          "sectionId": "details",
+          "heading": "Everything in the posting, in one place.",
+          "snippet": "Yokohama, Minato Mirai area"
+        }
+      ]
+    }
+  ],
+  "verificationPhrases": [],
+  "recordExposure": [],
+  "headingMismatch": [],
+  "allSections": [
+    {
+      "id": "schedule",
+      "heading": "Your day ends at 17:00.",
+      "foundKeys": []
+    },
+    {
+      "id": "ward",
+      "heading": "A defined team. Structured learning.",
+      "foundKeys": []
+    },
+    {
+      "id": "location",
+      "heading": "Minato Mirai, 8 minutes from the station.",
+      "foundKeys": []
+    },
+    {
+      "id": "benefits",
+      "heading": "Support, stated clearly.",
+      "foundKeys": []
+    },
+    {
+      "id": "details",
+      "heading": "Everything in the posting, in one place.",
+      "foundKeys": []
+    }
+  ],
+  "heroP6": {
+    "present": true,
+    "heroText": "Registered Nurse — Harborview General Hospital | Yokohama ✚ Harborview General Hospital Yokohama · Minato Mirai Schedule Ward & Training Location Benefits Full Details Review the Role ↓ Now Hiring · Full-Time · Permanent Daytime nursing, on a steady rhythm. Registered Nurse (full-time, general ward) at Harborview General Hospital in Yokohama, Minato Mirai area — day shift only, with no scheduled n",
+    "checks": [
+      {
+        "pattern": "/08:30-17:00/i",
+        "found": false,
+        "context": ""
+      },
+      {
+        "pattern": "/Day shift/i",
+        "found": true,
+        "context": "Yokohama, Minato Mirai area — day shift only, with no scheduled night duty. See"
+      }
+    ],
+    "missing": [
+      "/08:30-17:00/i"
+    ],
+    "label": "Day shift 08:30-17:00",
+    "applicability": "no hero tag — used fallback (vanilla structure may differ)"
+  }
+}

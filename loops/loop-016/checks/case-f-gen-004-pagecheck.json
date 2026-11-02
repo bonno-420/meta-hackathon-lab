@@ -1,0 +1,296 @@
+{
+  "case": "C-F",
+  "gen": "004",
+  "source": "loops/loop-016/previews/case-F-gen-004-complete.html",
+  "generatedAt": "2026-11-02T10:57:32.013Z",
+  "tool": "loop16-pagecheck.mjs",
+  "version": "1.1-candidate (T1-T5 + P6)",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7,
+    "heroP6": 6
+  },
+  "summary": {
+    "duplicates": 9,
+    "duplicateSentencesTotalOccurrences": 23,
+    "verificationHits": 2,
+    "verificationGroups": 2,
+    "recordExposureGroups": 0,
+    "recordExposureHits": 0,
+    "headingMismatch": 0,
+    "heroP6Present": 1,
+    "heroP6Missing": 0
+  },
+  "duplication": [
+    {
+      "example": "6 weeks: 2026-12-01 to 2027-01-11",
+      "normalized": "6 weeks: 2026-12-01 to 2027-01-11",
+      "count": 4,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Seasonal Sales Associate (casual, storefront)",
+          "snippet": "6 weeks: 2026-12-01 to 2027-01-11"
+        },
+        {
+          "sectionId": "header",
+          "heading": "Seasonal Sales Associate (casual, storefront)",
+          "snippet": "6 weeks: 2026-12-01 to 2027-01-11"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "6 weeks: 2026-12-01 to 2027-01-11"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "6 weeks: 2026-12-01 to 2027-01-11"
+        }
+      ]
+    },
+    {
+      "example": "Hourly 1,300 JPY",
+      "normalized": "hourly 1,300 jpy",
+      "count": 4,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Seasonal Sales Associate (casual, storefront)",
+          "snippet": "Hourly 1,300 JPY"
+        },
+        {
+          "sectionId": "header",
+          "heading": "Seasonal Sales Associate (casual, storefront)",
+          "snippet": "Hourly 1,300 JPY"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Hourly 1,300 JPY"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Hourly 1,300 JPY"
+        }
+      ]
+    },
+    {
+      "example": "Crestline Outdoor is hiring a Seasonal Sales Associate (casual, storefront) in Nagoya, Sakae district on a Casual / seasonal basis.",
+      "normalized": "crestline outdoor is hiring a seasonal sales associate (casual, storefront) in nagoya, sakae district on a casual / seasonal basis.",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "Crestline Outdoor is hiring a Seasonal Sales Associate (casual, storefront) in Nagoya, Sakae district on a Casual / seasonal basis."
+        },
+        {
+          "sectionId": "location",
+          "heading": "Place &amp; Access 勤務地",
+          "snippet": "Crestline Outdoor is hiring a Seasonal Sales Associate (casual, storefront) in Nagoya, Sakae district on a Casual / seasonal basis."
+        },
+        {
+          "sectionId": "team",
+          "heading": "Team &amp; Support チーム・サポート",
+          "snippet": "Crestline Outdoor is hiring a Seasonal Sales Associate (casual, storefront) in Nagoya, Sakae district on a Casual / seasonal basis."
+        }
+      ]
+    },
+    {
+      "example": "3-5 days/week, 4-7 hours/day; weekends preferred",
+      "normalized": "3-5 days/week, 4-7 hours/day; weekends preferred",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "3-5 days/week, 4-7 hours/day; weekends preferred"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "3-5 days/week, 4-7 hours/day; weekends preferred"
+        }
+      ]
+    },
+    {
+      "example": "Seasonal Sales Associate (casual, storefront)",
+      "normalized": "seasonal sales associate (casual, storefront)",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Seasonal Sales Associate (casual, storefront)",
+          "snippet": "Seasonal Sales Associate (casual, storefront)"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Seasonal Sales Associate (casual, storefront)"
+        }
+      ]
+    },
+    {
+      "example": "Commuter pass up to 8,000 JPY/month",
+      "normalized": "commuter pass up to 8,000 jpy/month",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Commuter pass up to 8,000 JPY/month"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Commuter pass up to 8,000 JPY/month"
+        }
+      ]
+    },
+    {
+      "example": "Nagoya, Sakae district",
+      "normalized": "nagoya, sakae district",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Seasonal Sales Associate (casual, storefront)",
+          "snippet": "Nagoya, Sakae district"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Nagoya, Sakae district"
+        }
+      ]
+    },
+    {
+      "example": "0, no text in image",
+      "normalized": "0, no text in image",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "0, no text in image"
+        },
+        {
+          "sectionId": "location",
+          "heading": "Place &amp; Access 勤務地",
+          "snippet": "0, no text in image"
+        }
+      ]
+    },
+    {
+      "example": "Casual / seasonal",
+      "normalized": "casual / seasonal",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Seasonal Sales Associate (casual, storefront)",
+          "snippet": "Casual / seasonal"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Casual / seasonal"
+        }
+      ]
+    }
+  ],
+  "verificationPhrases": [
+    {
+      "phrase": "All conditions above are from the",
+      "lang": "EN",
+      "source": "CTA block",
+      "note": "P2 meta",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "context": "r pass up to 8,000 JPY/month All conditions above are from the 8 sentences of C-F gen-004. N",
+          "phrase": "All conditions above are from the"
+        }
+      ]
+    },
+    {
+      "phrase": "No new facts are added",
+      "lang": "EN",
+      "source": "CTA block",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "context": "e 8 sentences of C-F gen-004. No new facts are added. Apply this week — start 202",
+          "phrase": "No new facts are added"
+        }
+      ]
+    }
+  ],
+  "recordExposure": [],
+  "headingMismatch": [],
+  "allSections": [
+    {
+      "id": "header",
+      "heading": "Seasonal Sales Associate (casual, storefront)",
+      "foundKeys": []
+    },
+    {
+      "id": "about",
+      "heading": "The Basics 募集の基本",
+      "foundKeys": []
+    },
+    {
+      "id": "conditions",
+      "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+      "foundKeys": []
+    },
+    {
+      "id": "location",
+      "heading": "Place &amp; Access 勤務地",
+      "foundKeys": []
+    },
+    {
+      "id": "team",
+      "heading": "Team &amp; Support チーム・サポート",
+      "foundKeys": []
+    },
+    {
+      "id": "check",
+      "heading": "Check Before You Apply 応募前の確認",
+      "foundKeys": []
+    },
+    {
+      "id": "lp-memo",
+      "heading": "Memo このLPへのメモ（ブラウザ保存）",
+      "foundKeys": []
+    }
+  ],
+  "heroP6": {
+    "present": true,
+    "heroText": "Casual / seasonal · Nagoya, Sakae district Seasonal Sales Associate (casual, storefront) 6 weeks: 2026-12-01 to 2027-01-11 Hourly 1,300 JPY This is a fictional posting for Casual Retail Seasonal Sales Associate (fictitious, EN-only). No application function. Casual / seasonal 6 weeks: 2026-12-01 to 2027-01-11 Hourly 1,300 JPY Nagoya, Sakae district",
+    "checks": [
+      {
+        "pattern": "/2026-12-01/i",
+        "found": true,
+        "context": "(casual, storefront) 6 weeks: 2026-12-01 to 2027-01-11 Hourly 1,300 JPY This is"
+      },
+      {
+        "pattern": "/6 weeks/i",
+        "found": true,
+        "context": "ssociate (casual, storefront) 6 weeks: 2026-12-01 to 2027-01-11 Hourly 1,300 JPY"
+      }
+    ],
+    "missing": [],
+    "label": "6 weeks: 2026-12-01 to 2027-01-11",
+    "note": "candidate — permanence requires owner approval"
+  }
+}

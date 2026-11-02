@@ -1,0 +1,301 @@
+{
+  "case": "C-D",
+  "gen": "004",
+  "source": "loops/loop-016/previews/case-D-gen-004-complete.html",
+  "generatedAt": "2026-11-02T10:57:31.677Z",
+  "tool": "loop16-pagecheck.mjs",
+  "version": "1.1-candidate (T1-T5 + P6)",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7,
+    "heroP6": 6
+  },
+  "summary": {
+    "duplicates": 9,
+    "duplicateSentencesTotalOccurrences": 24,
+    "verificationHits": 2,
+    "verificationGroups": 2,
+    "recordExposureGroups": 0,
+    "recordExposureHits": 0,
+    "headingMismatch": 0,
+    "heroP6Present": 1,
+    "heroP6Missing": 0
+  },
+  "duplication": [
+    {
+      "example": "Client distribution center in Saitama, Kawaguchi",
+      "normalized": "client distribution center in saitama, kawaguchi",
+      "count": 4,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Warehouse Associate (picking and packing)",
+          "snippet": "Client distribution center in Saitama, Kawaguchi"
+        },
+        {
+          "sectionId": "header",
+          "heading": "Warehouse Associate (picking and packing)",
+          "snippet": "Client distribution center in Saitama, Kawaguchi"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Client distribution center in Saitama, Kawaguchi"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Client distribution center in Saitama, Kawaguchi"
+        }
+      ]
+    },
+    {
+      "example": "Apex Work Partners (dispatching agency)",
+      "normalized": "apex work partners (dispatching agency)",
+      "count": 4,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Warehouse Associate (picking and packing)",
+          "snippet": "Apex Work Partners (dispatching agency)"
+        },
+        {
+          "sectionId": "header",
+          "heading": "Warehouse Associate (picking and packing)",
+          "snippet": "Apex Work Partners (dispatching agency)"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Apex Work Partners (dispatching agency)"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Apex Work Partners (dispatching agency)"
+        }
+      ]
+    },
+    {
+      "example": "Dispatched (agency employed, client site)",
+      "normalized": "dispatched (agency employed, client site)",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Warehouse Associate (picking and packing)",
+          "snippet": "Dispatched (agency employed, client site)"
+        },
+        {
+          "sectionId": "header",
+          "heading": "Warehouse Associate (picking and packing)",
+          "snippet": "Dispatched (agency employed, client site)"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Dispatched (agency employed, client site)"
+        }
+      ]
+    },
+    {
+      "example": "Hourly 1,400 JPY",
+      "normalized": "hourly 1,400 jpy",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Warehouse Associate (picking and packing)",
+          "snippet": "Hourly 1,400 JPY"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Hourly 1,400 JPY"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Hourly 1,400 JPY"
+        }
+      ]
+    },
+    {
+      "example": "You will be employed by Apex Work Partners (dispatching agency) on a Dispatched (agency employed, client site) basis.",
+      "normalized": "you will be employed by apex work partners (dispatching agency) on a dispatched (agency employed, client site) basis.",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "You will be employed by Apex Work Partners (dispatching agency) on a Dispatched (agency employed, client site) basis."
+        },
+        {
+          "sectionId": "location",
+          "heading": "Place &amp; Access 勤務地",
+          "snippet": "You will be employed by Apex Work Partners (dispatching agency) on a Dispatched (agency employed, client site) basis."
+        }
+      ]
+    },
+    {
+      "example": "You will work at the Client distribution center in Saitama, Kawaguchi as a Warehouse Associate (picking and packing).",
+      "normalized": "you will work at the client distribution center in saitama, kawaguchi as a warehouse associate (picking and packing).",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "location",
+          "heading": "Place &amp; Access 勤務地",
+          "snippet": "You will work at the Client distribution center in Saitama, Kawaguchi as a Warehouse Associate (picking and packing)."
+        },
+        {
+          "sectionId": "team",
+          "heading": "Team &amp; Support チーム・サポート",
+          "snippet": "You will work at the Client distribution center in Saitama, Kawaguchi as a Warehouse Associate (picking and packing)."
+        }
+      ]
+    },
+    {
+      "example": "Mon-Fri, 09:00-17:30, 3-5 days/week selectable",
+      "normalized": "mon-fri, 09:00-17:30, 3-5 days/week selectable",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Mon-Fri, 09:00-17:30, 3-5 days/week selectable"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Mon-Fri, 09:00-17:30, 3-5 days/week selectable"
+        }
+      ]
+    },
+    {
+      "example": "Warehouse Associate (picking and packing)",
+      "normalized": "warehouse associate (picking and packing)",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Warehouse Associate (picking and packing)",
+          "snippet": "Warehouse Associate (picking and packing)"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Warehouse Associate (picking and packing)"
+        }
+      ]
+    },
+    {
+      "example": "0, no text in image",
+      "normalized": "0, no text in image",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "0, no text in image"
+        },
+        {
+          "sectionId": "location",
+          "heading": "Place &amp; Access 勤務地",
+          "snippet": "0, no text in image"
+        }
+      ]
+    }
+  ],
+  "verificationPhrases": [
+    {
+      "phrase": "All conditions above are from the",
+      "lang": "EN",
+      "source": "CTA block",
+      "note": "P2 meta",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "context": "30, 3-5 days/week selectable All conditions above are from the 9 sentences of C-D gen-004. N",
+          "phrase": "All conditions above are from the"
+        }
+      ]
+    },
+    {
+      "phrase": "No new facts are added",
+      "lang": "EN",
+      "source": "CTA block",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "context": "e 9 sentences of C-D gen-004. No new facts are added. Register with agency — site",
+          "phrase": "No new facts are added"
+        }
+      ]
+    }
+  ],
+  "recordExposure": [],
+  "headingMismatch": [],
+  "allSections": [
+    {
+      "id": "header",
+      "heading": "Warehouse Associate (picking and packing)",
+      "foundKeys": []
+    },
+    {
+      "id": "about",
+      "heading": "The Basics 募集の基本",
+      "foundKeys": []
+    },
+    {
+      "id": "conditions",
+      "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+      "foundKeys": []
+    },
+    {
+      "id": "location",
+      "heading": "Place &amp; Access 勤務地",
+      "foundKeys": []
+    },
+    {
+      "id": "team",
+      "heading": "Team &amp; Support チーム・サポート",
+      "foundKeys": []
+    },
+    {
+      "id": "check",
+      "heading": "Check Before You Apply 応募前の確認",
+      "foundKeys": []
+    },
+    {
+      "id": "lp-memo",
+      "heading": "Memo このLPへのメモ（ブラウザ保存）",
+      "foundKeys": []
+    }
+  ],
+  "heroP6": {
+    "present": true,
+    "heroText": "Dispatched (agency employed, client site) · Client distribution center in Saitama, Kawaguchi Warehouse Associate (picking and packing) Apex Work Partners (dispatching agency) Client distribution center in Saitama, Kawaguchi Dispatched (agency employed, client site) This is a fictional posting for Dispatched Warehouse Associate via agency (fictitious, EN-only). No application function. Dispatched (",
+    "checks": [
+      {
+        "pattern": "/Apex Work Partners/i",
+        "found": true,
+        "context": "sociate (picking and packing) Apex Work Partners (dispatching agency) Client dis"
+      },
+      {
+        "pattern": "/Saitama/i",
+        "found": true,
+        "context": "Client distribution center in Saitama, Kawaguchi Warehouse Associate (picking an"
+      }
+    ],
+    "missing": [],
+    "label": "Apex Work Partners + Saitama Kawaguchi",
+    "note": "candidate — permanence requires owner approval"
+  }
+}

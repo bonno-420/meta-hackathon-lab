@@ -1,0 +1,152 @@
+{
+  "generatedAt": "2026-11-02T07:15:28.927Z",
+  "startedAt": "2026-11-02T07:15:10.989Z",
+  "model": "meta-models/muse-spark-open-1026",
+  "baseUrl": "https://inference.baseten.co/v1",
+  "language": "EN",
+  "case": {
+    "id": "C-E",
+    "label": "Part-time Cafe Crew short hours (fictitious, EN-only)",
+    "caseFile": "loops/loop-016/cases/case-E.json"
+  },
+  "provisionalLimit": {
+    "max_tokens": 12000,
+    "temperature": 0.4
+  },
+  "insightsApplied": [
+    "001.md",
+    "002.md",
+    "003.md",
+    "004.md",
+    "005.md",
+    "006.md"
+  ],
+  "researchApplied": [
+    "common.md",
+    "case-e.md"
+  ],
+  "researchVersion": "v1.0 (2026-11-02)",
+  "ok": true,
+  "error": null,
+  "usage": {
+    "prompt_tokens": 6622,
+    "completion_tokens": 5640,
+    "total_tokens": 12262,
+    "prompt_tokens_details": {
+      "audio_tokens": 0,
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": 4115,
+      "audio_tokens": 0,
+      "reasoning_tokens": 5330,
+      "rejected_prediction_tokens": 6567
+    }
+  },
+  "usageSummary": {
+    "prompt_tokens": 6622,
+    "completion_tokens": 5640,
+    "total_tokens": 12262
+  },
+  "generation": {
+    "sentences": [
+      {
+        "text": "Morningside Coffee is hiring Cafe Crew (part-time, short hours) in Setagaya, Futako-Tamagawa.",
+        "factKeys": [
+          "company",
+          "role",
+          "location"
+        ],
+        "sourceLines": [
+          "L01",
+          "L02",
+          "L03"
+        ]
+      },
+      {
+        "text": "This position is offered on a Part-time basis.",
+        "factKeys": [
+          "employmentType"
+        ],
+        "sourceLines": [
+          "L04"
+        ]
+      },
+      {
+        "text": "You can work From 3 hours/day, 2-4 days/week; 08:00-11:00 or 11:00-14:00.",
+        "factKeys": [
+          "workHours"
+        ],
+        "sourceLines": [
+          "L06"
+        ]
+      },
+      {
+        "text": "The cafe is a 2-min walk from Futako-Tamagawa Station; pass up to 10,000 JPY/month.",
+        "factKeys": [
+          "commute"
+        ],
+        "sourceLines": [
+          "L07"
+        ]
+      },
+      {
+        "text": "You will earn Hourly 1,250 JPY.",
+        "factKeys": [
+          "pay"
+        ],
+        "sourceLines": [
+          "L05"
+        ]
+      },
+      {
+        "text": "Training includes 3-day onboarding with buddy; no experience required.",
+        "factKeys": [
+          "training"
+        ],
+        "sourceLines": [
+          "L08"
+        ]
+      },
+      {
+        "text": "You will join a 6-person cafe team with shared shift board.",
+        "factKeys": [
+          "team"
+        ],
+        "sourceLines": [
+          "L09"
+        ]
+      },
+      {
+        "text": "You receive Staff drink free on shift.",
+        "factKeys": [
+          "benefits"
+        ],
+        "sourceLines": [
+          "L10"
+        ]
+      },
+      {
+        "text": "Quick apply with no resume for Cafe Crew (part-time, short hours) and start with a casual chat first.",
+        "factKeys": [
+          "role"
+        ],
+        "sourceLines": [
+          "L02"
+        ]
+      }
+    ]
+  },
+  "conformance": {
+    "pass": true,
+    "checked": 9,
+    "issues": []
+  },
+  "prose": {
+    "checked": 9,
+    "totalFindings": 0,
+    "needsFixCount": 0,
+    "findings": []
+  },
+  "cost": "未記録（残量が確認できないため）"
+}

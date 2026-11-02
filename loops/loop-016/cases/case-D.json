@@ -1,0 +1,70 @@
+﻿{
+    "id":  "C-D",
+    "label":  "Dispatched Warehouse Associate via agency (fictitious, EN-only)",
+    "employmentType":  "dispatched",
+    "industry":  "Logistics",
+    "role":  "Warehouse Associate (dispatched)",
+    "note":  "Fictitious. Facts authored in English; no JA embedded. Hash this file at start and record in run-record.",
+    "plan":  {
+                 "cta":  "Register with agency - site tour before assignment",
+                 "mustNot":  [
+                                 "Do not blur employer vs worksite",
+                                 "Do not invent direct-hire path"
+                             ],
+                 "targetAudience":  "Workers comfortable with agency employment valuing predictable shifts and coordinator support",
+                 "appeal":  "State employer (agency) and worksite (client) separately; shift predictability first.",
+                 "persona":  "Riku, 24, 1 year retail stockroom. Prefers dispatch for steady hours and coordinator contact. Checks employer vs worksite."
+             },
+    "facts":  [
+                  {
+                      "key":  "employer",
+                      "value":  "Apex Work Partners (dispatching agency)",
+                      "sourceLine":  "L01"
+                  },
+                  {
+                      "key":  "worksite",
+                      "value":  "Client distribution center in Saitama, Kawaguchi",
+                      "sourceLine":  "L02"
+                  },
+                  {
+                      "key":  "role",
+                      "value":  "Warehouse Associate (picking and packing)",
+                      "sourceLine":  "L03"
+                  },
+                  {
+                      "key":  "employmentType",
+                      "value":  "Dispatched (agency employed, client site)",
+                      "sourceLine":  "L04"
+                  },
+                  {
+                      "key":  "pay",
+                      "value":  "Hourly 1,400 JPY",
+                      "sourceLine":  "L05"
+                  },
+                  {
+                      "key":  "workHours",
+                      "value":  "Mon-Fri, 09:00-17:30, 3-5 days/week selectable",
+                      "sourceLine":  "L06"
+                  },
+                  {
+                      "key":  "commute",
+                      "value":  "Shuttle from Kawaguchi Station; pass up to 10,000 JPY/month",
+                      "sourceLine":  "L07"
+                  },
+                  {
+                      "key":  "support",
+                      "value":  "Agency coordinator on site twice/week + phone support on shift days",
+                      "sourceLine":  "L08"
+                  },
+                  {
+                      "key":  "team",
+                      "value":  "10-person team with buddy pairing week 1",
+                      "sourceLine":  "L09"
+                  },
+                  {
+                      "key":  "requirements",
+                      "value":  "No forklift license; able to stand/lift up to 15 kg",
+                      "sourceLine":  "L10"
+                  }
+              ]
+}

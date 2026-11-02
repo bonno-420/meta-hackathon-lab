@@ -1,0 +1,117 @@
+{
+  "case": "C-F",
+  "variant": "vanilla-wonder",
+  "gen": "vanilla-wonder",
+  "source": "vanilla/wonder/case-f.html",
+  "generatedAt": "2026-11-02T11:57:23.608Z",
+  "tool": "eval-phase-012.mjs phase2 pagecheck adapted",
+  "version": "1.1-candidate (T1-T5+P6) adapted for vanilla",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API. For vanilla HTML with different structure, missing checks are marked applicable=false and not forced.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7,
+    "heroP6": 6
+  },
+  "summary": {
+    "duplicates": 2,
+    "duplicateSentencesTotalOccurrences": 4,
+    "verificationHits": 0,
+    "verificationGroups": 0,
+    "recordExposureGroups": 0,
+    "recordExposureHits": 0,
+    "headingMismatch": 0,
+    "heroP6Present": 1,
+    "heroP6Missing": 1,
+    "applicabilityNotes": []
+  },
+  "applicability": {
+    "sectionsDetected": 4,
+    "hasHeroTag": false,
+    "hasSections": true,
+    "headingCheckApplicable": false,
+    "note": "standard"
+  },
+  "duplication": [
+    {
+      "example": "Dec 1 — Jan 11",
+      "normalized": "dec 1 - jan 11",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "glance",
+          "heading": "Everything stated, nothing added.",
+          "snippet": "Dec 1 — Jan 11"
+        },
+        {
+          "sectionId": "section-no-id",
+          "heading": "Orientation first. A buddy in week 1.",
+          "snippet": "Dec 1 — Jan 11"
+        }
+      ]
+    },
+    {
+      "example": "Weekends preferred.",
+      "normalized": "weekends preferred.",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "glance",
+          "heading": "Everything stated, nothing added.",
+          "snippet": "Weekends preferred."
+        },
+        {
+          "sectionId": "section-no-id",
+          "heading": "Orientation first. A buddy in week 1.",
+          "snippet": "Weekends preferred."
+        }
+      ]
+    }
+  ],
+  "verificationPhrases": [],
+  "recordExposure": [],
+  "headingMismatch": [],
+  "allSections": [
+    {
+      "id": "glance",
+      "heading": "Everything stated, nothing added.",
+      "foundKeys": []
+    },
+    {
+      "id": "schedule",
+      "heading": "schedule",
+      "foundKeys": []
+    },
+    {
+      "id": "perks",
+      "heading": "Clear perks, for the term.",
+      "foundKeys": []
+    },
+    {
+      "id": "section-no-id",
+      "heading": "Orientation first. A buddy in week 1.",
+      "foundKeys": []
+    }
+  ],
+  "heroP6": {
+    "present": true,
+    "heroText": "Crestline Outdoor — Seasonal Sales Associate | Nagoya, Sakae ⛰ CRESTLINE OUTDOOR At a glance Schedule & pay Perks Full details View details ↓ Now recruiting · Casual / Seasonal A 6-week season at Crestline Outdoor. Seasonal Sales Associate (casual, storefront) in Nagoya’s Sakae district — from 1 December 2026 to 11 January 2027. ¥ 1,300 JPY / hour 📍 Nagoya, Sakae district 🗓 2026-12-01 → 2027-01-",
+    "checks": [
+      {
+        "pattern": "/2026-12-01/i",
+        "found": true,
+        "context": "📍 Nagoya, Sakae district 🗓 2026-12-01 → 2027-01-11 Estimate your pay → See al"
+      },
+      {
+        "pattern": "/6 weeks/i",
+        "found": false,
+        "context": ""
+      }
+    ],
+    "missing": [
+      "/6 weeks/i"
+    ],
+    "label": "6 weeks: 2026-12-01 to 2027-01-11",
+    "applicability": "no hero tag — used fallback (vanilla structure may differ)"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "case": "C-E",
+  "variant": "vanilla-wonder",
+  "model": "muse-spark-1.3-contributor",
+  "usage": {
+    "completion_tokens": 6087,
+    "prompt_tokens": 3927,
+    "total_tokens": 10014,
+    "completion_tokens_details": {
+      "reasoning_tokens": 5695
+    },
+    "prompt_tokens_details": {
+      "cached_tokens": 3825
+    }
+  },
+  "contentLength": 862,
+  "source": "vanilla/wonder/case-e.html",
+  "attempt": 1
+}

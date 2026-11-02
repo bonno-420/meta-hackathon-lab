@@ -1,0 +1,1112 @@
+{
+  "generatedAt": "2026-11-02T11:57:22.655Z",
+  "tool": "eval-phase-012.mjs phase1 fact hallucination",
+  "note": "facts fixed L01-L10 per cases/*.json; counts invented numbers/conditions not in facts. Numeric hits are deterministic; condition hits are keyword-based and need manual review for false positives (e.g., 'insurance' handled separately).",
+  "rows": [
+    {
+      "case": "C-A",
+      "variant": "vanilla-wonder",
+      "source": "vanilla/wonder/case-a.html",
+      "facts": [
+        {
+          "key": "company",
+          "value": "Northbridge Labs",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "role",
+          "value": "Software Engineer (full-time, SaaS product team)",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "location",
+          "value": "Osaka, Umeda district",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Full-time (permanent)",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "salary",
+          "value": "Annual 4,800,000 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "workHours",
+          "value": "Mon-Fri, 10:00-18:30 (flex core 11:00-16:00)",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "commute",
+          "value": "5-min walk from Umeda Station; commuter pass reimbursed in full",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "training",
+          "value": "3-month onboarding with dedicated mentor and weekly code review",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "team",
+          "value": "8-person product team (4 engineers, 2 designers, 2 PMs)",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "benefits",
+          "value": "Health insurance, 10 paid days from month 7, laptop provided",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 3834,
+      "verdict": "clean — no invented numeric/condition found"
+    },
+    {
+      "case": "C-A",
+      "variant": "vanilla-spark",
+      "source": "vanilla/spark/case-a.html",
+      "facts": [
+        {
+          "key": "company",
+          "value": "Northbridge Labs",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "role",
+          "value": "Software Engineer (full-time, SaaS product team)",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "location",
+          "value": "Osaka, Umeda district",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Full-time (permanent)",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "salary",
+          "value": "Annual 4,800,000 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "workHours",
+          "value": "Mon-Fri, 10:00-18:30 (flex core 11:00-16:00)",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "commute",
+          "value": "5-min walk from Umeda Station; commuter pass reimbursed in full",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "training",
+          "value": "3-month onboarding with dedicated mentor and weekly code review",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "team",
+          "value": "8-person product team (4 engineers, 2 designers, 2 PMs)",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "benefits",
+          "value": "Health insurance, 10 paid days from month 7, laptop provided",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 1603,
+      "verdict": "clean — no invented numeric/condition found"
+    },
+    {
+      "case": "C-A",
+      "variant": "pipeline-gen-005",
+      "source": "previews/case-A-gen-005-complete.html",
+      "facts": [
+        {
+          "key": "company",
+          "value": "Northbridge Labs",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "role",
+          "value": "Software Engineer (full-time, SaaS product team)",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "location",
+          "value": "Osaka, Umeda district",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Full-time (permanent)",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "salary",
+          "value": "Annual 4,800,000 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "workHours",
+          "value": "Mon-Fri, 10:00-18:30 (flex core 11:00-16:00)",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "commute",
+          "value": "5-min walk from Umeda Station; commuter pass reimbursed in full",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "training",
+          "value": "3-month onboarding with dedicated mentor and weekly code review",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "team",
+          "value": "8-person product team (4 engineers, 2 designers, 2 PMs)",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "benefits",
+          "value": "Health insurance, 10 paid days from month 7, laptop provided",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 3704,
+      "verdict": "clean — no invented numeric/condition found"
+    },
+    {
+      "case": "C-B",
+      "variant": "vanilla-wonder",
+      "source": "vanilla/wonder/case-b.html",
+      "facts": [
+        {
+          "key": "company",
+          "value": "Harborview General Hospital",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "role",
+          "value": "Registered Nurse (full-time, general ward)",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "location",
+          "value": "Yokohama, Minato Mirai area",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Full-time (permanent)",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "salary",
+          "value": "Annual 5,200,000 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "workHours",
+          "value": "Day shift 08:30-17:00, 5 days/week; no scheduled night duty",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "commute",
+          "value": "8-min walk from Sakuragicho Station; commuter pass reimbursed in full",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "training",
+          "value": "Two paid training days per year + quarterly skills workshop",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "team",
+          "value": "12-nurse ward with dedicated handover lead",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "benefits",
+          "value": "Health insurance, 12 paid days from month 7, childcare support desk on site",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 3705,
+      "verdict": "clean — no invented numeric/condition found"
+    },
+    {
+      "case": "C-B",
+      "variant": "vanilla-spark",
+      "source": "vanilla/spark/case-b.html",
+      "facts": [
+        {
+          "key": "company",
+          "value": "Harborview General Hospital",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "role",
+          "value": "Registered Nurse (full-time, general ward)",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "location",
+          "value": "Yokohama, Minato Mirai area",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Full-time (permanent)",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "salary",
+          "value": "Annual 5,200,000 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "workHours",
+          "value": "Day shift 08:30-17:00, 5 days/week; no scheduled night duty",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "commute",
+          "value": "8-min walk from Sakuragicho Station; commuter pass reimbursed in full",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "training",
+          "value": "Two paid training days per year + quarterly skills workshop",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "team",
+          "value": "12-nurse ward with dedicated handover lead",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "benefits",
+          "value": "Health insurance, 12 paid days from month 7, childcare support desk on site",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 2056,
+      "verdict": "clean — no invented numeric/condition found"
+    },
+    {
+      "case": "C-B",
+      "variant": "pipeline-gen-005",
+      "source": "previews/case-B-gen-005-complete.html",
+      "facts": [
+        {
+          "key": "company",
+          "value": "Harborview General Hospital",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "role",
+          "value": "Registered Nurse (full-time, general ward)",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "location",
+          "value": "Yokohama, Minato Mirai area",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Full-time (permanent)",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "salary",
+          "value": "Annual 5,200,000 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "workHours",
+          "value": "Day shift 08:30-17:00, 5 days/week; no scheduled night duty",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "commute",
+          "value": "8-min walk from Sakuragicho Station; commuter pass reimbursed in full",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "training",
+          "value": "Two paid training days per year + quarterly skills workshop",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "team",
+          "value": "12-nurse ward with dedicated handover lead",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "benefits",
+          "value": "Health insurance, 12 paid days from month 7, childcare support desk on site",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 3610,
+      "verdict": "clean — no invented numeric/condition found"
+    },
+    {
+      "case": "C-C",
+      "variant": "vanilla-wonder",
+      "source": "vanilla/wonder/case-c.html",
+      "facts": [
+        {
+          "key": "company",
+          "value": "Everfield & Co.",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "role",
+          "value": "Brand Specialist (12-month fixed-term contract)",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "location",
+          "value": "Tokyo, Shibuya",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Contract, 12 months",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "salary",
+          "value": "Monthly 380,000 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "workHours",
+          "value": "Mon-Fri, 10:00-19:00, avg 2 days remote/week",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "commute",
+          "value": "Commuter pass up to 15,000 JPY/month",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "contractTerms",
+          "value": "Renewal review at month 11; no automatic conversion",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "team",
+          "value": "6-person brand team, reports to Brand Lead",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "benefits",
+          "value": "Health insurance, 10 paid days from month 4, ownership of 2 launches",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 3865,
+      "verdict": "clean — no invented numeric/condition found"
+    },
+    {
+      "case": "C-C",
+      "variant": "vanilla-spark",
+      "source": "vanilla/spark/case-c.html",
+      "facts": [
+        {
+          "key": "company",
+          "value": "Everfield & Co.",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "role",
+          "value": "Brand Specialist (12-month fixed-term contract)",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "location",
+          "value": "Tokyo, Shibuya",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Contract, 12 months",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "salary",
+          "value": "Monthly 380,000 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "workHours",
+          "value": "Mon-Fri, 10:00-19:00, avg 2 days remote/week",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "commute",
+          "value": "Commuter pass up to 15,000 JPY/month",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "contractTerms",
+          "value": "Renewal review at month 11; no automatic conversion",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "team",
+          "value": "6-person brand team, reports to Brand Lead",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "benefits",
+          "value": "Health insurance, 10 paid days from month 4, ownership of 2 launches",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 1,
+      "inventions": [
+        {
+          "type": "numeric-date",
+          "phrase": "2026-11-02",
+          "context": "from the posting sheet dated 2026-11-02. Company Everfield & Co. R",
+          "note": "date not in facts"
+        }
+      ],
+      "visibleLength": 967,
+      "verdict": "found 1 possible invented items (requires manual review)"
+    },
+    {
+      "case": "C-C",
+      "variant": "pipeline-gen-005",
+      "source": "previews/case-C-gen-005-complete.html",
+      "facts": [
+        {
+          "key": "company",
+          "value": "Everfield & Co.",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "role",
+          "value": "Brand Specialist (12-month fixed-term contract)",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "location",
+          "value": "Tokyo, Shibuya",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Contract, 12 months",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "salary",
+          "value": "Monthly 380,000 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "workHours",
+          "value": "Mon-Fri, 10:00-19:00, avg 2 days remote/week",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "commute",
+          "value": "Commuter pass up to 15,000 JPY/month",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "contractTerms",
+          "value": "Renewal review at month 11; no automatic conversion",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "team",
+          "value": "6-person brand team, reports to Brand Lead",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "benefits",
+          "value": "Health insurance, 10 paid days from month 4, ownership of 2 launches",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 3468,
+      "verdict": "clean — no invented numeric/condition found"
+    },
+    {
+      "case": "C-D",
+      "variant": "vanilla-wonder",
+      "source": "vanilla/wonder/case-d.html",
+      "facts": [
+        {
+          "key": "employer",
+          "value": "Apex Work Partners (dispatching agency)",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "worksite",
+          "value": "Client distribution center in Saitama, Kawaguchi",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "role",
+          "value": "Warehouse Associate (picking and packing)",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Dispatched (agency employed, client site)",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "pay",
+          "value": "Hourly 1,400 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "workHours",
+          "value": "Mon-Fri, 09:00-17:30, 3-5 days/week selectable",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "commute",
+          "value": "Shuttle from Kawaguchi Station; pass up to 10,000 JPY/month",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "support",
+          "value": "Agency coordinator on site twice/week + phone support on shift days",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "team",
+          "value": "10-person team with buddy pairing week 1",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "requirements",
+          "value": "No forklift license; able to stand/lift up to 15 kg",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 4794,
+      "verdict": "clean — no invented numeric/condition found"
+    },
+    {
+      "case": "C-D",
+      "variant": "vanilla-spark",
+      "source": "vanilla/spark/case-d.html",
+      "facts": [
+        {
+          "key": "employer",
+          "value": "Apex Work Partners (dispatching agency)",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "worksite",
+          "value": "Client distribution center in Saitama, Kawaguchi",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "role",
+          "value": "Warehouse Associate (picking and packing)",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Dispatched (agency employed, client site)",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "pay",
+          "value": "Hourly 1,400 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "workHours",
+          "value": "Mon-Fri, 09:00-17:30, 3-5 days/week selectable",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "commute",
+          "value": "Shuttle from Kawaguchi Station; pass up to 10,000 JPY/month",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "support",
+          "value": "Agency coordinator on site twice/week + phone support on shift days",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "team",
+          "value": "10-person team with buddy pairing week 1",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "requirements",
+          "value": "No forklift license; able to stand/lift up to 15 kg",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 1523,
+      "verdict": "clean — no invented numeric/condition found"
+    },
+    {
+      "case": "C-D",
+      "variant": "pipeline-gen-005",
+      "source": "previews/case-D-gen-005-complete.html",
+      "facts": [
+        {
+          "key": "employer",
+          "value": "Apex Work Partners (dispatching agency)",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "worksite",
+          "value": "Client distribution center in Saitama, Kawaguchi",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "role",
+          "value": "Warehouse Associate (picking and packing)",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Dispatched (agency employed, client site)",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "pay",
+          "value": "Hourly 1,400 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "workHours",
+          "value": "Mon-Fri, 09:00-17:30, 3-5 days/week selectable",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "commute",
+          "value": "Shuttle from Kawaguchi Station; pass up to 10,000 JPY/month",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "support",
+          "value": "Agency coordinator on site twice/week + phone support on shift days",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "team",
+          "value": "10-person team with buddy pairing week 1",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "requirements",
+          "value": "No forklift license; able to stand/lift up to 15 kg",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 3906,
+      "verdict": "clean — no invented numeric/condition found"
+    },
+    {
+      "case": "C-E",
+      "variant": "vanilla-wonder",
+      "source": "vanilla/wonder/case-e.html",
+      "facts": [
+        {
+          "key": "company",
+          "value": "Morningside Coffee",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "role",
+          "value": "Cafe Crew (part-time, short hours)",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "location",
+          "value": "Setagaya, Futako-Tamagawa",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Part-time",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "pay",
+          "value": "Hourly 1,250 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "workHours",
+          "value": "From 3 hours/day, 2-4 days/week; 08:00-11:00 or 11:00-14:00",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "commute",
+          "value": "2-min walk from Futako-Tamagawa Station; pass up to 10,000 JPY/month",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "training",
+          "value": "3-day onboarding with buddy; no experience required",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "team",
+          "value": "6-person cafe team with shared shift board",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "benefits",
+          "value": "Staff drink free on shift",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 2946,
+      "verdict": "clean — no invented numeric/condition found"
+    },
+    {
+      "case": "C-E",
+      "variant": "vanilla-spark",
+      "source": "vanilla/spark/case-e.html",
+      "facts": [
+        {
+          "key": "company",
+          "value": "Morningside Coffee",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "role",
+          "value": "Cafe Crew (part-time, short hours)",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "location",
+          "value": "Setagaya, Futako-Tamagawa",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Part-time",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "pay",
+          "value": "Hourly 1,250 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "workHours",
+          "value": "From 3 hours/day, 2-4 days/week; 08:00-11:00 or 11:00-14:00",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "commute",
+          "value": "2-min walk from Futako-Tamagawa Station; pass up to 10,000 JPY/month",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "training",
+          "value": "3-day onboarding with buddy; no experience required",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "team",
+          "value": "6-person cafe team with shared shift board",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "benefits",
+          "value": "Staff drink free on shift",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 1407,
+      "verdict": "clean — no invented numeric/condition found"
+    },
+    {
+      "case": "C-E",
+      "variant": "pipeline-gen-005",
+      "source": "previews/case-E-gen-005-complete.html",
+      "facts": [
+        {
+          "key": "company",
+          "value": "Morningside Coffee",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "role",
+          "value": "Cafe Crew (part-time, short hours)",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "location",
+          "value": "Setagaya, Futako-Tamagawa",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Part-time",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "pay",
+          "value": "Hourly 1,250 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "workHours",
+          "value": "From 3 hours/day, 2-4 days/week; 08:00-11:00 or 11:00-14:00",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "commute",
+          "value": "2-min walk from Futako-Tamagawa Station; pass up to 10,000 JPY/month",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "training",
+          "value": "3-day onboarding with buddy; no experience required",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "team",
+          "value": "6-person cafe team with shared shift board",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "benefits",
+          "value": "Staff drink free on shift",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 3307,
+      "verdict": "clean — no invented numeric/condition found"
+    },
+    {
+      "case": "C-F",
+      "variant": "vanilla-wonder",
+      "source": "vanilla/wonder/case-f.html",
+      "facts": [
+        {
+          "key": "company",
+          "value": "Crestline Outdoor",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "role",
+          "value": "Seasonal Sales Associate (casual, storefront)",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "location",
+          "value": "Nagoya, Sakae district",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Casual / seasonal",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "pay",
+          "value": "Hourly 1,300 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "term",
+          "value": "6 weeks: 2026-12-01 to 2027-01-11",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "workHours",
+          "value": "3-5 days/week, 4-7 hours/day; weekends preferred",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "commute",
+          "value": "Commuter pass up to 8,000 JPY/month",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "training",
+          "value": "1-day orientation + floor buddy week 1",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "perks",
+          "value": "Staff discount 20% during term, uniform provided",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 2362,
+      "verdict": "clean — no invented numeric/condition found"
+    },
+    {
+      "case": "C-F",
+      "variant": "vanilla-spark",
+      "source": "vanilla/spark/case-f.html",
+      "facts": [
+        {
+          "key": "company",
+          "value": "Crestline Outdoor",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "role",
+          "value": "Seasonal Sales Associate (casual, storefront)",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "location",
+          "value": "Nagoya, Sakae district",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Casual / seasonal",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "pay",
+          "value": "Hourly 1,300 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "term",
+          "value": "6 weeks: 2026-12-01 to 2027-01-11",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "workHours",
+          "value": "3-5 days/week, 4-7 hours/day; weekends preferred",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "commute",
+          "value": "Commuter pass up to 8,000 JPY/month",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "training",
+          "value": "1-day orientation + floor buddy week 1",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "perks",
+          "value": "Staff discount 20% during term, uniform provided",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 1544,
+      "verdict": "clean — no invented numeric/condition found"
+    },
+    {
+      "case": "C-F",
+      "variant": "pipeline-gen-005",
+      "source": "previews/case-F-gen-005-complete.html",
+      "facts": [
+        {
+          "key": "company",
+          "value": "Crestline Outdoor",
+          "sourceLine": "L01"
+        },
+        {
+          "key": "role",
+          "value": "Seasonal Sales Associate (casual, storefront)",
+          "sourceLine": "L02"
+        },
+        {
+          "key": "location",
+          "value": "Nagoya, Sakae district",
+          "sourceLine": "L03"
+        },
+        {
+          "key": "employmentType",
+          "value": "Casual / seasonal",
+          "sourceLine": "L04"
+        },
+        {
+          "key": "pay",
+          "value": "Hourly 1,300 JPY",
+          "sourceLine": "L05"
+        },
+        {
+          "key": "term",
+          "value": "6 weeks: 2026-12-01 to 2027-01-11",
+          "sourceLine": "L06"
+        },
+        {
+          "key": "workHours",
+          "value": "3-5 days/week, 4-7 hours/day; weekends preferred",
+          "sourceLine": "L07"
+        },
+        {
+          "key": "commute",
+          "value": "Commuter pass up to 8,000 JPY/month",
+          "sourceLine": "L08"
+        },
+        {
+          "key": "training",
+          "value": "1-day orientation + floor buddy week 1",
+          "sourceLine": "L09"
+        },
+        {
+          "key": "perks",
+          "value": "Staff discount 20% during term, uniform provided",
+          "sourceLine": "L10"
+        }
+      ],
+      "inventionCount": 0,
+      "inventions": [],
+      "visibleLength": 3288,
+      "verdict": "clean — no invented numeric/condition found"
+    }
+  ]
+}

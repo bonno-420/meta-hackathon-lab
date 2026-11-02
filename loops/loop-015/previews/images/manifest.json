@@ -1,0 +1,65 @@
+{
+  "generatedAt": "2026-11-01T12:30:12.503Z",
+  "model": "muse-image-1.0",
+  "endpoint": "https://api.meta.ai/v1/images/generations",
+  "totalInput": 141364,
+  "totalOutput": 14966,
+  "images": [
+    {
+      "id": "TA-hero",
+      "file": "images/TA-hero.webp",
+      "prompt": "Bright modern retail supermarket exterior entrance in Setagaya Tokyo, morning sunlight, clean glass doors, warm welcoming storefront, subtle greenery, photorealistic, wide angle, daytime, no text, no numbers, no logos",
+      "mime": "image/webp",
+      "bytes": 761496
+    },
+    {
+      "id": "TA-cashier",
+      "file": "images/TA-cashier.webp",
+      "prompt": "Young retail cashier smiling at bright modern supermarket checkout counter, clean store interior, natural daylight, customer in soft background blur, warm atmosphere, photorealistic, no text, no numbers, no logos",
+      "mime": "image/webp",
+      "bytes": 343642
+    },
+    {
+      "id": "TA-training",
+      "file": "images/TA-training.webp",
+      "prompt": "Friendly senior staff showing a new young retail employee how to use the cash register, bright backroom training area, warm supportive atmosphere, photorealistic, no text, no numbers, no logos",
+      "mime": "image/webp",
+      "bytes": 366168
+    },
+    {
+      "id": "TA-neighborhood",
+      "file": "images/TA-neighborhood.webp",
+      "prompt": "Quiet pleasant residential street in Setagaya Tokyo, daytime, trees lining the street, small local shops, calm suburban neighborhood, soft natural light, photorealistic, wide shot, no text, no numbers, no logos",
+      "mime": "image/webp",
+      "bytes": 1193164
+    },
+    {
+      "id": "TB-hero",
+      "file": "images/TB-hero.webp",
+      "prompt": "Bright warm care facility entrance in Yokohama, daytime, modern welcoming building with potted plants and soft landscaping, gentle sunlight, calm and clean atmosphere, photorealistic, wide angle, no text, no numbers, no logos",
+      "mime": "image/webp",
+      "bytes": 738652
+    },
+    {
+      "id": "TB-meal",
+      "file": "images/TB-meal.webp",
+      "prompt": "Kind care worker gently helping an elderly person with a meal in a bright airy dining room, warm natural light through windows, soft caring atmosphere, photorealistic, no text, no numbers, no logos",
+      "mime": "image/webp",
+      "bytes": 450654
+    },
+    {
+      "id": "TB-training",
+      "file": "images/TB-training.webp",
+      "prompt": "New young care worker shadowing an experienced senior colleague walking together in a bright modern care facility hallway, gentle guidance, warm supportive feeling, photorealistic, no text, no numbers, no logos",
+      "mime": "image/webp",
+      "bytes": 409014
+    },
+    {
+      "id": "TB-neighborhood",
+      "file": "images/TB-neighborhood.webp",
+      "prompt": "Quiet pleasant residential area in Yokohama, daytime, tree-lined street with houses, calm family neighborhood, soft daylight, photorealistic, wide shot, no text, no numbers, no logos",
+      "mime": "image/webp",
+      "bytes": 1242114
+    }
+  ]
+}

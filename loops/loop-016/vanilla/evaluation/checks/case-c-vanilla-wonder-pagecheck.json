@@ -1,0 +1,137 @@
+{
+  "case": "C-C",
+  "variant": "vanilla-wonder",
+  "gen": "vanilla-wonder",
+  "source": "vanilla/wonder/case-c.html",
+  "generatedAt": "2026-11-02T11:57:23.045Z",
+  "tool": "eval-phase-012.mjs phase2 pagecheck adapted",
+  "version": "1.1-candidate (T1-T5+P6) adapted for vanilla",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API. For vanilla HTML with different structure, missing checks are marked applicable=false and not forced.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7,
+    "heroP6": 6
+  },
+  "summary": {
+    "duplicates": 3,
+    "duplicateSentencesTotalOccurrences": 6,
+    "verificationHits": 0,
+    "verificationGroups": 0,
+    "recordExposureGroups": 0,
+    "recordExposureHits": 0,
+    "headingMismatch": 0,
+    "heroP6Present": 1,
+    "heroP6Missing": 0,
+    "applicabilityNotes": []
+  },
+  "applicability": {
+    "sectionsDetected": 5,
+    "hasHeroTag": false,
+    "hasSections": true,
+    "headingCheckApplicable": false,
+    "note": "standard"
+  },
+  "duplication": [
+    {
+      "example": "Tokyo, Shibuya",
+      "normalized": "tokyo, shibuya",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "details",
+          "heading": "Everything stated, in one place.",
+          "snippet": "Tokyo, Shibuya"
+        },
+        {
+          "sectionId": "section-no-id",
+          "heading": "A weekday rhythm, based in Shibuya.",
+          "snippet": "Tokyo, Shibuya"
+        }
+      ]
+    },
+    {
+      "example": "Contract Terms",
+      "normalized": "contract terms",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "details",
+          "heading": "Everything stated, in one place.",
+          "snippet": "Contract Terms"
+        },
+        {
+          "sectionId": "section-no-id",
+          "heading": "12 months, with clear milestones.",
+          "snippet": "Contract Terms"
+        }
+      ]
+    },
+    {
+      "example": "10 paid days",
+      "normalized": "10 paid days",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "section-no-id",
+          "heading": "12 months, with clear milestones.",
+          "snippet": "10 paid days"
+        },
+        {
+          "sectionId": "section-no-id",
+          "heading": "What is listed in the posting.",
+          "snippet": "10 paid days"
+        }
+      ]
+    }
+  ],
+  "verificationPhrases": [],
+  "recordExposure": [],
+  "headingMismatch": [],
+  "allSections": [
+    {
+      "id": "details",
+      "heading": "Everything stated, in one place.",
+      "foundKeys": []
+    },
+    {
+      "id": "section-no-id",
+      "heading": "A weekday rhythm, based in Shibuya.",
+      "foundKeys": []
+    },
+    {
+      "id": "section-no-id",
+      "heading": "12 months, with clear milestones.",
+      "foundKeys": []
+    },
+    {
+      "id": "section-no-id",
+      "heading": "What is listed in the posting.",
+      "foundKeys": []
+    },
+    {
+      "id": "section-no-id",
+      "heading": "Frequently asked questions",
+      "foundKeys": []
+    }
+  ],
+  "heroP6": {
+    "present": true,
+    "heroText": "Everfield & Co. — Brand Specialist | Tokyo, Shibuya E Everfield & Co. Tokyo, Shibuya • Contract, 12 months Now hiring — 12-month contract Brand Specialist in Shibuya. A 12-month fixed-term contract with Everfield & Co. in Tokyo, Shibuya — joining a 6-person brand team, reporting to the Brand Lead, with ownership of 2 launches. Monthly 380,000 JPY Mon-Fri, 10:00-19:00 Avg 2 days remote / week Clear",
+    "checks": [
+      {
+        "pattern": "/12 months/i",
+        "found": true,
+        "context": "o. Tokyo, Shibuya • Contract, 12 months Now hiring — 12-month contract Brand Spe"
+      },
+      {
+        "pattern": "/Contract/i",
+        "found": true,
+        "context": "rfield & Co. Tokyo, Shibuya • Contract, 12 months Now hiring — 12-month contract"
+      }
+    ],
+    "missing": [],
+    "label": "Contract 12 months",
+    "applicability": "no hero tag — used fallback (vanilla structure may differ)"
+  }
+}

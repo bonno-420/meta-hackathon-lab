@@ -1,0 +1,18 @@
+{
+  "case": "C-D",
+  "anonLabel": "Z",
+  "variantSealed": "see mapping-sealed-20261102.json",
+  "model": "muse-spark-1.3-contributor",
+  "usage": {
+    "completion_tokens": 3146,
+    "prompt_tokens": 987,
+    "total_tokens": 4133,
+    "completion_tokens_details": {
+      "reasoning_tokens": 2763
+    },
+    "prompt_tokens_details": {
+      "cached_tokens": 881
+    }
+  },
+  "contentLength": 1423
+}

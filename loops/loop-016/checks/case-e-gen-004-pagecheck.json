@@ -1,0 +1,267 @@
+{
+  "case": "C-E",
+  "gen": "004",
+  "source": "loops/loop-016/previews/case-E-gen-004-complete.html",
+  "generatedAt": "2026-11-02T10:57:31.870Z",
+  "tool": "loop16-pagecheck.mjs",
+  "version": "1.1-candidate (T1-T5 + P6)",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7,
+    "heroP6": 6
+  },
+  "summary": {
+    "duplicates": 7,
+    "duplicateSentencesTotalOccurrences": 19,
+    "verificationHits": 2,
+    "verificationGroups": 2,
+    "recordExposureGroups": 0,
+    "recordExposureHits": 0,
+    "headingMismatch": 0,
+    "heroP6Present": 1,
+    "heroP6Missing": 0
+  },
+  "duplication": [
+    {
+      "example": "2-min walk from Futako-Tamagawa Station; pass up to 10,000 JPY/month",
+      "normalized": "2-min walk from futako-tamagawa station; pass up to 10,000 jpy/month",
+      "count": 4,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Cafe Crew (part-time, short hours)",
+          "snippet": "2-min walk from Futako-Tamagawa Station; pass up to 10,000 JPY/month"
+        },
+        {
+          "sectionId": "header",
+          "heading": "Cafe Crew (part-time, short hours)",
+          "snippet": "2-min walk from Futako-Tamagawa Station; pass up to 10,000 JPY/month"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "2-min walk from Futako-Tamagawa Station; pass up to 10,000 JPY/month"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "2-min walk from Futako-Tamagawa Station; pass up to 10,000 JPY/month"
+        }
+      ]
+    },
+    {
+      "example": "From 3 hours/day, 2-4 days/week; 08:00-11:00 or 11:00-14:00",
+      "normalized": "from 3 hours/day, 2-4 days/week; 08:00-11:00 or 11:00-14:00",
+      "count": 4,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Cafe Crew (part-time, short hours)",
+          "snippet": "From 3 hours/day, 2-4 days/week; 08:00-11:00 or 11:00-14:00"
+        },
+        {
+          "sectionId": "header",
+          "heading": "Cafe Crew (part-time, short hours)",
+          "snippet": "From 3 hours/day, 2-4 days/week; 08:00-11:00 or 11:00-14:00"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "From 3 hours/day, 2-4 days/week; 08:00-11:00 or 11:00-14:00"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "From 3 hours/day, 2-4 days/week; 08:00-11:00 or 11:00-14:00"
+        }
+      ]
+    },
+    {
+      "example": "Hourly 1,250 JPY",
+      "normalized": "hourly 1,250 jpy",
+      "count": 3,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Cafe Crew (part-time, short hours)",
+          "snippet": "Hourly 1,250 JPY"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Hourly 1,250 JPY"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "Hourly 1,250 JPY"
+        }
+      ]
+    },
+    {
+      "example": "Morningside Coffee is hiring Cafe Crew (part-time, short hours) in Setagaya, Futako-Tamagawa.",
+      "normalized": "morningside coffee is hiring cafe crew (part-time, short hours) in setagaya, futako-tamagawa.",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "location",
+          "heading": "Place &amp; Access 勤務地",
+          "snippet": "Morningside Coffee is hiring Cafe Crew (part-time, short hours) in Setagaya, Futako-Tamagawa."
+        },
+        {
+          "sectionId": "team",
+          "heading": "Team &amp; Support チーム・サポート",
+          "snippet": "Morningside Coffee is hiring Cafe Crew (part-time, short hours) in Setagaya, Futako-Tamagawa."
+        }
+      ]
+    },
+    {
+      "example": "3-day onboarding with buddy; no experience required",
+      "normalized": "3-day onboarding with buddy; no experience required",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "3-day onboarding with buddy; no experience required"
+        },
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "snippet": "3-day onboarding with buddy; no experience required"
+        }
+      ]
+    },
+    {
+      "example": "Cafe Crew (part-time, short hours)",
+      "normalized": "cafe crew (part-time, short hours)",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "header",
+          "heading": "Cafe Crew (part-time, short hours)",
+          "snippet": "Cafe Crew (part-time, short hours)"
+        },
+        {
+          "sectionId": "about",
+          "heading": "The Basics 募集の基本",
+          "snippet": "Cafe Crew (part-time, short hours)"
+        }
+      ]
+    },
+    {
+      "example": "0, no text in image",
+      "normalized": "0, no text in image",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "conditions",
+          "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+          "snippet": "0, no text in image"
+        },
+        {
+          "sectionId": "location",
+          "heading": "Place &amp; Access 勤務地",
+          "snippet": "0, no text in image"
+        }
+      ]
+    }
+  ],
+  "verificationPhrases": [
+    {
+      "phrase": "All conditions above are from the",
+      "lang": "EN",
+      "source": "CTA block",
+      "note": "P2 meta",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "context": "uddy; no experience required All conditions above are from the 9 sentences of C-E gen-004. N",
+          "phrase": "All conditions above are from the"
+        }
+      ]
+    },
+    {
+      "phrase": "No new facts are added",
+      "lang": "EN",
+      "source": "CTA block",
+      "note": "",
+      "count": 1,
+      "hits": [
+        {
+          "sectionId": "check",
+          "heading": "Check Before You Apply 応募前の確認",
+          "context": "e 9 sentences of C-E gen-004. No new facts are added. Quick apply — no resume, ca",
+          "phrase": "No new facts are added"
+        }
+      ]
+    }
+  ],
+  "recordExposure": [],
+  "headingMismatch": [],
+  "allSections": [
+    {
+      "id": "header",
+      "heading": "Cafe Crew (part-time, short hours)",
+      "foundKeys": []
+    },
+    {
+      "id": "about",
+      "heading": "The Basics 募集の基本",
+      "foundKeys": []
+    },
+    {
+      "id": "conditions",
+      "heading": "Pay &amp; Hours — Exactly as Stated 給与・勤務時間は原文のまま",
+      "foundKeys": []
+    },
+    {
+      "id": "location",
+      "heading": "Place &amp; Access 勤務地",
+      "foundKeys": []
+    },
+    {
+      "id": "team",
+      "heading": "Team &amp; Support チーム・サポート",
+      "foundKeys": []
+    },
+    {
+      "id": "check",
+      "heading": "Check Before You Apply 応募前の確認",
+      "foundKeys": []
+    },
+    {
+      "id": "lp-memo",
+      "heading": "Memo このLPへのメモ（ブラウザ保存）",
+      "foundKeys": []
+    }
+  ],
+  "heroP6": {
+    "present": true,
+    "heroText": "Part-time · Setagaya, Futako-Tamagawa Cafe Crew (part-time, short hours) From 3 hours/day, 2-4 days/week; 08:00-11:00 or 11:00-14:00 2-min walk from Futako-Tamagawa Station; pass up to 10,000 JPY/month This is a fictional posting for Part-time Cafe Crew short hours (fictitious, EN-only). No application function. Part-time From 3 hours/day, 2-4 days/week; 08:00-11:00 or 11:00-14:00 2-min walk from ",
+    "checks": [
+      {
+        "pattern": "/3 hours/i",
+        "found": true,
+        "context": "(part-time, short hours) From 3 hours/day, 2-4 days/week; 08:00-11:00 or 11:00-1"
+      },
+      {
+        "pattern": "/08:00-11:00/i",
+        "found": true,
+        "context": "m 3 hours/day, 2-4 days/week; 08:00-11:00 or 11:00-14:00 2-min walk from Futako-"
+      },
+      {
+        "pattern": "/Futako-Tamagawa/i",
+        "found": true,
+        "context": "Part-time · Setagaya, Futako-Tamagawa Cafe Crew (part-time, short hours)"
+      }
+    ],
+    "missing": [],
+    "label": "From 3 hours + Futako-Tamagawa",
+    "note": "candidate — permanence requires owner approval"
+  }
+}

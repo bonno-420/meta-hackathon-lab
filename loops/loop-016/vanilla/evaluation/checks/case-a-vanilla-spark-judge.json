@@ -1,0 +1,23 @@
+{
+  "case": "C-A",
+  "variant": "vanilla-spark",
+  "model": "muse-spark-1.3-contributor",
+  "usage": {
+    "completion_tokens": 6519,
+    "prompt_tokens": 3585,
+    "total_tokens": 10104,
+    "completion_tokens_details": {
+      "reasoning_tokens": 6132
+    },
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "contentLength": 867,
+  "source": "vanilla/spark/case-a.html",
+  "pairsFiles": [
+    "pair-01-trial2-note.md",
+    "pair-02-loop012-loop013.md",
+    "pair-03-cA-folded.md"
+  ]
+}

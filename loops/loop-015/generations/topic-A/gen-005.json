@@ -1,0 +1,155 @@
+{
+  "generatedAt": "2026-11-01T11:23:31.039Z",
+  "startedAt": "2026-11-01T11:23:24.178Z",
+  "model": "meta-models/muse-spark-open-1026",
+  "baseUrl": "https://inference.baseten.co/v1",
+  "language": "EN",
+  "topic": {
+    "id": "T-A",
+    "label": "企画精度を見る群（架空）",
+    "sourceFingerprint": "FICT-TA-v1-20261101",
+    "topicFile": "loops/loop-015/topics/topic-A.json"
+  },
+  "provisionalLimit": {
+    "max_tokens": 4000,
+    "temperature": 0.4,
+    "note": "正式値 max_tokens=4,000（英語系統）"
+  },
+  "memo": {
+    "memoFile": null,
+    "memoVersion": null,
+    "applied": false,
+    "note": "反映メモなし（英語系統の自律3世代）"
+  },
+  "ok": true,
+  "error": null,
+  "usage": {
+    "prompt_tokens": 825,
+    "completion_tokens": 2532,
+    "total_tokens": 3357,
+    "prompt_tokens_details": {
+      "audio_tokens": 0,
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": 1956,
+      "audio_tokens": 0,
+      "reasoning_tokens": 2276,
+      "rejected_prediction_tokens": 2076
+    }
+  },
+  "usageSummary": {
+    "prompt_tokens": 825,
+    "completion_tokens": 2532,
+    "total_tokens": 3357,
+    "prompt_tokens_details": {
+      "audio_tokens": 0,
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": 1956,
+      "audio_tokens": 0,
+      "reasoning_tokens": 2276,
+      "rejected_prediction_tokens": 2076
+    }
+  },
+  "promptRecord": "## system\n\nYou write English LP (landing page) copy sentences for a fictional Japanese job posting. The FACT items are given in Japanese; you must keep every numeric value verbatim (e.g. 1,250円, 1,180円, 週3日〜、1日4時間〜, 週2日〜、1日3時間〜, 月1万円まで, 上限5千円, 3日間, 月ごと).\nRules:\n- Use only the stated FACT items. Never invent information not in the FACTs or the plan. The plan's appeal direction may guide phrasing but must not create new facts.\n- Write plain descriptive English sentences. Keep it natural but factual; no hype, no greetings, no invented benefits.\n- For every sentence, list the FACT keys it is based on (factKeys) and the original line IDs (sourceLines). A sentence must cite at least one key and at least one line, and must cite every key and line it uses.\n- Keep numbers, amounts, durations and conditions exactly as written in the FACT values. Do not convert yen, do not translate time expressions into different quantities (e.g. keep 週3日〜 as given, do not rewrite as '3 days a week' with altered meaning; you may render it in English but the quantity must stay verbatim).\n- If a FACT is not to be asserted, state only that it is not stated; do not fabricate.\n- Output JSON only, no markdown fences.\nSchema: {\"sentences\":[{\"text\":\"...\",\"factKeys\":[\"...\"],\"sourceLines\":[\"L01\"]}]}\n\n## user\n\nMaterials for T-A (企画精度を見る群（架空）) — version FICT-TA-v1-20261101:\nPlan (fixed before generation):\n- Target audience: 二十代前半、接客経験あり、安定した勤務地を希望する層\n- Appeal: 研修制度とシフトの柔軟性を前面に出す。給与は固定の事実どおりに述べる\n- Constraints: 未記載の福利厚生・昇給・正社員登用の有無は創作しない。数値は上記 facts どおりに述べる\n\nStated FACT items (key / value / sourceLine) — values are Japanese, keep them verbatim in English rendering:\n- company: value=\"架空の小売企業「サンライズマート」\" sourceLine=L01\n- role: value=\"販売スタッフ（レジ・品出し）\" sourceLine=L02\n- location: value=\"東京都世田谷区\" sourceLine=L03\n- employmentType: value=\"アルバイト\" sourceLine=L04\n- hourlyWage: value=\"1,250円\" sourceLine=L05\n- workHours: value=\"週3日〜、1日4時間〜\" sourceLine=L06\n- transport: value=\"交通費支給（月1万円まで）\" sourceLine=L07\n- training: value=\"入社時研修3日間あり\" sourceLine=L08\n- shiftSystem: value=\"シフト自己申告制（月ごと）\" sourceLine=L09\n\nWrite the English LP copy sentences as JSON per schema. Keep every factual value verbatim while rendering the sentences in English.",
+  "generation": {
+    "sentences": [
+      {
+        "text": "The employer is 架空の小売企業「サンライズマート」.",
+        "factKeys": [
+          "company"
+        ],
+        "sourceLines": [
+          "L01"
+        ]
+      },
+      {
+        "text": "The role is 販売スタッフ（レジ・品出し）.",
+        "factKeys": [
+          "role"
+        ],
+        "sourceLines": [
+          "L02"
+        ]
+      },
+      {
+        "text": "The work location is 東京都世田谷区.",
+        "factKeys": [
+          "location"
+        ],
+        "sourceLines": [
+          "L03"
+        ]
+      },
+      {
+        "text": "The employment type is アルバイト.",
+        "factKeys": [
+          "employmentType"
+        ],
+        "sourceLines": [
+          "L04"
+        ]
+      },
+      {
+        "text": "The hourly wage is 1,250円.",
+        "factKeys": [
+          "hourlyWage"
+        ],
+        "sourceLines": [
+          "L05"
+        ]
+      },
+      {
+        "text": "Work hours are 週3日〜、1日4時間〜.",
+        "factKeys": [
+          "workHours"
+        ],
+        "sourceLines": [
+          "L06"
+        ]
+      },
+      {
+        "text": "Transportation allowance is 交通費支給（月1万円まで）.",
+        "factKeys": [
+          "transport"
+        ],
+        "sourceLines": [
+          "L07"
+        ]
+      },
+      {
+        "text": "Training is 入社時研修3日間あり.",
+        "factKeys": [
+          "training"
+        ],
+        "sourceLines": [
+          "L08"
+        ]
+      },
+      {
+        "text": "The shift system is シフト自己申告制（月ごと）.",
+        "factKeys": [
+          "shiftSystem"
+        ],
+        "sourceLines": [
+          "L09"
+        ]
+      }
+    ]
+  },
+  "conformance": {
+    "pass": true,
+    "checked": 9,
+    "issues": []
+  },
+  "prose": {
+    "checked": 9,
+    "totalFindings": 0,
+    "needsFixCount": 0,
+    "findings": []
+  },
+  "rawResponseSnippet": "{\"id\":\"chatcmpl-836e21ebd7594945970328fdb93fd248\",\"choices\":[{\"index\":0,\"message\":{\"content\":\"{\\\"sentences\\\":[{\\\"text\\\":\\\"The employer is 架空の小売企業「サンライズマート」.\\\",\\\"factKeys\\\":[\\\"company\\\"],\\\"sourceLines\\\":[\\\"L01\\\"]},{\\\"text\\\":\\\"The role is 販売スタッフ（レジ・品出し）.\\\",\\\"factKeys\\\":[\\\"role\\\"],\\\"sourceLines\\\":[\\\"L02\\\"]},{\\\"text\\\":\\\"The work location is 東京都世田谷区.\\\",\\\"factKeys\\\":[\\\"location\\\"],\\\"sourceLines\\\":[\\\"L03\\\"]},{\\\"text\\\":\\\"The employment type is アルバイト.\\\",\\\"factKeys\\\":[\\\"employmentType\\\"],\\\"sourceLines\\\":[\\\"L04\\\"]},{\\\"text\\\":\\\"The hourly wage is 1,250円.\\\",\\\"factKeys\\\":[\\\"hourlyWage\\\"],\\\"sourceLines\\\":[\\\"L05\\\"]},{\\\"text\\\":\\\"Work hours are 週3日〜、1日4時間〜.\\\",\\\"factKeys\\\":[\\\"workHours\\\"],\\\"sourceLines\\\":[\\\"L06\\\"]},{\\\"text\\\":\\\"Transportation allowance is 交通費支給（月1万円まで）.\\\",\\\"factKeys\\\":[\\\"transport\\\"],\\\"source",
+  "cost": "未記録（残量が確認できないため）"
+}

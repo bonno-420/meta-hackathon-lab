@@ -1,0 +1,176 @@
+{
+  "case": "C-D",
+  "variant": "vanilla-wonder",
+  "gen": "vanilla-wonder",
+  "source": "vanilla/wonder/case-d.html",
+  "generatedAt": "2026-11-02T11:57:23.216Z",
+  "tool": "eval-phase-012.mjs phase2 pagecheck adapted",
+  "version": "1.1-candidate (T1-T5+P6) adapted for vanilla",
+  "note": "Candidate rules — permanence requires user approval. Layer1 deterministic, no API. For vanilla HTML with different structure, missing checks are marked applicable=false and not forced.",
+  "dictVersions": {
+    "verification": 13,
+    "recordLabels": 16,
+    "headingScope": 7,
+    "heroP6": 6
+  },
+  "summary": {
+    "duplicates": 5,
+    "duplicateSentencesTotalOccurrences": 10,
+    "verificationHits": 0,
+    "verificationGroups": 0,
+    "recordExposureGroups": 0,
+    "recordExposureHits": 0,
+    "headingMismatch": 0,
+    "heroP6Present": 1,
+    "heroP6Missing": 0,
+    "applicabilityNotes": []
+  },
+  "applicability": {
+    "sectionsDetected": 6,
+    "hasHeroTag": false,
+    "hasSections": true,
+    "headingCheckApplicable": false,
+    "note": "standard"
+  },
+  "duplication": [
+    {
+      "example": "Work Hours",
+      "normalized": "work hours",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "schedule",
+          "heading": "Choose 3–5 days a week, Monday to Friday",
+          "snippet": "Work Hours"
+        },
+        {
+          "sectionId": "details",
+          "heading": "All stated facts, in one place",
+          "snippet": "Work Hours"
+        }
+      ]
+    },
+    {
+      "example": "Client distribution center",
+      "normalized": "client distribution center",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "commute",
+          "heading": "In Kawaguchi, with a shuttle from the station",
+          "snippet": "Client distribution center"
+        },
+        {
+          "sectionId": "how",
+          "heading": "Dispatched: employed by Apex, working at the client site",
+          "snippet": "Client Distribution Center"
+        }
+      ]
+    },
+    {
+      "example": "Employment Type",
+      "normalized": "employment type",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "how",
+          "heading": "Dispatched: employed by Apex, working at the client site",
+          "snippet": "Employment Type"
+        },
+        {
+          "sectionId": "details",
+          "heading": "All stated facts, in one place",
+          "snippet": "Employment Type"
+        }
+      ]
+    },
+    {
+      "example": "Dispatched (agency employed, client site)",
+      "normalized": "dispatched (agency employed, client site)",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "how",
+          "heading": "Dispatched: employed by Apex, working at the client site",
+          "snippet": "Dispatched (agency employed, client site)"
+        },
+        {
+          "sectionId": "details",
+          "heading": "All stated facts, in one place",
+          "snippet": "Dispatched (agency employed, client site)"
+        }
+      ]
+    },
+    {
+      "example": "Requirements",
+      "normalized": "requirements",
+      "count": 2,
+      "occurrences": [
+        {
+          "sectionId": "details",
+          "heading": "All stated facts, in one place",
+          "snippet": "Requirements"
+        },
+        {
+          "sectionId": "section-no-id",
+          "heading": "What is listed in the posting",
+          "snippet": "Requirements"
+        }
+      ]
+    }
+  ],
+  "verificationPhrases": [],
+  "recordExposure": [],
+  "headingMismatch": [],
+  "allSections": [
+    {
+      "id": "role",
+      "heading": "Picking and packing, as part of a team of 10",
+      "foundKeys": []
+    },
+    {
+      "id": "schedule",
+      "heading": "Choose 3–5 days a week, Monday to Friday",
+      "foundKeys": []
+    },
+    {
+      "id": "commute",
+      "heading": "In Kawaguchi, with a shuttle from the station",
+      "foundKeys": []
+    },
+    {
+      "id": "how",
+      "heading": "Dispatched: employed by Apex, working at the client site",
+      "foundKeys": []
+    },
+    {
+      "id": "details",
+      "heading": "All stated facts, in one place",
+      "foundKeys": []
+    },
+    {
+      "id": "section-no-id",
+      "heading": "What is listed in the posting",
+      "foundKeys": []
+    }
+  ],
+  "heroP6": {
+    "present": true,
+    "heroText": "Warehouse Associate — Kawaguchi, Saitama | Apex Work Partners A APEX Work Partners The Role Schedule Commute Support Full Details View Details Dispatched Role • Kawaguchi, Saitama Warehouse Associate Picking & Packing Work at a client distribution center in Kawaguchi, employed by Apex Work Partners — with a shuttle from Kawaguchi Station and support on site. Hourly Pay ¥1,400 / hour Mon–Fri, 09:00",
+    "checks": [
+      {
+        "pattern": "/Apex Work Partners/i",
+        "found": true,
+        "context": "ociate — Kawaguchi, Saitama | Apex Work Partners A APEX Work Partners The Role S"
+      },
+      {
+        "pattern": "/Saitama/i",
+        "found": true,
+        "context": "ehouse Associate — Kawaguchi, Saitama | Apex Work Partners A APEX Work Partners"
+      }
+    ],
+    "missing": [],
+    "label": "Apex Work Partners + Saitama Kawaguchi",
+    "applicability": "no hero tag — used fallback (vanilla structure may differ)"
+  }
+}

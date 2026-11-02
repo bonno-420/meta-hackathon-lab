@@ -1,0 +1,259 @@
+{
+  "generatedAt": "2026-11-02T12:12:54.556Z",
+  "tool": "eval-phase-34-resume.mjs judge",
+  "note": "same judge, same pairs for all 18. Candidate P1-P6. Skipped existing files.",
+  "results": [
+    {
+      "case": "C-A",
+      "variant": "vanilla-wonder",
+      "ok": true,
+      "verdicts": {
+        "P1": "ない",
+        "P2": "ある",
+        "P3": "ない",
+        "P4": "ない",
+        "P5": "ない",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-A",
+      "variant": "vanilla-spark",
+      "ok": true,
+      "verdicts": {
+        "P1": "ある",
+        "P2": "ある",
+        "P3": "ない",
+        "P4": "ない",
+        "P5": "ある",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-A",
+      "variant": "pipeline-gen-005",
+      "ok": true,
+      "verdicts": {
+        "P1": "ない",
+        "P2": "ある",
+        "P3": "ある",
+        "P4": "ない",
+        "P5": "ある",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-B",
+      "variant": "vanilla-wonder",
+      "ok": true,
+      "verdicts": {
+        "P1": "ない",
+        "P2": "ある",
+        "P3": "ない",
+        "P4": "ない",
+        "P5": "ない",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-B",
+      "variant": "vanilla-spark",
+      "ok": true,
+      "verdicts": {
+        "P1": "ある",
+        "P2": "ある",
+        "P3": "ない",
+        "P4": "ある",
+        "P5": "ある",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-B",
+      "variant": "pipeline-gen-005",
+      "ok": true,
+      "verdicts": {
+        "P1": "ない",
+        "P2": "ある",
+        "P3": "ある",
+        "P4": "ない",
+        "P5": "ある",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-C",
+      "variant": "vanilla-wonder",
+      "ok": true,
+      "verdicts": {
+        "P1": "ある",
+        "P2": "ある",
+        "P3": "ない",
+        "P4": "ある",
+        "P5": "ある",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-C",
+      "variant": "vanilla-spark",
+      "ok": true,
+      "verdicts": {
+        "P1": "ない",
+        "P2": "ある",
+        "P3": "ある",
+        "P4": "ない",
+        "P5": "ある",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-C",
+      "variant": "pipeline-gen-005",
+      "ok": true,
+      "verdicts": {
+        "P1": "ある",
+        "P2": "ある",
+        "P3": "ある",
+        "P4": "ある",
+        "P5": "ある",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-D",
+      "variant": "vanilla-wonder",
+      "ok": true,
+      "verdicts": {
+        "P1": "ある",
+        "P2": "ある",
+        "P3": "ない",
+        "P4": "ある",
+        "P5": "ある",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-D",
+      "variant": "vanilla-spark",
+      "ok": true,
+      "verdicts": {
+        "P1": "ない",
+        "P2": "ある",
+        "P3": "ない",
+        "P4": "ない",
+        "P5": "ある",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-D",
+      "variant": "pipeline-gen-005",
+      "ok": true,
+      "verdicts": {
+        "P1": "ない",
+        "P2": "ある",
+        "P3": "ある",
+        "P4": "ある",
+        "P5": "ある",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-E",
+      "variant": "vanilla-wonder",
+      "ok": true,
+      "verdicts": {
+        "P1": "ない",
+        "P2": "ある",
+        "P3": "ない",
+        "P4": "ある",
+        "P5": "ない",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-E",
+      "variant": "vanilla-spark",
+      "ok": true,
+      "verdicts": {
+        "P1": "ない",
+        "P2": "ある",
+        "P3": "ない",
+        "P4": "ある",
+        "P5": "ある",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-E",
+      "variant": "pipeline-gen-005",
+      "ok": true,
+      "verdicts": {
+        "P1": "ある",
+        "P2": "ある",
+        "P3": "ある",
+        "P4": "ない",
+        "P5": "ある",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-F",
+      "variant": "vanilla-wonder",
+      "ok": true,
+      "verdicts": {
+        "P1": "ない",
+        "P2": "ある",
+        "P3": "ない",
+        "P4": "ある",
+        "P5": "ない",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-F",
+      "variant": "vanilla-spark",
+      "ok": true,
+      "verdicts": {
+        "P1": "ない",
+        "P2": "ある",
+        "P3": "ない",
+        "P4": "ない",
+        "P5": "ある",
+        "P6": "ない"
+      },
+      "note": "skipped existing"
+    },
+    {
+      "case": "C-F",
+      "variant": "pipeline-gen-005",
+      "ok": true,
+      "verdicts": {
+        "P1": "ない",
+        "P2": "ある",
+        "P3": "ある",
+        "P4": "ある",
+        "P5": "ある",
+        "P6": "ある"
+      },
+      "note": "skipped existing"
+    }
+  ]
+}

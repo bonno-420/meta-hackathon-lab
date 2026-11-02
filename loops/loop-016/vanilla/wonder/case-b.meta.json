@@ -1,0 +1,33 @@
+{
+  "generatedAt": "2026-11-02T07:04:06.248Z",
+  "startedAt": "2026-11-02T07:03:27.784Z",
+  "model": "muse-wonder-1.0",
+  "modelKey": "wonder",
+  "case": "B",
+  "caseId": "C-B",
+  "caseLabel": "Full-time Healthcare Registered Nurse (fictitious, EN-only)",
+  "promptPath": "loops/loop-016/vanilla/prompt-v1.0.md",
+  "promptVersion": "v1.0",
+  "promptLength": 1734,
+  "ticketPath": "vanilla/inputs/case-b.md",
+  "ticketHash": "2a805d6017c20cc930bbef789619cbcc0910c83996603129afcba8a23a9c2ffb",
+  "sourceCasePath": "cases/case-B.json",
+  "sourceCaseHash": "2a805d6017c20cc930bbef789619cbcc0910c83996603129afcba8a23a9c2ffb",
+  "keySource": "env:MODEL_API_KEY",
+  "usage": {
+    "completion_tokens": 6667,
+    "prompt_tokens": 494,
+    "total_tokens": 7161,
+    "completion_tokens_details": {
+      "reasoning_tokens": 1619
+    },
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "usageSummary": "prompt 494 / completion 6667 / total 7161",
+  "quota": "Meta API (vanilla contrast, not Baseten)",
+  "images": "previews/images/case-B-{hero,work,place}.webp (gen-001, shared across models)",
+  "htmlPath": "vanilla/wonder/case-b.html",
+  "htmlLength": 16533
+}

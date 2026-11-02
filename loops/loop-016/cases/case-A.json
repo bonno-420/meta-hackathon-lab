@@ -1,0 +1,70 @@
+﻿{
+    "id":  "C-A",
+    "label":  "Full-time SaaS Software Engineer (fictitious, EN-only)",
+    "employmentType":  "full-time",
+    "industry":  "SaaS",
+    "role":  "Software Engineer",
+    "note":  "Fictitious. Facts authored in English; no JA embedded. Hash this file at start and record in run-record.",
+    "plan":  {
+                 "cta":  "Apply with resume - casual first interview",
+                 "mustNot":  [
+                                 "Do not invent salary or benefits",
+                                 "Do not promise remote work"
+                             ],
+                 "targetAudience":  "Early-career engineers (1-3 years) seeking stable on-site work in an urban tech office",
+                 "appeal":  "Mentorship and code-review first; salary as fixed fact, no inflation. Emphasize commute and team rhythm.",
+                 "persona":  "Alex, 26, 2 years as backend engineer at small agency. Wants code-review culture, regular hours, short commute. Reads on mobile first."
+             },
+    "facts":  [
+                  {
+                      "key":  "company",
+                      "value":  "Northbridge Labs",
+                      "sourceLine":  "L01"
+                  },
+                  {
+                      "key":  "role",
+                      "value":  "Software Engineer (full-time, SaaS product team)",
+                      "sourceLine":  "L02"
+                  },
+                  {
+                      "key":  "location",
+                      "value":  "Osaka, Umeda district",
+                      "sourceLine":  "L03"
+                  },
+                  {
+                      "key":  "employmentType",
+                      "value":  "Full-time (permanent)",
+                      "sourceLine":  "L04"
+                  },
+                  {
+                      "key":  "salary",
+                      "value":  "Annual 4,800,000 JPY",
+                      "sourceLine":  "L05"
+                  },
+                  {
+                      "key":  "workHours",
+                      "value":  "Mon-Fri, 10:00-18:30 (flex core 11:00-16:00)",
+                      "sourceLine":  "L06"
+                  },
+                  {
+                      "key":  "commute",
+                      "value":  "5-min walk from Umeda Station; commuter pass reimbursed in full",
+                      "sourceLine":  "L07"
+                  },
+                  {
+                      "key":  "training",
+                      "value":  "3-month onboarding with dedicated mentor and weekly code review",
+                      "sourceLine":  "L08"
+                  },
+                  {
+                      "key":  "team",
+                      "value":  "8-person product team (4 engineers, 2 designers, 2 PMs)",
+                      "sourceLine":  "L09"
+                  },
+                  {
+                      "key":  "benefits",
+                      "value":  "Health insurance, 10 paid days from month 7, laptop provided",
+                      "sourceLine":  "L10"
+                  }
+              ]
+}
