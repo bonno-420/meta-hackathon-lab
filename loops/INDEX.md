@@ -15,3 +15,8 @@
 | 9 | 工程4（再検証） | `loops/loop-009/run-record.md`、`docs/design/step4-review.md`（監査合格・受け入れ済み、2026-10-28） |
 | 10 | 工程5（統合実行＋プレビュー公開） | `loops/loop-010/run-record.md`、`docs/design/step5-review.md`（監査合格・受け入れ済み、2026-10-28） |
 | 11 | 工程6（提出の形） | `loops/loop-011/run-record.md`（Spark 本線監査合格・Wonder セカンド監査の修正適用済み、統括と本人が受け入れ、2026-10-28） |
+| 12 | ライブラリ最小実装 procedures 1-2（承認ゲートまで） | `loops/loop-012/run-record.md`（2026-10-29） |
+| 13 | ペルソナ設定から入る改修版の再実行 | `loops/loop-013/run-record.md`（2026-10-29） |
+| 14 | 本体の完全性 修正の実施（①→②→③） | `loops/loop-014/run-record.md`、`docs/design/core-integrity-fix-design-v1.md`（設計監査・再監査いずれも合格、2026-10-31） |
+| 15 | Baseten 検証ループの実施 | `loops/loop-015/run-record.md`（パイロットとして終了、2026-11-01。完成LPのHTML・画像は記録対象外としローカルに残す） |
+| 16 | Baseten 検証ループ 拡張版（6ケース英語版） | `loops/loop-016/run-record.md`、`loops/loop-016/insights-consolidation-by-line-20261102.md`（2026-11-02。完成LPのHTML・画像は記録対象外としローカルに残す） |
