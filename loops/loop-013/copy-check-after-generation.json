@@ -1,0 +1,70 @@
+{
+  "method": "Mechanical string overlap as in loops/loop-012/copy-check-v1.json: generation text (all sentences concatenated) vs each origin case full text; metrics = longest common substring length in characters and number of distinct shared substrings of length >= 8. Numeric origin is checked separately: numeric tokens in the generation are looked up in the fixed FACT v1 text. Human range (characteristic phrasing) is recorded in loops/loop-013/prose-evaluation.md, not decided mechanically. Thresholds are undecided (U1); this is judgment material, not a pass/fail gate.",
+  "generated": "2026-10-29",
+  "target": "loops/loop-013/persona-generation.json (6 sentences, lp-generate-v3-persona, reference set LIB-PAT-002 v1 + LIB-PAT-003 v1 + LIB-PAT-004 v1)",
+  "pairs": [
+    {
+      "case_id": "LIB-CASE-001",
+      "generation_text_len": 265,
+      "case_text_len": 279,
+      "lcs_len_chars": 5,
+      "shared_substrings_ge8": 0
+    },
+    {
+      "case_id": "LIB-CASE-002",
+      "generation_text_len": 265,
+      "case_text_len": 296,
+      "lcs_len_chars": 5,
+      "shared_substrings_ge8": 0
+    },
+    {
+      "case_id": "LIB-CASE-003",
+      "generation_text_len": 265,
+      "case_text_len": 226,
+      "lcs_len_chars": 5,
+      "shared_substrings_ge8": 0
+    },
+    {
+      "case_id": "LIB-CASE-004",
+      "generation_text_len": 265,
+      "case_text_len": 193,
+      "lcs_len_chars": 8,
+      "shared_substrings_ge8": 1
+    },
+    {
+      "case_id": "LIB-CASE-005",
+      "generation_text_len": 265,
+      "case_text_len": 245,
+      "lcs_len_chars": 5,
+      "shared_substrings_ge8": 0
+    }
+  ],
+  "numeric_origin_check": [
+    {
+      "token": "1,500円",
+      "in_fixed_fact": true
+    },
+    {
+      "token": "10,000円",
+      "in_fixed_fact": true
+    },
+    {
+      "token": "20日",
+      "in_fixed_fact": true
+    },
+    {
+      "token": "3か月",
+      "in_fixed_fact": true
+    },
+    {
+      "token": "60分",
+      "in_fixed_fact": true
+    },
+    {
+      "token": "8時間",
+      "in_fixed_fact": true
+    }
+  ],
+  "note": "All generated sentences were also checked by the existing grounding check (loops/loop-013/persona-verification-result.json: pass, 6 sentences).",
+  "human_check_note": "Shared substring of length >=8 with LIB-CASE-004 requires human confirmation; see loops/loop-013/prose-evaluation.md."
+}

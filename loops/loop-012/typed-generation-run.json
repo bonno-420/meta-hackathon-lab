@@ -1,0 +1,47 @@
+{
+  "status": "generated",
+  "parseError": null,
+  "model": "muse-spark-1.3-contributor",
+  "requestedModel": "muse-spark-1.3-contributor",
+  "promptVersion": "lp-generate-v2-typed",
+  "referenceSet": {
+    "catalog": "LIB-CATALOG-V1",
+    "patterns": [
+      {
+        "id": "LIB-PAT-001",
+        "version": "v1"
+      },
+      {
+        "id": "LIB-PAT-002",
+        "version": "v1"
+      },
+      {
+        "id": "LIB-PAT-004",
+        "version": "v1"
+      }
+    ]
+  },
+  "apiCalled": true,
+  "retries": 0,
+  "startedAt": "2026-10-29T03:50:16.457Z",
+  "finishedAt": "2026-10-29T03:50:59.317Z",
+  "durationMs": 42858,
+  "usage": {
+    "completion_tokens": 5051,
+    "prompt_tokens": 1677,
+    "total_tokens": 6728,
+    "completion_tokens_details": {
+      "reasoning_tokens": 4643
+    },
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "costUsd": 0.0011779000000000002,
+  "costNote": "D4単価（入力$0.1/1M, 出力$0.2/1M）による算出値。確定実費は dev.meta.ai Billing 実績との突合が必要。",
+  "grounding": {
+    "pass": true,
+    "checked": 6,
+    "issues": []
+  }
+}

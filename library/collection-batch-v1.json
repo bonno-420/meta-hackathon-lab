@@ -1,0 +1,241 @@
+{
+  "batch_id": "LIB-BATCH-001",
+  "collection_date": "2026-10-29",
+  "counts": {
+    "candidates_kept": 5,
+    "created": 5
+  },
+  "density_estimate": {
+    "basis": "Not applicable to searching. This batch is hand-authored, not searched: there is no searched population, so no trial-search counts exist. Recorded honestly as not applicable rather than inventing a 多い/少ない judgment.",
+    "value": "not-applicable (hand-authored; no search performed)"
+  },
+  "exclusion_record": {
+    "excluded": [],
+    "reason": "No items excluded. All 5 hand-authored fictional cases were kept as abstraction candidates. No license-unknown or duplicate items arose because every item is self-authored fiction."
+  },
+  "population_definition": {
+    "excluded": "Real companies, real persons, real contact details, and real ad text are excluded. No real-world text was collected.",
+    "included": "Hand-authored fictional job-ad-style cases for the minimal implementation, covering at least 2 appeal types (reassurance for inexperienced applicants, income outlook, balance with daily life)."
+  },
+  "source": {
+    "detail": "Specified input only: production-line authored fictional cases written for this batch. No crawl, no external URL, no real ad text.",
+    "type": "production-line authored fictional cases (specified input only)"
+  },
+  "cases": [
+    {
+      "appeal_type": "未経験への安心 (reassurance for inexperienced applicants)",
+      "case_id": "LIB-CASE-001",
+      "composition": [
+        "導入 (introduction)",
+        "条件 (conditions)",
+        "働く場面 (work scene)",
+        "締め (closing)"
+      ],
+      "conditions": [
+        {
+          "fact": "employer is a fictional bakery named 架空ベーカリーあさいろ, located in fictional town ひかり台",
+          "source_position": "S2"
+        },
+        {
+          "fact": "shift is morning, 06:00-10:00",
+          "source_position": "S3"
+        },
+        {
+          "fact": "hourly wage 950 yen",
+          "source_position": "S3"
+        },
+        {
+          "fact": "3+ days per week, negotiable",
+          "source_position": "S3"
+        },
+        {
+          "fact": "first week starts with support tasks while a senior teaches the wrapping steps alongside",
+          "source_position": "S4"
+        }
+      ],
+      "full_text": "【フィクション】この事例は制作ラインが手書きした架空の求人広告風テキストです。実在の企業・人物・連絡先とは無関係であり、実在の広告文の引用ではありません。 ｜ パン作りが初めての方へ。（S1） 架空ベーカリーあさいろは、架空の町ひかり台にある架空のパン店の朝の仕込みの仕事です。（S2） 勤務は朝6時から10時まで、時給950円、週3日から相談できます。（S3） 最初の1週間は補助の仕事から始め、先輩が横について包みの手順を教えます。（S4） 朝の支度が終わる頃には仕事も終わり、昼からの時間を自由に使えます。（S5） 興味があれば見学からどうぞ。（S6）",
+      "license": {
+        "confirmation": "Confirmed: all names are invented and clearly fictional; no real company, person, contact, or ad text is used.",
+        "declaration": "Self-authored fictional case by the production line.",
+        "status": "登録可"
+      },
+      "other_expression_material": {
+        "life_translation": "S5 translates the morning-shift condition into morning-routine language (life-translation element).",
+        "rephrasing": null
+      }
+    },
+    {
+      "appeal_type": "収入の見通し (income outlook)",
+      "case_id": "LIB-CASE-002",
+      "composition": [
+        "条件 (conditions first)",
+        "試算・仮定明示 (trial calculation with assumption stated)",
+        "場面 (scene)",
+        "締め (closing)"
+      ],
+      "conditions": [
+        {
+          "fact": "work is picking at fictional logistics center 架空物流センターみどり野",
+          "source_position": "S2"
+        },
+        {
+          "fact": "hourly wage 1,100 yen",
+          "source_position": "S2"
+        },
+        {
+          "fact": "7 hours per day, 4 days per week",
+          "source_position": "S2"
+        },
+        {
+          "fact": "trial calculation: 1100 yen x 7h x 16 days/month = 123,200 yen, explicitly stated as an assumption-based estimate, not guaranteed",
+          "source_position": "S3"
+        },
+        {
+          "fact": "handles daily-goods boxes, moves them to shelves with a cart",
+          "source_position": "S4"
+        },
+        {
+          "fact": "night-shift allowance: NOT STATED (explicitly marked as unstated, never asserted)",
+          "source_position": "S5"
+        }
+      ],
+      "full_text": "【フィクション】この事例は制作ラインが手書きした架空の求人広告風テキストです。実在の企業・人物・連絡先とは無関係であり、実在の広告文の引用ではありません。 ｜ 架空物流センターみどり野でのピッキングの仕事です。（S1） 時給1,100円、1日7時間、週4日の条件です。（S2） 週4日で働いた場合の目安は、1,100円×7時間×月16日＝123,200円ですが、これは仮定に基づく試算であり、保証するものではありません。（S3） 扱うのは日用品の箱で、台車を使って棚へ運びます。（S4） 夜勤手当の有無はここでは触れていません（未記載）。（S5） 詳しい条件は面談で確認してください。（S6）",
+      "license": {
+        "confirmation": "Confirmed: all names are invented and clearly fictional; no real company, person, contact, or ad text is used.",
+        "declaration": "Self-authored fictional case by the production line.",
+        "status": "登録可"
+      },
+      "other_expression_material": {
+        "life_translation": null,
+        "rephrasing": null,
+        "unstated_item": "S5 states night-shift allowance as not stated."
+      }
+    },
+    {
+      "appeal_type": "生活との両立 (balance with daily life)",
+      "case_id": "LIB-CASE-003",
+      "composition": [
+        "対象層への呼びかけ (target-layer address)",
+        "時間条件 (time conditions)",
+        "生活の場面 (life scene)",
+        "締め (closing)"
+      ],
+      "conditions": [
+        {
+          "fact": "target layer: people wanting to balance childcare/housework with work",
+          "source_position": "S1"
+        },
+        {
+          "fact": "hours 09:00-15:00",
+          "source_position": "S2"
+        },
+        {
+          "fact": "3 days per week",
+          "source_position": "S2"
+        },
+        {
+          "fact": "hourly wage 1,050 yen",
+          "source_position": "S2"
+        },
+        {
+          "fact": "work at fictional facility 架空ケアステーションはなみずき (care-support work)",
+          "source_position": "S3"
+        }
+      ],
+      "full_text": "【フィクション】この事例は制作ラインが手書きした架空の求人広告風テキストです。実在の企業・人物・連絡先とは無関係であり、実在の広告文の引用ではありません。 ｜ 子育てや家事と両立したい方へ。（S1） 勤務は9時から15時まで、週3日、時給1,050円です。（S2） 架空ケアステーションはなみずきでの見守り中心の仕事です。（S3） お子さんを送り出した後の時間で働き、お迎えの時間には帰れる働き方です。（S4） 無理のない範囲から始められます。（S5）",
+      "license": {
+        "confirmation": "Confirmed: all names are invented and clearly fictional; no real company, person, contact, or ad text is used.",
+        "declaration": "Self-authored fictional case by the production line.",
+        "status": "登録可"
+      },
+      "other_expression_material": {
+        "life_translation": "S4 translates the 09:00-15:00 condition into daily-life language (school drop-off/pick-up routine). No new factual conditions are added by the translation.",
+        "rephrasing": null
+      }
+    },
+    {
+      "appeal_type": "収入の見通し (income outlook)",
+      "case_id": "LIB-CASE-004",
+      "composition": [
+        "条件 (conditions first)",
+        "場面 (scene)",
+        "締め (closing)"
+      ],
+      "conditions": [
+        {
+          "fact": "work is night-shift shelf stocking at fictional store 架空ストアよるひかり",
+          "source_position": "S1"
+        },
+        {
+          "fact": "night hourly wage 1,300 yen",
+          "source_position": "S2"
+        },
+        {
+          "fact": "hours 22:00-02:00",
+          "source_position": "S2"
+        },
+        {
+          "fact": "small crew, mainly quiet shelf-arranging work",
+          "source_position": "S3"
+        }
+      ],
+      "full_text": "【フィクション】この事例は制作ラインが手書きした架空の求人広告風テキストです。実在の企業・人物・連絡先とは無関係であり、実在の広告文の引用ではありません。 ｜ 架空ストアよるひかりでの深夜の品出しの仕事です。（S1） 深夜時給1,300円、22時から翌2時までです。（S2） 店内は少人数で、黙々と棚を整える作業が中心です。（S3） 短時間で収入を確保したい方はご相談ください。（S4）",
+      "license": {
+        "confirmation": "Confirmed: all names are invented and clearly fictional; no real company, person, contact, or ad text is used.",
+        "declaration": "Self-authored fictional case by the production line.",
+        "status": "登録可"
+      },
+      "other_expression_material": {
+        "life_translation": null,
+        "rephrasing": null
+      }
+    },
+    {
+      "appeal_type": "未経験への安心 (reassurance for inexperienced applicants)",
+      "case_id": "LIB-CASE-005",
+      "composition": [
+        "導入 (introduction)",
+        "条件 (conditions)",
+        "場面 (scene)",
+        "締め (closing)"
+      ],
+      "conditions": [
+        {
+          "fact": "target layer: inexperienced applicants",
+          "source_position": "S1"
+        },
+        {
+          "fact": "work is assembly of small parts at fictional workshop 架空組立工房そらまめ",
+          "source_position": "S2"
+        },
+        {
+          "fact": "hourly wage 1,000 yen",
+          "source_position": "S3"
+        },
+        {
+          "fact": "hours 09:00-17:00, 5 days per week",
+          "source_position": "S3"
+        },
+        {
+          "fact": "standing, physically active work, but no heavy lifting; follows a written procedure",
+          "source_position": "S4"
+        },
+        {
+          "fact": "pay raise: NOT STATED (explicitly marked as unstated, never asserted)",
+          "source_position": "S5"
+        }
+      ],
+      "full_text": "【フィクション】この事例は制作ラインが手書きした架空の求人広告風テキストです。実在の企業・人物・連絡先とは無関係であり、実在の広告文の引用ではありません。 ｜ 未経験の方へ。（S1） 架空組立工房そらまめでの小さな部品の組立の仕事です。（S2） 時給1,000円、9時から17時まで、週5日です。（S3） 立ち作業で体を動かす仕事ですが、重いものを持つ工程はなく、手順書に沿って進めます。（S4） 昇給の有無はここでは触れていません（未記載）。（S5） まずは職場の見学からどうぞ。（S6）",
+      "license": {
+        "confirmation": "Confirmed: all names are invented and clearly fictional; no real company, person, contact, or ad text is used.",
+        "declaration": "Self-authored fictional case by the production line.",
+        "status": "登録可"
+      },
+      "other_expression_material": {
+        "life_translation": null,
+        "rephrasing": "S4 factually rephrases a physically active job (standing work) without adding unsupported claims: it states what the work involves and what it does not involve.",
+        "unstated_item": "S5 states pay raise as not stated."
+      }
+    }
+  ]
+}

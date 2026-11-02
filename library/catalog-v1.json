@@ -1,0 +1,265 @@
+{
+  "approval_note": "Approved by the person on 2026-10-29 (modified approval): all 4 patterns are registered. LIB-PAT-003, initially registered only, was approved for use in loop-013 (2026-10-29). See loops/loop-012/reference-set-proposal.md and loops/loop-013/reference-set-proposal.md.",
+  "catalog_id": "LIB-CATALOG-V1",
+  "catalog_updated": "2026-10-29",
+  "patterns": [
+    {
+      "applicable_conditions": {
+        "業種・職種": "未経験受入れのある職種（飲食・製造・小売などの現場仕事）",
+        "対象層": "未経験者・初挑戦層",
+        "媒体の種類": "求人広告テキスト全般",
+        "構成の型": "導入→条件→働く場面→締め",
+        "訴求の種類": "未経験への安心",
+        "言い換え・生活翻訳の型の有無": "生活翻訳なし。言い換えは事実の範囲でのみ可"
+      },
+      "circulation_reference": "Circulation aggregation is out of the minimal scope: no count is recorded and it is not used as approval evidence.",
+      "composition": [
+        "導入: 対象層への呼びかけ",
+        "条件: 勤務条件の提示",
+        "働く場面: 仕事の様子の描写",
+        "締め: 見学・応募への誘い"
+      ],
+      "id": "LIB-PAT-001",
+      "kind": "文章の型",
+      "last_used_date": "2026-10-29",
+      "license_status": "登録可",
+      "license_summary_per_origin_case": [
+        {
+          "case_id": "LIB-CASE-001",
+          "status": "登録可",
+          "summary": "Self-authored fictional case by the production line. No real origin. No usage restriction."
+        },
+        {
+          "case_id": "LIB-CASE-005",
+          "status": "登録可",
+          "summary": "Self-authored fictional case by the production line. No real origin. No usage restriction."
+        }
+      ],
+      "origins": {
+        "batch_id": "LIB-BATCH-001",
+        "case_ids": [
+          "LIB-CASE-001",
+          "LIB-CASE-005"
+        ]
+      },
+      "pattern_status": "registered (approved 2026-10-29)",
+      "purpose": "経験の有無に不安を持つ読み手に向け、導入で対象を明示し、条件を示したうえで働く様子を描き、見学や応募の一歩で締める形を与える。",
+      "registered_date": "2026-10-29",
+      "slots": [
+        {
+          "condition": "FACTに記載がある場合のみ、支援や研修の記述を入れてよい。記載がなければ入れない。",
+          "may_enter": "働く様子。記載の範囲に限る",
+          "name": "場面枠"
+        },
+        {
+          "condition": "新しい事実や数値を足さない。",
+          "may_enter": "見学や応募への誘い",
+          "name": "締め枠"
+        },
+        {
+          "condition": "事実・数値を入れない。",
+          "may_enter": "対象層の明示のみ",
+          "name": "導入枠"
+        },
+        {
+          "condition": "FACTに記載のある条件のみ。未記載の項目は主張しない。",
+          "may_enter": "勤務条件",
+          "name": "条件枠"
+        }
+      ],
+      "version": "v1"
+    },
+    {
+      "applicable_conditions": {
+        "業種・職種": "時給制の現場仕事（物流・小売のシフト勤務など）",
+        "対象層": "収入の見通しを知りたい層",
+        "媒体の種類": "求人広告テキスト全般",
+        "構成の型": "条件→試算（仮定を明示）→場面→締め",
+        "訴求の種類": "収入の見通し",
+        "言い換え・生活翻訳の型の有無": "生活翻訳なし。試算は仮定明示の型を使う"
+      },
+      "circulation_reference": "Circulation aggregation is out of the minimal scope: no count is recorded and it is not used as approval evidence.",
+      "composition": [
+        "条件: 勤務条件の先行提示",
+        "試算: 仮定を明示した収入の目安",
+        "場面: 仕事の様子の描写",
+        "締め: 相談・確認への誘い"
+      ],
+      "id": "LIB-PAT-002",
+      "kind": "文章の型",
+      "last_used_date": "2026-10-29",
+      "license_status": "登録可",
+      "license_summary_per_origin_case": [
+        {
+          "case_id": "LIB-CASE-002",
+          "status": "登録可",
+          "summary": "Self-authored fictional case by the production line. No real origin. No usage restriction."
+        },
+        {
+          "case_id": "LIB-CASE-004",
+          "status": "登録可",
+          "summary": "Self-authored fictional case by the production line. No real origin. No usage restriction."
+        }
+      ],
+      "origins": {
+        "batch_id": "LIB-BATCH-001",
+        "case_ids": [
+          "LIB-CASE-002",
+          "LIB-CASE-004"
+        ]
+      },
+      "pattern_status": "registered (approved 2026-10-29)",
+      "purpose": "収入の見通しを知りたい読み手に向け、条件を先に示し、仮定を明示した試算で目安を伝え、場面を添えて相談や確認へつなげる形を与える。",
+      "registered_date": "2026-10-29",
+      "slots": [
+        {
+          "condition": "金額・時間・日数の根拠はFACTの記載に限る。",
+          "may_enter": "勤務条件",
+          "name": "条件枠"
+        },
+        {
+          "condition": "試算の仮定は仮定のまま記し、保証された月収として提示しない。未記載の手当などは試算に入れない。",
+          "may_enter": "仮定を明示した収入の目安",
+          "name": "試算枠"
+        },
+        {
+          "condition": "記載の範囲に限る。",
+          "may_enter": "仕事の様子",
+          "name": "場面枠"
+        },
+        {
+          "condition": "新しい事実を足さない。",
+          "may_enter": "相談や確認への誘い",
+          "name": "締め枠"
+        }
+      ],
+      "version": "v1"
+    },
+    {
+      "applicable_conditions": {
+        "業種・職種": "時間条件が訴求の中心になる職種（見守り・軽作業などの日勤帯の仕事）",
+        "対象層": "家事・育児等と両立したい層",
+        "媒体の種類": "求人広告テキスト全般",
+        "構成の型": "対象層→時間条件→生活の言葉への翻訳→締め",
+        "訴求の種類": "生活との両立",
+        "言い換え・生活翻訳の型の有無": "生活翻訳あり。翻訳は条件の言い換えに限り、新しい事実的条件を足さない"
+      },
+      "circulation_reference": "Circulation aggregation is out of the minimal scope: no count is recorded and it is not used as approval evidence.",
+      "composition": [
+        "対象層: 両立したい層への呼びかけ",
+        "時間条件: 勤務時間・日数の提示",
+        "翻訳: 条件を生活の言葉に置き換える",
+        "締め: 無理のない開始への誘い"
+      ],
+      "id": "LIB-PAT-003",
+      "kind": "文章の型",
+      "last_used_date": "2026-10-29",
+      "license_status": "登録可",
+      "license_summary_per_origin_case": [
+        {
+          "case_id": "LIB-CASE-003",
+          "status": "登録可",
+          "summary": "Self-authored fictional case by the production line. No real origin. No usage restriction."
+        },
+        {
+          "case_id": "LIB-CASE-001",
+          "status": "登録可",
+          "summary": "Self-authored fictional case by the production line. No real origin. No usage restriction."
+        }
+      ],
+      "origins": {
+        "batch_id": "LIB-BATCH-001",
+        "case_ids": [
+          "LIB-CASE-003",
+          "LIB-CASE-001"
+        ]
+      },
+      "pattern_status": "registered (approved 2026-10-29)",
+      "purpose": "生活との両立を気にする読み手に向け、対象層を呼び、時間条件を示し、条件を生活の言葉に置き換えて、無理のない開始へつなげる形を与える。",
+      "registered_date": "2026-10-29",
+      "slots": [
+        {
+          "condition": "FACTに記載のある時間条件のみ。",
+          "may_enter": "勤務時間・日数",
+          "name": "時間条件枠"
+        },
+        {
+          "condition": "生活翻訳は新しい事実的条件を足さない。条件の範囲を超えた場面を付け足さない。",
+          "may_enter": "条件を生活の言葉に置き換えた文",
+          "name": "翻訳枠"
+        },
+        {
+          "condition": "新しい事実を足さない。",
+          "may_enter": "無理のない開始への誘い",
+          "name": "締め枠"
+        },
+        {
+          "condition": "事実・数値を入れない。",
+          "may_enter": "両立したい層への呼びかけ",
+          "name": "対象層枠"
+        }
+      ],
+      "version": "v1"
+    },
+    {
+      "applicable_conditions": {
+        "業種・職種": "職種を問わず、条件の一部が未記載の募集",
+        "対象層": "条件を正確に知りたい層",
+        "媒体の種類": "求人広告テキスト全般",
+        "構成の型": "条件→未記載の明示→締め",
+        "訴求の種類": "条件の透明性（未記載の明示）",
+        "言い換え・生活翻訳の型の有無": "生活翻訳なし。未記載の明示の型を使う"
+      },
+      "circulation_reference": "Circulation aggregation is out of the minimal scope: no count is recorded and it is not used as approval evidence.",
+      "composition": [
+        "条件: 記載のある条件の提示",
+        "未記載の明示: 触れていない項目の明示",
+        "締め: 確認への誘い"
+      ],
+      "id": "LIB-PAT-004",
+      "kind": "文章の型",
+      "last_used_date": "2026-10-29",
+      "license_status": "登録可",
+      "license_summary_per_origin_case": [
+        {
+          "case_id": "LIB-CASE-002",
+          "status": "登録可",
+          "summary": "Self-authored fictional case by the production line. No real origin. No usage restriction."
+        },
+        {
+          "case_id": "LIB-CASE-005",
+          "status": "登録可",
+          "summary": "Self-authored fictional case by the production line. No real origin. No usage restriction."
+        }
+      ],
+      "origins": {
+        "batch_id": "LIB-BATCH-001",
+        "case_ids": [
+          "LIB-CASE-002",
+          "LIB-CASE-005"
+        ]
+      },
+      "pattern_status": "registered (approved 2026-10-29)",
+      "purpose": "条件を正確に知りたい読み手に向け、記載のある条件を示し、触れていない項目は未記載として明示し、確認へつなげる形を与える。",
+      "registered_date": "2026-10-29",
+      "slots": [
+        {
+          "condition": "FACTに記載のある条件のみ。",
+          "may_enter": "記載のある条件",
+          "name": "条件枠"
+        },
+        {
+          "condition": "未記載の項目は未記載としてのみ示し、断定や推測を入れない。",
+          "may_enter": "触れていない項目の明示",
+          "name": "未記載明示枠"
+        },
+        {
+          "condition": "新しい事実を足さない。",
+          "may_enter": "確認への誘い",
+          "name": "締め枠"
+        }
+      ],
+      "version": "v1"
+    }
+  ]
+}

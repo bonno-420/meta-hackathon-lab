@@ -1,0 +1,187 @@
+{
+  "method": "Mechanical string overlap. Pattern descriptive text = purpose + composition roles joined + each slot (name + may_enter + condition) concatenated. Metrics per pattern-case pair: (1) longest common substring length in characters; (2) number of distinct character 8-grams of the pattern descriptive text found anywhere in the origin case full text. Computed locally with Node.js, no API calls.",
+  "generated": "2026-10-29",
+  "pairs": [
+    {
+      "case_id": "LIB-CASE-001",
+      "pattern_id": "LIB-PAT-001",
+      "pattern_text_len": 255,
+      "case_text_len": 279,
+      "lcs_len_chars": 3,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 248
+    },
+    {
+      "case_id": "LIB-CASE-002",
+      "pattern_id": "LIB-PAT-001",
+      "pattern_text_len": 255,
+      "case_text_len": 296,
+      "lcs_len_chars": 3,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 248
+    },
+    {
+      "case_id": "LIB-CASE-003",
+      "pattern_id": "LIB-PAT-001",
+      "pattern_text_len": 255,
+      "case_text_len": 226,
+      "lcs_len_chars": 3,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 248
+    },
+    {
+      "case_id": "LIB-CASE-004",
+      "pattern_id": "LIB-PAT-001",
+      "pattern_text_len": 255,
+      "case_text_len": 193,
+      "lcs_len_chars": 2,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 248
+    },
+    {
+      "case_id": "LIB-CASE-005",
+      "pattern_id": "LIB-PAT-001",
+      "pattern_text_len": 255,
+      "case_text_len": 245,
+      "lcs_len_chars": 3,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 248
+    },
+    {
+      "case_id": "LIB-CASE-001",
+      "pattern_id": "LIB-PAT-002",
+      "pattern_text_len": 250,
+      "case_text_len": 279,
+      "lcs_len_chars": 3,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 238
+    },
+    {
+      "case_id": "LIB-CASE-002",
+      "pattern_id": "LIB-PAT-002",
+      "pattern_text_len": 250,
+      "case_text_len": 296,
+      "lcs_len_chars": 3,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 238
+    },
+    {
+      "case_id": "LIB-CASE-003",
+      "pattern_id": "LIB-PAT-002",
+      "pattern_text_len": 250,
+      "case_text_len": 226,
+      "lcs_len_chars": 3,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 238
+    },
+    {
+      "case_id": "LIB-CASE-004",
+      "pattern_id": "LIB-PAT-002",
+      "pattern_text_len": 250,
+      "case_text_len": 193,
+      "lcs_len_chars": 2,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 238
+    },
+    {
+      "case_id": "LIB-CASE-005",
+      "pattern_id": "LIB-PAT-002",
+      "pattern_text_len": 250,
+      "case_text_len": 245,
+      "lcs_len_chars": 3,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 238
+    },
+    {
+      "case_id": "LIB-CASE-001",
+      "pattern_id": "LIB-PAT-003",
+      "pattern_text_len": 269,
+      "case_text_len": 279,
+      "lcs_len_chars": 3,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 240
+    },
+    {
+      "case_id": "LIB-CASE-002",
+      "pattern_id": "LIB-PAT-003",
+      "pattern_text_len": 269,
+      "case_text_len": 296,
+      "lcs_len_chars": 2,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 240
+    },
+    {
+      "case_id": "LIB-CASE-003",
+      "pattern_id": "LIB-PAT-003",
+      "pattern_text_len": 269,
+      "case_text_len": 226,
+      "lcs_len_chars": 6,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 240
+    },
+    {
+      "case_id": "LIB-CASE-004",
+      "pattern_id": "LIB-PAT-003",
+      "pattern_text_len": 269,
+      "case_text_len": 193,
+      "lcs_len_chars": 3,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 240
+    },
+    {
+      "case_id": "LIB-CASE-005",
+      "pattern_id": "LIB-PAT-003",
+      "pattern_text_len": 269,
+      "case_text_len": 245,
+      "lcs_len_chars": 2,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 240
+    },
+    {
+      "case_id": "LIB-CASE-001",
+      "pattern_id": "LIB-PAT-004",
+      "pattern_text_len": 194,
+      "case_text_len": 279,
+      "lcs_len_chars": 2,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 179
+    },
+    {
+      "case_id": "LIB-CASE-002",
+      "pattern_id": "LIB-PAT-004",
+      "pattern_text_len": 194,
+      "case_text_len": 296,
+      "lcs_len_chars": 4,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 179
+    },
+    {
+      "case_id": "LIB-CASE-003",
+      "pattern_id": "LIB-PAT-004",
+      "pattern_text_len": 194,
+      "case_text_len": 226,
+      "lcs_len_chars": 2,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 179
+    },
+    {
+      "case_id": "LIB-CASE-004",
+      "pattern_id": "LIB-PAT-004",
+      "pattern_text_len": 194,
+      "case_text_len": 193,
+      "lcs_len_chars": 2,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 179
+    },
+    {
+      "case_id": "LIB-CASE-005",
+      "pattern_id": "LIB-PAT-004",
+      "pattern_text_len": 194,
+      "case_text_len": 245,
+      "lcs_len_chars": 4,
+      "shared_substrings_ge8": 0,
+      "pattern_distinct_8grams": 179
+    }
+  ],
+  "note_thresholds": "Thresholds are undecided (U1). This file is judgment material, not a pass/fail gate. Short shared fragments (e.g. generic role words like 条件, 締め) are expected; what matters for the registration condition (design §2) is that no case sentence, proper noun, number, or distinctive phrasing remains verbatim in any pattern."
+}

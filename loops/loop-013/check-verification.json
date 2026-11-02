@@ -1,0 +1,245 @@
+{
+  "testFile": "src/generate-persona.test.mjs",
+  "target": "src/generate-persona.mjs",
+  "pass": true,
+  "passed": 39,
+  "total": 39,
+  "results": [
+    {
+      "id": "persona-model-consistent",
+      "pass": true,
+      "expected": "muse-spark-1.3-contributor",
+      "actual": "muse-spark-1.3-contributor"
+    },
+    {
+      "id": "persona-prompt-version",
+      "pass": true,
+      "expected": "lp-generate-v3-persona",
+      "actual": "lp-generate-v3-persona"
+    },
+    {
+      "id": "persona-intent-speaker",
+      "pass": true,
+      "expected": "S-01",
+      "actual": "S-01"
+    },
+    {
+      "id": "persona-intent-persona",
+      "pass": true,
+      "expected": "P-01",
+      "actual": "P-01"
+    },
+    {
+      "id": "persona-intent-worries",
+      "pass": true,
+      "expected": "W1,W2,W3,W4,W5",
+      "actual": "W1,W2,W3,W4,W5"
+    },
+    {
+      "id": "persona-input-approved-allowed",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-prompt-contains-s01",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-prompt-contains-p01",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-prompt-contains-W1",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-prompt-contains-W2",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-prompt-contains-W3",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-prompt-contains-W4",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-prompt-contains-W5",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-prompt-contains-LIB-PAT-002",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-prompt-contains-LIB-PAT-003",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-prompt-contains-LIB-PAT-004",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-prompt-contains-versions",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-prompt-excludes-pat-001",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "persona-prompt-inquiry-invitation",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-prompt-no-contact-detail",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-prompt-softened-income-hendou",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-prompt-softened-income-hoshou",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-prompt-no-monthly-figure-instruction",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-stub-flow-generated",
+      "pass": true,
+      "expected": "generated",
+      "actual": "generated"
+    },
+    {
+      "id": "persona-stub-flow-api-called",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-stub-flow-prompt-version",
+      "pass": true,
+      "expected": "lp-generate-v3-persona",
+      "actual": "lp-generate-v3-persona"
+    },
+    {
+      "id": "persona-stub-generation-prompt-version",
+      "pass": true,
+      "expected": "lp-generate-v3-persona",
+      "actual": "lp-generate-v3-persona"
+    },
+    {
+      "id": "persona-stub-reference-set-catalog",
+      "pass": true,
+      "expected": "LIB-CATALOG-V1",
+      "actual": "LIB-CATALOG-V1"
+    },
+    {
+      "id": "persona-stub-reference-set-patterns",
+      "pass": true,
+      "expected": "[{\"id\":\"LIB-PAT-002\",\"version\":\"v1\"},{\"id\":\"LIB-PAT-003\",\"version\":\"v1\"},{\"id\":\"LIB-PAT-004\",\"version\":\"v1\"}]",
+      "actual": "[{\"id\":\"LIB-PAT-002\",\"version\":\"v1\"},{\"id\":\"LIB-PAT-003\",\"version\":\"v1\"},{\"id\":\"LIB-PAT-004\",\"version\":\"v1\"}]"
+    },
+    {
+      "id": "persona-stub-intent-ref",
+      "pass": true,
+      "expected": "{\"speaker\":\"S-01\",\"persona\":\"P-01\",\"source\":\"loops/loop-013/persona-design.md\"}",
+      "actual": "{\"speaker\":\"S-01\",\"persona\":\"P-01\",\"source\":\"loops/loop-013/persona-design.md\"}"
+    },
+    {
+      "id": "persona-grounding-pass-on-faithful-output",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-stub-unstated-inquiry-kept",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-stub-softened-sentence-kept",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "persona-draft-refused",
+      "pass": true,
+      "expected": "refused",
+      "actual": "refused"
+    },
+    {
+      "id": "persona-draft-refused-reason",
+      "pass": true,
+      "expected": "approval-not-approved",
+      "actual": "approval-not-approved"
+    },
+    {
+      "id": "persona-draft-api-not-called",
+      "pass": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "id": "persona-tampered-facts-refused",
+      "pass": true,
+      "expected": "refused",
+      "actual": "refused"
+    },
+    {
+      "id": "persona-tampered-facts-reason",
+      "pass": true,
+      "expected": "approval-invalid",
+      "actual": "approval-invalid"
+    },
+    {
+      "id": "persona-tampered-api-not-called",
+      "pass": true,
+      "expected": 0,
+      "actual": 0
+    }
+  ],
+  "note": "生成系のケースはモデル呼び出しをスタブ化しており、実 API は呼んでいない（MODEL_API_KEY 不使用）。",
+  "runAt": "2026-10-29T04:23:45.608Z"
+}

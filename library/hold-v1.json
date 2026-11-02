@@ -1,0 +1,6 @@
+{
+  "hold_updated": "2026-10-29",
+  "items": [],
+  "note": "No real held items were created in this scope. The minimal implementation used only self-authored fictional cases (all 登録可), so nothing entered the hold area. This file exists to establish the hold-area record format.",
+  "state_transition": "申告あり → 確認中 →（一致）登録可 → 目録に登録 / →（不一致・確認不能）保留 → 本人の最終判断 → 登録可 または 却下。保留中の参照は検索できる目録の対象にせず、参照セットの提案の対象にしない (design §3). Final judgment is escalated to the person; judgment and reason are kept on the record."
+}

@@ -1,0 +1,161 @@
+{
+  "testFile": "src/generate-typed.test.mjs",
+  "target": "src/generate-typed.mjs",
+  "pass": true,
+  "passed": 25,
+  "total": 25,
+  "results": [
+    {
+      "id": "typed-model-consistent",
+      "pass": true,
+      "expected": "muse-spark-1.3-contributor",
+      "actual": "muse-spark-1.3-contributor"
+    },
+    {
+      "id": "typed-prompt-version",
+      "pass": true,
+      "expected": "lp-generate-v2-typed",
+      "actual": "lp-generate-v2-typed"
+    },
+    {
+      "id": "typed-input-approved-allowed",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "typed-prompt-contains-LIB-PAT-001",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "typed-prompt-contains-LIB-PAT-002",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "typed-prompt-contains-LIB-PAT-004",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "typed-prompt-contains-versions",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "typed-prompt-excludes-pat-003",
+      "pass": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "id": "typed-prompt-softened-income-hendou",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "typed-prompt-softened-income-hoshou",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "typed-prompt-no-monthly-figure-instruction",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "typed-stub-flow-generated",
+      "pass": true,
+      "expected": "generated",
+      "actual": "generated"
+    },
+    {
+      "id": "typed-stub-flow-api-called",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "typed-stub-flow-prompt-version",
+      "pass": true,
+      "expected": "lp-generate-v2-typed",
+      "actual": "lp-generate-v2-typed"
+    },
+    {
+      "id": "typed-stub-generation-prompt-version",
+      "pass": true,
+      "expected": "lp-generate-v2-typed",
+      "actual": "lp-generate-v2-typed"
+    },
+    {
+      "id": "typed-stub-reference-set-catalog",
+      "pass": true,
+      "expected": "LIB-CATALOG-V1",
+      "actual": "LIB-CATALOG-V1"
+    },
+    {
+      "id": "typed-stub-reference-set-patterns",
+      "pass": true,
+      "expected": "[{\"id\":\"LIB-PAT-001\",\"version\":\"v1\"},{\"id\":\"LIB-PAT-002\",\"version\":\"v1\"},{\"id\":\"LIB-PAT-004\",\"version\":\"v1\"}]",
+      "actual": "[{\"id\":\"LIB-PAT-001\",\"version\":\"v1\"},{\"id\":\"LIB-PAT-002\",\"version\":\"v1\"},{\"id\":\"LIB-PAT-004\",\"version\":\"v1\"}]"
+    },
+    {
+      "id": "typed-grounding-pass-on-faithful-output",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "typed-stub-softened-sentence-kept",
+      "pass": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "typed-draft-refused",
+      "pass": true,
+      "expected": "refused",
+      "actual": "refused"
+    },
+    {
+      "id": "typed-draft-refused-reason",
+      "pass": true,
+      "expected": "approval-not-approved",
+      "actual": "approval-not-approved"
+    },
+    {
+      "id": "typed-draft-api-not-called",
+      "pass": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "id": "typed-tampered-facts-refused",
+      "pass": true,
+      "expected": "refused",
+      "actual": "refused"
+    },
+    {
+      "id": "typed-tampered-facts-reason",
+      "pass": true,
+      "expected": "approval-invalid",
+      "actual": "approval-invalid"
+    },
+    {
+      "id": "typed-tampered-api-not-called",
+      "pass": true,
+      "expected": 0,
+      "actual": 0
+    }
+  ],
+  "note": "生成系のケースはモデル呼び出しをスタブ化しており、実 API は呼んでいない（MODEL_API_KEY 不使用）。",
+  "runAt": "2026-10-29T03:51:54.549Z"
+}
