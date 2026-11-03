@@ -7,8 +7,17 @@ import { performance } from "node:perf_hooks";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-const MODEL = "muse-spark-1.3-contributor";
-const BASE_URL = "https://api.meta.ai/v1";
+// Endpoint selection: defaults are the Meta Model API and the
+// contributor model, exactly as before. PIPELINE_BASE_URL /
+// PIPELINE_MODEL / PIPELINE_MAX_TOKENS let the same tool run against
+// another OpenAI-compatible endpoint (e.g. Baseten's Muse Spark
+// Open for the live verification runs, loop-022). When the model is
+// overridden, the D4 contributor rates do not apply, so costs are
+// left unrecorded rather than computed at the wrong rate.
+const MODEL = process.env.PIPELINE_MODEL ?? "muse-spark-1.3-contributor";
+const BASE_URL = process.env.PIPELINE_BASE_URL ?? "https://api.meta.ai/v1";
+const MAX_TOKENS = process.env.PIPELINE_MAX_TOKENS ? Number(process.env.PIPELINE_MAX_TOKENS) : null;
+const RATES_KNOWN = !process.env.PIPELINE_MODEL;
 const INPUT_ID_DEFAULT = "FICT-J01";
 const INPUT_VERSION_DEFAULT = "v1";
 // D4 rates for muse-spark-1.3-contributor (USD per 1M tokens).
@@ -92,6 +101,19 @@ export function checkQuoteVerbatim(facts, original) {
     return { pass: false, reason: "facts.items is not an array", checked: 0, issues };
   }
   for (const item of facts.items) {
+    // An unstated item has two legitimate forms: the original
+    // explicitly declares the item 未記載 and the item cites that
+    // line (the adopted FICT-J01 facts), or the original is simply
+    // silent and the item carries no source reference at all (a raw
+    // posting through the text entry, loop-022). Both pass; a
+    // half-filled reference does not.
+    if (item.status === "unstated" && (item.sourceLine ?? null) === null && (item.quote ?? null) === null) {
+      continue;
+    }
+    if ((item.sourceLine ?? null) === null || (item.quote ?? null) === null) {
+      issues.push({ key: item.key ?? null, issue: "source reference is incomplete (sourceLine and quote must both be present, or both absent on an unstated item)" });
+      continue;
+    }
     const line = lines.get(item.sourceLine);
     if (line === undefined) {
       issues.push({ key: item.key ?? null, issue: `sourceLine not found: ${String(item.sourceLine)}` });
@@ -319,7 +341,7 @@ async function runLive() {
       "Content-Type": "application/json",
       Authorization: `Bearer ${apiKey}`,
     },
-    body: JSON.stringify({ model: MODEL, messages, temperature: 0 }),
+    body: JSON.stringify({ model: MODEL, messages, temperature: 0, ...(MAX_TOKENS ? { max_tokens: MAX_TOKENS } : {}) }),
   });
   const durationMs = Math.round(performance.now() - t0);
   const text = await res.text();
@@ -359,7 +381,9 @@ async function runLive() {
   const usage = body.usage ?? null;
   let costUsd = null;
   let costNote = "未記録（usageが返らなかったため推定しない）";
-  if (usage && typeof usage.prompt_tokens === "number" && typeof usage.completion_tokens === "number") {
+  if (!RATES_KNOWN) {
+    costNote = "未記録（PIPELINE_MODEL でモデルが差し替えられており、D4単価が適用できないため算出しない。使用量は usage に記録）";
+  } else if (usage && typeof usage.prompt_tokens === "number" && typeof usage.completion_tokens === "number") {
     costUsd = (usage.prompt_tokens * RATE_INPUT_PER_1M + usage.completion_tokens * RATE_OUTPUT_PER_1M) / 1_000_000;
     costNote = `D4単価（入力$${RATE_INPUT_PER_1M}/1M, 出力$${RATE_OUTPUT_PER_1M}/1M）による算出。確定実費は dev.meta.ai Billing 実績との突合が必要。`;
   }

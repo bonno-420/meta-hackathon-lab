@@ -9,6 +9,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildApprovalDraft } from "./approve.mjs";
+import { checkQuoteVerbatim } from "./extract-and-check.mjs";
 import { fixtureFacts } from "./extract-and-check.mjs";
 import { checkGrounding, runGeneration } from "./generate.mjs";
 import { runPlanningGeneration } from "./generate-planning.mjs";
@@ -81,6 +82,11 @@ expect("pagecheck-record-label-fails", labelPage.pass, false);
 const cleanPage = checkPage(`<html><body><p>${longSentence}</p><p>交通費は実費支給で、月上限10,000円です。</p></body></html>`);
 expectTrue("pagecheck-clean-passes", cleanPage.pass);
 expect("pagecheck-dict-counts", `${cleanPage.dictCounts.verification}/${cleanPage.dictCounts.recordLabels}/${cleanPage.dictCounts.headingScope}`, "13/13/4");
+// Audit F-a (C6/C11): a verifier phrase fails the page check, and a
+// failing pagecheck makes checkCompletion's C5 fail.
+const phrasePage = checkPage(`<html><body><p>All facts below are the only stated facts. 条件は以上です。</p></body></html>`);
+expect("pagecheck-verifier-phrase-fails", phrasePage.pass, false);
+expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits >= 1);
 
 // ---------- grounding generalization (F9) ----------
 const customFacts = clone(facts);
@@ -119,6 +125,16 @@ const faithfulSentences = [
   { text: "勤務時間は09:00〜18:00で、休憩60分、実働8時間です。", factKeys: ["workHours", "breakMinutes", "actualHours"], sourceLines: ["L04"] },
   { text: "交通費は実費支給で、月上限10,000円です。", factKeys: ["transport", "transportCap"], sourceLines: ["L05"] },
 ];
+// ---------- checkCompletion C5 wiring (audit F-a) ----------
+{
+  const c5Base = { root: mkdtempSync(path.join(tmpdir(), "c5-wiring-")), generation: { sentences: faithfulSentences }, imageFiles: [], lpFile: "out/lp.html", grounding: { pass: true, checked: 0, issues: [] } };
+  const c5Fail = checkCompletion({ ...c5Base, pagecheck: { pass: false, summary: { verificationHits: 1 } } });
+  expect("completion-c5-fails-on-bad-page", c5Fail.checks.find((c) => c.id === "C5")?.pass, false);
+  expect("completion-fails-on-bad-page", c5Fail.pass, false);
+  const c5Pass = checkCompletion({ ...c5Base, pagecheck: { pass: true, summary: {} } });
+  expect("completion-c5-passes-on-clean-page", c5Pass.checks.find((c) => c.id === "C5")?.pass, true);
+}
+
 function faithfulExtract() {
   return {
     status: "completed", facts: fixtureFacts(), schemaCheck: { pass: true },
@@ -275,6 +291,45 @@ expect("images-hold-completion-fails", runH2.stages.verification.completion.pass
 const lpPresentation = JSON.parse(readFileSync(path.join(scratchH, "out/presentation-lp.json"), "utf8"));
 expectTrue("lp-presentation-lists-hold", lpPresentation.holds.some((h) => h.stage === "images"));
 
+// ---------- assembly failure: bounded retry, captured (audit F-b) ----------
+import { assembleLP } from "./run-demo.mjs";
+const scratchB = makeScratch();
+const runB1 = await runDemo(
+  { root: scratchB, ...REAL, checkpoints: "light" },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages() },
+);
+const stateB = JSON.parse(readFileSync(path.join(scratchB, "out/run-state.json"), "utf8"));
+const confB = { file: stateB.keyVisual.image.file, sha256: stateB.keyVisual.image.sha256, confirmer: "本人", confirmedAt: "2026-11-03" };
+let assembleAttempts = 0;
+const flakyAssemble = async (args) => {
+  assembleAttempts += 1;
+  if (assembleAttempts < 3) throw new Error("stub write failure");
+  const built = assembleLP({ root: args.root, generation: args.generation, images: args.images, lpDir: path.dirname(args.lpFile), heroChips: args.heroChips });
+  writeFileSync(path.join(args.root, args.lpFile), built.html, "utf8");
+  return { file: args.lpFile, referenced: built.referenced, skipped: built.skipped };
+};
+const runB2 = await runDemo(
+  { root: scratchB, ...REAL, checkpoints: "light", resumeState: stateB, kvConfirmation: confB },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages(), assemble: flakyAssemble },
+);
+expect("assembly-retry-attempts", runB2.stages.lpAssembly.attempts, 3);
+expectTrue("assembly-retry-completes", runB2.stages.verification.completion.pass);
+const scratchB2 = makeScratch();
+const runB3 = await runDemo(
+  { root: scratchB2, ...REAL, checkpoints: "light" },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages() },
+);
+const stateB2 = JSON.parse(readFileSync(path.join(scratchB2, "out/run-state.json"), "utf8"));
+const confB2 = { file: stateB2.keyVisual.image.file, sha256: stateB2.keyVisual.image.sha256, confirmer: "本人", confirmedAt: "2026-11-03" };
+const alwaysFailAssemble = async () => { throw new Error("stub write failure"); };
+const runB4 = await runDemo(
+  { root: scratchB2, ...REAL, checkpoints: "light", resumeState: stateB2, kvConfirmation: confB2 },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages(), assemble: alwaysFailAssemble },
+);
+expect("assembly-failure-stops", runB4.stoppedAt, "assembly");
+expect("assembly-failure-attempts", runB4.stages.lpAssembly.attempts, 3);
+expectTrue("assembly-failure-hold", runB4.holds.some((h) => h.stage === "assembly"));
+
 // ---------- text entry (F1) ----------
 const scratchE = makeScratch();
 const postingText = [
@@ -372,6 +427,22 @@ const refused = await runPlanningGeneration({
 });
 expect("planning-generation-refused", refused.status, "refused");
 expect("planning-generation-refusal-no-api", refusedCalls, 0);
+
+// --- Verbatim check: unstated forms (found by the loop-022 live run)
+// A raw posting is silent on unstated items (no source reference);
+// an original may also declare 未記載 explicitly and be cited. Both
+// pass; half-filled references and sourceless stated items fail.
+{
+  const orig = { lines: [{ id: "L01", text: "時給： 1,350円" }, { id: "L02", text: "更新の有無は未記載。" }] };
+  const silent = { items: [{ key: "hourlyWage", status: "stated", sourceLine: "L01", quote: "1,350円" }, { key: "housing", status: "unstated", sourceLine: null, quote: null }] };
+  expect("verbatim-silent-unstated-passes", checkQuoteVerbatim(silent, orig).pass, true);
+  const declared = { items: [{ key: "renewal", status: "unstated", sourceLine: "L02", quote: "更新の有無は未記載。" }] };
+  expect("verbatim-declared-unstated-passes", checkQuoteVerbatim(declared, orig).pass, true);
+  const half = { items: [{ key: "housing", status: "unstated", sourceLine: null, quote: "寮あり" }] };
+  expect("verbatim-half-filled-fails", checkQuoteVerbatim(half, orig).pass, false);
+  const statedNull = { items: [{ key: "hourlyWage", status: "stated", sourceLine: null, quote: null }] };
+  expect("verbatim-stated-without-source-fails", checkQuoteVerbatim(statedNull, orig).pass, false);
+}
 
 const failed = results.filter((r) => !r.pass);
 console.log(JSON.stringify({

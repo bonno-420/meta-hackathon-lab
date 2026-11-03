@@ -1,0 +1,308 @@
+{
+  "kind": "demo-run-result",
+  "version": 1,
+  "startedAt": "2026-11-03T14:25:17.270Z",
+  "finishedAt": "2026-11-03T14:26:12.904Z",
+  "durationMs": 55634,
+  "status": "stopped",
+  "stoppedAt": "facts-comparison",
+  "stopReason": "抽出候補の引用逐語性チェックが pass しなかったため、後段を実行しない",
+  "input": {
+    "original": {
+      "file": "loops/loop-022/run/entry/original.json"
+    },
+    "facts": {
+      "file": "loops/loop-022/run/entry/facts.json"
+    },
+    "approval": {
+      "file": "loops/loop-022/run/entry/approval.json"
+    }
+  },
+  "stages": {
+    "extraction": {
+      "executed": true,
+      "status": "completed",
+      "model": "meta-models/muse-spark-open-1026",
+      "promptVersion": "fact-extract-v1.1",
+      "durationMs": 55365,
+      "usage": {
+        "prompt_tokens": 494,
+        "completion_tokens": 3877,
+        "total_tokens": 4371,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 3123,
+          "audio_tokens": 0,
+          "reasoning_tokens": 3357,
+          "rejected_prediction_tokens": 2155
+        }
+      },
+      "costUsd": null,
+      "costNote": "未記録（PIPELINE_MODEL でモデルが差し替えられており、D4単価が適用できないため算出しない。使用量は usage に記録）",
+      "schemaCheck": {
+        "pass": true,
+        "expectedCount": 15,
+        "actualCount": 15,
+        "missingKeys": [],
+        "extraKeys": [],
+        "duplicateKeys": [],
+        "fieldIssues": []
+      },
+      "e01": {
+        "caseId": "E01",
+        "stage": "照合",
+        "verdict": "一致（人間承認待ち）",
+        "stoppedAtReconciliation": false,
+        "generationStarted": false,
+        "generationNote": "生成工程は作らない。人間承認前には生成を開始しない。",
+        "matched": [
+          {
+            "field": "勤務時間",
+            "value": "07:00〜16:00",
+            "source": "L05"
+          },
+          {
+            "field": "交通費（月上限）",
+            "value": "15,000円",
+            "source": "L07"
+          }
+        ],
+        "contradictions": [],
+        "unstated": [
+          {
+            "key": "employer",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "jobId",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "renewal",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "monthlyIncomeGuarantee",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "actualHours",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "monthlyDaysAssumption",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "housing",
+            "source": null,
+            "quote": null
+          }
+        ],
+        "claims": {
+          "workHours": {
+            "value": "07:00〜16:00",
+            "snippet": "07:00〜16:00"
+          },
+          "transportCap": {
+            "value": 15000,
+            "snippet": "月上限15,000円"
+          }
+        }
+      },
+      "e02": null
+    },
+    "entry": {
+      "executed": true,
+      "originalFile": "loops/loop-022/run/entry/original.json",
+      "factsFile": "loops/loop-022/run/entry/facts.json",
+      "manifestFile": "loops/loop-022/run/entry/manifest.json",
+      "originalSha256": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+      "factsSha256": "66397b7be47b08b3a4f7dd98151158cab2236d44cf99a8ba97da2225cfda7e66"
+    },
+    "factsComparison": {
+      "executed": true,
+      "mode": "entry",
+      "verbatim": {
+        "pass": false,
+        "checked": 15,
+        "issues": [
+          {
+            "key": "employer",
+            "issue": "sourceLine not found: null"
+          },
+          {
+            "key": "jobId",
+            "issue": "sourceLine not found: null"
+          },
+          {
+            "key": "renewal",
+            "issue": "sourceLine not found: null"
+          },
+          {
+            "key": "monthlyIncomeGuarantee",
+            "issue": "sourceLine not found: null"
+          },
+          {
+            "key": "actualHours",
+            "issue": "sourceLine not found: null"
+          },
+          {
+            "key": "monthlyDaysAssumption",
+            "issue": "sourceLine not found: null"
+          },
+          {
+            "key": "housing",
+            "issue": "sourceLine not found: null"
+          }
+        ]
+      },
+      "candidate": {
+        "factsFile": "loops/loop-022/run/entry/facts.json",
+        "sha256": "66397b7be47b08b3a4f7dd98151158cab2236d44cf99a8ba97da2225cfda7e66"
+      }
+    },
+    "approval": {
+      "executed": false,
+      "reason": "前段で停止したため、承認の有効性の再確認を実行しない"
+    },
+    "planning": {
+      "executed": false,
+      "reason": "前段で停止したため、企画入力の確認を実行しない"
+    },
+    "keyVisual": {
+      "executed": false,
+      "reason": "前段で停止したため、1枚画を実行しない"
+    },
+    "generation": {
+      "executed": false,
+      "reason": "前段で停止したため、生成を実行しない"
+    },
+    "images": {
+      "executed": false,
+      "reason": "前段で停止したため、画像生成を実行しない"
+    },
+    "lpAssembly": {
+      "executed": false,
+      "reason": "前段で停止したため、LP の組み立てを実行しない"
+    },
+    "verification": {
+      "executed": false,
+      "reason": "前段で停止したため、再検証を実行しない"
+    },
+    "preview": {
+      "executed": false,
+      "reason": "前段で停止したため、プレビューを生成しない"
+    }
+  },
+  "e02": {
+    "caseId": "E02",
+    "stage": "照合",
+    "verdict": null,
+    "stoppedAtReconciliation": null,
+    "contradictions": [],
+    "approval": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため承認を実行しない（矛盾で停止した対象に承認記録を作らない、G-INV-3）"
+    },
+    "generation": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため生成を実行しない"
+    },
+    "images": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため画像生成を実行しない"
+    },
+    "lpAssembly": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため LP の組み立てを実行しない"
+    },
+    "verification": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため再検証を実行しない"
+    },
+    "preview": {
+      "executed": false,
+      "reason": "E02 は照合で停止したためプレビューを実行しない"
+    }
+  },
+  "checkpoints": "full",
+  "stopKind": null,
+  "holds": [],
+  "presentationRecords": [],
+  "planning": null,
+  "stateFile": "loops/loop-022/run/run-state.json",
+  "entry": {
+    "originalFile": "loops/loop-022/run/entry/original.json",
+    "factsFile": "loops/loop-022/run/entry/facts.json",
+    "manifestFile": "loops/loop-022/run/entry/manifest.json",
+    "originalSha256": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+    "factsSha256": "66397b7be47b08b3a4f7dd98151158cab2236d44cf99a8ba97da2225cfda7e66"
+  },
+  "artifacts": {
+    "generationFile": null,
+    "verificationFile": "loops/loop-022/run/verification-result.json",
+    "lpFile": null,
+    "imagesRunFile": null,
+    "preview": null
+  },
+  "costs": {
+    "category": "製品実行",
+    "currency": "USD",
+    "extractionCostUsd": null,
+    "generationCostUsd": null,
+    "imageCostUsd": null,
+    "totalCostUsd": null,
+    "breakdown": [
+      {
+        "stage": "抽出（工程1、ライブ）",
+        "costUsd": null,
+        "usage": {
+          "prompt_tokens": 494,
+          "completion_tokens": 3877,
+          "total_tokens": 4371,
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 3123,
+            "audio_tokens": 0,
+            "reasoning_tokens": 3357,
+            "rejected_prediction_tokens": 2155
+          }
+        }
+      },
+      {
+        "stage": "生成（工程3、ライブ）",
+        "costUsd": null,
+        "usage": null
+      },
+      {
+        "stage": "画像生成（muse-image-1.0、ライブ）",
+        "costUsd": null,
+        "usage": null,
+        "note": "未記録（画像生成が実行されなかったため推定しない）"
+      },
+      {
+        "stage": "再検証・プレビュー生成",
+        "costUsd": 0,
+        "usage": null,
+        "note": "API を呼ばないため費用は発生しない"
+      }
+    ],
+    "note": "抽出と生成と画像の算出値がそろわなかったため、合計は未記録（推定しない）。内訳の算出値は各道具の D4 単価による算出値で、確定実費は dev.meta.ai Billing 実績との突合が必要"
+  },
+  "generationFile": "loops/loop-022/run/generated-lp-v1.json",
+  "verificationFile": "loops/loop-022/run/verification-result.json",
+  "lpFile": "loops/loop-022/run/lp.html"
+}

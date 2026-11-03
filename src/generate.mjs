@@ -21,8 +21,17 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { checkApprovalValidity } from "./approve.mjs";
 
-export const MODEL = "muse-spark-1.3-contributor";
-export const BASE_URL = "https://api.meta.ai/v1";
+// Endpoint selection: defaults are the Meta Model API and the
+// contributor model, exactly as before. PIPELINE_BASE_URL /
+// PIPELINE_MODEL / PIPELINE_MAX_TOKENS let the same tools run against
+// another OpenAI-compatible endpoint (e.g. Baseten's Muse Spark Open
+// for the live verification runs, loop-022). When the model is
+// overridden, the D4 contributor rates do not apply, so costs are
+// left unrecorded rather than computed at the wrong rate.
+export const MODEL = process.env.PIPELINE_MODEL ?? "muse-spark-1.3-contributor";
+export const BASE_URL = process.env.PIPELINE_BASE_URL ?? "https://api.meta.ai/v1";
+export const MAX_TOKENS = process.env.PIPELINE_MAX_TOKENS ? Number(process.env.PIPELINE_MAX_TOKENS) : null;
+export const RATES_KNOWN = !process.env.PIPELINE_MODEL;
 export const PROMPT_VERSION = "lp-generate-v1";
 // D4 rates for muse-spark-1.3-contributor (USD per 1M tokens).
 const RATE_INPUT_PER_1M = 0.10;
@@ -286,7 +295,9 @@ export async function runGeneration({ root, originalFile, factsFile, approvalFil
   const usage = res.usage ?? null;
   let costUsd = null;
   let costNote = "未記録（usageが返らなかったため推定しない）";
-  if (usage && typeof usage.prompt_tokens === "number" && typeof usage.completion_tokens === "number") {
+  if (!RATES_KNOWN) {
+    costNote = "未記録（PIPELINE_MODEL でモデルが差し替えられており、D4単価が適用できないため算出しない。使用量は usage に記録）";
+  } else if (usage && typeof usage.prompt_tokens === "number" && typeof usage.completion_tokens === "number") {
     costUsd = (usage.prompt_tokens * RATE_INPUT_PER_1M + usage.completion_tokens * RATE_OUTPUT_PER_1M) / 1_000_000;
     costNote = `D4単価（入力$${RATE_INPUT_PER_1M}/1M, 出力$${RATE_OUTPUT_PER_1M}/1M）による算出値。確定実費は dev.meta.ai Billing 実績との突合が必要。`;
   }
@@ -326,7 +337,7 @@ async function callModelLive(messages) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${apiKey}`,
     },
-    body: JSON.stringify({ model: MODEL, messages, temperature: 0 }),
+    body: JSON.stringify({ model: MODEL, messages, temperature: 0, ...(MAX_TOKENS ? { max_tokens: MAX_TOKENS } : {}) }),
   });
   const text = await res.text();
   let body = null;

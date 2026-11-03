@@ -21,3 +21,5 @@
 | 15 | Baseten 検証ループの実施 | `loops/loop-015/run-record.md`（パイロットとして終了、2026-11-01。完成LPのHTML・画像は記録対象外としローカルに残す） |
 | 16 | Baseten 検証ループ 拡張版（6ケース英語版） | `loops/loop-016/run-record.md`、`loops/loop-016/insights-consolidation-by-line-20261102.md`（2026-11-02。完成LPのHTML・画像は記録対象外としローカルに残す） |
 | 18 | LP フルパイプライン化の実施（画像生成 → 組み立て → 完成照合） | `loops/loop-018/run-record.md`（2026-11-03。監査待ちのため未コミット） |
+| 21 | パイプライン修正 F1–F10 の実施と監査（C1–C11 合格） | `loops/loop-021/run-record.md`、`loops/loop-021/audit-record.md`（2026-11-03） |
+| 22 | 実走確認 L1–L3（Baseten）と本人側監査の修正対応 F-a–F-d | `loops/loop-022/run-record.md`（2026-11-03、進行中） |

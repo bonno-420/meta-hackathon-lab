@@ -739,13 +739,38 @@ export async function runDemo(options, deps = {}) {
         })
         .filter((v) => typeof v === "string" && v.length > 0)
       : undefined;
-    assembly = await assemble({ root, generation: generationRun.generation, images: imageRun.images ?? [], imagesDir, lpFile, heroChips });
-    stages.lpAssembly = {
-      executed: true,
-      file: assembly ? (assembly.file ?? lpFile) : lpFile,
-      referenced: assembly ? (assembly.referenced ?? []) : [],
-      skipped: assembly ? (assembly.skipped ?? []) : [],
-    };
+    // Assembly retries (audit F-b on C8): bounded retries in
+    // pipeline mode, and an error is always captured and recorded —
+    // a failed write must never crash the whole run unrecorded.
+    const maxAssemblyAttempts = pipelineMode ? 3 : 1;
+    let assemblyAttempts = 0;
+    let assemblyError = null;
+    while (assemblyAttempts < maxAssemblyAttempts && !assembly) {
+      assemblyAttempts += 1;
+      try {
+        assembly = await assemble({ root, generation: generationRun.generation, images: imageRun.images ?? [], imagesDir, lpFile, heroChips });
+        assemblyError = null;
+      } catch (e) {
+        assembly = null;
+        assemblyError = e;
+      }
+    }
+    if (assembly) {
+      stages.lpAssembly = {
+        executed: true,
+        attempts: assemblyAttempts,
+        file: assembly.file ?? lpFile,
+        referenced: assembly.referenced ?? [],
+        skipped: assembly.skipped ?? [],
+      };
+    } else {
+      const detail = `組み立てが${assemblyAttempts}回とも失敗した: ${String(assemblyError?.message ?? assemblyError)}`;
+      stages.lpAssembly = { executed: true, attempts: assemblyAttempts, error: detail };
+      if (pipelineMode) {
+        holds.push({ stage: "assembly", condition: "lp-assembly", detail, attempts: assemblyAttempts });
+      }
+      stop("assembly", `LP の組み立てが失敗したため、後段を実行しない（${detail}）`);
+    }
   } else {
     stages.lpAssembly = stageNotExecuted("前段で停止したため、LP の組み立てを実行しない");
   }
@@ -899,9 +924,9 @@ export async function runDemo(options, deps = {}) {
 // --- Live executors (CLI連携). Each tool keeps its own API caller and
 // its own refusal-before-API behaviour; the runner only collects. ---
 
-async function runNode(args) {
+async function runNode(args, env) {
   try {
-    const { stdout, stderr } = await execFileAsync(process.execPath, args, { maxBuffer: 16 * 1024 * 1024, env: process.env });
+    const { stdout, stderr } = await execFileAsync(process.execPath, args, { maxBuffer: 16 * 1024 * 1024, env: env ?? process.env });
     return { exitCode: 0, stdout, stderr };
   } catch (e) {
     return { exitCode: typeof e.code === "number" ? e.code : 1, stdout: e.stdout ?? "", stderr: e.stderr ?? String(e.message ?? e) };
@@ -944,17 +969,24 @@ function childErrorResult(stage, exitCode) {
   };
 }
 
-export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesRunFile, planningFile, feedbackFile }) {
+export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesRunFile, planningFile, feedbackFile, textApiKey, imageApiKey }) {
   const here = path.dirname(fileURLToPath(import.meta.url));
   const extractionOutDir = path.join(outDir, "extraction");
   const runner = run ?? runNode;
+  // Per-stage keys (loop-022): when the text stages run against a
+  // different endpoint than the image stage (e.g. text on Baseten,
+  // images on the Meta API), each child gets the key for its own
+  // endpoint. Without explicit keys, children inherit the environment
+  // exactly as before.
+  const textRunner = textApiKey ? (args) => runNode(args, { ...process.env, MODEL_API_KEY: textApiKey }) : runner;
+  const imageRunner = imageApiKey ? (args) => runNode(args, { ...process.env, MODEL_API_KEY: imageApiKey }) : runner;
   const imgDir = imagesDir ?? path.join(path.dirname(generationFile), "images");
   const imgRunRel = imagesRunFile ?? path.join(outDir, "images-run.json");
   return {
     extract: async ({ originalFile: origFile, inputId, inputVersion } = {}) => {
       const liveFile = path.join(root, extractionOutDir, "live-run.json");
       removeIfExists(liveFile);
-      const ran = await runner([
+      const ran = await textRunner([
         path.join(here, "extract-and-check.mjs"), "--prompt", "v1.1", "--out-dir", extractionOutDir,
         ...(origFile ? ["--original", origFile] : []),
         ...(inputId ? ["--input-id", inputId] : []),
@@ -983,7 +1015,7 @@ export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesR
       // is generate-planning.mjs, whose intent layer comes from the
       // planning file (and the feedback memo, when given).
       const script = planningFile ? "generate-planning.mjs" : "generate.mjs";
-      const ran = await runner([
+      const ran = await textRunner([
         path.join(here, script), "--approval", approvalFile, "--original", originalFile, "--facts", factsFile, "--out", generationFile, "--run-out", runOutRel,
         ...(planningFile ? ["--planning", planningFile] : []),
         ...(planningFile && feedbackFile ? ["--feedback", feedbackFile] : []),
@@ -1025,7 +1057,7 @@ export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesR
         writeFileSync(path.join(root, planRel), JSON.stringify(specPlan, null, 2) + "\n", "utf8");
         planArgs = ["--plan-file", planRel];
       }
-      const ran = await runner([path.join(here, "generate-images.mjs"), ...planArgs, "--out-dir", imgDir, "--run-out", imgRunRel]);
+      const ran = await imageRunner([path.join(here, "generate-images.mjs"), ...planArgs, "--out-dir", imgDir, "--run-out", imgRunRel]);
       if (ran.exitCode !== 0) {
         return { ...childErrorResult("images", ran.exitCode), images: [] };
       }
@@ -1061,7 +1093,7 @@ export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesR
       const planRel = path.join(outDir, "key-visual-plan.json");
       mkdirSync(path.dirname(path.join(root, planRel)), { recursive: true });
       writeFileSync(path.join(root, planRel), JSON.stringify({ images: [{ id: "key-visual", prompt, line: null }] }, null, 2) + "\n", "utf8");
-      const ran = await runner([path.join(here, "generate-images.mjs"), "--plan-file", planRel, "--out-dir", imgDir, "--run-out", kvRunRel]);
+      const ran = await imageRunner([path.join(here, "generate-images.mjs"), "--plan-file", planRel, "--out-dir", imgDir, "--run-out", kvRunRel]);
       if (ran.exitCode !== 0) {
         return { ...childErrorResult("key-visual", ran.exitCode), images: [] };
       }
@@ -1148,7 +1180,7 @@ async function main() {
       ...(kvConfirmation ? { kvConfirmation } : {}),
       stateFile: `${outDir.replaceAll("\\", "/")}/run-state.json`,
     },
-    liveDeps({ root, outDir, generationFile, imagesDir, imagesRunFile, planningFile, feedbackFile }),
+    liveDeps({ root, outDir, generationFile, imagesDir, imagesRunFile, planningFile, feedbackFile, textApiKey: process.env.BASETEN_API_KEY || undefined, imageApiKey: process.env.MODEL_API_KEY || undefined }),
   );
 
   mkdirSync(path.join(root, outDir), { recursive: true });

@@ -12,7 +12,7 @@ import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { performance } from "node:perf_hooks";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { MODEL, BASE_URL, checkGenerationInput, checkGrounding } from "./generate.mjs";
+import { MODEL, BASE_URL, MAX_TOKENS, RATES_KNOWN, checkGenerationInput, checkGrounding } from "./generate.mjs";
 import { buildPersonaGenerationMessages } from "./generate-persona.mjs";
 import { intentFromPlanning, sha256Text } from "./planning.mjs";
 
@@ -92,7 +92,9 @@ export async function runPlanningGeneration({ root, originalFile, factsFile, app
   const usage = res.usage ?? null;
   let costUsd = null;
   let costNote = "未記録（usageが返らなかったため推定しない）";
-  if (usage && typeof usage.prompt_tokens === "number" && typeof usage.completion_tokens === "number") {
+  if (!RATES_KNOWN) {
+    costNote = "未記録（PIPELINE_MODEL でモデルが差し替えられており、D4単価が適用できないため算出しない。使用量は usage に記録）";
+  } else if (usage && typeof usage.prompt_tokens === "number" && typeof usage.completion_tokens === "number") {
     costUsd = (usage.prompt_tokens * RATE_INPUT_PER_1M + usage.completion_tokens * RATE_OUTPUT_PER_1M) / 1_000_000;
     costNote = `D4単価（入力$${RATE_INPUT_PER_1M}/1M, 出力$${RATE_OUTPUT_PER_1M}/1M）による算出値。確定実費は dev.meta.ai Billing 実績との突合が必要。`;
   }
@@ -133,7 +135,7 @@ async function callModelLive(messages) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${apiKey}`,
     },
-    body: JSON.stringify({ model: MODEL, messages, temperature: 0 }),
+    body: JSON.stringify({ model: MODEL, messages, temperature: 0, ...(MAX_TOKENS ? { max_tokens: MAX_TOKENS } : {}) }),
   });
   const text = await res.text();
   let body = null;
