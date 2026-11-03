@@ -1,0 +1,21 @@
+{
+  "status": "generated",
+  "reason": null,
+  "model": "muse-image-1.0",
+  "promptTemplate": "lp-image-v1",
+  "images": [
+    {
+      "id": "key-visual",
+      "file": "loops/loop-022/run5/images/key-visual.webp",
+      "prompt": "A single tall portrait image showing a complete landing page design mockup for a logistics warehouse job posting, clean modern Japanese web design: at the top a hero photograph of a modern logistics warehouse building in early morning with warm dawn sunlight and a bright sky; below it a dark navy title card with three light gray placeholder text bars; then a grid of four white cards with simple minimal line icons (a plain circle, a shield with checkmark, a map pin, a document) and gray placeholder text bars; then a wide photograph of a worker sorting cardboard parcels on a conveyor belt inside a bright warehouse; then two white detail cards with checkbox placeholder rows and gray text bars; then a dark navy footer band with a single orange rounded button shape containing one gray placeholder bar. All text appears only as gray placeholder bars, photorealistic photographs, no readable text, no numbers, no logos, no watermark, no bedroom, no bed, no house, no bus, no money, no cash, no coins, no clock",
+      "line": null,
+      "mime": "image/webp",
+      "bytes": 184806
+    }
+  ],
+  "usage": null,
+  "costUsd": 0.01,
+  "costNote": "画像 1 枚 × $0.01 の算出値。確定実費は dev.meta.ai Billing 実績との突合が必要。",
+  "startedAt": "2026-11-03T14:50:41.315Z",
+  "finishedAt": "2026-11-03T14:50:53.232Z"
+}

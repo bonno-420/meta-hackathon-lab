@@ -1,0 +1,8 @@
+{
+  "checkpoint": "key-visual",
+  "file": "loops/loop-022/run4/images/key-visual-overall.webp",
+  "sha256": "ce9ac369d7326b06859e14df9d2a708bdfffb1d30bae9bfde369c17231e234c4",
+  "confirmer": "原田徳一（本人）",
+  "confirmedAt": "2026-11-03",
+  "note": "全体の絵（LP全体の見た目を決める1枚画）として本人がチャットで確認（2026-11-03 23:49「うん、それで進めて」）。run4 の道具生成KV（単一シーン）は image-process-spec 制定により差し替え。本確認は全体絵に対するもの"
+}

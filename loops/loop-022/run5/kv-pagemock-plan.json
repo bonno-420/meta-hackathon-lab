@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "model": "muse-image-1.0",
+  "images": [
+    {
+      "id": "key-visual",
+      "prompt": "A single tall portrait image showing a complete landing page design mockup for a logistics warehouse job posting, clean modern Japanese web design: at the top a hero photograph of a modern logistics warehouse building in early morning with warm dawn sunlight and a bright sky; below it a dark navy title card with three light gray placeholder text bars; then a grid of four white cards with simple minimal line icons (a plain circle, a shield with checkmark, a map pin, a document) and gray placeholder text bars; then a wide photograph of a worker sorting cardboard parcels on a conveyor belt inside a bright warehouse; then two white detail cards with checkbox placeholder rows and gray text bars; then a dark navy footer band with a single orange rounded button shape containing one gray placeholder bar. All text appears only as gray placeholder bars, photorealistic photographs, no readable text, no numbers, no logos, no watermark, no bedroom, no bed, no house, no bus, no money, no cash, no coins, no clock",
+      "basis": "Form reference: loop-020 key visual (full-page mockup in one image). Elements grounded in approved FICT-J02 facts and planning: warehouse in Toyohashi (workLocation), sorting work (work content), early morning (workHours 07:00 start, appeal A2). Excluded per the loop-020 checklist: bedroom/housing, bus, money bag/cash, clock with a specific time, house icon."
+    }
+  ]
+}

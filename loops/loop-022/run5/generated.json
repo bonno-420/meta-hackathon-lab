@@ -1,0 +1,76 @@
+{
+  "kind": "lp-copy-generation",
+  "version": 1,
+  "promptVersion": "lp-generate-v4-planning",
+  "model": "meta-models/muse-spark-open-1026",
+  "intentRef": {
+    "source": "planning-input",
+    "file": "loops/loop-022/planning-FICT-J02.json",
+    "sha256": "019392a4909eeb9bc995f94c20325b7cfb5afcc875c4543c89c9ae9eb1625ecf"
+  },
+  "input": {
+    "original": {
+      "id": "FICT-J02",
+      "version": "v1",
+      "file": "loops/loop-022/run2/entry/original.json",
+      "sha256": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6"
+    },
+    "facts": {
+      "factsId": "FICT-J02-facts",
+      "factsVersion": 1,
+      "file": "loops/loop-022/run2/entry/facts.json",
+      "sha256": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06"
+    },
+    "approvalId": "FICT-J02-approval-1"
+  },
+  "sentences": [
+    {
+      "text": "雇用形態は有期契約社員で、契約期間は3か月です。",
+      "factKeys": [
+        "employmentType",
+        "contractPeriod"
+      ],
+      "sourceLines": [
+        "L02"
+      ]
+    },
+    {
+      "text": "時給は1,350円です。",
+      "factKeys": [
+        "salaryHourly"
+      ],
+      "sourceLines": [
+        "L04"
+      ]
+    },
+    {
+      "text": "勤務地は愛知県豊橋市内の物流倉庫です。",
+      "factKeys": [
+        "workLocation"
+      ],
+      "sourceLines": [
+        "L03"
+      ]
+    },
+    {
+      "text": "勤務時間は07:00〜16:00で、休憩は60分です。",
+      "factKeys": [
+        "workHours",
+        "breakMinutes"
+      ],
+      "sourceLines": [
+        "L05"
+      ]
+    },
+    {
+      "text": "交通費は実費支給で、月上限は15,000円です。",
+      "factKeys": [
+        "transport",
+        "transportCap"
+      ],
+      "sourceLines": [
+        "L07"
+      ]
+    }
+  ]
+}
