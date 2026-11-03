@@ -60,3 +60,7 @@ Content is fixed here; fine expression (exact staging, motion, transitions) is d
    "Every loop is recorded in the repository — inputs, models, prompts, outputs, audit verdicts, costs. Later loops tested a pattern library and reader personas, and a separate verification series ran on Baseten with Muse Spark Open. Those are experiments, kept distinct from the platform — and disclosed as such."
 7. **Close (card)** — One line + repository and preview links + TTS credit.
    "Loopwright: AI does the work, records make it checkable, and humans keep the judgement. The repository and the recorded preview are public — links in the description."
+
+## Production models (user, 2026-11-03)
+
+- Production runs on Spark. If it goes well, a Wonder version is also produced for comparison. Either version goes through the step-4 audit before use; the comparison itself is recorded.
