@@ -5,7 +5,7 @@
 
 ## The key visual (1枚画)
 
-- Form (settled by the user on 2026-11-03 with the loop-020 key visual itself as the reference, sha256 `c04a298afee359296522517d3050f6ddffa57044e008134af60dd185543ea1d9`): a single image that shows the whole landing page — a full-page mockup in one tall image (hero photograph, title block, condition cards, work-scene photograph, detail blocks, call-to-action footer), with text as placeholder bars. It is made once, first, so the finished page's whole image can be shared and confirmed before anything else is produced. It is not a hero photograph and not a single scene.
+- Form (the user's words, 2026-11-03): make the LP's finished image (「LPの完成イメージを作る」). Not "represent everything in one image" — the image of what the completed LP looks like, in one image (the loop-020 key visual is the reference for the form, sha256 `c04a298afee359296522517d3050f6ddffa57044e008134af60dd185543ea1d9`). It is made once, first, so the finished image can be shared and confirmed before anything else is produced.
 - A single overall key visual that fixes the look of the whole page (generation flow statement). It is generated once, from the planning input, before the copy, and the run stops at its preview checkpoint for the user's confirmation.
 - It is the specification for the look. It is not a part assembled into the page: the page is assembled from the copy and the real images.
 - Before presentation it is checked element by element (the loop-020 checklist): building identity (a workplace must not read as a house or dormitory), motifs that imply unstated items, invented specifics (a clock showing a specific time, a vehicle implying a commute mode, cash imagery), and conformance to the planning.

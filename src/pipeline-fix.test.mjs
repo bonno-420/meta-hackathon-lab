@@ -68,10 +68,12 @@ try { buildCorrespondence(unstatedBasis, facts); } catch { threw = true; }
 expectTrue("correspondence-unstated-basis-throws", threw);
 // Cash imagery and clock faces are standing bans.
 expect("kv-prompt-cash-blocked", checkPromptCompliance("Workers with cash and a wall clock", correspondence).pass, false);
-// Spec plan excludes the key visual and carries correspondence prompts.
+// Spec plan: the key-visual spec's photograph becomes the LP hero (a
+// real image); the finished image itself is never assembled.
 const specPlan = decideImagePlanFromSpecs({ correspondence });
-expect("spec-plan-count", specPlan.images.length, 1);
-expect("spec-plan-id", specPlan.images[0].id, "work");
+expect("spec-plan-count", specPlan.images.length, 2);
+expect("spec-plan-id", specPlan.images[0].id, "hero");
+expect("spec-plan-id-2", specPlan.images[1].id, "work");
 
 // ---------- pagecheck units (C5) ----------
 const longSentence = "勤務時間は09:00から18:00までで、休憩は60分です。";
@@ -158,12 +160,25 @@ function faithfulGenerate() {
     return result;
   };
 }
-function stubKeyVisual(counter) {
-  return async ({ root: r, imagesDir }) => {
-    if (counter) counter.count++;
-    const file = `${imagesDir}/key-visual.png`;
-    writeFileSync(path.join(r, file), Buffer.from([0x89, 0x50, 0x4e, 0x47]));
-    return { status: "generated", model: "stub", images: [{ id: "key-visual", file, prompt: "stub", line: null }], costUsd: 0.01 };
+function stubKeyVisualDeps(counter) {
+  return {
+    keyVisualPhotos: async ({ root: r, photoPlan, imagesDir }) => {
+      if (counter) counter.count++;
+      const images = photoPlan.map((pp) => {
+        const file = `${imagesDir}/${pp.id}.png`;
+        mkdirSync(path.dirname(path.join(r, file)), { recursive: true });
+        writeFileSync(path.join(r, file), Buffer.from([0x89, 0x50, 0x4e, 0x47]));
+        return { id: pp.id, role: pp.role, file, prompt: pp.prompt, line: null };
+      });
+      return { status: "generated", model: "stub", images, costUsd: 0.01 };
+    },
+    renderFinishedImage: async ({ root: r, outDir, baseName }) => {
+      const file = `${outDir}/${baseName}.png`;
+      mkdirSync(path.dirname(path.join(r, file)), { recursive: true });
+      writeFileSync(path.join(r, file), Buffer.from([0x89, 0x50, 0x4e, 0x47]));
+      writeFileSync(path.join(r, `${outDir}/${baseName}.html`), "<html>stub</html>");
+      return { status: "rendered", file, htmlFile: `${outDir}/${baseName}.html` };
+    },
   };
 }
 function stubImages() {
@@ -183,7 +198,7 @@ const kvCounter = { count: 0 };
 let generateCallsA = 0;
 const runA = await runDemo(
   { root: scratchA, ...REAL, checkpoints: "light" },
-  { extract: async () => faithfulExtract(), generate: async (a) => { generateCallsA++; return faithfulGenerate()(a); }, keyVisual: stubKeyVisual(kvCounter), images: stubImages() },
+  { extract: async () => faithfulExtract(), generate: async (a) => { generateCallsA++; return faithfulGenerate()(a); }, ...stubKeyVisualDeps(kvCounter), images: stubImages() },
 );
 expect("kv-stop-status", runA.status, "stopped-at-checkpoint");
 expect("kv-stop-stage", runA.stoppedAt, "key-visual");
@@ -197,12 +212,12 @@ const kvSha = stateA.keyVisual.image.sha256;
 // ---------- resume refusals ----------
 const runB = await runDemo(
   { root: scratchA, ...REAL, checkpoints: "light", resumeState: stateA },
-  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages() },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
 );
 expect("resume-no-confirmation-stops", runB.stoppedAt, "key-visual-confirmation");
 const runC = await runDemo(
   { root: scratchA, ...REAL, checkpoints: "light", resumeState: stateA, kvConfirmation: { file: stateA.keyVisual.image.file, sha256: "0".repeat(64), confirmer: "本人", confirmedAt: "2026-11-03" } },
-  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages() },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
 );
 expect("resume-wrong-sha-stops", runC.stoppedAt, "key-visual-confirmation");
 
@@ -210,7 +225,7 @@ expect("resume-wrong-sha-stops", runC.stoppedAt, "key-visual-confirmation");
 const confirmation = { file: stateA.keyVisual.image.file, sha256: kvSha, confirmer: "本人", confirmedAt: "2026-11-03" };
 const runD = await runDemo(
   { root: scratchA, ...REAL, checkpoints: "light", resumeState: stateA, kvConfirmation: confirmation },
-  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages() },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
 );
 expect("resume-completion-has-c5", Array.isArray(runD.stages.verification.completion?.checks) && runD.stages.verification.completion.checks.some((c) => c.id === "C5"), true);
 expectTrue("resume-completion-pass", runD.stages.verification.completion.pass);
@@ -223,7 +238,7 @@ expect("resume-status", runD.status, "pending-human-confirmation");
 const scratchF = makeScratch();
 const runF1 = await runDemo(
   { root: scratchF, ...REAL, checkpoints: "full" },
-  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages() },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
 );
 expect("full-kv-stop", runF1.stoppedAt, "key-visual");
 expectTrue("full-planning-presentation", existsSync(path.join(scratchF, "out/presentation-planning.json")));
@@ -231,14 +246,14 @@ const stateF = JSON.parse(readFileSync(path.join(scratchF, "out/run-state.json")
 const confF = { file: stateF.keyVisual.image.file, sha256: stateF.keyVisual.image.sha256, confirmer: "本人", confirmedAt: "2026-11-03" };
 const runF2 = await runDemo(
   { root: scratchF, ...REAL, checkpoints: "full", resumeState: stateF, kvConfirmation: confF },
-  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages() },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
 );
 expect("full-text-stop", runF2.stoppedAt, "text-checkpoint");
 expect("full-text-stop-status", runF2.status, "stopped-at-checkpoint");
 const stateF2 = JSON.parse(readFileSync(path.join(scratchF, "out/run-state.json"), "utf8"));
 const runF3 = await runDemo(
   { root: scratchF, ...REAL, checkpoints: "full", resumeState: stateF2, kvConfirmation: confF },
-  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages() },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
 );
 expectTrue("full-resume-completes", runF3.stages.verification.completion.pass);
 
@@ -246,7 +261,7 @@ expectTrue("full-resume-completes", runF3.stages.verification.completion.pass);
 const scratchP = makeScratch();
 const runP = await runDemo(
   { root: scratchP, ...REAL, checkpoints: "light", planningFile: undefined },
-  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages() },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
 );
 expect("missing-planning-stop", runP.stoppedAt, "planning");
 expect("missing-planning-checkpoint", runP.status, "stopped-at-checkpoint");
@@ -255,7 +270,7 @@ expect("missing-planning-checkpoint", runP.status, "stopped-at-checkpoint");
 const scratchR = makeScratch();
 const runR1 = await runDemo(
   { root: scratchR, ...REAL, checkpoints: "light" },
-  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages() },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
 );
 const stateR = JSON.parse(readFileSync(path.join(scratchR, "out/run-state.json"), "utf8"));
 const confR = { file: stateR.keyVisual.image.file, sha256: stateR.keyVisual.image.sha256, confirmer: "本人", confirmedAt: "2026-11-03" };
@@ -267,7 +282,7 @@ const flakyGenerate = async (args) => {
 };
 const runR2 = await runDemo(
   { root: scratchR, ...REAL, checkpoints: "light", resumeState: stateR, kvConfirmation: confR },
-  { extract: async () => faithfulExtract(), generate: flakyGenerate, keyVisual: stubKeyVisual(), images: stubImages() },
+  { extract: async () => faithfulExtract(), generate: flakyGenerate, ...stubKeyVisualDeps(), images: stubImages() },
 );
 expect("generation-retry-attempts", runR2.stages.generation.attempts, 3);
 expectTrue("generation-retry-completes", runR2.stages.verification.completion.pass);
@@ -276,14 +291,14 @@ expectTrue("generation-retry-completes", runR2.stages.verification.completion.pa
 const scratchH = makeScratch();
 const runH1 = await runDemo(
   { root: scratchH, ...REAL, checkpoints: "light" },
-  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages() },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
 );
 const stateH = JSON.parse(readFileSync(path.join(scratchH, "out/run-state.json"), "utf8"));
 const confH = { file: stateH.keyVisual.image.file, sha256: stateH.keyVisual.image.sha256, confirmer: "本人", confirmedAt: "2026-11-03" };
 const failingImages = async () => ({ status: "failed", reason: "stub failure", model: "stub", images: [], costUsd: 0 });
 const runH2 = await runDemo(
   { root: scratchH, ...REAL, checkpoints: "light", resumeState: stateH, kvConfirmation: confH },
-  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: failingImages },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: failingImages },
 );
 expect("images-hold-recorded", runH2.holds.some((h) => h.stage === "images"), true);
 expect("images-attempts", runH2.stages.images.attempts, 3);
@@ -296,7 +311,7 @@ import { assembleLP } from "./run-demo.mjs";
 const scratchB = makeScratch();
 const runB1 = await runDemo(
   { root: scratchB, ...REAL, checkpoints: "light" },
-  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages() },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
 );
 const stateB = JSON.parse(readFileSync(path.join(scratchB, "out/run-state.json"), "utf8"));
 const confB = { file: stateB.keyVisual.image.file, sha256: stateB.keyVisual.image.sha256, confirmer: "本人", confirmedAt: "2026-11-03" };
@@ -310,24 +325,37 @@ const flakyAssemble = async (args) => {
 };
 const runB2 = await runDemo(
   { root: scratchB, ...REAL, checkpoints: "light", resumeState: stateB, kvConfirmation: confB },
-  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages(), assemble: flakyAssemble },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages(), assemble: flakyAssemble },
 );
 expect("assembly-retry-attempts", runB2.stages.lpAssembly.attempts, 3);
 expectTrue("assembly-retry-completes", runB2.stages.verification.completion.pass);
 const scratchB2 = makeScratch();
 const runB3 = await runDemo(
   { root: scratchB2, ...REAL, checkpoints: "light" },
-  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages() },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
 );
 const stateB2 = JSON.parse(readFileSync(path.join(scratchB2, "out/run-state.json"), "utf8"));
 const confB2 = { file: stateB2.keyVisual.image.file, sha256: stateB2.keyVisual.image.sha256, confirmer: "本人", confirmedAt: "2026-11-03" };
 const alwaysFailAssemble = async () => { throw new Error("stub write failure"); };
 const runB4 = await runDemo(
   { root: scratchB2, ...REAL, checkpoints: "light", resumeState: stateB2, kvConfirmation: confB2 },
-  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages(), assemble: alwaysFailAssemble },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages(), assemble: alwaysFailAssemble },
 );
 expect("assembly-failure-stops", runB4.stoppedAt, "assembly");
 expect("assembly-failure-attempts", runB4.stages.lpAssembly.attempts, 3);
+
+// ---------- Render failure: the run stops as a hold AND persists state
+// so it can resume after the environment is fixed ----------
+const scratchRF = makeScratch();
+const kvDepsRF = stubKeyVisualDeps();
+const runRF = await runDemo(
+  { root: scratchRF, ...REAL, checkpoints: "light" },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), keyVisualPhotos: kvDepsRF.keyVisualPhotos, renderFinishedImage: async () => { throw new Error("browser missing (stub)"); }, images: stubImages() },
+);
+expect("render-failure-stops", runRF.stoppedAt, "key-visual");
+expectTrue("render-failure-hold", (runRF.holds ?? []).some((h) => h.stage === "key-visual"));
+const stateRF = JSON.parse(readFileSync(path.join(scratchRF, "out/run-state.json"), "utf8"));
+expectTrue("render-failure-state-persisted", Array.isArray(stateRF.completedStages) && !stateRF.completedStages.includes("keyVisual"));
 expectTrue("assembly-failure-hold", runB4.holds.some((h) => h.stage === "assembly"));
 
 // ---------- text entry (F1) ----------
@@ -370,7 +398,7 @@ const runE = await runDemo(
     generationFile: "entry/generated.json", imagesDir: "entry/images", lpFile: "entry/lp.html", imagesRunFile: "entry/images-run.json",
     checkpoints: "light",
   },
-  { extract: async () => entryExtract, generate: async () => { entryGenerateCalls++; return faithfulGenerate()({}); }, keyVisual: stubKeyVisual(), images: stubImages() },
+  { extract: async () => entryExtract, generate: async () => { entryGenerateCalls++; return faithfulGenerate()({}); }, ...stubKeyVisualDeps(), images: stubImages() },
 );
 expect("entry-stops-at-approval", runE.stoppedAt, "approval");
 // The approval stop persists state, and a resume continues from the
@@ -387,7 +415,7 @@ expectTrue("entry-approval-stop-saves-state", existsSync(path.join(scratchE, "en
   writeFileSync(path.join(scratchE, "entry/planning.json"), JSON.stringify(planning, null, 2) + "\n", "utf8");
   const runE2 = await runDemo(
     { root: scratchE, resumeState: stateE, checkpoints: "light", planningFile: "entry/planning.json" },
-    { extract: async () => entryExtract, generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages() },
+    { extract: async () => entryExtract, generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
   );
   expect("entry-resume-reaches-key-visual", runE2.stoppedAt, "key-visual");
   expect("entry-resume-approval-passed", runE2.stages.approval.pass, true);
@@ -415,7 +443,7 @@ const runEC = await runDemo(
     generationFile: "entry2/generated.json", imagesDir: "entry2/images", lpFile: "entry2/lp.html", imagesRunFile: "entry2/images-run.json",
     checkpoints: "light",
   },
-  { extract: async () => contraExtract, generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages() },
+  { extract: async () => contraExtract, generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
 );
 expect("entry-contradiction-stops", runEC.stoppedAt, "reconciliation");
 

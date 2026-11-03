@@ -73,9 +73,11 @@ export function decideImagePlanFromSpecs({ correspondence }) {
   const elements = correspondence && Array.isArray(correspondence.elements) ? correspondence.elements : [];
   const images = [];
   for (const el of elements) {
-    if (el.role === "key-visual") continue;
     images.push({
-      id: el.id,
+      // The key-visual spec's photograph becomes the LP hero (a real
+      // image, generated here in the images stage). The finished image
+      // itself is a preview artifact and is never assembled.
+      id: el.role === "key-visual" ? "hero" : el.id,
       line: null,
       role: el.role,
       prompt: `${el.description}, ${correspondence.style ?? "photorealistic"}, no text, no numbers, no logos, no watermark`,

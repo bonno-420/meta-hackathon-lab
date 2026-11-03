@@ -1,0 +1,56 @@
+{
+  "checkpoint": "key-visual",
+  "presented": [
+    {
+      "kind": "image",
+      "file": "loops/loop-022/run7/lp-finished-image.png",
+      "sha256": "ffce728b6f6ec54fa5ad4d07c22a618dfd9a48e75adc2893328e6af4fe51caa2"
+    }
+  ],
+  "layout": {
+    "kind": "lp-finished-image",
+    "anatomy": [
+      "hero photograph",
+      "title block (placeholder text)",
+      "condition cards x3 (planning firstCheckKeys)",
+      "photo bands x1",
+      "detail blocks (placeholder text)",
+      "call to action"
+    ],
+    "photos": [
+      {
+        "id": "key-visual",
+        "role": "key-visual",
+        "file": "loops/loop-022/run7/images/kv-photos/key-visual.webp"
+      },
+      {
+        "id": "section-work",
+        "role": "section",
+        "file": "loops/loop-022/run7/images/kv-photos/section-work.webp"
+      }
+    ],
+    "note": "LPの完成イメージ。文章はプレースホルダで、実文と実画像は後段で同じレイアウトの同じ場所に入る"
+  },
+  "checklist": [
+    {
+      "element": "key-visual",
+      "basis": {
+        "appealId": "A2"
+      },
+      "description": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    }
+  ],
+  "holds": [],
+  "judgement": {
+    "result": null,
+    "confirmer": null,
+    "confirmedAt": null,
+    "corrections": []
+  }
+}

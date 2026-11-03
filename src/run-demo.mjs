@@ -26,6 +26,8 @@ import { runVerification } from "./verify.mjs";
 import { buildPreview } from "./build-preview.mjs";
 import { checkPage } from "./pagecheck.mjs";
 import { buildCorrespondence, buildImagePrompt, buildKeyVisualChecklist, checkPromptCompliance, sha256Text, validatePlanning } from "./planning.mjs";
+import { buildFinishedImageHtml } from "./page-layout.mjs";
+import { renderHtmlToImage } from "./render-page-image.mjs";
 import { pinPostingText, buildFactsFile, buildManifest } from "./pin-posting.mjs";
 import { decideImagePlanFromSpecs } from "./generate-images.mjs";
 
@@ -249,7 +251,7 @@ export function checkCompletion({ root, generation, imageFiles, lpFile, groundin
     checks,
     failures,
     reason: pass ? null : `未完成のため止める（${failures.map((f) => f.check).join("、")}）: ${failures[0].detail}`,
-    note: "完成の判定は文章・機械的な含有・ページ品質（C5）を対象とする。画像の内容としての適切さは完成判定では見ないが、1枚画（キービジュアル）は生成前に企画との対応表と禁止モチーフで検査され、提示時に要素ごとの確認欄（loop-020 のチェックリスト）とともに記録される。",
+    note: "完成の判定は文章・機械的な含有・ページ品質（C5）を対象とする。画像の内容としての適切さは完成判定では見ないが、1枚画（LPの完成イメージ）は企画の構造からレイアウトを組んで描画したプレビューであり、その写真は生成前に対応表と禁止モチーフで検査され、提示時に要素ごとの確認欄（loop-020 のチェックリスト）とともに記録される。完成イメージ自体はLPに組み込まれない。",
   };
 }
 
@@ -296,7 +298,8 @@ export async function runDemo(options, deps = {}) {
     writeFileSync(resolveRoot(root, lpFile), built.html, "utf8");
     return { file: lpFile, referenced: built.referenced, skipped: built.skipped };
   });
-  const keyVisualExec = deps.keyVisual ?? (async () => { throw new Error("no key-visual executor wired"); });
+  const keyVisualPhotos = deps.keyVisualPhotos ?? (async () => { throw new Error("no key-visual photo executor wired"); });
+  const renderFinishedImage = deps.renderFinishedImage ?? (async () => { throw new Error("no finished-image renderer wired"); });
   const verify = deps.verify ?? ((args) => runVerification(args));
   const preview = deps.preview ?? (({ generation, verification, facts, e02, repoUrl }) => buildPreview({ generation, verification, facts, e02, repoUrl }));
 
@@ -545,49 +548,77 @@ export async function runDemo(options, deps = {}) {
         stop("key-visual-confirmation", "確認済み1枚画の照合ができなかったため、後段を実行しない（確認記録のファイル・ハッシュ・確認者・日時が、提示した1枚画と一致する必要がある）");
       }
     } else if (!stoppedAt) {
-      const kvElement = correspondence.elements.find((e) => e.role === "key-visual");
-      const prompt = buildImagePrompt(kvElement, correspondence);
-      const compliance = checkPromptCompliance(prompt, correspondence);
+      // 1枚画: the LP's finished image. Photographs for the layout are
+      // generated from the planning specs (each prompt compliance-checked
+      // against the correspondence), the page layout is composed from the
+      // structured planning, and the composed page is rendered to a
+      // single image. The image model never draws the page itself, and
+      // the finished image is a preview artifact: it is never assembled
+      // into the LP (the copy and the real images take its places later).
+      const photoPlan = correspondence.elements.map((el) => ({ id: el.id, role: el.role, prompt: buildImagePrompt(el, correspondence) }));
+      const complianceResults = photoPlan.map((pp) => ({ id: pp.id, ...checkPromptCompliance(pp.prompt, correspondence) }));
+      const compliance = { pass: complianceResults.every((c) => c.pass), results: complianceResults };
       if (!compliance.pass) {
-        stages.keyVisual = { executed: true, pass: false, correspondence, prompt, compliance };
-        stop("key-visual", `1枚画のプロンプトが禁止モチーフ検査に触れたため、生成しない（${compliance.hits.map((h) => `${h.term}（${h.source}）`).join("、")}）。対応表か企画の側の不備であり、プロンプトの言い換えでは直さない`);
+        const hits = complianceResults.filter((c) => !c.pass).flatMap((c) => (c.hits ?? []).map((h) => `${c.id}: ${h.term}`));
+        stages.keyVisual = { executed: true, pass: false, correspondence, photoPlan, compliance };
+        stop("key-visual", `1枚画の写真のプロンプトが禁止モチーフ検査に触れたため、生成しない（${hits.join("、")}）。対応表か企画の側の不備であり、プロンプトの言い換えでは直さない`);
       } else {
+        const kvPhotosDir = normalizePath(path.join(imagesDir, "kv-photos"));
+        const kvPageDir = normalizePath(path.dirname(generationFile));
+        mkdirSync(resolveRoot(root, kvPhotosDir), { recursive: true });
+        mkdirSync(resolveRoot(root, kvPageDir), { recursive: true });
         let attempts = 0;
-        let kvRun = null;
+        let photosRun = null;
         while (attempts < 3) {
           attempts++;
           try {
-            kvRun = await keyVisualExec({ root, prompt, imagesDir, correspondence });
+            photosRun = await keyVisualPhotos({ root, photoPlan, imagesDir: kvPhotosDir });
           } catch (e) {
-            kvRun = { status: "failed", reason: String(e && e.message ? e.message : e), images: [] };
+            photosRun = { status: "failed", reason: String(e && e.message ? e.message : e), images: [] };
           }
-          if (kvRun && kvRun.status === "generated" && Array.isArray(kvRun.images) && kvRun.images.length > 0) break;
+          if (photosRun && photosRun.status === "generated" && Array.isArray(photosRun.images) && photosRun.images.length > 0) break;
         }
-        if (!kvRun || kvRun.status !== "generated" || !kvRun.images || kvRun.images.length === 0) {
-          holds.push({ stage: "key-visual", condition: "1枚画の生成", detail: "上限まで再試行したが1枚画が生成できなかった", attempts });
-          stages.keyVisual = { executed: true, pass: false, correspondence, prompt, compliance, attempts, holds: [...holds] };
-          stop("key-visual", "1枚画が生成できなかったため止める（保留として記録した）");
+        if (!photosRun || photosRun.status !== "generated" || !photosRun.images || photosRun.images.length === 0) {
+          holds.push({ stage: "key-visual", condition: "1枚画の写真の生成", detail: "上限まで再試行したが写真が生成できなかった", attempts });
+          stages.keyVisual = { executed: true, pass: false, correspondence, photoPlan, compliance, attempts, holds: [...holds] };
+          persistState(["extraction", "factsComparison", "approval", "planning"], { e02raw });
+          stop("key-visual", "1枚画の写真が生成できなかったため止める（保留として記録した）");
         } else {
-          const img = kvRun.images[0];
-          const sha = sha256File(resolveRoot(root, img.file));
-          kvImage = { file: img.file, sha256: sha, prompt };
-          stages.keyVisual = {
-            executed: true, pass: true, correspondence, prompt, compliance, attempts,
-            image: kvImage,
-            model: kvRun.model ?? null,
-            costUsd: kvRun.costUsd ?? null,
-            checklist: buildKeyVisualChecklist(correspondence),
-          };
-          writePresentationRecord("key-visual", {
-            checkpoint: "key-visual",
-            presented: [{ kind: "image", file: kvImage.file, sha256: sha }],
-            correspondence,
-            checklist: buildKeyVisualChecklist(correspondence),
-            holds: [...holds],
-            judgement: { result: null, confirmer: null, confirmedAt: null, corrections: [] },
-          });
-          persistState(["extraction", "factsComparison", "approval", "planning", "keyVisual"], { keyVisual: { image: kvImage, prompt, correspondence }, e02raw });
-          stop("key-visual", "1枚画のプレビュー確認のため止める（チェックポイント）", "checkpoint");
+          const layout = buildFinishedImageHtml({ root, planning, photos: photosRun.images, pageDir: kvPageDir });
+          let rendered = null;
+          try {
+            rendered = await renderFinishedImage({ root, html: layout.html, outDir: kvPageDir, baseName: "lp-finished-image" });
+          } catch (e) {
+            rendered = { status: "failed", reason: String(e && e.message ? e.message : e) };
+          }
+          if (!rendered || rendered.status !== "rendered" || !rendered.file) {
+            holds.push({ stage: "key-visual", condition: "LPの完成イメージの描画", detail: rendered && rendered.reason ? rendered.reason : "描画できなかった", attempts });
+            stages.keyVisual = { executed: true, pass: false, correspondence, photoPlan, compliance, layout: layout.record, photos: photosRun.images, attempts, holds: [...holds] };
+            persistState(["extraction", "factsComparison", "approval", "planning"], { e02raw });
+            stop("key-visual", "LPの完成イメージを描画できなかったため止める（保留として記録した）");
+          } else {
+            const sha = sha256File(resolveRoot(root, rendered.file));
+            kvImage = { file: rendered.file, sha256: sha };
+            stages.keyVisual = {
+              executed: true, pass: true, correspondence, photoPlan, compliance, attempts,
+              layout: layout.record,
+              photos: photosRun.images,
+              image: kvImage,
+              model: photosRun.model ?? null,
+              costUsd: photosRun.costUsd ?? null,
+              checklist: buildKeyVisualChecklist(correspondence),
+            };
+            writePresentationRecord("key-visual", {
+              checkpoint: "key-visual",
+              presented: [{ kind: "image", file: kvImage.file, sha256: sha }],
+              layout: layout.record,
+              checklist: buildKeyVisualChecklist(correspondence),
+              holds: [...holds],
+              judgement: { result: null, confirmer: null, confirmedAt: null, corrections: [] },
+            });
+            persistState(["extraction", "factsComparison", "approval", "planning", "keyVisual"], { keyVisual: { image: kvImage, layout: layout.record, photos: photosRun.images }, e02raw });
+            stop("key-visual", "1枚画（LPの完成イメージ）のプレビュー確認のため止める（チェックポイント）", "checkpoint");
+          }
         }
       }
     } else if (!stages.keyVisual) {
@@ -675,7 +706,9 @@ export async function runDemo(options, deps = {}) {
   // Stage 5 (images): typed image generation for the LP. A failure
   // stops the run; leftover files are never treated as success.
   // Pipeline mode (fix F4/F8): images come from the planning
-  // correspondence (the confirmed key visual is the hero), retry up
+  // correspondence (the hero photograph is the key-visual spec's
+  // photograph, generated here as a real image; the finished image
+  // itself is a preview artifact and is never assembled), retry up
   // to 3 attempts, and on exhaustion the missing images become a
   // hold: the run continues to assembly so the hold is presented
   // with the page, and the completion check fails on the expected
@@ -695,9 +728,8 @@ export async function runDemo(options, deps = {}) {
         if (lastRun && lastRun.status === "generated") break;
       }
     }
-    const heroEntry = kvImage ? [{ id: "hero", file: kvImage.file, prompt: kvImage.prompt, line: null }] : [];
     if (lastRun && lastRun.status === "generated") {
-      imageRun = { ...lastRun, images: [...heroEntry, ...(lastRun.images ?? [])] };
+      imageRun = { ...lastRun, images: lastRun.images ?? [] };
       expectedImageFiles = imageRun.images.map((i) => i.file);
       stages.images = {
         executed: true, attempts, status: imageRun.status ?? null, model: imageRun.model ?? null,
@@ -707,10 +739,10 @@ export async function runDemo(options, deps = {}) {
       holds.push({ stage: "images", condition: "企画の画像仕様どおりの画像生成", detail: "上限まで再試行したが画像生成が完了しなかった", attempts });
       imageRun = {
         status: "generated-with-holds", model: lastRun ? (lastRun.model ?? null) : null,
-        images: heroEntry, costUsd: lastRun ? (lastRun.costUsd ?? null) : null,
+        images: [], costUsd: lastRun ? (lastRun.costUsd ?? null) : null,
         costNote: lastRun ? (lastRun.costNote ?? null) : null, reason: null,
       };
-      expectedImageFiles = [...heroEntry.map((i) => i.file), ...specPlan.images.map((s) => normalizePath(path.join(imagesDir, `${s.id}.png`)))];
+      expectedImageFiles = specPlan.images.map((s) => normalizePath(path.join(imagesDir, `${s.id}.png`)));
       stages.images = {
         executed: true, attempts, status: imageRun.status, model: imageRun.model,
         images: imageRun.images, costUsd: imageRun.costUsd, costNote: imageRun.costNote, reason: null,
@@ -1095,37 +1127,50 @@ export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesR
       }
       return { ...record, images: record.images ?? [] };
     },
-    // Key visual (fix F3): a one-image plan executed through the same
-    // image tool in plan-file mode, with the same freshness rules.
-    keyVisual: async ({ prompt }) => {
-      const kvRunRel = path.join(outDir, "key-visual-run.json");
-      const kvRunAbs = resolveRoot(root, kvRunRel);
-      removeIfExists(kvRunAbs);
-      const planRel = path.join(outDir, "key-visual-plan.json");
+    // Key visual photographs: the planning specs as a multi-image plan
+    // through the same image tool in plan-file mode, with the same
+    // freshness rules as the LP images.
+    keyVisualPhotos: async ({ photoPlan, imagesDir: photosDir }) => {
+      const runRel = path.join(outDir, "key-visual-photos-run.json");
+      const runAbs = resolveRoot(root, runRel);
+      removeIfExists(runAbs);
+      const planRel = path.join(outDir, "key-visual-photos-plan.json");
       mkdirSync(path.dirname(path.join(root, planRel)), { recursive: true });
-      writeFileSync(path.join(root, planRel), JSON.stringify({ images: [{ id: "key-visual", prompt, line: null }] }, null, 2) + "\n", "utf8");
-      const ran = await imageRunner([path.join(here, "generate-images.mjs"), "--plan-file", planRel, "--out-dir", imgDir, "--run-out", kvRunRel]);
+      writeFileSync(path.join(root, planRel), JSON.stringify({ images: photoPlan.map((pp) => ({ id: pp.id, prompt: pp.prompt, line: null })) }, null, 2) + "\n", "utf8");
+      const ran = await imageRunner([path.join(here, "generate-images.mjs"), "--plan-file", planRel, "--out-dir", photosDir, "--run-out", runRel]);
       if (ran.exitCode !== 0) {
-        return { ...childErrorResult("key-visual", ran.exitCode), images: [] };
+        return { ...childErrorResult("key-visual-photos", ran.exitCode), images: [] };
       }
-      if (!existsSync(kvRunAbs)) {
+      if (!existsSync(runAbs)) {
         return {
-          ...childErrorResult("key-visual", ran.exitCode),
+          ...childErrorResult("key-visual-photos", ran.exitCode),
           status: "stale-output",
-          reason: `子プロセスは終了コード 0 で終わったが、実行記録ファイル ${normalizePath(kvRunRel)} が今回の実行で更新されなかったため、成功として扱わない`,
+          reason: `子プロセスは終了コード 0 で終わったが、実行記録ファイル ${normalizePath(runRel)} が今回の実行で更新されなかったため、成功として扱わない`,
           images: [],
         };
       }
-      const record = loadJson(kvRunAbs);
+      const record = loadJson(runAbs);
       if (record.status === "generated") {
         const missing = (record.images ?? []).filter((i) => !existsSync(resolveRoot(root, i.file)));
         if (missing.length > 0) {
-          return { ...childErrorResult("key-visual", ran.exitCode), status: "stale-output", reason: "1枚画の実行記録は generated だが、画像ファイルが今回の実行で書かれていないため、成功として扱わない", images: record.images ?? [] };
+          return { ...childErrorResult("key-visual-photos", ran.exitCode), status: "stale-output", reason: "1枚画の写真の実行記録は generated だが、画像ファイルが今回の実行で書かれていないため、成功として扱わない", images: record.images ?? [] };
         }
-        return { ...record, images: record.images ?? [] };
+        const byId = new Map(photoPlan.map((pp) => [pp.id, pp]));
+        return { ...record, images: (record.images ?? []).map((i) => ({ ...i, role: byId.get(i.id)?.role ?? null, prompt: byId.get(i.id)?.prompt ?? null })) };
       }
       return { ...record, images: record.images ?? [] };
     },
+    // The finished image: compose (done by the runner) and render here.
+    renderFinishedImage: async ({ html, outDir: dir, baseName }) => {
+      const rendered = await renderHtmlToImage({
+        root,
+        html,
+        htmlFile: path.join(dir, `${baseName}.html`),
+        outFile: path.join(dir, `${baseName}.png`),
+      });
+      return { status: rendered.status, file: normalizePath(rendered.file), htmlFile: normalizePath(rendered.htmlFile) };
+    },
+
   };
 }
 
