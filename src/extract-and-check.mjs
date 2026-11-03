@@ -9,8 +9,8 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const MODEL = "muse-spark-1.3-contributor";
 const BASE_URL = "https://api.meta.ai/v1";
-const INPUT_ID = "FICT-J01";
-const INPUT_VERSION = "v1";
+const INPUT_ID_DEFAULT = "FICT-J01";
+const INPUT_VERSION_DEFAULT = "v1";
 // D4 rates for muse-spark-1.3-contributor (USD per 1M tokens).
 const RATE_INPUT_PER_1M = 0.10;
 const RATE_OUTPUT_PER_1M = 0.20;
@@ -27,6 +27,14 @@ function argValue(flag) {
   return i >= 0 && i + 1 < argv.length ? argv[i + 1] : null;
 }
 const PROMPT_VERSION = argValue("--prompt") === "v1.1" ? "fact-extract-v1.1" : "fact-extract-v1";
+// Input selection (fix F1): defaults preserve the FICT-J01 behaviour
+// exactly. --original <file>, --input-id <id> and --input-version <v>
+// let the same extraction run against a pinned posting text artifact
+// produced by the text entry (src/pin-posting.mjs). The FACT key set
+// stays the job-domain schema of this tool.
+const INPUT_ID = argValue("--input-id") ?? INPUT_ID_DEFAULT;
+const INPUT_VERSION = argValue("--input-version") ?? INPUT_VERSION_DEFAULT;
+const ORIGINAL_FILE = argValue("--original");
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "..");
@@ -94,8 +102,9 @@ export function checkQuoteVerbatim(facts, original) {
   return { pass: issues.length === 0, checked: facts.items.length, issues };
 }
 
-export function loadOriginal() {
-  const raw = readFileSync(path.join(here, "fict-j01-v1.json"), "utf8");
+export function loadOriginal(file) {
+  const p = file ? (path.isAbsolute(file) ? file : path.join(root, file)) : path.join(here, "fict-j01-v1.json");
+  const raw = readFileSync(p, "utf8");
   return JSON.parse(raw);
 }
 
@@ -107,7 +116,7 @@ function originalText(original) {
 const E02_SUMMARY =
   "ソラノ輪具研究所（FICT-J01）の概要: 時給1,700円。勤務時間は09:00〜18:00、休憩60分、実働8時間。交通費は実費支給、月上限10,000円。勤務地は架空の青空実験区A棟。雇用形態は有期契約社員、契約期間は3か月。";
 
-function buildMessages(original) {
+export function buildMessages(original) {
   const isV11 = PROMPT_VERSION === "fact-extract-v1.1";
   const system = [
     "You extract FACTs from a fictional job-posting original.",
@@ -132,7 +141,7 @@ function buildMessages(original) {
 }
 
 function promptText() {
-  const original = loadOriginal();
+  const original = loadOriginal(ORIGINAL_FILE);
   const msgs = buildMessages(original);
   return msgs.map((m) => `## ${m.role}\n\n${m.content}`).join("\n\n") + "\n";
 }
@@ -185,7 +194,10 @@ function extractSummaryClaims(summary) {
 
 // Mechanical reconciliation. Numeric/version/ID agreement is checked here;
 // semantic equivalence beyond these fields is left to human review.
-function reconcile(facts, summary, caseId) {
+// Exported for the text entry (fix F1): a pinned posting is reconciled
+// against its own text (the E01-side input), which checks that the
+// extraction is consistent with the source it was extracted from.
+export function reconcile(facts, summary, caseId) {
   const claims = extractSummaryClaims(summary);
   const contradictions = [];
   const matched = [];
@@ -277,7 +289,7 @@ function verifyOffline() {
 
 async function runLive() {
   const apiKey = process.env.MODEL_API_KEY;
-  const original = loadOriginal();
+  const original = loadOriginal(ORIGINAL_FILE);
   const startedAt = new Date().toISOString();
   const t0 = performance.now();
 
@@ -366,7 +378,9 @@ async function runLive() {
   if (facts && Array.isArray(facts.items)) {
     const e01Summary = original.lines.map((l) => l.text).join("");
     e01 = reconcile(facts, e01Summary, "E01");
-    e02 = reconcile(facts, E02_SUMMARY, "E02");
+    // E02 is the FICT-J01 evaluation case (a doctored summary of that
+    // one posting). For any other input it does not apply.
+    e02 = INPUT_ID === "FICT-J01" ? reconcile(facts, E02_SUMMARY, "E02") : null;
   }
 
   return {

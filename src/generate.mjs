@@ -115,12 +115,12 @@ function promptText(facts) {
   return msgs.map((m) => `## ${m.role}\n\n${m.content}`).join("\n\n") + "\n";
 }
 
-const NUMERIC_REPRESENTATIONS = {
-  salaryHourly: ["1,500", "1500"],
-  transportCap: ["10,000", "10000"],
-  breakMinutes: ["60"],
-  actualHours: ["8"],
-};
+// Numeric representations are derived from the FACT items themselves
+// (fix F9): a cited numeric item's value must appear verbatim, in its
+// plain or thousands-separated form. The earlier table hardcoded
+// FICT-J01's values (1,500 / 10,000 / 60 / 8), which silently bound
+// the grounding check to that one fixture; for any other posting the
+// check compared against the wrong numbers.
 const UNSTATED_ASSERTION_PATTERNS = [
   "更新あり", "更新なし", "更新有", "更新無",
   "寮あり", "寮なし", "寮完備", "寮有", "社宅あり", "社宅なし",
@@ -139,6 +139,12 @@ const UNSTATED_ASSERTION_PATTERNS = [
 export function checkGrounding(generation, facts, original) {
   const issues = [];
   const itemsByKey = new Map(facts.items.map((i) => [i.key, i]));
+  const numericReps = new Map();
+  for (const i of facts.items) {
+    if (typeof i.normalized === "number") {
+      numericReps.set(i.key, [...new Set([String(i.normalized), i.normalized.toLocaleString("en-US")])]);
+    }
+  }
   const lineIds = new Set(original.lines.map((l) => l.id));
   const yenAmounts = new Set();
   for (const i of facts.items) {
@@ -201,7 +207,7 @@ export function checkGrounding(generation, facts, original) {
       if (!factTimes.has(m[1])) issues.push({ ...at, issue: `time not in FACTs: ${m[1]}` });
     }
     for (const k of keys) {
-      const reps = NUMERIC_REPRESENTATIONS[k];
+      const reps = numericReps.get(k);
       if (reps && !reps.some((r) => s.text.includes(r))) {
         issues.push({ ...at, issue: `cited numeric value not kept verbatim: ${k}` });
       }

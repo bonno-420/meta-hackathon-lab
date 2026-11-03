@@ -1,0 +1,106 @@
+[
+  {
+    "phrase": "What this means",
+    "lang": "EN",
+    "source": "C-A real highlight box",
+    "note": "P2 verification phrase",
+    "status": "candidate",
+    "added": "2026-11-02"
+  },
+  {
+    "phrase": "numbers stay exactly as stated",
+    "lang": "EN",
+    "source": "C-A real",
+    "note": "",
+    "status": "candidate",
+    "added": "2026-11-02"
+  },
+  {
+    "phrase": "as stated in the FACT",
+    "lang": "EN",
+    "source": "C-A real",
+    "note": "",
+    "status": "candidate",
+    "added": "2026-11-02"
+  },
+  {
+    "phrase": "Read the sentences above as the full conditions",
+    "lang": "EN",
+    "source": "C-A real",
+    "note": "",
+    "status": "candidate",
+    "added": "2026-11-02"
+  },
+  {
+    "phrase": "No rounding or reinterpretation",
+    "lang": "EN",
+    "source": "C-A real",
+    "note": "",
+    "status": "candidate",
+    "added": "2026-11-02"
+  },
+  {
+    "phrase": "All facts below are the only stated facts",
+    "lang": "EN",
+    "source": "C-A must block",
+    "note": "",
+    "status": "candidate",
+    "added": "2026-11-02"
+  },
+  {
+    "phrase": "Do not invent",
+    "lang": "EN",
+    "source": "case-A mustNot",
+    "note": "",
+    "status": "candidate",
+    "added": "2026-11-02"
+  },
+  {
+    "phrase": "Each cites its fact keys and source lines verbatim",
+    "lang": "EN",
+    "source": "C-A about lead",
+    "note": "P2/P3",
+    "status": "candidate",
+    "added": "2026-11-02"
+  },
+  {
+    "phrase": "All conditions above are from the",
+    "lang": "EN",
+    "source": "CTA block",
+    "note": "P2 meta",
+    "status": "candidate",
+    "added": "2026-11-02"
+  },
+  {
+    "phrase": "No new facts are added",
+    "lang": "EN",
+    "source": "CTA block",
+    "note": "",
+    "status": "candidate",
+    "added": "2026-11-02"
+  },
+  {
+    "phrase": "求人票にない",
+    "lang": "JA",
+    "source": "trial2 brief",
+    "note": "P2 JA",
+    "status": "candidate",
+    "added": "2026-11-02"
+  },
+  {
+    "phrase": "再計算はしない",
+    "lang": "JA",
+    "source": "trial2 brief",
+    "note": "",
+    "status": "candidate",
+    "added": "2026-11-02"
+  },
+  {
+    "phrase": "ため書きません",
+    "lang": "JA",
+    "source": "trial2 brief",
+    "note": "",
+    "status": "candidate",
+    "added": "2026-11-02"
+  }
+]

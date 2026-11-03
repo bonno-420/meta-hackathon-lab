@@ -19,11 +19,15 @@ import { performance } from "node:perf_hooks";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { promisify } from "node:util";
-import { checkApprovalValidity } from "./approve.mjs";
+import { checkApprovalValidity, sha256File } from "./approve.mjs";
 import { checkQuoteVerbatim, loadOriginal } from "./extract-and-check.mjs";
-import { checkGenerationInput } from "./generate.mjs";
+import { checkGenerationInput, checkGrounding } from "./generate.mjs";
 import { runVerification } from "./verify.mjs";
 import { buildPreview } from "./build-preview.mjs";
+import { checkPage } from "./pagecheck.mjs";
+import { buildCorrespondence, buildImagePrompt, buildKeyVisualChecklist, checkPromptCompliance, sha256Text, validatePlanning } from "./planning.mjs";
+import { pinPostingText, buildFactsFile, buildManifest } from "./pin-posting.mjs";
+import { decideImagePlanFromSpecs } from "./generate-images.mjs";
 
 const execFileAsync = promisify(execFile);
 
@@ -106,7 +110,7 @@ export function checkApprovalStage({ root, originalFile, factsFile, approvalFile
 // not exist are left out and reported as skipped; the completion check
 // decides pass/fail. Image meaning is out of scope and is never judged
 // here (only existence and reference are handled).
-export function assembleLP({ root, generation, images, lpDir }) {
+export function assembleLP({ root, generation, images, lpDir, heroChips }) {
   const sentences = generation && Array.isArray(generation.sentences) ? generation.sentences : [];
   const existing = new Set();
   const skipped = [];
@@ -123,7 +127,13 @@ export function assembleLP({ root, generation, images, lpDir }) {
   let body = "";
   const hero = (images ?? []).find((i) => i.id === "hero");
   if (hero && existing.has(hero.id)) {
-    body += `<section class="lp-hero"><img src="${esc(srcFor(hero))}" alt="hero"></section>\n`;
+    // Hero block (fix F5, traced from loop-016's complete-LP assembly):
+    // the confirmed key visual plus the first-check FACT values as
+    // short chips. Chips carry FACT values only, verbatim.
+    const chips = Array.isArray(heroChips) && heroChips.length > 0
+      ? `<div class="hero-chips">${heroChips.map((c) => `<span class="hero-chip">${esc(c)}</span>`).join("")}</div>`
+      : "";
+    body += `<section class="lp-hero"><img src="${esc(srcFor(hero))}" alt="hero">${chips}</section>\n`;
     placed.push(hero.file);
   }
   sentences.forEach((s, idx) => {
@@ -166,7 +176,7 @@ ${body}</main>
 // exists and contains both text and image, grounding re-run passes.
 // Image meaning is out of scope and is never judged here (N3: the note
 // below states this for the record reader).
-export function checkCompletion({ root, generation, imageFiles, lpFile, grounding }) {
+export function checkCompletion({ root, generation, imageFiles, lpFile, grounding, pagecheck }) {
   const checks = [];
   let lpHtml = null;
   try { lpHtml = readFileSync(resolveRoot(root, lpFile), "utf8"); }
@@ -217,6 +227,21 @@ export function checkCompletion({ root, generation, imageFiles, lpFile, groundin
     pass: c4Pass,
     detail: c4Pass ? "根拠検査の再実行が pass である" : "根拠検査の再実行が pass ではない",
   });
+  // C5 (fix F6): deterministic page quality, checked by src/pagecheck.mjs
+  // (duplication, verification-side phrases, record-label exposure,
+  // heading scope). Only when a pagecheck result is supplied.
+  if (pagecheck) {
+    const s = pagecheck.summary ?? {};
+    const c5Pass = pagecheck.pass === true;
+    checks.push({
+      id: "C5",
+      pass: c5Pass,
+      detail: c5Pass
+        ? `ページ品質の決定的チェックが pass（重複 ${s.duplicateGroups ?? 0}、検証側定型文 ${s.verificationHits ?? 0}、記録ラベル ${s.recordExposureHits ?? 0}、見出しずれ ${s.headingMismatches ?? 0}）`
+        : `ページ品質の決定的チェックが fail（重複 ${s.duplicateGroups ?? 0} 件、検証側定型文 ${s.verificationHits ?? 0} 件、記録ラベル露出 ${s.recordExposureHits ?? 0} 件、見出しずれ ${s.headingMismatches ?? 0} 件）`,
+      pagecheck: { version: pagecheck.version ?? null, dictsVersion: pagecheck.dictsVersion ?? null, summary: s },
+    });
+  }
   const failures = checks.filter((c) => !c.pass).map((c) => ({ check: c.id, detail: c.detail }));
   const pass = checks.every((c) => c.pass);
   return {
@@ -224,7 +249,7 @@ export function checkCompletion({ root, generation, imageFiles, lpFile, groundin
     checks,
     failures,
     reason: pass ? null : `未完成のため止める（${failures.map((f) => f.check).join("、")}）: ${failures[0].detail}`,
-    note: "画像の意味は範囲外である。人間の確認と完成の判定は文章と機械的な含有を対象とし、画像が内容として適切かは今回の判定に含めない。",
+    note: "完成の判定は文章・機械的な含有・ページ品質（C5）を対象とする。画像の内容としての適切さは完成判定では見ないが、1枚画（キービジュアル）は生成前に企画との対応表と禁止モチーフで検査され、提示時に要素ごとの確認欄（loop-020 のチェックリスト）とともに記録される。",
   };
 }
 
@@ -238,6 +263,19 @@ function stageNotExecuted(reason) {
 // (the live run never fabricates one). options.allowPreview stays false
 // for the automatic run up to mechanical checks.
 export async function runDemo(options, deps = {}) {
+  // Resume (fix F7): a checkpoint stop persisted a run state; a resume
+  // run takes its file set and checkpoint mode from that state.
+  const resumeState = options.resumeState ?? null;
+  if (resumeState && resumeState.files) {
+    options.originalFile = resumeState.files.originalFile ?? options.originalFile;
+    options.factsFile = resumeState.files.factsFile ?? options.factsFile;
+    options.approvalFile = resumeState.files.approvalFile ?? options.approvalFile;
+    options.generationFile = resumeState.files.generationFile ?? options.generationFile;
+    options.planningFile = resumeState.files.planningFile ?? options.planningFile;
+    options.feedbackFile = resumeState.files.feedbackFile ?? options.feedbackFile;
+    options.checkpoints = (resumeState.mode && resumeState.mode.checkpoints) ?? options.checkpoints;
+    if (resumeState.mode && resumeState.mode.entry) options.posting = options.posting ?? { id: resumeState.files.postingId ?? "ENTRY", version: "v1", text: "" };
+  }
   const root = options.root;
   const originalFile = options.originalFile ?? "src/fict-j01-v1.json";
   const factsFile = options.factsFile ?? "src/facts/FICT-J01-facts-v1.json";
@@ -252,37 +290,141 @@ export async function runDemo(options, deps = {}) {
   const extract = deps.extract ?? (async () => { throw new Error("no extraction executor wired"); });
   const generate = deps.generate ?? (async () => { throw new Error("no generation executor wired"); });
   const images = deps.images ?? (async () => { throw new Error("no image executor wired"); });
-  const assemble = deps.assemble ?? (async ({ root, generation, images, lpFile }) => {
-    const built = assembleLP({ root, generation, images, lpDir: path.dirname(lpFile) });
+  const assemble = deps.assemble ?? (async ({ root, generation, images, lpFile, heroChips }) => {
+    const built = assembleLP({ root, generation, images, lpDir: path.dirname(lpFile), heroChips });
     mkdirSync(path.dirname(resolveRoot(root, lpFile)), { recursive: true });
     writeFileSync(resolveRoot(root, lpFile), built.html, "utf8");
     return { file: lpFile, referenced: built.referenced, skipped: built.skipped };
   });
+  const keyVisualExec = deps.keyVisual ?? (async () => { throw new Error("no key-visual executor wired"); });
   const verify = deps.verify ?? ((args) => runVerification(args));
   const preview = deps.preview ?? (({ generation, verification, facts, e02, repoUrl }) => buildPreview({ generation, verification, facts, e02, repoUrl }));
 
   const stages = {};
   let stoppedAt = null;
   let stopReason = null;
-  const stop = (stage, reason) => { stoppedAt = stage; stopReason = reason; };
+  let stopKind = null;
+  const stop = (stage, reason, kind) => { stoppedAt = stage; stopReason = reason; stopKind = kind ?? null; };
+
+  // --- Pipeline mode (fix F1–F10) setup. Active when a checkpoint set
+  // is chosen (options.checkpoints: "full" | "light") or a posting is
+  // handed in as text (options.posting). The legacy pinned run above
+  // this work is untouched when neither is given. ---
+  const pipelineMode = Boolean(options.checkpoints) || Boolean(options.posting);
+  const entryMode = Boolean(options.posting) && !(resumeState && resumeState.mode && resumeState.mode.entry);
+  const resumedStages = new Set(resumeState && Array.isArray(resumeState.completedStages) ? resumeState.completedStages : []);
+  const holds = [];
+  const presentationRecords = [];
+  const stateFile = pipelineMode ? normalizePath(options.stateFile ?? path.join(path.dirname(generationFile), "run-state.json")) : null;
+  const writePresentationRecord = (checkpoint, record) => {
+    if (!stateFile) return null;
+    const file = normalizePath(path.join(path.dirname(stateFile), `presentation-${checkpoint}.json`));
+    mkdirSync(path.dirname(resolveRoot(root, file)), { recursive: true });
+    writeFileSync(resolveRoot(root, file), JSON.stringify(record, null, 2) + "\n", "utf8");
+    presentationRecords.push({ checkpoint, file });
+    return file;
+  };
+  const persistState = (completedStages, extra = {}) => {
+    if (!stateFile) return;
+    const state = {
+      version: 1,
+      mode: { checkpoints: options.checkpoints ?? null, entry: Boolean(options.posting) },
+      files: {
+        originalFile, factsFile, approvalFile, generationFile,
+        planningFile: options.planningFile ?? null,
+        feedbackFile: options.feedbackFile ?? null,
+        postingId: options.posting ? options.posting.id : null,
+      },
+      completedStages,
+      keyVisual: extra.keyVisual ?? (resumeState ? resumeState.keyVisual : null) ?? null,
+      priorStages: JSON.parse(JSON.stringify(stages)),
+      e02raw: extra.e02raw ?? null,
+    };
+    mkdirSync(path.dirname(resolveRoot(root, stateFile)), { recursive: true });
+    writeFileSync(resolveRoot(root, stateFile), JSON.stringify(state, null, 2) + "\n", "utf8");
+  };
+  let planning = null;
+  let planningSha256 = null;
+  if (options.planningFile && existsSync(resolveRoot(root, options.planningFile))) {
+    try {
+      const raw = readFileSync(resolveRoot(root, options.planningFile), "utf8");
+      planningSha256 = sha256Text(raw);
+      planning = JSON.parse(raw);
+    } catch { planning = null; }
+  }
+  let feedbackText = null;
+  if (options.feedbackFile && existsSync(resolveRoot(root, options.feedbackFile))) {
+    try { feedbackText = readFileSync(resolveRoot(root, options.feedbackFile), "utf8"); } catch { feedbackText = null; }
+  }
+  // Planning checkpoint presentation (full set): the planning input is
+  // presented before production starts; the record is written at run
+  // start, its judgement fields stay for the human to fill.
+  if (pipelineMode && options.checkpoints === "full" && planning && !resumeState) {
+    writePresentationRecord("planning", {
+      checkpoint: "planning",
+      presented: [{ kind: "planning", file: options.planningFile, sha256: planningSha256 }],
+      holds: [],
+      judgement: { result: null, confirmer: null, confirmedAt: null, corrections: [] },
+    });
+  }
+  // Text entry (fix F1): pin the posting text as the source artifact.
+  // options.originalFile / options.factsFile name the entry targets.
+  let entryArtifacts = null;
+  if (entryMode) {
+    const pinned = pinPostingText({ id: options.posting.id, version: options.posting.version ?? "v1", text: options.posting.text });
+    mkdirSync(path.dirname(resolveRoot(root, originalFile)), { recursive: true });
+    writeFileSync(resolveRoot(root, originalFile), JSON.stringify(pinned, null, 2) + "\n", "utf8");
+    entryArtifacts = { originalFile, factsFile, manifestFile: normalizePath(options.manifestFile ?? path.join(path.dirname(factsFile), "manifest.json")) };
+  }
 
   // Stage 1: extraction and reconciliation (E01 and E02 in one run).
-  const extraction = await extract();
-  const e01 = extraction && extraction.e01 ? extraction.e01 : null;
-  const e02raw = extraction && extraction.e02 ? extraction.e02 : null;
-  stages.extraction = {
-    executed: true,
-    status: extraction ? (extraction.status ?? null) : null,
-    model: extraction ? (extraction.model ?? null) : null,
-    promptVersion: extraction ? (extraction.promptVersion ?? null) : null,
-    durationMs: extraction ? (extraction.durationMs ?? null) : null,
-    usage: extraction ? (extraction.usage ?? null) : null,
-    costUsd: extraction ? (extraction.costUsd ?? null) : null,
-    costNote: extraction ? (extraction.costNote ?? null) : null,
-    schemaCheck: extraction ? (extraction.schemaCheck ?? null) : null,
-    e01,
-    e02: e02raw,
-  };
+  const extraction = resumedStages.has("extraction") ? null : await extract({ originalFile, inputId: options.posting ? options.posting.id : undefined, inputVersion: options.posting ? (options.posting.version ?? "v1") : undefined });
+  const e01 = resumedStages.has("extraction")
+    ? ((resumeState.priorStages && resumeState.priorStages.extraction && resumeState.priorStages.extraction.e01) ?? null)
+    : (extraction && extraction.e01 ? extraction.e01 : null);
+  const e02raw = resumedStages.has("extraction")
+    ? (resumeState.e02raw ?? null)
+    : (extraction && extraction.e02 ? extraction.e02 : null);
+  stages.extraction = resumedStages.has("extraction")
+    ? { executed: false, resumed: true, ...((resumeState.priorStages && resumeState.priorStages.extraction) ?? {}) }
+    : {
+      executed: true,
+      status: extraction ? (extraction.status ?? null) : null,
+      model: extraction ? (extraction.model ?? null) : null,
+      promptVersion: extraction ? (extraction.promptVersion ?? null) : null,
+      durationMs: extraction ? (extraction.durationMs ?? null) : null,
+      usage: extraction ? (extraction.usage ?? null) : null,
+      costUsd: extraction ? (extraction.costUsd ?? null) : null,
+      costNote: extraction ? (extraction.costNote ?? null) : null,
+      schemaCheck: extraction ? (extraction.schemaCheck ?? null) : null,
+      e01,
+      e02: e02raw,
+    };
+  // Text entry: write the extracted candidate as the FACT file and the
+  // manifest, in the shapes the approval tooling consumes. The run
+  // then stops at approval below: no approval exists for the new pair
+  // yet, and this runner never creates one.
+  if (entryMode && extraction && extraction.status === "completed" && extraction.facts) {
+    const factsObj = buildFactsFile({
+      items: extraction.facts.items,
+      originalId: options.posting.id,
+      originalVersion: options.posting.version ?? "v1",
+      promptVersion: extraction.promptVersion ?? null,
+      model: extraction.model ?? null,
+      sourceRun: "text-entry",
+    });
+    mkdirSync(path.dirname(resolveRoot(root, factsFile)), { recursive: true });
+    writeFileSync(resolveRoot(root, factsFile), JSON.stringify(factsObj, null, 2) + "\n", "utf8");
+    const manifest = buildManifest({
+      originalId: options.posting.id,
+      originalVersion: options.posting.version ?? "v1",
+      originalSha256: sha256File(resolveRoot(root, originalFile)),
+      factsSha256: sha256File(resolveRoot(root, factsFile)),
+    });
+    writeFileSync(resolveRoot(root, entryArtifacts.manifestFile), JSON.stringify(manifest, null, 2) + "\n", "utf8");
+    entryArtifacts = { ...entryArtifacts, originalSha256: manifest.original.sha256, factsSha256: manifest.sha256 };
+    stages.entry = { executed: true, originalFile, factsFile, manifestFile: entryArtifacts.manifestFile, originalSha256: manifest.original.sha256, factsSha256: manifest.sha256 };
+  }
   const e02 = {
     caseId: "E02",
     stage: "照合",
@@ -297,27 +439,42 @@ export async function runDemo(options, deps = {}) {
     preview: stageNotExecuted("E02 は照合で停止したためプレビューを実行しない"),
   };
 
-  if (!extraction || extraction.status !== "completed" || !extraction.facts) {
-    stop("extraction", extraction && extraction.reason ? extraction.reason : (extraction && extraction.parseError ? extraction.parseError : "抽出が完了しなかったため、後段を実行しない"));
-  } else if (extraction.schemaCheck && extraction.schemaCheck.pass !== true) {
-    stop("extraction", "抽出結果のスキーマ完全性チェックが pass しなかったため、後段を実行しない");
-  } else if (!e01 || e01.stoppedAtReconciliation || !String(e01.verdict ?? "").includes("一致")) {
-    stop("reconciliation", e01 ? `E01 の照合が停止したため、後段を実行しない（${e01.verdict ?? "判定なし"}）` : "E01 の照合結果が得られなかったため、後段を実行しない");
+  if (!resumedStages.has("extraction")) {
+    if (!extraction || extraction.status !== "completed" || !extraction.facts) {
+      stop("extraction", extraction && extraction.reason ? extraction.reason : (extraction && extraction.parseError ? extraction.parseError : "抽出が完了しなかったため、後段を実行しない"));
+    } else if (extraction.schemaCheck && extraction.schemaCheck.pass !== true) {
+      stop("extraction", "抽出結果のスキーマ完全性チェックが pass しなかったため、後段を実行しない");
+    } else if (!e01 || e01.stoppedAtReconciliation || !String(e01.verdict ?? "").includes("一致")) {
+      stop("reconciliation", e01 ? `E01 の照合が停止したため、後段を実行しない（${e01.verdict ?? "判定なし"}）` : "E01 の照合結果が得られなかったため、後段を実行しない");
+    }
   }
 
   // Stage 2 (facts comparison): the candidate must not substantively
   // disagree with the fixed FACT v1 that the approval stands for.
   let fixedFacts = null;
-  if (!stoppedAt) {
+  if (resumedStages.has("factsComparison")) {
     fixedFacts = loadJson(path.join(root, factsFile));
-    const original = loadOriginal();
+    stages.factsComparison = { executed: false, resumed: true, ...((resumeState.priorStages && resumeState.priorStages.factsComparison) ?? {}) };
+  } else if (!stoppedAt) {
+    fixedFacts = loadJson(path.join(root, factsFile));
+    const original = JSON.parse(readFileSync(resolveRoot(root, originalFile), "utf8"));
     const verbatim = checkQuoteVerbatim(extraction.facts, original);
-    const comparison = compareFactSets(extraction.facts, fixedFacts);
-    stages.factsComparison = { executed: true, verbatim, ...comparison };
-    if (!verbatim.pass) {
-      stop("facts-comparison", "抽出候補の引用逐語性チェックが pass しなかったため、後段を実行しない");
-    } else if (!comparison.agrees) {
-      stop("facts-comparison", "抽出の再実行で得た FACT 候補が固定済み FACT v1 と食い違うため、その時点で止める（承認は FACT v1 の組にのみ成立しているため）");
+    if (entryMode || (resumeState && resumeState.mode && resumeState.mode.entry)) {
+      // Text entry: there is no fixed FACT set to compare against.
+      // The candidate IS the extracted set just written; verbatim is
+      // its check here, and approval (next stage) is where it stops.
+      stages.factsComparison = { executed: true, mode: "entry", verbatim, candidate: { factsFile, sha256: entryArtifacts ? entryArtifacts.factsSha256 ?? null : sha256File(resolveRoot(root, factsFile)) } };
+      if (!verbatim.pass) {
+        stop("facts-comparison", "抽出候補の引用逐語性チェックが pass しなかったため、後段を実行しない");
+      }
+    } else {
+      const comparison = compareFactSets(extraction.facts, fixedFacts);
+      stages.factsComparison = { executed: true, verbatim, ...comparison };
+      if (!verbatim.pass) {
+        stop("facts-comparison", "抽出候補の引用逐語性チェックが pass しなかったため、後段を実行しない");
+      } else if (!comparison.agrees) {
+        stop("facts-comparison", "抽出の再実行で得た FACT 候補が固定済み FACT v1 と食い違うため、その時点で止める（承認は FACT v1 の組にのみ成立しているため）");
+      }
     }
   } else {
     stages.factsComparison = stageNotExecuted("前段で停止したため、FACT 候補と固定済み FACT の比較を実行しない");
@@ -334,14 +491,142 @@ export async function runDemo(options, deps = {}) {
     stages.approval = stageNotExecuted("前段で停止したため、承認の有効性の再確認を実行しない");
   }
 
+  // Stage 3.5 (planning and key visual; pipeline mode only, fix
+  // F2/F3/F7). Order per the confirmed generation flow: planning is an
+  // input; the key visual is generated from the correspondence and
+  // the run stops at its preview checkpoint; a resume continues only
+  // with the confirmed key visual (file and hash must match).
+  let correspondence = null;
+  let kvImage = null;
+  if (pipelineMode) {
+    if (!stoppedAt) {
+      if (!planning) {
+        stages.planning = { executed: true, pass: false, file: options.planningFile ?? null, sha256: planningSha256 };
+        stop("planning", options.planningFile ? "企画入力ファイルが読み込めなかったため、後段を実行しない" : "企画入力がないため、企画待ちで止める（チェックポイント。ツールは企画を作らない）", options.planningFile ? undefined : "checkpoint");
+      } else {
+        const validation = validatePlanning(planning);
+        stages.planning = { executed: true, pass: validation.ok, file: options.planningFile ?? null, sha256: planningSha256, audience: planning.audience ?? null, validation };
+        if (!validation.ok) {
+          stop("planning", `企画入力が成立していないため、後段を実行しない（${validation.errors.join(" / ")}）`);
+        }
+      }
+    } else {
+      stages.planning = stageNotExecuted("前段で停止したため、企画入力の確認を実行しない");
+    }
+    if (!stoppedAt) {
+      const factsForPlanning = fixedFacts ?? loadJson(path.join(root, factsFile));
+      try {
+        correspondence = buildCorrespondence(planning, factsForPlanning);
+      } catch (e) {
+        stages.keyVisual = { executed: true, pass: false, reason: String(e && e.message ? e.message : e) };
+        stop("key-visual", `企画と画像の対応表が作れなかったため、後段を実行しない（${String(e && e.message ? e.message : e)}）`);
+      }
+    }
+    if (!stoppedAt && resumedStages.has("keyVisual") && resumeState.keyVisual) {
+      const kv = resumeState.keyVisual;
+      kvImage = kv.image ?? null;
+      const conf = options.kvConfirmation ?? null;
+      let actualSha = null;
+      try { actualSha = kvImage ? sha256File(resolveRoot(root, kvImage.file)) : null; } catch { actualSha = null; }
+      const confOk = Boolean(conf && kvImage && conf.file === kvImage.file && conf.sha256 === kvImage.sha256 && actualSha === kvImage.sha256 && conf.confirmer && conf.confirmedAt);
+      stages.keyVisual = { executed: false, resumed: true, ...kv, confirmation: conf, confirmationPass: confOk };
+      if (!confOk) {
+        stop("key-visual-confirmation", "確認済み1枚画の照合ができなかったため、後段を実行しない（確認記録のファイル・ハッシュ・確認者・日時が、提示した1枚画と一致する必要がある）");
+      }
+    } else if (!stoppedAt) {
+      const kvElement = correspondence.elements.find((e) => e.role === "key-visual");
+      const prompt = buildImagePrompt(kvElement, correspondence);
+      const compliance = checkPromptCompliance(prompt, correspondence);
+      if (!compliance.pass) {
+        stages.keyVisual = { executed: true, pass: false, correspondence, prompt, compliance };
+        stop("key-visual", `1枚画のプロンプトが禁止モチーフ検査に触れたため、生成しない（${compliance.hits.map((h) => `${h.term}（${h.source}）`).join("、")}）。対応表か企画の側の不備であり、プロンプトの言い換えでは直さない`);
+      } else {
+        let attempts = 0;
+        let kvRun = null;
+        while (attempts < 3) {
+          attempts++;
+          try {
+            kvRun = await keyVisualExec({ root, prompt, imagesDir, correspondence });
+          } catch (e) {
+            kvRun = { status: "failed", reason: String(e && e.message ? e.message : e), images: [] };
+          }
+          if (kvRun && kvRun.status === "generated" && Array.isArray(kvRun.images) && kvRun.images.length > 0) break;
+        }
+        if (!kvRun || kvRun.status !== "generated" || !kvRun.images || kvRun.images.length === 0) {
+          holds.push({ stage: "key-visual", condition: "1枚画の生成", detail: "上限まで再試行したが1枚画が生成できなかった", attempts });
+          stages.keyVisual = { executed: true, pass: false, correspondence, prompt, compliance, attempts, holds: [...holds] };
+          stop("key-visual", "1枚画が生成できなかったため止める（保留として記録した）");
+        } else {
+          const img = kvRun.images[0];
+          const sha = sha256File(resolveRoot(root, img.file));
+          kvImage = { file: img.file, sha256: sha, prompt };
+          stages.keyVisual = {
+            executed: true, pass: true, correspondence, prompt, compliance, attempts,
+            image: kvImage,
+            model: kvRun.model ?? null,
+            costUsd: kvRun.costUsd ?? null,
+            checklist: buildKeyVisualChecklist(correspondence),
+          };
+          writePresentationRecord("key-visual", {
+            checkpoint: "key-visual",
+            presented: [{ kind: "image", file: kvImage.file, sha256: sha }],
+            correspondence,
+            checklist: buildKeyVisualChecklist(correspondence),
+            holds: [...holds],
+            judgement: { result: null, confirmer: null, confirmedAt: null, corrections: [] },
+          });
+          persistState(["extraction", "factsComparison", "approval", "planning", "keyVisual"], { keyVisual: { image: kvImage, prompt, correspondence }, e02raw });
+          stop("key-visual", "1枚画のプレビュー確認のため止める（チェックポイント）", "checkpoint");
+        }
+      }
+    } else if (!stages.keyVisual) {
+      stages.keyVisual = stageNotExecuted("前段で停止したため、1枚画を実行しない");
+    }
+  }
+
   // Stage 4 (generation): the tool's own input check runs first inside
   // the generation flow; a refusal never reaches the API. The stage pass
   // is the tool's grounding result, not its status alone (L-021).
+  // Pipeline mode adds the R1 retry bound (fix F8): fixable failures
+  // (API/parse errors, grounding failures) retry up to 3 attempts in
+  // total; a refusal never retries. On resume the generation is not
+  // re-run; it is reloaded and its grounding re-checked in-process.
   let generationRun = null;
-  if (!stoppedAt) {
-    generationRun = await generate({ root, originalFile, factsFile, approvalFile });
+  if (!stoppedAt && resumedStages.has("generation")) {
+    const generation = loadJson(path.join(root, generationFile));
+    const factsForGrounding = fixedFacts ?? loadJson(path.join(root, factsFile));
+    const originalForGrounding = JSON.parse(readFileSync(resolveRoot(root, originalFile), "utf8"));
+    const grounding = checkGrounding(generation, factsForGrounding, originalForGrounding);
+    generationRun = {
+      status: "generated", generation, grounding, apiCalled: false,
+      model: generation.model ?? null, promptVersion: generation.promptVersion ?? null,
+      durationMs: null, usage: null, costUsd: null,
+      costNote: "再開実行のため生成は再実行していない（費用は元の実行の記録にある）",
+      reasonCode: null, reason: null,
+    };
+    stages.generation = {
+      executed: false, resumed: true, status: "generated", apiCalled: false,
+      model: generationRun.model, promptVersion: generationRun.promptVersion,
+      durationMs: null, usage: null, costUsd: null, costNote: generationRun.costNote,
+      grounding, reasonCode: null, reason: null,
+    };
+    if (!grounding.pass) {
+      stop("generation", "再開時に読み直した生成物の根拠検査が pass しなかったため、後段を実行しない");
+    }
+  } else if (!stoppedAt) {
+    const maxAttempts = pipelineMode ? 3 : 1;
+    let attempts = 0;
+    let lastRun = null;
+    while (attempts < maxAttempts) {
+      attempts++;
+      lastRun = await generate({ root, originalFile, factsFile, approvalFile, planningFile: options.planningFile ?? undefined, feedbackFile: options.feedbackFile ?? undefined });
+      if (!lastRun || lastRun.status === "refused") break;
+      if (lastRun.status === "generated" && lastRun.generation && lastRun.grounding && lastRun.grounding.pass === true) break;
+    }
+    generationRun = lastRun;
     stages.generation = {
       executed: true,
+      attempts,
       status: generationRun ? (generationRun.status ?? null) : null,
       apiCalled: generationRun ? (generationRun.apiCalled ?? null) : null,
       model: generationRun ? (generationRun.model ?? null) : null,
@@ -357,9 +642,20 @@ export async function runDemo(options, deps = {}) {
     if (!generationRun || generationRun.status === "refused") {
       stop("generation", generationRun && generationRun.reason ? generationRun.reason : "生成の入力チェックで拒否されたため、後段を実行しない");
     } else if (generationRun.status !== "generated" || !generationRun.generation) {
+      if (pipelineMode) holds.push({ stage: "generation", condition: "生成の完了", detail: "上限まで再試行したが生成が完了しなかった", attempts });
       stop("generation", "生成が完了しなかったため、後段を実行しない");
     } else if (!generationRun.grounding || generationRun.grounding.pass !== true) {
+      if (pipelineMode) holds.push({ stage: "generation", condition: "根拠検査 pass", detail: "上限まで再試行したが根拠検査が pass しなかった", attempts });
       stop("generation", "生成の根拠検査が pass しなかったため、後段を実行しない");
+    } else if (pipelineMode && options.checkpoints === "full") {
+      writePresentationRecord("text", {
+        checkpoint: "text",
+        presented: [{ kind: "generation", file: generationFile }],
+        holds: [...holds],
+        judgement: { result: null, confirmer: null, confirmedAt: null, corrections: [] },
+      });
+      persistState(["extraction", "factsComparison", "approval", "planning", "keyVisual", "generation"], { e02raw });
+      stop("text-checkpoint", "文章のプレビュー確認のため止める（チェックポイント）", "checkpoint");
     }
   } else {
     stages.generation = stageNotExecuted("前段で停止したため、生成を実行しない");
@@ -367,8 +663,50 @@ export async function runDemo(options, deps = {}) {
 
   // Stage 5 (images): typed image generation for the LP. A failure
   // stops the run; leftover files are never treated as success.
+  // Pipeline mode (fix F4/F8): images come from the planning
+  // correspondence (the confirmed key visual is the hero), retry up
+  // to 3 attempts, and on exhaustion the missing images become a
+  // hold: the run continues to assembly so the hold is presented
+  // with the page, and the completion check fails on the expected
+  // (planned) file list rather than the produced one.
   let imageRun = null;
-  if (!stoppedAt) {
+  let expectedImageFiles = null;
+  if (!stoppedAt && pipelineMode && correspondence) {
+    const specPlan = decideImagePlanFromSpecs({ correspondence });
+    let attempts = 0;
+    let lastRun = null;
+    if (specPlan.images.length === 0) {
+      lastRun = { status: "generated", model: null, images: [], costUsd: 0, costNote: "企画の画像仕様に1枚画以外の要素がないため、追加の画像生成はない", reason: null };
+    } else {
+      while (attempts < 3) {
+        attempts++;
+        lastRun = await images({ root, generation: generationRun.generation, generationFile, factsFile, imagesDir, imagesRunFile, specPlan });
+        if (lastRun && lastRun.status === "generated") break;
+      }
+    }
+    const heroEntry = kvImage ? [{ id: "hero", file: kvImage.file, prompt: kvImage.prompt, line: null }] : [];
+    if (lastRun && lastRun.status === "generated") {
+      imageRun = { ...lastRun, images: [...heroEntry, ...(lastRun.images ?? [])] };
+      expectedImageFiles = imageRun.images.map((i) => i.file);
+      stages.images = {
+        executed: true, attempts, status: imageRun.status ?? null, model: imageRun.model ?? null,
+        images: imageRun.images, costUsd: imageRun.costUsd ?? null, costNote: imageRun.costNote ?? null, reason: null,
+      };
+    } else {
+      holds.push({ stage: "images", condition: "企画の画像仕様どおりの画像生成", detail: "上限まで再試行したが画像生成が完了しなかった", attempts });
+      imageRun = {
+        status: "generated-with-holds", model: lastRun ? (lastRun.model ?? null) : null,
+        images: heroEntry, costUsd: lastRun ? (lastRun.costUsd ?? null) : null,
+        costNote: lastRun ? (lastRun.costNote ?? null) : null, reason: null,
+      };
+      expectedImageFiles = [...heroEntry.map((i) => i.file), ...specPlan.images.map((s) => normalizePath(path.join(imagesDir, `${s.id}.png`)))];
+      stages.images = {
+        executed: true, attempts, status: imageRun.status, model: imageRun.model,
+        images: imageRun.images, costUsd: imageRun.costUsd, costNote: imageRun.costNote, reason: null,
+        holds: holds.filter((h) => h.stage === "images"),
+      };
+    }
+  } else if (!stoppedAt) {
     imageRun = await images({ root, generation: generationRun.generation, generationFile, factsFile, imagesDir, imagesRunFile });
     stages.images = {
       executed: true,
@@ -389,9 +727,19 @@ export async function runDemo(options, deps = {}) {
   // Stage 6 (LP assembly): combine the generation sentences (verbatim)
   // with the existing image files into the complete LP page. Missing
   // files are left out and reported; the completion check decides.
+  // Pipeline mode passes the hero chips (fix F5): the planning's
+  // first-check FACT values, verbatim.
   let assembly = null;
   if (!stoppedAt) {
-    assembly = await assemble({ root, generation: generationRun.generation, images: imageRun.images ?? [], imagesDir, lpFile });
+    const heroChips = pipelineMode && correspondence
+      ? (correspondence.firstCheckKeys ?? [])
+        .map((k) => {
+          const item = ((fixedFacts && fixedFacts.items) ?? []).find((i) => i.key === k);
+          return item && item.status === "stated" ? item.value : null;
+        })
+        .filter((v) => typeof v === "string" && v.length > 0)
+      : undefined;
+    assembly = await assemble({ root, generation: generationRun.generation, images: imageRun.images ?? [], imagesDir, lpFile, heroChips });
     stages.lpAssembly = {
       executed: true,
       file: assembly ? (assembly.file ?? lpFile) : lpFile,
@@ -426,14 +774,29 @@ export async function runDemo(options, deps = {}) {
     if (verification.verdict.status === "fail") {
       stop("verification", verification.verdict.reason ?? "再検証が不合格のため、後段を実行しない");
     } else {
+      let pagecheck = null;
+      try {
+        const lpHtml = readFileSync(resolveRoot(root, lpFile), "utf8");
+        pagecheck = checkPage(lpHtml);
+      } catch { pagecheck = null; }
       const completion = checkCompletion({
         root,
         generation: generationRun.generation,
-        imageFiles: (imageRun.images ?? []).map((i) => i.file),
+        imageFiles: expectedImageFiles ?? (imageRun.images ?? []).map((i) => i.file),
         lpFile,
         grounding: verification.grounding,
+        pagecheck,
       });
       stages.verification.completion = completion;
+      if (pipelineMode) {
+        writePresentationRecord("lp", {
+          checkpoint: "lp",
+          presented: [{ kind: "lp", file: lpFile }],
+          completion: { pass: completion.pass, failures: completion.failures },
+          holds: [...holds],
+          judgement: { result: null, confirmer: null, confirmedAt: null, corrections: [] },
+        });
+      }
       if (!completion.pass) {
         stop("verification", completion.reason);
       }
@@ -474,7 +837,7 @@ export async function runDemo(options, deps = {}) {
   const imageCount = stages.images && Array.isArray(stages.images.images) ? stages.images.images.length : null;
 
   let status;
-  if (stoppedAt) status = stoppedAt === "preview" ? "failed" : "stopped";
+  if (stoppedAt) status = stopKind === "checkpoint" ? "stopped-at-checkpoint" : (stoppedAt === "preview" ? "failed" : "stopped");
   else if (verification && verification.verdict.status === "pass") status = "pass";
   else status = "pending-human-confirmation";
 
@@ -494,6 +857,15 @@ export async function runDemo(options, deps = {}) {
     },
     stages,
     e02,
+    ...(pipelineMode ? {
+      checkpoints: options.checkpoints ?? null,
+      stopKind,
+      holds,
+      presentationRecords,
+      planning: planning ? { file: options.planningFile ?? null, sha256: planningSha256 } : null,
+      stateFile,
+      entry: entryArtifacts,
+    } : {}),
     generation: generationRun ? (generationRun.generation ?? null) : null,
     verification: verification ?? null,
     previewHtml: previewResult ? (previewResult.html ?? null) : null,
@@ -572,17 +944,22 @@ function childErrorResult(stage, exitCode) {
   };
 }
 
-export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesRunFile }) {
+export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesRunFile, planningFile, feedbackFile }) {
   const here = path.dirname(fileURLToPath(import.meta.url));
   const extractionOutDir = path.join(outDir, "extraction");
   const runner = run ?? runNode;
   const imgDir = imagesDir ?? path.join(path.dirname(generationFile), "images");
   const imgRunRel = imagesRunFile ?? path.join(outDir, "images-run.json");
   return {
-    extract: async () => {
+    extract: async ({ originalFile: origFile, inputId, inputVersion } = {}) => {
       const liveFile = path.join(root, extractionOutDir, "live-run.json");
       removeIfExists(liveFile);
-      const ran = await runner([path.join(here, "extract-and-check.mjs"), "--prompt", "v1.1", "--out-dir", extractionOutDir]);
+      const ran = await runner([
+        path.join(here, "extract-and-check.mjs"), "--prompt", "v1.1", "--out-dir", extractionOutDir,
+        ...(origFile ? ["--original", origFile] : []),
+        ...(inputId ? ["--input-id", inputId] : []),
+        ...(inputVersion ? ["--input-version", inputVersion] : []),
+      ]);
       if (ran.exitCode !== 0) {
         return { ...childErrorResult("extraction", ran.exitCode), facts: null, schemaCheck: null, e01: null, e02: null };
       }
@@ -602,7 +979,15 @@ export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesR
       const runOutAbs = path.join(root, runOutRel);
       removeIfExists(runOutAbs);
       removeIfExists(genAbs);
-      const ran = await runner([path.join(here, "generate.mjs"), "--approval", approvalFile, "--original", originalFile, "--facts", factsFile, "--out", generationFile, "--run-out", runOutRel]);
+      // Planning path (fix F2/F10): with a planning input the executor
+      // is generate-planning.mjs, whose intent layer comes from the
+      // planning file (and the feedback memo, when given).
+      const script = planningFile ? "generate-planning.mjs" : "generate.mjs";
+      const ran = await runner([
+        path.join(here, script), "--approval", approvalFile, "--original", originalFile, "--facts", factsFile, "--out", generationFile, "--run-out", runOutRel,
+        ...(planningFile ? ["--planning", planningFile] : []),
+        ...(planningFile && feedbackFile ? ["--feedback", feedbackFile] : []),
+      ]);
       if (ran.exitCode !== 0) {
         return { ...childErrorResult("generation", ran.exitCode), generation: null, grounding: null };
       }
@@ -628,10 +1013,19 @@ export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesR
       }
       return { ...record, generation: null };
     },
-    images: async ({ generationFile: genFile, factsFile: factsF }) => {
+    images: async ({ generationFile: genFile, factsFile: factsF, specPlan }) => {
       const runOutAbs = resolveRoot(root, imgRunRel);
       removeIfExists(runOutAbs);
-      const ran = await runner([path.join(here, "generate-images.mjs"), "--generation", genFile, "--facts", factsF, "--out-dir", imgDir, "--run-out", imgRunRel]);
+      // Spec-plan mode (fix F4): prompts were computed by the runner
+      // from the planning correspondence and are executed as a plan.
+      let planArgs = ["--generation", genFile, "--facts", factsF];
+      if (specPlan) {
+        const planRel = path.join(outDir, "image-plan.json");
+        mkdirSync(path.dirname(path.join(root, planRel)), { recursive: true });
+        writeFileSync(path.join(root, planRel), JSON.stringify(specPlan, null, 2) + "\n", "utf8");
+        planArgs = ["--plan-file", planRel];
+      }
+      const ran = await runner([path.join(here, "generate-images.mjs"), ...planArgs, "--out-dir", imgDir, "--run-out", imgRunRel]);
       if (ran.exitCode !== 0) {
         return { ...childErrorResult("images", ran.exitCode), images: [] };
       }
@@ -653,6 +1047,37 @@ export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesR
             reason: `画像の実行記録は generated だが、画像ファイル ${missing.length} 件が今回の実行で書かれていないため、成功として扱わない`,
             images: record.images ?? [],
           };
+        }
+        return { ...record, images: record.images ?? [] };
+      }
+      return { ...record, images: record.images ?? [] };
+    },
+    // Key visual (fix F3): a one-image plan executed through the same
+    // image tool in plan-file mode, with the same freshness rules.
+    keyVisual: async ({ prompt }) => {
+      const kvRunRel = path.join(outDir, "key-visual-run.json");
+      const kvRunAbs = resolveRoot(root, kvRunRel);
+      removeIfExists(kvRunAbs);
+      const planRel = path.join(outDir, "key-visual-plan.json");
+      mkdirSync(path.dirname(path.join(root, planRel)), { recursive: true });
+      writeFileSync(path.join(root, planRel), JSON.stringify({ images: [{ id: "key-visual", prompt, line: null }] }, null, 2) + "\n", "utf8");
+      const ran = await runner([path.join(here, "generate-images.mjs"), "--plan-file", planRel, "--out-dir", imgDir, "--run-out", kvRunRel]);
+      if (ran.exitCode !== 0) {
+        return { ...childErrorResult("key-visual", ran.exitCode), images: [] };
+      }
+      if (!existsSync(kvRunAbs)) {
+        return {
+          ...childErrorResult("key-visual", ran.exitCode),
+          status: "stale-output",
+          reason: `子プロセスは終了コード 0 で終わったが、実行記録ファイル ${normalizePath(kvRunRel)} が今回の実行で更新されなかったため、成功として扱わない`,
+          images: [],
+        };
+      }
+      const record = loadJson(kvRunAbs);
+      if (record.status === "generated") {
+        const missing = (record.images ?? []).filter((i) => !existsSync(resolveRoot(root, i.file)));
+        if (missing.length > 0) {
+          return { ...childErrorResult("key-visual", ran.exitCode), status: "stale-output", reason: "1枚画の実行記録は generated だが、画像ファイルが今回の実行で書かれていないため、成功として扱わない", images: record.images ?? [] };
         }
         return { ...record, images: record.images ?? [] };
       }
@@ -680,10 +1105,50 @@ async function main() {
   const imagesDir = argValue(argv, "--images-dir") ?? `${generationFile.replaceAll("\\", "/").split("/").slice(0, -1).join("/")}/images`;
   const imagesRunFile = argValue(argv, "--images-run-out") ?? `${outDir.replaceAll("\\", "/")}/images-run.json`;
   const lpFile = argValue(argv, "--lp-out") ?? `${generationFile.replaceAll("\\", "/").split("/").slice(0, -1).join("/")}/lp.html`;
+  // Pipeline mode (fix F1–F10): --posting <text file> hands a posting
+  // in as text (pinned into <out-dir>/entry/); --planning <file> is
+  // the planning input; --checkpoints full|light selects the
+  // checkpoint set; --resume <state file> continues a checkpointed
+  // run, with --kv-confirmation <file> carrying the human's key-visual
+  // confirmation ({ file, sha256, confirmer, confirmedAt }).
+  const planningFile = argValue(argv, "--planning") ?? undefined;
+  const feedbackFile = argValue(argv, "--feedback") ?? undefined;
+  const checkpoints = argValue(argv, "--checkpoints") ?? undefined;
+  const postingFile = argValue(argv, "--posting");
+  let posting;
+  let effOriginalFile = originalFile;
+  let effFactsFile = factsFile;
+  let effApprovalFile = approvalFile;
+  if (postingFile) {
+    const entryDir = `${outDir.replaceAll("\\", "/")}/entry`;
+    posting = { id: argValue(argv, "--posting-id") ?? "ENTRY-001", version: "v1", text: readFileSync(path.join(root, postingFile), "utf8") };
+    effOriginalFile = `${entryDir}/original.json`;
+    effFactsFile = `${entryDir}/facts.json`;
+    effApprovalFile = argValue(argv, "--approval") ?? `${entryDir}/approval.json`;
+  }
+  let resumeState;
+  let kvConfirmation;
+  const resumeFile = argValue(argv, "--resume");
+  if (resumeFile) {
+    resumeState = loadJson(path.join(root, resumeFile));
+  }
+  const kvConfFile = argValue(argv, "--kv-confirmation");
+  if (kvConfFile) {
+    kvConfirmation = loadJson(path.join(root, kvConfFile));
+  }
 
   const result = await runDemo(
-    { root, originalFile, factsFile, approvalFile, generationFile, verificationFile, imagesDir, lpFile, imagesRunFile, allowPreview: false },
-    liveDeps({ root, outDir, generationFile, imagesDir, imagesRunFile }),
+    {
+      root, originalFile: effOriginalFile, factsFile: effFactsFile, approvalFile: effApprovalFile, generationFile, verificationFile, imagesDir, lpFile, imagesRunFile, allowPreview: false,
+      ...(posting ? { posting } : {}),
+      ...(planningFile ? { planningFile } : {}),
+      ...(feedbackFile ? { feedbackFile } : {}),
+      ...(checkpoints ? { checkpoints } : {}),
+      ...(resumeState ? { resumeState } : {}),
+      ...(kvConfirmation ? { kvConfirmation } : {}),
+      stateFile: `${outDir.replaceAll("\\", "/")}/run-state.json`,
+    },
+    liveDeps({ root, outDir, generationFile, imagesDir, imagesRunFile, planningFile, feedbackFile }),
   );
 
   mkdirSync(path.join(root, outDir), { recursive: true });

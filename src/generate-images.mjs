@@ -63,6 +63,27 @@ export function decideImagePlan({ generation, facts }) {
   return { images };
 }
 
+// Decide the image plan from the planning correspondence (fix F4):
+// one image per correspondence element except the key visual, which
+// is generated earlier at its own checkpoint. Prompts come from
+// src/planning.mjs (built only from correspondence elements), never
+// from the hardcoded templates above; decideImagePlan stays for the
+// pinned demo path only.
+export function decideImagePlanFromSpecs({ correspondence }) {
+  const elements = correspondence && Array.isArray(correspondence.elements) ? correspondence.elements : [];
+  const images = [];
+  for (const el of elements) {
+    if (el.role === "key-visual") continue;
+    images.push({
+      id: el.id,
+      line: null,
+      role: el.role,
+      prompt: `${el.description}, ${correspondence.style ?? "photorealistic"}, no text, no numbers, no logos, no watermark`,
+    });
+  }
+  return { images };
+}
+
 // Run the image generation for a decided plan. callImage(prompt) is
 // injected so tests can stub the API; it must resolve to
 // { buffer: Buffer, mime: string }. imagesDir is repository-relative;
@@ -156,10 +177,11 @@ async function main() {
   const argv = process.argv.slice(2);
   const generationFile = argValue(argv, "--generation");
   const factsFile = argValue(argv, "--facts");
+  const planFile = argValue(argv, "--plan-file");
   const outDir = argValue(argv, "--out-dir");
   const runOut = argValue(argv, "--run-out");
-  if (!generationFile || !factsFile || !outDir) {
-    console.error("usage: generate-images.mjs --generation <f> --facts <f> --out-dir <imagesDir> [--run-out <run.json>]");
+  if ((!planFile && (!generationFile || !factsFile)) || !outDir) {
+    console.error("usage: generate-images.mjs (--generation <f> --facts <f> | --plan-file <plan.json>) --out-dir <imagesDir> [--run-out <run.json>]");
     process.exitCode = 2;
     return;
   }
@@ -168,9 +190,12 @@ async function main() {
     process.exitCode = 2;
     return;
   }
-  const generation = loadJson(path.join(root, generationFile));
-  const facts = loadJson(path.join(root, factsFile));
-  const plan = decideImagePlan({ generation, facts });
+  // --plan-file mode (fix F3/F4): the runner computed the prompts from
+  // the planning correspondence and recorded them in a plan file; this
+  // tool only executes the plan.
+  const plan = planFile
+    ? loadJson(path.join(root, planFile))
+    : decideImagePlan({ generation: loadJson(path.join(root, generationFile)), facts: loadJson(path.join(root, factsFile)) });
   const imagesDir = outDir;
   let result;
   try {

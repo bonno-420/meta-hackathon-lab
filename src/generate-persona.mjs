@@ -92,18 +92,18 @@ function describePattern(p) {
   return `- ${p.id} (version ${p.version})\n  composition: ${composition}\n${slots}`;
 }
 
-function describeIntent() {
-  const w = INTENT.persona.worries
+function describeIntent(intent) {
+  const w = intent.persona.worries
     .map((x) => `- ${x.id}: worry=${x.worry}; appeal=${x.appeal}; factKeys=${x.factKeys.join(",")}; sourceLines=${x.sourceLines.join(",")}`)
     .join("\n");
   return [
-    `Speaker ${INTENT.speaker.id} (${INTENT.speaker.label}): ${INTENT.speaker.stance} ${INTENT.speaker.funnelPosition} ${INTENT.speaker.neverVoice}`,
-    `Target layer: ${INTENT.targetLayer.description}`,
-    ...INTENT.targetLayer.points.map((p) => `  - ${p}`),
-    `Persona ${INTENT.persona.id} (${INTENT.persona.label}):`,
+    `Speaker ${intent.speaker.id} (${intent.speaker.label}): ${intent.speaker.stance} ${intent.speaker.funnelPosition} ${intent.speaker.neverVoice}`,
+    `Target layer: ${intent.targetLayer.description}`,
+    ...intent.targetLayer.points.map((p) => `  - ${p}`),
+    `Persona ${intent.persona.id} (${intent.persona.label}):`,
     w,
     "Voice rules:",
-    ...INTENT.voice.rules.map((r) => `- ${r}`),
+    ...intent.voice.rules.map((r) => `- ${r}`),
   ].join("\n");
 }
 
@@ -112,7 +112,11 @@ function describeIntent() {
 // the loop-013 pattern set (shape only), the merged order, the speaker
 // voice, the inquiry-invitation closing, and the softened monthly-income
 // instruction.
-export function buildPersonaGenerationMessages(facts, patterns) {
+// The intent layer defaults to the loop-013 INTENT (the recorded
+// experiment path). The pipeline path (fix F2) passes an intent built
+// from the planning input file instead (src/planning.mjs
+// intentFromPlanning), so the persona is data, not code.
+export function buildPersonaGenerationMessages(facts, patterns, intent = INTENT) {
   const stated = facts.items.filter((i) => i.status === "stated");
   const unstated = facts.items.filter((i) => i.status === "unstated");
   const list = Array.isArray(patterns) ? patterns : [];
@@ -126,8 +130,8 @@ export function buildPersonaGenerationMessages(facts, patterns) {
     "- Items listed as unstated have no value. Either omit them, or write a sentence that states only that the item is not stated (未記載), citing its key and line. Never assert a value for them (no 更新あり/なし, no 寮あり/なし).",
     "- Output JSON only, no markdown fences.",
     'Schema: {"sentences":[{"text":"...","factKeys":["..."],"sourceLines":["L01"]}]}',
-    "Intent layer (structured; from loops/loop-013/persona-design.md):",
-    describeIntent(),
+    "Intent layer (structured; default: loops/loop-013/persona-design.md; pipeline path: the planning input):",
+    describeIntent(intent),
     "Structured pattern input (sentence shape only):",
     ...list.map((p) => describePattern(p)),
     "- Patterns give sentence shape only and never supply facts, numbers, or names. Every value, number, time, and name still comes from the FACT items above.",
