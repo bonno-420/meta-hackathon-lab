@@ -1,0 +1,29 @@
+{
+  "images": [
+    {
+      "id": "key-visual",
+      "prompt": "The work itself: people doing the hands-on tasks of the job at a work table. Wide establishing shot of the scene described; the described subject fills the frame; impression-level, with no specific factual claim. photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+      "line": null
+    },
+    {
+      "id": "section-work",
+      "prompt": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning. The work activity itself, as an explanatory image beside the text it explains. photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+      "line": null
+    },
+    {
+      "id": "appeal-A3",
+      "prompt": "A person enjoying a day off at home with family, relaxed weekend mood. The work activity itself, as an explanatory image beside the text it explains. photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+      "line": null
+    },
+    {
+      "id": "appeal-A4",
+      "prompt": "A person walking to work along a quiet street in the morning, calm and unhurried. The work activity itself, as an explanatory image beside the text it explains. photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+      "line": null
+    },
+    {
+      "id": "appeal-A5",
+      "prompt": "A new worker being shown the task by a senior worker, both at a work table. The work activity itself, as an explanatory image beside the text it explains. photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+      "line": null
+    }
+  ]
+}

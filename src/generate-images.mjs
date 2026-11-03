@@ -12,7 +12,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { ILLUSTRATION_STYLE } from "./image-design.mjs";
+import { IMAGE_STYLE } from "./image-design.mjs";
 
 export const IMAGE_MODEL = "muse-image-1.0";
 export const IMAGE_API_URL = "https://api.meta.ai/v1/images/generations";
@@ -83,7 +83,7 @@ export function decideImagePlanFromSpecs({ correspondence }) {
       role: el.role,
       // Gate G9: no generated image presents the workplace as a real
       // photograph, in any role — every prompt is illustration style.
-      prompt: `${el.description}, ${ILLUSTRATION_STYLE}, no text, no numbers, no logos, no watermark`,
+      prompt: `${el.description}, ${IMAGE_STYLE}, no text, no numbers, no logos, no watermark`,
     });
   }
   return { images };

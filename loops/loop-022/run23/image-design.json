@@ -1,0 +1,161 @@
+{
+  "version": "image-design-v2",
+  "count": 5,
+  "images": [
+    {
+      "id": "key-visual",
+      "role": "key-visual",
+      "kind": "hero",
+      "source": "spec",
+      "appealId": "A2",
+      "purpose": "07:00〜16:00の勤務時間（休憩60分）",
+      "subject": "The work itself: people doing the hands-on tasks of the job at a work table",
+      "composition": "Wide establishing shot of the scene described; the described subject fills the frame; impression-level, with no specific factual claim",
+      "depiction": "photorealistic",
+      "styleText": "photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms",
+      "placement": {
+        "area": "hero",
+        "size": "large",
+        "aspect": "5:3"
+      },
+      "mustNotImply": [
+        "寮・寝室を思わせる要素",
+        "現金・金額の含意",
+        "特定の時刻",
+        "通勤手段や車両を主役にすること",
+        "読める文字・数字・ロゴ",
+        "契約更新の有無は言わない",
+        "寮・住宅の補助は言わない",
+        "月収の額や保証は言わない"
+      ],
+      "prompt": "The work itself: people doing the hands-on tasks of the job at a work table. Wide establishing shot of the scene described; the described subject fills the frame; impression-level, with no specific factual claim. photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+    },
+    {
+      "id": "section-work",
+      "role": "section",
+      "kind": "section",
+      "source": "spec",
+      "appealId": null,
+      "purpose": "workLocation",
+      "subject": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning",
+      "composition": "The work activity itself, as an explanatory image beside the text it explains",
+      "depiction": "photorealistic",
+      "styleText": "photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms",
+      "placement": {
+        "area": "inline",
+        "size": "small",
+        "aspect": "13:6"
+      },
+      "mustNotImply": [
+        "寮・寝室を思わせる要素",
+        "現金・金額の含意",
+        "特定の時刻",
+        "通勤手段や車両を主役にすること",
+        "読める文字・数字・ロゴ",
+        "契約更新の有無は言わない",
+        "寮・住宅の補助は言わない",
+        "月収の額や保証は言わない"
+      ],
+      "prompt": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning. The work activity itself, as an explanatory image beside the text it explains. photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+    },
+    {
+      "id": "appeal-A3",
+      "role": "section",
+      "kind": "section",
+      "source": "appeal",
+      "appealId": "A3",
+      "purpose": "土日祝日休み",
+      "subject": "A person enjoying a day off at home with family, relaxed weekend mood",
+      "composition": "The work activity itself, as an explanatory image beside the text it explains",
+      "depiction": "photorealistic",
+      "styleText": "photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms",
+      "placement": {
+        "area": "inline",
+        "size": "small",
+        "aspect": "4:3"
+      },
+      "mustNotImply": [
+        "寮・寝室を思わせる要素",
+        "現金・金額の含意",
+        "特定の時刻",
+        "通勤手段や車両を主役にすること",
+        "読める文字・数字・ロゴ",
+        "契約更新の有無は言わない",
+        "寮・住宅の補助は言わない",
+        "月収の額や保証は言わない"
+      ],
+      "prompt": "A person enjoying a day off at home with family, relaxed weekend mood. The work activity itself, as an explanatory image beside the text it explains. photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+    },
+    {
+      "id": "appeal-A4",
+      "role": "section",
+      "kind": "section",
+      "source": "appeal",
+      "appealId": "A4",
+      "purpose": "交通費は実費支給、月上限15,000円",
+      "subject": "A person walking to work along a quiet street in the morning, calm and unhurried",
+      "composition": "The work activity itself, as an explanatory image beside the text it explains",
+      "depiction": "photorealistic",
+      "styleText": "photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms",
+      "placement": {
+        "area": "inline",
+        "size": "small",
+        "aspect": "4:3"
+      },
+      "mustNotImply": [
+        "寮・寝室を思わせる要素",
+        "現金・金額の含意",
+        "特定の時刻",
+        "通勤手段や車両を主役にすること",
+        "読める文字・数字・ロゴ",
+        "契約更新の有無は言わない",
+        "寮・住宅の補助は言わない",
+        "月収の額や保証は言わない"
+      ],
+      "prompt": "A person walking to work along a quiet street in the morning, calm and unhurried. The work activity itself, as an explanatory image beside the text it explains. photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+    },
+    {
+      "id": "appeal-A5",
+      "role": "section",
+      "kind": "section",
+      "source": "appeal",
+      "appealId": "A5",
+      "purpose": "未経験可",
+      "subject": "A new worker being shown the task by a senior worker, both at a work table",
+      "composition": "The work activity itself, as an explanatory image beside the text it explains",
+      "depiction": "photorealistic",
+      "styleText": "photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms",
+      "placement": {
+        "area": "inline",
+        "size": "small",
+        "aspect": "4:3"
+      },
+      "mustNotImply": [
+        "寮・寝室を思わせる要素",
+        "現金・金額の含意",
+        "特定の時刻",
+        "通勤手段や車両を主役にすること",
+        "読める文字・数字・ロゴ",
+        "契約更新の有無は言わない",
+        "寮・住宅の補助は言わない",
+        "月収の額や保証は言わない"
+      ],
+      "prompt": "A new worker being shown the task by a senior worker, both at a work table. The work activity itself, as an explanatory image beside the text it explains. photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+    }
+  ],
+  "noImage": [
+    {
+      "appealId": "A1",
+      "reason": "この訴求は条件カード（第一確認の事実）が担うため、画像は作らない"
+    }
+  ],
+  "designNotes": [
+    {
+      "imageId": "key-visual",
+      "rule": "G9",
+      "action": "subject-replaced",
+      "from": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light",
+      "to": "The work itself: people doing the hands-on tasks of the job at a work table"
+    }
+  ]
+}

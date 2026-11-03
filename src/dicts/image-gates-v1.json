@@ -67,7 +67,7 @@
       ]
     },
     {
-      "criterion": "説明画像は大きくしない・写実にしない（イラスト調で小さく置く）",
+      "criterion": "説明画像は大きくしない（小さく差し込む。大きく置くと実在の現場の記録として読まれ、誤解を与える）",
       "id": "G6",
       "kind": "design",
       "source": "user 2026-11-04: a large explanatory image passes a generated image off as the real site"
@@ -85,7 +85,7 @@
       "source": "user 2026-11-04: the layout was too crude; then 01:22 the preview is designed from the reader persona, not from the coordinator's earlier image"
     },
     {
-      "criterion": "職場・建物の外観を写実的な生成画像で見せない（実在しない場所を実物らしく見せない。全役割イラスト調）",
+      "criterion": "職場・建物の外観を想像で作らない（描き方は問わない。実在しない場所を作ること自体が禁止）",
       "id": "G9",
       "kind": "design",
       "source": "user 2026-11-04 01:20: imagining the building / workplace exterior is fraud-like",

@@ -1,0 +1,31 @@
+{
+  "version": "lp-design-v1",
+  "patternId": "P-COND",
+  "scores": {
+    "P-COND": 3,
+    "P-WORK": 0,
+    "P-LIFE": 1
+  },
+  "signals": [
+    "A1: 第一確認の事実を持つ訴求（条件）",
+    "A2: 第一確認の事実を持つ訴求（条件）",
+    "A3: 生活適合の訴求",
+    "A4: 第一確認の事実を持つ訴求（条件）"
+  ],
+  "rationale": "訴求と第一確認の信号から P-COND を選択（条件 3 / 仕事 0 / 生活 1）。LIB-PAT-001（導入→条件→働く場面→締め）: 第一確認の条件を先に置く",
+  "blockOrder": [
+    "hero",
+    "title",
+    "cards",
+    "rows",
+    "details",
+    "cta"
+  ],
+  "palette": {
+    "titleBg": "#173550",
+    "accent": "#f2762e",
+    "chipBg": "#eef3f8"
+  },
+  "paletteBasis": "パターンに紐づくトークン（候補。市場のリサーチ裏付けはなく、候補のまま記録する）",
+  "basis": "LIB-PAT-001（導入→条件→働く場面→締め）: 第一確認の条件を先に置く"
+}

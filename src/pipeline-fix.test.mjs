@@ -535,8 +535,8 @@ const stateRF = JSON.parse(readFileSync(path.join(scratchRF, "out/run-state.json
 expectTrue("render-failure-state-persisted", Array.isArray(stateRF.completedStages) && !stateRF.completedStages.includes("keyVisual"));
 
 // ---------- Finished-image gate: a page that fails is not presented ----------
-expectTrue("gate-pass", evaluateFinishedImageGate({ audience: "x", messageGaps: [], design: { patternId: "P-COND", rationale: "r" }, form: { personaBasis: { audience: "x", decisionOrder: ["hero"] } }, photos: [{ id: "a", role: "key-visual" }], imageDesign: [{ id: "a", purpose: "p", aspect: "5:3", placement: "hero", size: "large", depiction: "illustration" }] }).pass);
-expectTrue("gate-blocks-no-design", !evaluateFinishedImageGate({ audience: "x", messageGaps: [], form: { personaBasis: { audience: "x", decisionOrder: ["hero"] } }, photos: [{ id: "a", role: "key-visual" }], imageDesign: [{ id: "a", purpose: "p", aspect: "5:3", placement: "hero", size: "large", depiction: "illustration" }] }).pass);
+expectTrue("gate-pass", evaluateFinishedImageGate({ audience: "x", messageGaps: [], design: { patternId: "P-COND", rationale: "r" }, form: { personaBasis: { audience: "x", decisionOrder: ["hero"] } }, photos: [{ id: "a", role: "key-visual" }], imageDesign: [{ id: "a", purpose: "p", aspect: "5:3", placement: "hero", size: "large", depiction: "photorealistic" }] }).pass);
+expectTrue("gate-blocks-no-design", !evaluateFinishedImageGate({ audience: "x", messageGaps: [], form: { personaBasis: { audience: "x", decisionOrder: ["hero"] } }, photos: [{ id: "a", role: "key-visual" }], imageDesign: [{ id: "a", purpose: "p", aspect: "5:3", placement: "hero", size: "large", depiction: "photorealistic" }] }).pass);
 {
   // design derivation: different plannings yield different designs
   const dCond = deriveLpDesign(planning);
@@ -569,7 +569,8 @@ expectTrue("gate-fail-not-presented", !existsSync(path.join(scratchG, "out/prese
 // ---------- Image design step (loop-023) ----------
 const designJ01 = buildImageDesign(planning, facts);
 expect("design-count", designJ01.count, planning.imageSpecs.length);
-expectTrue("design-hero-illustration", designJ01.images.find((e) => e.kind === "hero")?.depiction === "illustration");
+expectTrue("design-hero-photorealistic", designJ01.images.find((e) => e.kind === "hero")?.depiction === "photorealistic");
+expectTrue("design-hero-subject-from-work-spec", (designJ01.images.find((e) => e.kind === "hero")?.subject ?? "").includes("assembling small wheels") && designJ01.designNotes.some((n) => n.action === "subject-from-work-spec"));
 expectTrue("design-hero-subject-not-exterior", !/exterior|facade|外観/i.test(designJ01.images.find((e) => e.kind === "hero")?.subject ?? ""));
 expectTrue("design-exterior-replacement-noted", (designJ01.designNotes ?? []).some((n) => n.rule === "G9" && n.action === "subject-replaced"));
 // run20 review: the composition text itself instructed an exterior
@@ -597,16 +598,20 @@ expectTrue("design-hero-prompt-has-no-exterior-instruction", !/building|exterior
   expectTrue("design-check-blocks-exterior-subject", !checkImageDesign(designExt).pass);
 }
 {
+  // Depiction policy (user decision 2026-11-04, D13): photorealistic
+  // is the designed depiction for every role; what the design check
+  // blocks is an exterior subject/prompt (G9) and a large explanatory
+  // placement (G6), not the style.
   const designPhoto = JSON.parse(JSON.stringify(designJ01));
   designPhoto.images[0].depiction = "photorealistic";
-  expectTrue("design-check-blocks-photoreal-hero", !checkImageDesign(designPhoto).pass);
+  expectTrue("design-check-allows-photorealistic", checkImageDesign(designPhoto).pass);
 }
-expectTrue("design-explanatory-illustration", designJ01.images.filter((e) => e.kind !== "hero").every((e) => e.depiction === "illustration" && e.placement.size === "small"));
+expectTrue("design-explanatory-photorealistic-small", designJ01.images.filter((e) => e.kind !== "hero").every((e) => e.depiction === "photorealistic" && e.placement.size === "small"));
 expectTrue("design-every-image-has-purpose", designJ01.images.every((e) => typeof e.purpose === "string" && e.purpose.length > 0));
 expectTrue("design-check-pass", checkImageDesign(designJ01).pass);
 const designBad = JSON.parse(JSON.stringify(designJ01));
-designBad.images.find((e) => e.kind !== "hero").depiction = "photorealistic";
-expectTrue("design-check-blocks-photoreal-explanatory", !checkImageDesign(designBad).pass);
+designBad.images.find((e) => e.kind !== "hero").placement.size = "large";
+expectTrue("design-check-blocks-large-explanatory", !checkImageDesign(designBad).pass);
 const designNoPurpose = JSON.parse(JSON.stringify(designJ01));
 designNoPurpose.images[0].purpose = null;
 expectTrue("design-check-blocks-purposeless", !checkImageDesign(designNoPurpose).pass);

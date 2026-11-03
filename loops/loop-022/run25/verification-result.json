@@ -1,0 +1,292 @@
+{
+  "kind": "re-verification-result",
+  "version": 1,
+  "verifiedAt": "2026-11-03T21:54:30.671Z",
+  "target": {
+    "generationFile": "loops/loop-022/run25/generated.json",
+    "generationSha256": "d7d57d63784447ced1be03af5c5c736d97c0607067855260f49541759fe7cb14",
+    "promptVersion": "lp-generate-v5-planning",
+    "model": "meta-models/muse-spark-open-1026",
+    "sentenceCount": 8
+  },
+  "inputIdentity": {
+    "pass": true,
+    "checks": [
+      {
+        "id": "original-file",
+        "pass": true,
+        "expected": "loops/loop-022/run2/entry/original.json",
+        "actual": "loops/loop-022/run2/entry/original.json"
+      },
+      {
+        "id": "facts-file",
+        "pass": true,
+        "expected": "loops/loop-022/run2/entry/facts.json",
+        "actual": "loops/loop-022/run2/entry/facts.json"
+      },
+      {
+        "id": "original-hash",
+        "pass": true,
+        "expected": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+        "actual": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+        "error": null
+      },
+      {
+        "id": "facts-hash",
+        "pass": true,
+        "expected": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+        "actual": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+        "error": null
+      },
+      {
+        "id": "approval-id",
+        "pass": true,
+        "expected": "FICT-J02-approval-1",
+        "actual": "FICT-J02-approval-1"
+      },
+      {
+        "id": "approval-status",
+        "pass": true,
+        "expected": "approved with approver and approvedAt",
+        "actual": {
+          "status": "approved",
+          "approver": "原田徳一（本人）",
+          "approvedAt": "2026-11-03"
+        }
+      },
+      {
+        "id": "approval-validity",
+        "pass": true,
+        "expected": true,
+        "actual": true,
+        "validity": {
+          "valid": true,
+          "approvalId": "FICT-J02-approval-1",
+          "status": "approved",
+          "checks": [
+            {
+              "target": "original",
+              "file": "loops/loop-022/run2/entry/original.json",
+              "expected": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+              "actual": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+              "match": true
+            },
+            {
+              "target": "facts",
+              "file": "loops/loop-022/run2/entry/facts.json",
+              "expected": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+              "actual": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+              "match": true
+            }
+          ],
+          "reason": null
+        }
+      },
+      {
+        "id": "generation-input",
+        "pass": true,
+        "expected": true,
+        "actual": true,
+        "reasonCode": null,
+        "reason": null
+      }
+    ],
+    "failures": [],
+    "original": {
+      "id": "FICT-J02",
+      "version": "v1",
+      "file": "loops/loop-022/run2/entry/original.json",
+      "headerSha256": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+      "actualSha256": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6"
+    },
+    "facts": {
+      "factsId": "FICT-J02-facts",
+      "factsVersion": 1,
+      "file": "loops/loop-022/run2/entry/facts.json",
+      "headerSha256": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+      "actualSha256": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06"
+    },
+    "approvalId": {
+      "header": "FICT-J02-approval-1",
+      "record": "FICT-J02-approval-1",
+      "match": true
+    },
+    "approval": {
+      "approvalId": "FICT-J02-approval-1",
+      "status": "approved",
+      "approver": "原田徳一（本人）",
+      "approvedAt": "2026-11-03"
+    },
+    "validity": {
+      "valid": true,
+      "approvalId": "FICT-J02-approval-1",
+      "status": "approved",
+      "checks": [
+        {
+          "target": "original",
+          "file": "loops/loop-022/run2/entry/original.json",
+          "expected": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+          "actual": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+          "match": true
+        },
+        {
+          "target": "facts",
+          "file": "loops/loop-022/run2/entry/facts.json",
+          "expected": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+          "actual": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+          "match": true
+        }
+      ],
+      "reason": null
+    },
+    "generationInput": {
+      "ok": true,
+      "reasonCode": null,
+      "reason": null,
+      "approvalId": "FICT-J02-approval-1",
+      "status": "approved",
+      "validity": {
+        "valid": true,
+        "approvalId": "FICT-J02-approval-1",
+        "status": "approved",
+        "checks": [
+          {
+            "target": "original",
+            "file": "loops/loop-022/run2/entry/original.json",
+            "expected": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+            "actual": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+            "match": true
+          },
+          {
+            "target": "facts",
+            "file": "loops/loop-022/run2/entry/facts.json",
+            "expected": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+            "actual": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+            "match": true
+          }
+        ],
+        "reason": null
+      }
+    }
+  },
+  "grounding": {
+    "pass": true,
+    "checked": 8,
+    "issues": [],
+    "skipped": false,
+    "skipReason": null
+  },
+  "humanConfirmation": {
+    "status": "pending",
+    "confirmer": null,
+    "confirmedAt": null,
+    "sentences": [
+      {
+        "sentence": 0,
+        "text": "仕事内容は物流倉庫での仕分け・検品作業です。",
+        "factKeys": [],
+        "sourceLines": [
+          "L01"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 1,
+        "text": "勤務地は愛知県豊橋市内の物流倉庫です。",
+        "factKeys": [
+          "workLocation"
+        ],
+        "sourceLines": [
+          "L03"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 2,
+        "text": "雇用形態は有期契約社員で、契約期間は3か月です。",
+        "factKeys": [
+          "employmentType",
+          "contractPeriod"
+        ],
+        "sourceLines": [
+          "L02"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 3,
+        "text": "時給は1,350円です。",
+        "factKeys": [
+          "salaryHourly"
+        ],
+        "sourceLines": [
+          "L04"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 4,
+        "text": "勤務時間は07:00〜16:00で、休憩は60分です。",
+        "factKeys": [
+          "workHours",
+          "breakMinutes"
+        ],
+        "sourceLines": [
+          "L05"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 5,
+        "text": "休日は土日祝日休みです。",
+        "factKeys": [],
+        "sourceLines": [
+          "L06"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 6,
+        "text": "交通費は実費支給で、月上限は15,000円です。",
+        "factKeys": [
+          "transport",
+          "transportCap"
+        ],
+        "sourceLines": [
+          "L07"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 7,
+        "text": "応募資格は未経験可です。",
+        "factKeys": [],
+        "sourceLines": [
+          "L08"
+        ],
+        "result": null,
+        "detail": null
+      }
+    ],
+    "note": "機械検査で覆えない意味の対応（文が使っている項目と factKeys・sourceLines の対応、期間・個数などの数量表現、否定・条件の反転、公開・申込と読める表現の混入）は人間の確認に残る。全文の確認が終わるまで再検証は合格にならない"
+  },
+  "mechanicalPass": true,
+  "verdict": {
+    "status": "pending-human-confirmation",
+    "pass": false,
+    "mechanicalPass": true,
+    "category": "human-confirmation",
+    "reason": "機械検査（入力同一性と根拠検査の再実行）は pass したが、人間の確認（意味の対応）が未完了のため、再検証の合格は未確定である",
+    "effect": "未確定。合格となった場合の効果はデモ内プレビューの許可までであり、公開の許可ではない（G-INV-4）"
+  },
+  "apiCalled": false,
+  "costUsd": 0,
+  "costNote": "再検証の道具は API を呼ばないため費用は発生しない。区分は D5 の製品実行とし、金額は 0 とする"
+}

@@ -1,12 +1,18 @@
 // The image-design step (loop-023): before any image is generated, the
 // pipeline designs the images from the approved planning — how many,
-// what each one shows, how it is depicted, and where it sits. A
-// generated image is not a real photograph: the hero may be large and
-// photorealistic (it is the page's face and reads as impression), but
-// an explanatory image reads as a record of the actual site, so
-// explanatory images are illustrations, placed small beside the text
-// they explain. Pointed-out issues become standing gates in
-// src/dicts/image-gates-v1.json and are checked here and in the layout.
+// what each one shows, how it is depicted, and where it sits.
+// Depiction policy (the user's decision, 2026-11-04, D13):
+// photorealistic is fine for every role — imagery of the work and of
+// people at work is impression material, and making it look more
+// fictional serves nothing. The standing bans are about content, not
+// style: never invent a workplace or building exterior, in any style
+// (G9); an explanatory image stays small, because a large one reads
+// as a record of the actual site (G6); plus the prompt gates G1–G5.
+// (An earlier implementation made every image an illustration; that
+// was the coordinator's chosen means, not the user's instruction,
+// and the user corrected it.) Pointed-out issues become standing
+// gates in src/dicts/image-gates-v1.json and are checked here and in
+// the layout.
 
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -15,22 +21,22 @@ import { fileURLToPath } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 export const IMAGE_GATES = JSON.parse(readFileSync(path.join(here, "dicts/image-gates-v1.json"), "utf8")).gates;
 
-export const ILLUSTRATION_STYLE = "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms";
+export const IMAGE_STYLE = "photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms";
 
 // A scene for an appeal-derived image, chosen by what the appeal
 // itself says: scenes of people and moments, never icon collages
 // and never a workplace exterior (user, 2026-11-04).
 const APPEAL_SCENES = [
-  { re: /土日|休日|週末|休み|weekend|day off|holiday/, scene: "An illustration of a person enjoying a day off at home with family, relaxed weekend mood" },
+  { re: /土日|休日|週末|休み|weekend|day off|holiday/, scene: "A person enjoying a day off at home with family, relaxed weekend mood" },
   // The transport scene must not put a commute vehicle in the
   // picture (gate G4: a train/bus as the visual subject implies the
   // commute method). An earlier scene ("commuting on a local
   // train") hit G4 at the prompt stage, and the send-back rebuild
   // stripped its main clause, leaving a fragment prompt ("calm and
   // unhurried") that generated an unrelated desk scene (run21).
-  { re: /交通費|通勤|電車|transport|commut|train/, scene: "An illustration of a person walking to work along a quiet street in the morning, calm and unhurried" },
-  { re: /未経験|研修|初めて|no experience|training|first job/, scene: "An illustration of a new worker being shown the task by a senior worker, both at a work table" },
-  { re: /朝|夕方|時間|時給|勤務時間|morning|hours|shift/, scene: "An illustration of a worker starting the day at a work table in bright morning light" },
+  { re: /交通費|通勤|電車|transport|commut|train/, scene: "A person walking to work along a quiet street in the morning, calm and unhurried" },
+  { re: /未経験|研修|初めて|no experience|training|first job/, scene: "A new worker being shown the task by a senior worker, both at a work table" },
+  { re: /朝|夕方|時間|時給|勤務時間|morning|hours|shift/, scene: "A worker starting the day at a work table in bright morning light" },
 ];
 // The neutral work scene used when a spec asks for an exterior
 // (replaced under G9) and as the appeal-scene fallback. It must stay
@@ -39,7 +45,7 @@ const APPEAL_SCENES = [
 // appeal images came out as parcel scenes (2026-11-04). The job's
 // own scenes come from the planning's spec descriptions and appeal
 // texts, not from this default.
-const WORK_SCENE = "An illustration of the work itself: people doing the hands-on tasks of the job at a work table";
+const WORK_SCENE = "The work itself: people doing the hands-on tasks of the job at a work table";
 function appealScene(appealText) {
   for (const sc of APPEAL_SCENES) if (sc.re.test(appealText ?? "")) return sc.scene;
   return WORK_SCENE;
@@ -67,7 +73,7 @@ const COMPOSITION = {
   place: "The surrounding area of the workplace, as a small explanatory image",
 };
 const DEFAULT_SUBJECT = {
-  hero: "An illustration of the work itself: people doing the work at a fictional workplace",
+  hero: "People doing the work at a fictional workplace",
   section: "People doing the work at a fictional workplace",
   place: "The street around a fictional workplace",
 };
@@ -104,21 +110,12 @@ export function buildImageDesign(planning, facts) {
       : typeof basis.factKey === "string"
         ? factLabel(facts, basis.factKey)
         : (typeof spec.purpose === "string" ? spec.purpose : null);
-    // No role is photorealistic (gate G9, the user's 2026-11-04
-    // instruction): a generated image of the building or workplace
-    // exterior must not present a place that does not exist as if it
-    // were real. Every image is an illustration, openly an image.
-    const depiction = "illustration";
-    const styleText = ILLUSTRATION_STYLE;
+    // Depiction is photorealistic for every role (the user's
+    // decision, 2026-11-04, D13). What G9 bans is the exterior as a
+    // subject, in any style; that check follows below.
+    const depiction = "photorealistic";
+    const styleText = IMAGE_STYLE;
     let subject = typeof spec.description === "string" && spec.description.length > 0 ? spec.description : DEFAULT_SUBJECT[kind];
-    if (/photorealistic/i.test(subject)) {
-      // The spec's wording asks for a photograph while the design's
-      // depiction is an illustration (G9): the wording is cleaned at
-      // design time so the prompt never contradicts itself.
-      designNotes.push({ imageId: spec.id, rule: "G9", action: "subject-wording-cleaned", from: subject });
-      subject = subject.replace(/photorealistic photo of /i, "").replace(/photorealistic /i, "");
-      subject = subject.charAt(0).toUpperCase() + subject.slice(1);
-    }
     if (EXTERIOR_RE.test(subject)) {
       // The spec asks for a workplace/building exterior. The user
       // forbids inventing one (2026-11-04): the design replaces the
@@ -146,6 +143,22 @@ export function buildImageDesign(planning, facts) {
       prompt: `${subject}. ${composition}. ${styleText}, no text, no numbers, no logos, no watermark`,
     });
   }
+  // A hero whose spec subject was an exterior had its subject
+  // replaced with the neutral work scene (G9) — but the neutral
+  // scene carries no job, and the image model renders "hands-on
+  // tasks at a work table" as whatever craft it likes (run23: a
+  // sewing atelier as the face of a logistics sorting job). When the
+  // planning has a work spec with its own subject, the hero adopts
+  // that subject: the same job, in the hero's composition.
+  const heroEntry = images.find((e) => e.kind === "hero" && designNotes.some((n) => n.imageId === e.id && n.action === "subject-replaced"));
+  if (heroEntry) {
+    const workEntry = images.find((e) => e !== heroEntry && e.source === "spec" && /work/i.test(`${e.id} ${e.role ?? ""}`) && e.subject !== WORK_SCENE);
+    if (workEntry) {
+      designNotes.push({ imageId: heroEntry.id, rule: "G9", action: "subject-from-work-spec", from: heroEntry.subject, to: workEntry.subject });
+      heroEntry.subject = workEntry.subject;
+      heroEntry.prompt = `${heroEntry.subject}. ${heroEntry.composition}. ${heroEntry.styleText}, no text, no numbers, no logos, no watermark`;
+    }
+  }
   const firstCheck = new Set(planning?.firstCheckKeys ?? []);
   const noImage = [];
   for (const a of planning?.appeals ?? []) {
@@ -171,11 +184,11 @@ export function buildImageDesign(planning, facts) {
       purpose: a.text,
       subject,
       composition: COMPOSITION.section,
-      depiction: "illustration",
-      styleText: ILLUSTRATION_STYLE,
+      depiction: "photorealistic",
+      styleText: IMAGE_STYLE,
       placement: { area: "inline", size: "small", aspect: "4:3" },
       mustNotImply: [...MUST_NOT_IMPLY, ...(planning?.notSay ?? []).map((n) => n.text ?? n.key).filter(Boolean)],
-      prompt: `${subject}. ${COMPOSITION.section}. ${ILLUSTRATION_STYLE}, no text, no numbers, no logos, no watermark`,
+      prompt: `${subject}. ${COMPOSITION.section}. ${IMAGE_STYLE}, no text, no numbers, no logos, no watermark`,
     });
     servedAppeals.add(a.id);
   }
@@ -203,10 +216,7 @@ export function checkImageDesign(design, planning) {
     if (!e.purpose) failures.push(`画像 ${e.id} に目的（担う訴求・事実）がない（G7）`);
     if (!e.subject || !e.composition) failures.push(`画像 ${e.id} の内容の設計が欠けている（G7）`);
     if (!e.depiction || !e.placement) failures.push(`画像 ${e.id} の描き方・置き場の設計が欠けている（G7）`);
-    if (e.kind !== "hero" && e.depiction !== "illustration") failures.push(`説明画像 ${e.id} が写実になっている（G6）`);
-    if (e.depiction === "photorealistic") failures.push(`画像 ${e.id} が写実になっている（G9）`);
     if (EXTERIOR_RE.test(e.subject ?? "")) failures.push(`画像 ${e.id} が職場・建物の外観を題材にしている（G9）`);
-    if (/photorealistic/i.test(e.subject ?? "")) failures.push(`画像 ${e.id} の題材文が写実を指示している（G9）`);
     // The composed prompt is what the image model actually reads:
     // an exterior instruction hiding in the composition or style
     // text must fail here too (run20's LP hero, 2026-11-04).

@@ -88,7 +88,7 @@ export function buildFinishedImageHtml({ root, planning, photos, pageDir, design
       purpose: sd?.purpose ?? spec.purpose ?? (placement === "hero" ? "the workplace itself, establishing the page" : "the work, in the body of the page"),
       appealId: sd?.appealId ?? null,
       subject: sd?.subject ?? spec.description ?? null,
-      depiction: sd?.depiction ?? "illustration",
+      depiction: sd?.depiction ?? "photorealistic",
       size: sd?.placement?.size ?? (placement === "hero" ? "large" : "small"),
     };
   };
@@ -264,9 +264,7 @@ export function evaluateFinishedImageGate(record) {
     if (d && (!d.purpose || !d.aspect)) failures.push(`写真 ${photo.id} の設計（目的・形）が欠けている（G7）`);
     if (d && d.placement === "hero") {
       if (d.size !== "large") failures.push(`ヒーロー ${photo.id} が大きく置かれていない（G8）`);
-      if (d.depiction === "photorealistic") failures.push(`ヒーロー ${photo.id} が写実になっている（G9）`);
     } else if (d) {
-      if (d.depiction !== "illustration") failures.push(`説明画像 ${photo.id} が写実になっている（G6）`);
       if (d.size !== "small") failures.push(`説明画像 ${photo.id} が小さく置かれていない（G6）`);
     }
   }

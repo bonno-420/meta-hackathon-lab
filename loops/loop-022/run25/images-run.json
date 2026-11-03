@@ -1,0 +1,53 @@
+{
+  "status": "generated",
+  "reason": null,
+  "model": "muse-image-1.0",
+  "promptTemplate": "lp-image-v1",
+  "images": [
+    {
+      "id": "hero",
+      "file": "loops/loop-022/run25/images/hero.webp",
+      "prompt": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning. Wide establishing shot of the scene described; the described subject fills the frame; impression-level, with no specific factual claim. photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+      "line": null,
+      "mime": "image/webp",
+      "bytes": 498098
+    },
+    {
+      "id": "section-work",
+      "file": "loops/loop-022/run25/images/section-work.webp",
+      "prompt": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning. The work activity itself, as an explanatory image beside the text it explains. photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+      "line": null,
+      "mime": "image/webp",
+      "bytes": 426092
+    },
+    {
+      "id": "appeal-A3",
+      "file": "loops/loop-022/run25/images/appeal-A3.webp",
+      "prompt": "A person enjoying a day off at home with family, relaxed weekend mood. The work activity itself, as an explanatory image beside the text it explains. photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+      "line": null,
+      "mime": "image/webp",
+      "bytes": 495540
+    },
+    {
+      "id": "appeal-A4",
+      "file": "loops/loop-022/run25/images/appeal-A4.webp",
+      "prompt": "A person walking to work along a quiet street in the morning, calm and unhurried. The work activity itself, as an explanatory image beside the text it explains. photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+      "line": null,
+      "mime": "image/webp",
+      "bytes": 480996
+    },
+    {
+      "id": "appeal-A5",
+      "file": "loops/loop-022/run25/images/appeal-A5.webp",
+      "prompt": "A new worker being shown the task by a senior worker, both at a work table. The work activity itself, as an explanatory image beside the text it explains. photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+      "line": null,
+      "mime": "image/webp",
+      "bytes": 437704
+    }
+  ],
+  "usage": null,
+  "costUsd": 0.05,
+  "costNote": "画像 5 枚 × $0.01 の算出値。確定実費は dev.meta.ai Billing 実績との突合が必要。",
+  "startedAt": "2026-11-03T21:53:09.713Z",
+  "finishedAt": "2026-11-03T21:54:30.648Z"
+}
