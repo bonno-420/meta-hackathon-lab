@@ -1,0 +1,56 @@
+{
+  "checkpoint": "key-visual",
+  "presented": [
+    {
+      "kind": "image",
+      "file": "loops/loop-022/run8/lp-finished-image.png",
+      "sha256": "19030f1c5d2926fdd54b1403843dd5dbeee7425fe571cd36ed3f244b6c0671f3"
+    }
+  ],
+  "layout": {
+    "kind": "lp-finished-image",
+    "anatomy": [
+      "hero photograph",
+      "title block (placeholder text)",
+      "condition cards x3 (planning firstCheckKeys)",
+      "photo bands x1",
+      "detail blocks (placeholder text)",
+      "call to action"
+    ],
+    "photos": [
+      {
+        "id": "key-visual",
+        "role": "key-visual",
+        "file": "loops/loop-022/run8/images/kv-photos/key-visual.webp"
+      },
+      {
+        "id": "section-work",
+        "role": "section",
+        "file": "loops/loop-022/run8/images/kv-photos/section-work.webp"
+      }
+    ],
+    "note": "LPの完成イメージ。文章はプレースホルダで、実文と実画像は後段で同じレイアウトの同じ場所に入る"
+  },
+  "checklist": [
+    {
+      "element": "key-visual",
+      "basis": {
+        "appealId": "A2"
+      },
+      "description": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    }
+  ],
+  "holds": [],
+  "judgement": {
+    "result": null,
+    "confirmer": null,
+    "confirmedAt": null,
+    "corrections": []
+  }
+}

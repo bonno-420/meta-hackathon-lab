@@ -1200,6 +1200,8 @@ async function main() {
   // run, with --kv-confirmation <file> carrying the human's key-visual
   // confirmation ({ file, sha256, confirmer, confirmedAt }).
   const planningFile = argValue(argv, "--planning") ?? undefined;
+  const inputId = argValue(argv, "--input-id") ?? undefined;
+  const inputVersion = argValue(argv, "--input-version") ?? undefined;
   const feedbackFile = argValue(argv, "--feedback") ?? undefined;
   const checkpoints = argValue(argv, "--checkpoints") ?? undefined;
   const postingFile = argValue(argv, "--posting");
@@ -1232,6 +1234,8 @@ async function main() {
       ...(planningFile ? { planningFile } : {}),
       ...(feedbackFile ? { feedbackFile } : {}),
       ...(checkpoints ? { checkpoints } : {}),
+      ...(inputId ? { inputId } : {}),
+      ...(inputVersion ? { inputVersion } : {}),
       ...(resumeState ? { resumeState } : {}),
       ...(kvConfirmation ? { kvConfirmation } : {}),
       stateFile: `${outDir.replaceAll("\\", "/")}/run-state.json`,

@@ -46,8 +46,34 @@ export function buildFinishedImageHtml({ root, planning, photos, pageDir }) {
   const bands = usable.filter((p) => p !== hero);
   const cardCount = Array.isArray(planning?.firstCheckKeys) ? planning.firstCheckKeys.length : 0;
 
+  // Image design: each photograph's place, shape and fit in the page.
+  // The planning designs the needed images (subject in the spec's
+  // description; shape in the spec's optional design); the defaults
+  // give the hero a wide establishing shape and bands an inset shape.
+  const COLUMN = 480;
+  const specById = new Map((Array.isArray(planning?.imageSpecs) ? planning.imageSpecs : []).map((s) => [s.id, s]));
+  const designFor = (photo, placement) => {
+    const spec = specById.get(photo.id) ?? {};
+    const d = spec.design ?? {};
+    const aspect = d.aspect ?? (placement === "hero" ? "5:3" : "13:6");
+    const [aw, ah] = aspect.split(":").map((n) => Number(n) || 1);
+    const width = placement === "hero" ? COLUMN : COLUMN - 36;
+    return {
+      id: photo.id,
+      placement,
+      aspect,
+      heightPx: Math.round((width * ah) / aw),
+      fit: d.fit ?? "cover",
+      position: d.position ?? "center",
+      purpose: spec.purpose ?? (placement === "hero" ? "the workplace itself, establishing the page" : "the work, in the body of the page"),
+    };
+  };
+  const heroDesign = hero ? designFor(hero, "hero") : null;
+  const bandDesigns = bands.map((b) => designFor(b, "band"));
+  const designById = new Map([heroDesign, ...bandDesigns].filter(Boolean).map((d) => [d.id, d]));
+
   let body = "";
-  if (hero) body += `<section class="hero"><img src="${srcFor(hero)}" alt=""></section>\n`;
+  if (hero) body += `<section class="hero"><div class="photo-hero" style="background-image:url('${srcFor(hero)}');height:${heroDesign.heightPx}px"></div></section>\n`;
   body += `<section class="title-block">${bars([78, 58, 42], "bar bar-light")}</section>\n`;
   if (cardCount > 0) {
     const cards = [];
@@ -57,7 +83,8 @@ export function buildFinishedImageHtml({ root, planning, photos, pageDir }) {
     body += `<section class="cards">${cards.join("")}<div class="clear"></div></section>\n`;
   }
   for (const img of bands) {
-    body += `<section class="band"><img src="${srcFor(img)}" alt=""></section>\n`;
+    const d = designById.get(img.id);
+    body += `<section class="band"><div class="photo-band" style="background-image:url('${srcFor(img)}');height:${d.heightPx}px"></div></section>\n`;
   }
   const rows = `<div class="check-row"><span class="box"></span><span class="bar bar-sm" style="width:68%"></span></div>`.repeat(4);
   body += `<section class="details"><div class="detail-card">${rows}</div><div class="detail-card detail-r">${rows}</div><div class="clear"></div></section>\n`;
@@ -72,7 +99,9 @@ export function buildFinishedImageHtml({ root, planning, photos, pageDir }) {
 <style>
 *{box-sizing:border-box}body{margin:0;background:#dcdcdc;font-family:sans-serif}
 .page{max-width:480px;margin:0 auto;background:#fff;box-shadow:0 0 18px rgba(0,0,0,.18)}
-.hero img,.band img{display:block;width:100%;height:auto}
+.photo-hero{background-size:cover;background-position:center}
+.band{padding:16px 18px 0}
+.photo-band{border-radius:12px;background-size:cover;background-position:center}
 .title-block{background:#173550;padding:34px 30px 38px}
 .bar{display:block;height:15px;border-radius:8px;background:#c9d4de;margin:0 0 14px}
 .bar:last-child{margin-bottom:0}
@@ -101,10 +130,58 @@ ${body}</main>
 </body>
 </html>
 `;
+  // Message map: which appeal and which facts each block of the page
+  // carries — the communication design (who is told what, where),
+  // produced by the pipeline from the planning. An appeal with no
+  // block is a gap and is recorded as one, never silently dropped.
+  const appeals = Array.isArray(planning?.appeals) ? planning.appeals : [];
+  const appealByKey = new Map();
+  for (const a of appeals) {
+    for (const k of Array.isArray(a?.factKeys) ? a.factKeys : []) {
+      if (!appealByKey.has(k)) appealByKey.set(k, a.id);
+    }
+  }
+  const firstCheckKeys = Array.isArray(planning?.firstCheckKeys) ? planning.firstCheckKeys : [];
+  const messageMap = [];
+  if (appeals.length > 0) {
+    messageMap.push({ block: "title", carries: { appealId: appeals[0].id }, note: "the lead appeal's headline slot (placeholder text at this stage)" });
+  }
+  for (const key of firstCheckKeys) {
+    messageMap.push({ block: "condition-card", carries: { factKey: key, appealId: appealByKey.get(key) ?? null } });
+  }
+  for (const d of [heroDesign, ...bandDesigns].filter(Boolean)) {
+    const spec = specById.get(d.id) ?? {};
+    messageMap.push({ block: d.placement === "hero" ? "hero-photo" : "photo-band", carries: { specId: d.id, basis: spec.basis ?? null }, purpose: d.purpose });
+  }
+  const allAppealKeys = [...new Set(appeals.flatMap((a) => (Array.isArray(a?.factKeys) ? a.factKeys : [])))];
+  const detailKeys = allAppealKeys.filter((k) => !firstCheckKeys.includes(k));
+  // Appeals grounded in original lines but with no FACT key (the fact
+  // schema has no key for them) are carried by the detail blocks.
+  const lineGroundedAppeals = appeals
+    .filter((a) => (Array.isArray(a?.factKeys) ? a.factKeys.length : 0) === 0 && (Array.isArray(a?.sourceLines) ? a.sourceLines.length : 0) > 0)
+    .map((a) => a.id);
+  messageMap.push({ block: "details", carries: { factKeys: detailKeys, appealIds: lineGroundedAppeals }, note: "appeal facts not shown as first-check cards, and line-grounded appeals with no fact key; carried by the detail blocks and the copy" });
+  messageMap.push({ block: "cta", carries: { action: true } });
+  const carriedAppealIds = new Set(messageMap.flatMap((m) => {
+    const c = (m && m.carries) || {};
+    return [
+      ...(c.appealId ? [c.appealId] : []),
+      ...(Array.isArray(c.appealIds) ? c.appealIds : []),
+      ...(c.basis && c.basis.appealId ? [c.basis.appealId] : []),
+    ];
+  }));
+  const messageGaps = appeals
+    .filter((a) => !carriedAppealIds.has(a.id))
+    .map((a) => ({ appealId: a.id, reason: "no block in the finished image carries this appeal (it is carried by the copy only, or its facts have no card)" }));
+
   const record = {
     kind: "lp-finished-image",
+    audience: planning?.audience ?? null,
     anatomy: ["hero photograph", "title block (placeholder text)", `condition cards x${cardCount} (planning firstCheckKeys)`, `photo bands x${bands.length}`, "detail blocks (placeholder text)", "call to action"],
+    messageMap,
+    messageGaps,
     photos: usable.map((p) => ({ id: p.id, role: p.role ?? null, file: p.file })),
+    imageDesign: [heroDesign, ...bandDesigns].filter(Boolean),
     note: "LPの完成イメージ。文章はプレースホルダで、実文と実画像は後段で同じレイアウトの同じ場所に入る",
   };
   return { html, record };

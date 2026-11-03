@@ -17,6 +17,7 @@ import { decideImagePlanFromSpecs } from "./generate-images.mjs";
 import { buildCorrespondence, buildImagePrompt, checkPromptCompliance, intentFromPlanning, validatePlanning } from "./planning.mjs";
 import { checkPage } from "./pagecheck.mjs";
 import { checkCompletion, runDemo } from "./run-demo.mjs";
+import { buildFinishedImageHtml } from "./page-layout.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "..");
@@ -74,6 +75,46 @@ const specPlan = decideImagePlanFromSpecs({ correspondence });
 expect("spec-plan-count", specPlan.images.length, 2);
 expect("spec-plan-id", specPlan.images[0].id, "hero");
 expect("spec-plan-id-2", specPlan.images[1].id, "work");
+
+// ---------- finished image: message map + image design ----------
+{
+  const scratch = mkdtempSync(path.join(tmpdir(), "layout-unit-"));
+  mkdirSync(path.join(scratch, "img"), { recursive: true });
+  writeFileSync(path.join(scratch, "img/hero.png"), Buffer.from([0x89, 0x50]));
+  writeFileSync(path.join(scratch, "img/work.png"), Buffer.from([0x89, 0x50]));
+  const planningUnit = {
+    audience: "unit audience",
+    firstCheckKeys: ["salaryHourly"],
+    appeals: [
+      { id: "A1", text: "lead", factKeys: ["salaryHourly"], sourceLines: ["L04"] },
+      { id: "A2", text: "line-grounded, no fact key", factKeys: [], sourceLines: ["L06"] },
+      { id: "A3", text: "ungrounded", factKeys: [], sourceLines: [] },
+    ],
+    imageSpecs: [
+      { id: "kv", role: "key-visual", description: "exterior", purpose: "the workplace", design: { aspect: "5:3" } },
+      { id: "work", role: "section", description: "scene", purpose: "the work" },
+    ],
+  };
+  const built = buildFinishedImageHtml({
+    root: scratch,
+    planning: planningUnit,
+    photos: [
+      { id: "kv", role: "key-visual", file: "img/hero.png" },
+      { id: "work", role: "section", file: "img/work.png" },
+    ],
+    pageDir: ".",
+  });
+  const rec = built.record;
+  expect("layout-audience", rec.audience, "unit audience");
+  expect("layout-title-carries-lead-appeal", rec.messageMap.find((m) => m.block === "title")?.carries.appealId, "A1");
+  expect("layout-card-maps-appeal", rec.messageMap.find((m) => m.block === "condition-card")?.carries.appealId, "A1");
+  expectTrue("layout-line-grounded-carried-by-details", (rec.messageMap.find((m) => m.block === "details")?.carries.appealIds ?? []).includes("A2"));
+  expectTrue("layout-gap-surfaced", rec.messageGaps.some((g) => g.appealId === "A3"));
+  expectTrue("layout-no-false-gap", !rec.messageGaps.some((g) => g.appealId === "A2"));
+  expect("layout-hero-aspect", rec.imageDesign.find((d) => d.placement === "hero")?.aspect, "5:3");
+  expect("layout-hero-height", rec.imageDesign.find((d) => d.placement === "hero")?.heightPx, 288);
+  expectTrue("layout-html-crops-hero", built.html.includes("photo-hero"));
+}
 
 // ---------- pagecheck units (C5) ----------
 const longSentence = "勤務時間は09:00から18:00までで、休憩は60分です。";

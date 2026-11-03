@@ -1,0 +1,158 @@
+{
+  "checkpoint": "key-visual",
+  "presented": [
+    {
+      "kind": "image",
+      "file": "loops/loop-022/run11/lp-finished-image.png",
+      "sha256": "6091279243368d2bc520c15afe992398e935aed5cb366f06a9466affcc03160c"
+    }
+  ],
+  "layout": {
+    "kind": "lp-finished-image",
+    "audience": null,
+    "anatomy": [
+      "hero photograph",
+      "title block (placeholder text)",
+      "condition cards x3 (planning firstCheckKeys)",
+      "photo bands x1",
+      "detail blocks (placeholder text)",
+      "call to action"
+    ],
+    "messageMap": [
+      {
+        "block": "title",
+        "carries": {
+          "appealId": "A1"
+        },
+        "note": "the lead appeal's headline slot (placeholder text at this stage)"
+      },
+      {
+        "block": "condition-card",
+        "carries": {
+          "factKey": "salaryHourly",
+          "appealId": null
+        }
+      },
+      {
+        "block": "condition-card",
+        "carries": {
+          "factKey": "workHours",
+          "appealId": null
+        }
+      },
+      {
+        "block": "condition-card",
+        "carries": {
+          "factKey": "transportCap",
+          "appealId": null
+        }
+      },
+      {
+        "block": "hero-photo",
+        "carries": {
+          "specId": "key-visual",
+          "basis": {
+            "appealId": "A2"
+          }
+        },
+        "purpose": "職場そのもの（倉庫の外観）でページの第一印象を作る"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "section-work",
+          "basis": {
+            "factKey": "workLocation"
+          }
+        },
+        "purpose": "本文で仕事内容（仕分け・検品）を見せる"
+      },
+      {
+        "block": "details",
+        "carries": {
+          "factKeys": []
+        },
+        "note": "appeal facts not shown as first-check cards; carried by the detail blocks and the copy"
+      },
+      {
+        "block": "cta",
+        "carries": {
+          "action": true
+        }
+      }
+    ],
+    "messageGaps": [
+      {
+        "appealId": "A2",
+        "reason": "no block in the finished image carries this appeal (it is carried by the copy only, or its facts have no card)"
+      },
+      {
+        "appealId": "A3",
+        "reason": "no block in the finished image carries this appeal (it is carried by the copy only, or its facts have no card)"
+      },
+      {
+        "appealId": "A4",
+        "reason": "no block in the finished image carries this appeal (it is carried by the copy only, or its facts have no card)"
+      },
+      {
+        "appealId": "A5",
+        "reason": "no block in the finished image carries this appeal (it is carried by the copy only, or its facts have no card)"
+      }
+    ],
+    "photos": [
+      {
+        "id": "key-visual",
+        "role": "key-visual",
+        "file": "loops/loop-022/run11/images/kv-photos/key-visual.webp"
+      },
+      {
+        "id": "section-work",
+        "role": "section",
+        "file": "loops/loop-022/run11/images/kv-photos/section-work.webp"
+      }
+    ],
+    "imageDesign": [
+      {
+        "id": "key-visual",
+        "placement": "hero",
+        "aspect": "5:3",
+        "heightPx": 288,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "職場そのもの（倉庫の外観）でページの第一印象を作る"
+      },
+      {
+        "id": "section-work",
+        "placement": "band",
+        "aspect": "13:6",
+        "heightPx": 205,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "本文で仕事内容（仕分け・検品）を見せる"
+      }
+    ],
+    "note": "LPの完成イメージ。文章はプレースホルダで、実文と実画像は後段で同じレイアウトの同じ場所に入る"
+  },
+  "checklist": [
+    {
+      "element": "key-visual",
+      "basis": {
+        "appealId": "A2"
+      },
+      "description": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    }
+  ],
+  "holds": [],
+  "judgement": {
+    "result": null,
+    "confirmer": null,
+    "confirmedAt": null,
+    "corrections": []
+  }
+}
