@@ -177,6 +177,8 @@ ${body}</main>
   const record = {
     kind: "lp-finished-image",
     audience: planning?.audience ?? null,
+    // gate is filled by evaluateFinishedImageGate below (kept on the
+    // record so the presentation and the run record carry the verdict).
     anatomy: ["hero photograph", "title block (placeholder text)", `condition cards x${cardCount} (planning firstCheckKeys)`, `photo bands x${bands.length}`, "detail blocks (placeholder text)", "call to action"],
     messageMap,
     messageGaps,
@@ -185,4 +187,27 @@ ${body}</main>
     note: "LPの完成イメージ。文章はプレースホルダで、実文と実画像は後段で同じレイアウトの同じ場所に入る",
   };
   return { html, record };
+}
+
+// The gate for the finished image: what must hold before the image may
+// be presented at the checkpoint at all. The criteria come from the
+// requirements on record, not from the maker's convenience: the
+// audience is named; every appeal has a place in the page (no gaps);
+// every photograph is placed under an image design (purpose + shape).
+// A page that fails is not presented — the run stops with the reasons.
+export function evaluateFinishedImageGate(record) {
+  const failures = [];
+  if (!record || typeof record.audience !== "string" || record.audience.length === 0) {
+    failures.push("対象（audience）が企画にない");
+  }
+  for (const gap of record?.messageGaps ?? []) {
+    failures.push(`訴求 ${gap.appealId} の置き場がページにない`);
+  }
+  const designedIds = new Set((record?.imageDesign ?? []).map((d) => d.id));
+  for (const photo of record?.photos ?? []) {
+    if (!designedIds.has(photo.id)) failures.push(`写真 ${photo.id} に画像の設計がない`);
+    const d = (record?.imageDesign ?? []).find((x) => x.id === photo.id);
+    if (d && (!d.purpose || !d.aspect)) failures.push(`写真 ${photo.id} の設計（目的・形）が欠けている`);
+  }
+  return { pass: failures.length === 0, failures };
 }

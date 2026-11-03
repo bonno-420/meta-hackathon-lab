@@ -26,7 +26,7 @@ import { runVerification } from "./verify.mjs";
 import { buildPreview } from "./build-preview.mjs";
 import { checkPage } from "./pagecheck.mjs";
 import { buildCorrespondence, buildImagePrompt, buildKeyVisualChecklist, checkPromptCompliance, sha256Text, validatePlanning } from "./planning.mjs";
-import { buildFinishedImageHtml } from "./page-layout.mjs";
+import { buildFinishedImageHtml, evaluateFinishedImageGate } from "./page-layout.mjs";
 import { renderHtmlToImage } from "./render-page-image.mjs";
 import { pinPostingText, buildFactsFile, buildManifest } from "./pin-posting.mjs";
 import { decideImagePlanFromSpecs } from "./generate-images.mjs";
@@ -597,11 +597,22 @@ export async function runDemo(options, deps = {}) {
             persistState(["extraction", "factsComparison", "approval", "planning"], { e02raw });
             stop("key-visual", "LPの完成イメージを描画できなかったため止める（保留として記録した）");
           } else {
+            const gate = evaluateFinishedImageGate(layout.record);
+            if (!gate.pass) {
+              stages.keyVisual = {
+                executed: true, pass: false, correspondence, photoPlan, compliance, attempts,
+                layout: layout.record, photos: photosRun.images, gate,
+                model: photosRun.model ?? null, costUsd: photosRun.costUsd ?? null,
+              };
+              persistState(["extraction", "factsComparison", "approval", "planning"], { e02raw });
+              stop("key-visual", `完成イメージがゲートを通らなかったため、提示しない（${gate.failures.join("、")}）`);
+            } else {
             const sha = sha256File(resolveRoot(root, rendered.file));
             kvImage = { file: rendered.file, sha256: sha };
             stages.keyVisual = {
               executed: true, pass: true, correspondence, photoPlan, compliance, attempts,
               layout: layout.record,
+              gate: { pass: true, failures: [] },
               photos: photosRun.images,
               image: kvImage,
               model: photosRun.model ?? null,
@@ -618,6 +629,7 @@ export async function runDemo(options, deps = {}) {
             });
             persistState(["extraction", "factsComparison", "approval", "planning", "keyVisual"], { keyVisual: { image: kvImage, layout: layout.record, photos: photosRun.images }, e02raw });
             stop("key-visual", "1枚画（LPの完成イメージ）のプレビュー確認のため止める（チェックポイント）", "checkpoint");
+            }
           }
         }
       }

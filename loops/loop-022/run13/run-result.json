@@ -1,0 +1,674 @@
+{
+  "kind": "demo-run-result",
+  "version": 1,
+  "startedAt": "2026-11-03T15:41:33.082Z",
+  "finishedAt": "2026-11-03T15:42:17.147Z",
+  "durationMs": 44064,
+  "status": "stopped-at-checkpoint",
+  "stoppedAt": "key-visual",
+  "stopReason": "1枚画（LPの完成イメージ）のプレビュー確認のため止める（チェックポイント）",
+  "input": {
+    "original": {
+      "file": "loops/loop-022/run2/entry/original.json"
+    },
+    "facts": {
+      "file": "loops/loop-022/run2/entry/facts.json"
+    },
+    "approval": {
+      "file": "loops/loop-022/run2/entry/approval.json"
+    }
+  },
+  "stages": {
+    "extraction": {
+      "executed": true,
+      "status": "completed",
+      "model": "meta-models/muse-spark-open-1026",
+      "promptVersion": "fact-extract-v1.1",
+      "durationMs": 7881,
+      "usage": {
+        "prompt_tokens": 494,
+        "completion_tokens": 3046,
+        "total_tokens": 3540,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 384
+        },
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 2402,
+          "audio_tokens": 0,
+          "reasoning_tokens": 2477,
+          "rejected_prediction_tokens": 2099
+        }
+      },
+      "costUsd": null,
+      "costNote": "未記録（PIPELINE_MODEL でモデルが差し替えられており、D4単価が適用できないため算出しない。使用量は usage に記録）",
+      "schemaCheck": {
+        "pass": true,
+        "expectedCount": 15,
+        "actualCount": 15,
+        "missingKeys": [],
+        "extraKeys": [],
+        "duplicateKeys": [],
+        "fieldIssues": []
+      },
+      "e01": {
+        "caseId": "E01",
+        "stage": "照合",
+        "verdict": "一致（人間承認待ち）",
+        "stoppedAtReconciliation": false,
+        "generationStarted": false,
+        "generationNote": "生成工程は作らない。人間承認前には生成を開始しない。",
+        "matched": [
+          {
+            "field": "勤務時間",
+            "value": "07:00〜16:00",
+            "source": "L05"
+          },
+          {
+            "field": "交通費（月上限）",
+            "value": "15,000円",
+            "source": "L07"
+          }
+        ],
+        "contradictions": [],
+        "unstated": [
+          {
+            "key": "employer",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "jobId",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "renewal",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "monthlyIncomeGuarantee",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "actualHours",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "monthlyDaysAssumption",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "housing",
+            "source": null,
+            "quote": null
+          }
+        ],
+        "claims": {
+          "workHours": {
+            "value": "07:00〜16:00",
+            "snippet": "07:00〜16:00"
+          },
+          "transportCap": {
+            "value": 15000,
+            "snippet": "月上限15,000円"
+          }
+        }
+      },
+      "e02": null
+    },
+    "factsComparison": {
+      "executed": true,
+      "verbatim": {
+        "pass": true,
+        "checked": 15,
+        "issues": []
+      },
+      "agrees": true,
+      "diffs": [],
+      "textualDiffs": [
+        {
+          "key": "workLocation",
+          "field": "quote",
+          "fixed": "愛知県豊橋市内の物流倉庫",
+          "candidate": "勤務地： 愛知県豊橋市内の物流倉庫"
+        },
+        {
+          "key": "employmentType",
+          "field": "quote",
+          "fixed": "有期契約社員",
+          "candidate": "雇用形態： 有期契約社員（契約期間3か月）"
+        },
+        {
+          "key": "contractPeriod",
+          "field": "quote",
+          "fixed": "契約期間3か月",
+          "candidate": "雇用形態： 有期契約社員（契約期間3か月）"
+        },
+        {
+          "key": "salaryHourly",
+          "field": "quote",
+          "fixed": "1,350円",
+          "candidate": "時給： 1,350円"
+        },
+        {
+          "key": "workHours",
+          "field": "quote",
+          "fixed": "07:00〜16:00",
+          "candidate": "勤務時間： 07:00〜16:00（休憩60分）"
+        },
+        {
+          "key": "breakMinutes",
+          "field": "quote",
+          "fixed": "休憩60分",
+          "candidate": "勤務時間： 07:00〜16:00（休憩60分）"
+        },
+        {
+          "key": "transport",
+          "field": "quote",
+          "fixed": "実費支給",
+          "candidate": "交通費： 実費支給（月上限15,000円）"
+        },
+        {
+          "key": "transportCap",
+          "field": "quote",
+          "fixed": "月上限15,000円",
+          "candidate": "交通費： 実費支給（月上限15,000円）"
+        }
+      ]
+    },
+    "approval": {
+      "executed": true,
+      "pass": true,
+      "reasonCode": null,
+      "reason": null,
+      "approvalId": "FICT-J02-approval-1",
+      "status": "approved",
+      "approver": "原田徳一（本人）",
+      "approvedAt": "2026-11-03",
+      "validity": {
+        "valid": true,
+        "approvalId": "FICT-J02-approval-1",
+        "status": "approved",
+        "checks": [
+          {
+            "target": "original",
+            "file": "loops/loop-022/run2/entry/original.json",
+            "expected": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+            "actual": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+            "match": true
+          },
+          {
+            "target": "facts",
+            "file": "loops/loop-022/run2/entry/facts.json",
+            "expected": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+            "actual": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+            "match": true
+          }
+        ],
+        "reason": null
+      },
+      "generationInput": {
+        "ok": true,
+        "reasonCode": null,
+        "reason": null,
+        "approvalId": "FICT-J02-approval-1",
+        "status": "approved",
+        "validity": {
+          "valid": true,
+          "approvalId": "FICT-J02-approval-1",
+          "status": "approved",
+          "checks": [
+            {
+              "target": "original",
+              "file": "loops/loop-022/run2/entry/original.json",
+              "expected": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+              "actual": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+              "match": true
+            },
+            {
+              "target": "facts",
+              "file": "loops/loop-022/run2/entry/facts.json",
+              "expected": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+              "actual": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+              "match": true
+            }
+          ],
+          "reason": null
+        }
+      }
+    },
+    "planning": {
+      "executed": true,
+      "pass": true,
+      "file": "loops/loop-022/planning-FICT-J02.json",
+      "sha256": "26c9c59aae0dbd3ed17b52002463f6f1630b0c60ee33ba93d45de7557bc6a24c",
+      "audience": "早朝から夕方までの勤務の形が合う人／土日祝日を休みたい人／豊橋市内へ通える範囲の人",
+      "validation": {
+        "ok": true,
+        "errors": []
+      }
+    },
+    "keyVisual": {
+      "executed": true,
+      "pass": true,
+      "correspondence": {
+        "elements": [
+          {
+            "id": "key-visual",
+            "role": "key-visual",
+            "basis": {
+              "appealId": "A2"
+            },
+            "description": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light"
+          },
+          {
+            "id": "section-work",
+            "role": "section",
+            "basis": {
+              "factKey": "workLocation"
+            },
+            "description": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning"
+          }
+        ],
+        "prohibited": [
+          {
+            "source": "planning notSay: 契約更新の有無は言わない",
+            "terms": [
+              "更新あり",
+              "更新可",
+              "長期勤務"
+            ]
+          },
+          {
+            "source": "planning notSay: 寮・住宅の補助は言わない",
+            "terms": [
+              "寮",
+              "住宅補助",
+              "社宅"
+            ]
+          },
+          {
+            "source": "planning notSay: 月収の額や保証は言わない",
+            "terms": [
+              "月収",
+              "月給"
+            ]
+          },
+          {
+            "source": "standing ban: cash / income imagery",
+            "terms": [
+              "現金",
+              "札束",
+              "紙幣",
+              "硬貨",
+              "財布",
+              "お金",
+              "cash",
+              "banknote",
+              "banknotes",
+              "coin",
+              "coins",
+              "wallet",
+              "money",
+              "yen bills"
+            ]
+          },
+          {
+            "source": "standing ban: specific clock times",
+            "terms": [
+              "時計",
+              "clock",
+              "watch face",
+              "wall clock",
+              "wristwatch"
+            ]
+          },
+          {
+            "source": "standing ban: housing is unstated, so no residence imagery",
+            "terms": [
+              "住宅",
+              "一軒家",
+              "寮",
+              "社宅",
+              "マイホーム",
+              "戸建",
+              "residence",
+              "residential house",
+              "dormitory",
+              "house exterior",
+              "detached house",
+              "apartment building"
+            ]
+          }
+        ],
+        "firstCheckKeys": [
+          "salaryHourly",
+          "workHours",
+          "transportCap"
+        ],
+        "style": "Photorealistic, natural morning light, documentary style."
+      },
+      "photoPlan": [
+        {
+          "id": "key-visual",
+          "role": "key-visual",
+          "prompt": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light, Photorealistic, natural morning light, documentary style., no text, no numbers, no logos, no watermark"
+        },
+        {
+          "id": "section-work",
+          "role": "section",
+          "prompt": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning, Photorealistic, natural morning light, documentary style., no text, no numbers, no logos, no watermark"
+        }
+      ],
+      "compliance": {
+        "pass": true,
+        "results": [
+          {
+            "id": "key-visual",
+            "pass": true,
+            "hits": []
+          },
+          {
+            "id": "section-work",
+            "pass": true,
+            "hits": []
+          }
+        ]
+      },
+      "attempts": 1,
+      "layout": {
+        "kind": "lp-finished-image",
+        "audience": "早朝から夕方までの勤務の形が合う人／土日祝日を休みたい人／豊橋市内へ通える範囲の人",
+        "anatomy": [
+          "hero photograph",
+          "title block (placeholder text)",
+          "condition cards x3 (planning firstCheckKeys)",
+          "photo bands x1",
+          "detail blocks (placeholder text)",
+          "call to action"
+        ],
+        "messageMap": [
+          {
+            "block": "title",
+            "carries": {
+              "appealId": "A1"
+            },
+            "note": "the lead appeal's headline slot (placeholder text at this stage)"
+          },
+          {
+            "block": "condition-card",
+            "carries": {
+              "factKey": "salaryHourly",
+              "appealId": "A1"
+            }
+          },
+          {
+            "block": "condition-card",
+            "carries": {
+              "factKey": "workHours",
+              "appealId": "A2"
+            }
+          },
+          {
+            "block": "condition-card",
+            "carries": {
+              "factKey": "transportCap",
+              "appealId": "A4"
+            }
+          },
+          {
+            "block": "hero-photo",
+            "carries": {
+              "specId": "key-visual",
+              "basis": {
+                "appealId": "A2"
+              }
+            },
+            "purpose": "職場そのもの（倉庫の外観）でページの第一印象を作る"
+          },
+          {
+            "block": "photo-band",
+            "carries": {
+              "specId": "section-work",
+              "basis": {
+                "factKey": "workLocation"
+              }
+            },
+            "purpose": "本文で仕事内容（仕分け・検品）を見せる"
+          },
+          {
+            "block": "details",
+            "carries": {
+              "factKeys": [
+                "breakMinutes",
+                "transport"
+              ],
+              "appealIds": [
+                "A3",
+                "A5"
+              ]
+            },
+            "note": "appeal facts not shown as first-check cards, and line-grounded appeals with no fact key; carried by the detail blocks and the copy"
+          },
+          {
+            "block": "cta",
+            "carries": {
+              "action": true
+            }
+          }
+        ],
+        "messageGaps": [],
+        "photos": [
+          {
+            "id": "key-visual",
+            "role": "key-visual",
+            "file": "loops/loop-022/run13/images/kv-photos/key-visual.webp"
+          },
+          {
+            "id": "section-work",
+            "role": "section",
+            "file": "loops/loop-022/run13/images/kv-photos/section-work.webp"
+          }
+        ],
+        "imageDesign": [
+          {
+            "id": "key-visual",
+            "placement": "hero",
+            "aspect": "5:3",
+            "heightPx": 288,
+            "fit": "cover",
+            "position": "center",
+            "purpose": "職場そのもの（倉庫の外観）でページの第一印象を作る"
+          },
+          {
+            "id": "section-work",
+            "placement": "band",
+            "aspect": "13:6",
+            "heightPx": 205,
+            "fit": "cover",
+            "position": "center",
+            "purpose": "本文で仕事内容（仕分け・検品）を見せる"
+          }
+        ],
+        "note": "LPの完成イメージ。文章はプレースホルダで、実文と実画像は後段で同じレイアウトの同じ場所に入る"
+      },
+      "gate": {
+        "pass": true,
+        "failures": []
+      },
+      "photos": [
+        {
+          "id": "key-visual",
+          "file": "loops/loop-022/run13/images/kv-photos/key-visual.webp",
+          "prompt": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light, Photorealistic, natural morning light, documentary style., no text, no numbers, no logos, no watermark",
+          "line": null,
+          "mime": "image/webp",
+          "bytes": 685370,
+          "role": "key-visual"
+        },
+        {
+          "id": "section-work",
+          "file": "loops/loop-022/run13/images/kv-photos/section-work.webp",
+          "prompt": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning, Photorealistic, natural morning light, documentary style., no text, no numbers, no logos, no watermark",
+          "line": null,
+          "mime": "image/webp",
+          "bytes": 415422,
+          "role": "section"
+        }
+      ],
+      "image": {
+        "file": "loops/loop-022/run13/lp-finished-image.png",
+        "sha256": "07d3f1203ecfb5c912711d959b7a8037507999e20e8c0c580c71cded5987b98c"
+      },
+      "model": "muse-image-1.0",
+      "costUsd": 0.02,
+      "checklist": [
+        {
+          "element": "key-visual",
+          "basis": {
+            "appealId": "A2"
+          },
+          "description": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light",
+          "checks": {
+            "subjectIdentity": null,
+            "unstatedImplication": null,
+            "inventedSpecifics": null,
+            "cashImagery": null
+          }
+        }
+      ]
+    },
+    "generation": {
+      "executed": false,
+      "reason": "前段で停止したため、生成を実行しない"
+    },
+    "images": {
+      "executed": false,
+      "reason": "前段で停止したため、画像生成を実行しない"
+    },
+    "lpAssembly": {
+      "executed": false,
+      "reason": "前段で停止したため、LP の組み立てを実行しない"
+    },
+    "verification": {
+      "executed": false,
+      "reason": "前段で停止したため、再検証を実行しない"
+    },
+    "preview": {
+      "executed": false,
+      "reason": "前段で停止したため、プレビューを生成しない"
+    }
+  },
+  "e02": {
+    "caseId": "E02",
+    "stage": "照合",
+    "verdict": null,
+    "stoppedAtReconciliation": null,
+    "contradictions": [],
+    "approval": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため承認を実行しない（矛盾で停止した対象に承認記録を作らない、G-INV-3）"
+    },
+    "generation": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため生成を実行しない"
+    },
+    "images": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため画像生成を実行しない"
+    },
+    "lpAssembly": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため LP の組み立てを実行しない"
+    },
+    "verification": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため再検証を実行しない"
+    },
+    "preview": {
+      "executed": false,
+      "reason": "E02 は照合で停止したためプレビューを実行しない"
+    }
+  },
+  "checkpoints": "full",
+  "stopKind": "checkpoint",
+  "holds": [],
+  "presentationRecords": [
+    {
+      "checkpoint": "planning",
+      "file": "loops/loop-022/run13/presentation-planning.json"
+    },
+    {
+      "checkpoint": "key-visual",
+      "file": "loops/loop-022/run13/presentation-key-visual.json"
+    }
+  ],
+  "planning": {
+    "file": "loops/loop-022/planning-FICT-J02.json",
+    "sha256": "26c9c59aae0dbd3ed17b52002463f6f1630b0c60ee33ba93d45de7557bc6a24c"
+  },
+  "stateFile": "loops/loop-022/run13/run-state.json",
+  "entry": null,
+  "artifacts": {
+    "generationFile": null,
+    "verificationFile": "loops/loop-022/run13/verification-result.json",
+    "lpFile": null,
+    "imagesRunFile": null,
+    "preview": null
+  },
+  "costs": {
+    "category": "製品実行",
+    "currency": "USD",
+    "extractionCostUsd": null,
+    "generationCostUsd": null,
+    "imageCostUsd": null,
+    "totalCostUsd": null,
+    "breakdown": [
+      {
+        "stage": "抽出（工程1、ライブ）",
+        "costUsd": null,
+        "usage": {
+          "prompt_tokens": 494,
+          "completion_tokens": 3046,
+          "total_tokens": 3540,
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cached_tokens": 384
+          },
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 2402,
+            "audio_tokens": 0,
+            "reasoning_tokens": 2477,
+            "rejected_prediction_tokens": 2099
+          }
+        }
+      },
+      {
+        "stage": "生成（工程3、ライブ）",
+        "costUsd": null,
+        "usage": null
+      },
+      {
+        "stage": "画像生成（muse-image-1.0、ライブ）",
+        "costUsd": null,
+        "usage": null,
+        "note": "未記録（画像生成が実行されなかったため推定しない）"
+      },
+      {
+        "stage": "再検証・プレビュー生成",
+        "costUsd": 0,
+        "usage": null,
+        "note": "API を呼ばないため費用は発生しない"
+      }
+    ],
+    "note": "抽出と生成と画像の算出値がそろわなかったため、合計は未記録（推定しない）。内訳の算出値は各道具の D4 単価による算出値で、確定実費は dev.meta.ai Billing 実績との突合が必要"
+  },
+  "generationFile": "loops/loop-022/run13/generated.json",
+  "verificationFile": "loops/loop-022/run13/verification-result.json",
+  "lpFile": "loops/loop-022/run13/lp.html"
+}

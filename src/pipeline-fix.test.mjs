@@ -17,7 +17,7 @@ import { decideImagePlanFromSpecs } from "./generate-images.mjs";
 import { buildCorrespondence, buildImagePrompt, checkPromptCompliance, intentFromPlanning, validatePlanning } from "./planning.mjs";
 import { checkPage } from "./pagecheck.mjs";
 import { checkCompletion, runDemo } from "./run-demo.mjs";
-import { buildFinishedImageHtml } from "./page-layout.mjs";
+import { buildFinishedImageHtml, evaluateFinishedImageGate } from "./page-layout.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "..");
@@ -397,6 +397,26 @@ expect("render-failure-stops", runRF.stoppedAt, "key-visual");
 expectTrue("render-failure-hold", (runRF.holds ?? []).some((h) => h.stage === "key-visual"));
 const stateRF = JSON.parse(readFileSync(path.join(scratchRF, "out/run-state.json"), "utf8"));
 expectTrue("render-failure-state-persisted", Array.isArray(stateRF.completedStages) && !stateRF.completedStages.includes("keyVisual"));
+
+// ---------- Finished-image gate: a page that fails is not presented ----------
+expectTrue("gate-pass", evaluateFinishedImageGate({ audience: "x", messageGaps: [], photos: [{ id: "a" }], imageDesign: [{ id: "a", purpose: "p", aspect: "5:3" }] }).pass);
+expectTrue("gate-fails-no-audience", !evaluateFinishedImageGate({ audience: null, messageGaps: [], photos: [], imageDesign: [] }).pass);
+expectTrue("gate-fails-gap", !evaluateFinishedImageGate({ audience: "x", messageGaps: [{ appealId: "A9" }], photos: [], imageDesign: [] }).pass);
+expectTrue("gate-fails-undesigned-photo", !evaluateFinishedImageGate({ audience: "x", messageGaps: [], photos: [{ id: "a" }], imageDesign: [] }).pass);
+const scratchG = makeScratch();
+{
+  const p = JSON.parse(readFileSync(path.join(scratchG, "out/planning.json"), "utf8"));
+  p.appeals.push({ id: "AX", text: "ungrounded appeal", factKeys: [], sourceLines: [] });
+  writeFileSync(path.join(scratchG, "out/planning.json"), JSON.stringify(p, null, 2) + "\n", "utf8");
+}
+const runG = await runDemo(
+  { root: scratchG, ...REAL, checkpoints: "light" },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
+);
+expect("gate-fail-stops-at-kv", runG.stoppedAt, "key-visual");
+expect("gate-fail-not-a-checkpoint", runG.status, "stopped");
+expectTrue("gate-fail-recorded", runG.stages.keyVisual.gate && runG.stages.keyVisual.gate.pass === false);
+expectTrue("gate-fail-not-presented", !existsSync(path.join(scratchG, "out/presentation-key-visual.json")));
 expectTrue("assembly-failure-hold", runB4.holds.some((h) => h.stage === "assembly"));
 
 // ---------- text entry (F1) ----------
