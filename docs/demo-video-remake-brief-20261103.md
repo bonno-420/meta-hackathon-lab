@@ -15,3 +15,16 @@ v1 (loops/loop-017/demo-video-v1.mp4) is a narrated slideshow: static cards held
 - Every transition has a stated meaning in the design; motion speed lets a first-time viewer follow the reveal order
 - Real screens are the actual artifacts (no regenerated look-alikes)
 - The zoom → highlight → after pattern is used where a before/after exists in the records
+
+## Production route: UltraFlame (user's direction, 2026-11-03)
+
+The remake is produced with UltraFlame (bonno-420/ultraframes; planning-led pipeline, HyperFrames video renderer). Production input = the materials below plus the staging requirements above. The finished video returns to this project's flow for the step-4 audit.
+
+### Materials specification
+
+- Real screen 1: the public preview, English edition — https://meta-hackathon-lab-demo.pages.dev/ (opening, the 9 recorded sentences, verification panel)
+- Real screen 2: the actual run — the integrated runner output with the model name and usage visible (a live run was captured during v1 production on 2026-11-03; materials are in the loop-017 working files on the user's PC)
+- Records: loops/loop-010 (approval FICT-J01-approval-1, generated-lp-v1.json — the 9 sentences, verification result), loops/loop-002 (the E02 stop records), experiments/exp-002-fact-extract-prompt-v1.1.md (before/after for the null change), docs/learnings.md (ledger entries), loops/INDEX.md (the loop list — 12 folders, numbered to Loop 16)
+- Script: the final script in docs/design/demo-video-design-v1.md (audit fixes F1/F2 applied). Wording changes go back through design → audit
+- Voice: English TTS, disclosed (v1 used Kokoro-82M, voice af_heart, local synthesis — same voice preferred for continuity; any change is disclosed the same way)
+- Output: MP4, 1920×1080, total ≤ 3:00 with the message complete within 2:55. Upload is done by the user after the step-4 audit
