@@ -163,6 +163,11 @@ function collectDuplication(sections) {
     for (const raw of splitSentences(text)) {
       const norm = normalizeSentence(raw);
       if (norm.length < 10) continue;
+      // Duplication is about sentences in the body text. A short
+      // fragment without terminal punctuation is a label or a value
+      // (a fact value shown both as a hero chip and in its condition
+      // card is the confirmed design, not a duplicated sentence).
+      if (!/[.!?]$/.test(norm) && norm.length < 20) continue;
       if (!map.has(norm)) map.set(norm, { example: raw.slice(0, 400), normalized: norm, count: 0, occurrences: [] });
       const e = map.get(norm);
       e.count++;
@@ -260,9 +265,16 @@ function detectHeadingMismatch(sections, scopeRules) {
 export function checkPage(html, { dicts } = {}) {
   const d = dicts ?? loadDicts();
   const sections = extractSections(html);
-  const duplication = collectDuplication(sections);
-  const verificationPhrases = detectVerification(sections, d.verification);
-  const recordExposure = detectRecordExposure(sections, d.recordLabels);
+  // The text checks always run over the whole page. Text outside any
+  // <section> must never escape inspection: this tool's own LP
+  // assembly puts its sentences in <p> elements beside a hero
+  // <section>, and with section-only scopes a duplicated sentence and
+  // an internal label in the body passed with zero hits (found
+  // 2026-11-04, reproduced before this fix).
+  const pageScope = [{ id: "page", heading: "(page)", rawHtml: String(html), inner: String(html), index: 0 }];
+  const duplication = collectDuplication(pageScope);
+  const verificationPhrases = detectVerification(pageScope, d.verification);
+  const recordExposure = detectRecordExposure(pageScope, d.recordLabels);
   const heading = detectHeadingMismatch(sections, d.headingScope);
   const summary = {
     duplicateGroups: duplication.length,

@@ -21,24 +21,31 @@ function resolveRoot(root, rel) {
   return path.isAbsolute(rel) ? rel : path.join(root, rel);
 }
 
+export const FACT_LABEL = {
+  salaryHourly: "時給", workHours: "勤務時間", transportCap: "交通費上限",
+  transport: "交通費", breakMinutes: "休憩", contractPeriod: "契約期間",
+  workLocation: "勤務地", employmentType: "雇用形態",
+};
+
 const ICONS = [
-  // circle
-  '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#173550" stroke-width="1.6"><circle cx="12" cy="12" r="8"/></svg>',
-  // shield with check
-  '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#173550" stroke-width="1.6"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>',
+  // tag
+  '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#e8862e" stroke-width="1.6"><path d="M20.59 13.41 11 3H4v7l9.59 9.59a2 2 0 0 0 2.82 0l4.18-4.18a2 2 0 0 0 0-2.82z"/><circle cx="7.5" cy="7.5" r="1"/></svg>',
+  // calendar
+  '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#e8862e" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
   // map pin
-  '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#173550" stroke-width="1.6"><path d="M12 21s-6-5.5-6-10a6 6 0 1 1 12 0c0 4.5-6 10-6 10z"/><circle cx="12" cy="11" r="2.4"/></svg>',
+  '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#e8862e" stroke-width="1.6"><path d="M12 21s-6-5.5-6-10a6 6 0 1 1 12 0c0 4.5-6 10-6 10z"/><circle cx="12" cy="11" r="2.4"/></svg>',
   // document
-  '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#173550" stroke-width="1.6"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/></svg>',
+  '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#e8862e" stroke-width="1.6"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/></svg>',
   // people
-  '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#173550" stroke-width="1.6"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5S13.9 16 14.5 19"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.7c2.3.2 4.3 1.6 5 4.3"/></svg>',
+  '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#e8862e" stroke-width="1.6"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5S13.9 16 14.5 19"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.7c2.3.2 4.3 1.6 5 4.3"/></svg>',
 ];
+const ICON_FOR_KEY = { salaryHourly: 0, workHours: 1, transportCap: 2, transport: 2 };
 
 function bars(widths, cls = "bar") {
   return widths.map((w) => `<span class="${cls}" style="width:${w}%"></span>`).join("");
 }
 
-export function buildFinishedImageHtml({ root, planning, photos, pageDir }) {
+export function buildFinishedImageHtml({ root, planning, photos, pageDir, design }) {
   const pageDirAbs = resolveRoot(root, pageDir);
   const srcFor = (img) => path.relative(pageDirAbs, resolveRoot(root, img.file)).split(path.sep).join("/").replaceAll("&", "&amp;").replaceAll('"', "&quot;");
   const usable = (photos ?? []).filter((p) => p && p.file && existsSync(resolveRoot(root, p.file)));
@@ -52,12 +59,18 @@ export function buildFinishedImageHtml({ root, planning, photos, pageDir }) {
   // give the hero a wide establishing shape and bands an inset shape.
   const COLUMN = 480;
   const specById = new Map((Array.isArray(planning?.imageSpecs) ? planning.imageSpecs : []).map((s) => [s.id, s]));
+  // The image design (loop-023) is the authority for each photograph's
+  // purpose, subject, depiction and size. Without a design record the
+  // composer falls back to the planning specs, with the same rules:
+  // hero large, explanatory images small illustrations.
+  const stepDesignById = new Map((Array.isArray(design?.images) ? design.images : []).map((e) => [e.id, e]));
   const designFor = (photo, placement) => {
     const spec = specById.get(photo.id) ?? {};
+    const sd = stepDesignById.get(photo.id) ?? null;
     const d = spec.design ?? {};
-    const aspect = d.aspect ?? (placement === "hero" ? "5:3" : "13:6");
+    const aspect = sd?.placement?.aspect ?? d.aspect ?? (placement === "hero" ? "5:3" : "4:3");
     const [aw, ah] = aspect.split(":").map((n) => Number(n) || 1);
-    const width = placement === "hero" ? COLUMN : COLUMN - 36;
+    const width = placement === "hero" ? COLUMN : Math.round((COLUMN - 36) * 0.38);
     return {
       id: photo.id,
       placement,
@@ -65,7 +78,10 @@ export function buildFinishedImageHtml({ root, planning, photos, pageDir }) {
       heightPx: Math.round((width * ah) / aw),
       fit: d.fit ?? "cover",
       position: d.position ?? "center",
-      purpose: spec.purpose ?? (placement === "hero" ? "the workplace itself, establishing the page" : "the work, in the body of the page"),
+      purpose: sd?.purpose ?? spec.purpose ?? (placement === "hero" ? "the workplace itself, establishing the page" : "the work, in the body of the page"),
+      subject: sd?.subject ?? spec.description ?? null,
+      depiction: sd?.depiction ?? (placement === "hero" ? "photorealistic" : "illustration"),
+      size: sd?.placement?.size ?? (placement === "hero" ? "large" : "small"),
     };
   };
   const heroDesign = hero ? designFor(hero, "hero") : null;
@@ -77,14 +93,17 @@ export function buildFinishedImageHtml({ root, planning, photos, pageDir }) {
   body += `<section class="title-block">${bars([78, 58, 42], "bar bar-light")}</section>\n`;
   if (cardCount > 0) {
     const cards = [];
+    const firstKeys = Array.isArray(planning?.firstCheckKeys) ? planning.firstCheckKeys : [];
     for (let i = 0; i < cardCount; i++) {
-      cards.push(`<div class="card${i % 2 === 1 ? " card-r" : ""}"><div class="card-icon">${ICONS[i % ICONS.length]}</div>${bars([70, 92, 55], "bar bar-sm")}</div>`);
+      const icon = ICONS[ICON_FOR_KEY[firstKeys[i]] ?? 3] ?? ICONS[3];
+      cards.push(`<div class="card${i % 2 === 1 ? " card-r" : ""}"><div class="card-icon">${icon}</div>${bars([70, 92, 55], "bar bar-sm")}</div>`);
     }
     body += `<section class="cards">${cards.join("")}<div class="clear"></div></section>\n`;
   }
+  const explainRows = `<div class="check-row"><span class="box"></span><span class="bar bar-sm" style="width:68%"></span></div>`.repeat(3);
   for (const img of bands) {
     const d = designById.get(img.id);
-    body += `<section class="band"><div class="photo-band" style="background-image:url('${srcFor(img)}');height:${d.heightPx}px"></div></section>\n`;
+    body += `<section class="explain-row"><div class="photo-inline" style="background-image:url('${srcFor(img)}');height:${d.heightPx}px"></div><div class="explain-card">${explainRows}</div><div class="clear"></div></section>\n`;
   }
   const rows = `<div class="check-row"><span class="box"></span><span class="bar bar-sm" style="width:68%"></span></div>`.repeat(4);
   body += `<section class="details"><div class="detail-card">${rows}</div><div class="detail-card detail-r">${rows}</div><div class="clear"></div></section>\n`;
@@ -97,18 +116,19 @@ export function buildFinishedImageHtml({ root, planning, photos, pageDir }) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LP finished image</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#dcdcdc;font-family:sans-serif}
-.page{max-width:480px;margin:0 auto;background:#fff;box-shadow:0 0 18px rgba(0,0,0,.18)}
+*{box-sizing:border-box}body{margin:0;background:#dde4ee;font-family:sans-serif;padding:24px 0}
+.page{max-width:480px;margin:0 auto;background:#fff;border-radius:26px;box-shadow:0 10px 34px rgba(23,42,66,.18);overflow:hidden}
 .photo-hero{background-size:cover;background-position:center}
-.band{padding:16px 18px 0}
-.photo-band{border-radius:12px;background-size:cover;background-position:center}
-.title-block{background:#173550;padding:34px 30px 38px}
+.explain-row{padding:16px 18px 0}
+.photo-inline{float:left;width:38%;border-radius:16px;background-size:cover;background-position:center}
+.explain-card{float:right;width:58%;border:1px solid #e3e7eb;border-radius:14px;padding:14px 12px;box-shadow:0 4px 16px rgba(23,42,66,.08)}
+.title-block{background:#173550;padding:30px 30px 34px;margin:-56px 34px 0;position:relative;border-radius:20px;box-shadow:0 8px 22px rgba(23,42,66,.25)}
 .bar{display:block;height:15px;border-radius:8px;background:#c9d4de;margin:0 0 14px}
 .bar:last-child{margin-bottom:0}
 .bar-light{background:#e8eef4}
 .bar-sm{height:9px;margin:0 0 8px}
 .cards{padding:20px 18px 6px}
-.card{float:left;width:48%;border:1px solid #e3e7eb;border-radius:12px;padding:16px 14px;margin:0 0 14px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.card{float:left;width:48%;border-radius:18px;padding:16px 14px;margin:0 0 14px;box-shadow:0 4px 16px rgba(23,42,66,.10);text-align:center}
 .card-r{float:right}
 .card-icon{margin-bottom:8px}
 .details{padding:6px 18px 26px}
@@ -120,7 +140,7 @@ export function buildFinishedImageHtml({ root, planning, photos, pageDir }) {
 .check-row .bar{display:inline-block;vertical-align:middle}
 .clear{clear:both}
 .cta{background:#173550;padding:26px 30px 34px;text-align:center}
-.cta-button{display:inline-block;background:#f2762e;border-radius:10px;padding:14px 44px;width:70%}
+.cta-button{display:inline-block;background:#f2762e;border-radius:999px;padding:14px 44px;width:56%}
 .bar-cta{background:#ffd9c2;height:13px;margin:0 auto}
 </style>
 </head>
@@ -179,7 +199,8 @@ ${body}</main>
     audience: planning?.audience ?? null,
     // gate is filled by evaluateFinishedImageGate below (kept on the
     // record so the presentation and the run record carry the verdict).
-    anatomy: ["hero photograph", "title block (placeholder text)", `condition cards x${cardCount} (planning firstCheckKeys)`, `photo bands x${bands.length}`, "detail blocks (placeholder text)", "call to action"],
+    form: { pageFrame: true, titleOverlap: true, reference: "loop-020 form, with the 2026-11-04 rules applied" },
+    anatomy: ["hero photograph", "title block (placeholder text)", `condition cards x${cardCount} (planning firstCheckKeys)`, `explanatory image rows x${bands.length} (small insets)`, "detail blocks (placeholder text)", "call to action"],
     messageMap,
     messageGaps,
     photos: usable.map((p) => ({ id: p.id, role: p.role ?? null, file: p.file })),
@@ -205,9 +226,18 @@ export function evaluateFinishedImageGate(record) {
   }
   const designedIds = new Set((record?.imageDesign ?? []).map((d) => d.id));
   for (const photo of record?.photos ?? []) {
-    if (!designedIds.has(photo.id)) failures.push(`写真 ${photo.id} に画像の設計がない`);
+    if (!designedIds.has(photo.id)) failures.push(`写真 ${photo.id} に画像の設計がない（G7）`);
     const d = (record?.imageDesign ?? []).find((x) => x.id === photo.id);
-    if (d && (!d.purpose || !d.aspect)) failures.push(`写真 ${photo.id} の設計（目的・形）が欠けている`);
+    if (d && (!d.purpose || !d.aspect)) failures.push(`写真 ${photo.id} の設計（目的・形）が欠けている（G7）`);
+    if (d && d.placement === "hero") {
+      if (d.size !== "large") failures.push(`ヒーロー ${photo.id} が大きく置かれていない（G8）`);
+    } else if (d) {
+      if (d.depiction !== "illustration") failures.push(`説明画像 ${photo.id} が写実になっている（G6）`);
+      if (d.size !== "small") failures.push(`説明画像 ${photo.id} が小さく置かれていない（G6）`);
+    }
+  }
+  if (!record?.form?.pageFrame || !record?.form?.titleOverlap) {
+    failures.push("レイアウトが参照形（ページ枠・タイトルの重なり）になっていない（G8）");
   }
   return { pass: failures.length === 0, failures };
 }

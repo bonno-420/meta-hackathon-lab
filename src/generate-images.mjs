@@ -12,6 +12,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { ILLUSTRATION_STYLE } from "./image-design.mjs";
 
 export const IMAGE_MODEL = "muse-image-1.0";
 export const IMAGE_API_URL = "https://api.meta.ai/v1/images/generations";
@@ -80,7 +81,9 @@ export function decideImagePlanFromSpecs({ correspondence }) {
       id: el.role === "key-visual" ? "hero" : el.id,
       line: null,
       role: el.role,
-      prompt: `${el.description}, ${correspondence.style ?? "photorealistic"}, no text, no numbers, no logos, no watermark`,
+      prompt: el.role === "key-visual"
+        ? `${el.description}, ${correspondence.style ?? "photorealistic"}, no text, no numbers, no logos, no watermark`
+        : `${el.description}, ${ILLUSTRATION_STYLE}, no text, no numbers, no logos, no watermark`,
     });
   }
   return { images };

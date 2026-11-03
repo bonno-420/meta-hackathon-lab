@@ -16,8 +16,9 @@ import { runPlanningGeneration } from "./generate-planning.mjs";
 import { decideImagePlanFromSpecs } from "./generate-images.mjs";
 import { buildCorrespondence, buildImagePrompt, checkPromptCompliance, intentFromPlanning, validatePlanning } from "./planning.mjs";
 import { checkPage } from "./pagecheck.mjs";
-import { checkCompletion, runDemo } from "./run-demo.mjs";
+import { checkCompletion, liveDeps, runDemo } from "./run-demo.mjs";
 import { buildFinishedImageHtml, evaluateFinishedImageGate } from "./page-layout.mjs";
+import { buildImageDesign, checkImageDesign, checkPromptGates, rebuildPromptWithoutHits } from "./image-design.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "..");
@@ -130,6 +131,54 @@ expect("pagecheck-dict-counts", `${cleanPage.dictCounts.verification}/${cleanPag
 const phrasePage = checkPage(`<html><body><p>All facts below are the only stated facts. 条件は以上です。</p></body></html>`);
 expect("pagecheck-verifier-phrase-fails", phrasePage.pass, false);
 expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits >= 1);
+
+// ---------- pagecheck: the 2026-11-04 defect (hero present, body unchecked) ----------
+{
+  const sentence = "勤務時間は07:00から16:00までで、休憩は60分です。";
+  const badPage = `<!doctype html><html><body><main><section class="lp-hero"><img src="images/hero.webp" alt="hero"></section><p>${sentence}</p><p>${sentence}</p><p>条件は factKeys を確認してください。</p></main></body></html>`;
+  const badResult = checkPage(badPage);
+  expectTrue("pagecheck-hero-body-duplication-fails", !badResult.pass && badResult.summary.duplicateGroups >= 1 && badResult.summary.recordExposureHits >= 1);
+  const valuePage = `<!doctype html><html><body><main><section class="lp-hero"><span>09:00〜18:00</span></section><div class="card">09:00〜18:00</div><p>${sentence}</p></main></body></html>`;
+  expectTrue("pagecheck-value-repetition-is-not-duplication", checkPage(valuePage).pass);
+}
+
+// ---------- assembly from the confirmed layout + appeal coverage (C6) ----------
+{
+  const { assembleFromLayout, matchAppealSentences } = await import("./assemble-layout.mjs");
+  const gen = { sentences: [
+    { text: "時給は1,500円です。", factKeys: ["salaryHourly"], sourceLines: ["L03"] },
+    { text: "土日祝日は休みです。", factKeys: [], sourceLines: ["L06"] },
+  ] };
+  const layoutRec = { messageMap: [
+    { block: "hero-photo", carries: {} },
+    { block: "title", carries: { appealId: "A1" } },
+    { block: "condition-card", carries: { factKey: "salaryHourly", appealId: "A1" } },
+    { block: "details", carries: { factKeys: [], appealIds: ["A3"] } },
+    { block: "cta", carries: { action: true } },
+  ] };
+  const built = assembleFromLayout({ root: makeScratch(), generation: gen, images: [], lpDir: "out", heroChips: ["時給1,500円"], layout: layoutRec, planning, facts });
+  expectTrue("layout-assembly-places-every-sentence", gen.sentences.every((s) => built.html.includes(s.text)));
+  expectTrue("layout-assembly-card-carries-value", built.html.includes("card-value") && built.html.includes("時給1,500円"));
+  expectTrue("layout-assembly-has-cta", built.html.includes("応募する"));
+  const completion = checkCompletion({ root: makeScratch(), generation: gen, imageFiles: [], lpFile: "out/lp.html", grounding: { pass: true }, pagecheck: null, appealCoverage: [{ appealId: "A1", sentenceIdxs: [0] }, { appealId: "A9", sentenceIdxs: [] }] });
+  expectTrue("completion-c6-blocks-uncovered-appeal", !completion.pass && completion.checks.some((c) => c.id === "C6" && !c.pass));
+}
+
+// ---------- per-endpoint keys (liveDeps stage envs) ----------
+{
+  const seen = [];
+  const probeDeps = liveDeps({
+    root: makeScratch(), outDir: "out", generationFile: "out/generated.json",
+    run: async (args, env) => { seen.push({ script: path.basename(args[0]), env }); return { exitCode: 1, stdout: "", stderr: "" }; },
+    textApiKey: "TEXTKEY", imageApiKey: "IMAGEKEY",
+  });
+  await probeDeps.extract({});
+  await probeDeps.keyVisualPhotos({ photoPlan: [], imagesDir: "out/images" }).catch(() => {});
+  const textEnv = seen.find((x) => x.script === "extract-and-check.mjs")?.env ?? {};
+  const imageEnv = seen.find((x) => x.script === "generate-images.mjs")?.env ?? {};
+  expectTrue("keys-text-child-gets-only-text-key", textEnv.MODEL_API_KEY === "TEXTKEY" && !("BASETEN_API_KEY" in textEnv));
+  expectTrue("keys-image-child-gets-only-image-key", imageEnv.MODEL_API_KEY === "IMAGEKEY" && !("BASETEN_API_KEY" in imageEnv));
+}
 
 // ---------- grounding generalization (F9) ----------
 const customFacts = clone(facts);
@@ -272,6 +321,8 @@ expect("resume-completion-has-c5", Array.isArray(runD.stages.verification.comple
 expectTrue("resume-completion-pass", runD.stages.verification.completion.pass);
 const lpHtml = readFileSync(path.join(scratchA, "out/lp.html"), "utf8");
 expectTrue("lp-hero-chips", lpHtml.includes("hero-chips") && lpHtml.includes("時給1,500円"));
+expectTrue("lp-assembled-from-confirmed-layout", runD.stages.lpAssembly.layoutUsed === true);
+expectTrue("lp-appeal-coverage-recorded", Array.isArray(runD.stages.lpAssembly.appealCoverage) && runD.stages.lpAssembly.appealCoverage.every((c) => c.sentenceIdxs.length > 0));
 expectTrue("lp-presentation-saved", existsSync(path.join(scratchA, "out/presentation-lp.json")));
 expect("resume-status", runD.status, "pending-human-confirmation");
 
@@ -399,7 +450,7 @@ const stateRF = JSON.parse(readFileSync(path.join(scratchRF, "out/run-state.json
 expectTrue("render-failure-state-persisted", Array.isArray(stateRF.completedStages) && !stateRF.completedStages.includes("keyVisual"));
 
 // ---------- Finished-image gate: a page that fails is not presented ----------
-expectTrue("gate-pass", evaluateFinishedImageGate({ audience: "x", messageGaps: [], photos: [{ id: "a" }], imageDesign: [{ id: "a", purpose: "p", aspect: "5:3" }] }).pass);
+expectTrue("gate-pass", evaluateFinishedImageGate({ audience: "x", messageGaps: [], form: { pageFrame: true, titleOverlap: true }, photos: [{ id: "a", role: "key-visual" }], imageDesign: [{ id: "a", purpose: "p", aspect: "5:3", placement: "hero", size: "large", depiction: "photorealistic" }] }).pass);
 expectTrue("gate-fails-no-audience", !evaluateFinishedImageGate({ audience: null, messageGaps: [], photos: [], imageDesign: [] }).pass);
 expectTrue("gate-fails-gap", !evaluateFinishedImageGate({ audience: "x", messageGaps: [{ appealId: "A9" }], photos: [], imageDesign: [] }).pass);
 expectTrue("gate-fails-undesigned-photo", !evaluateFinishedImageGate({ audience: "x", messageGaps: [], photos: [{ id: "a" }], imageDesign: [] }).pass);
@@ -417,6 +468,29 @@ expect("gate-fail-stops-at-kv", runG.stoppedAt, "key-visual");
 expect("gate-fail-not-a-checkpoint", runG.status, "stopped");
 expectTrue("gate-fail-recorded", runG.stages.keyVisual.gate && runG.stages.keyVisual.gate.pass === false);
 expectTrue("gate-fail-not-presented", !existsSync(path.join(scratchG, "out/presentation-key-visual.json")));
+
+// ---------- Image design step (loop-023) ----------
+const designJ01 = buildImageDesign(planning, facts);
+expect("design-count", designJ01.count, planning.imageSpecs.length);
+expectTrue("design-hero-photoreal", designJ01.images.find((e) => e.kind === "hero")?.depiction === "photorealistic");
+expectTrue("design-explanatory-illustration", designJ01.images.filter((e) => e.kind !== "hero").every((e) => e.depiction === "illustration" && e.placement.size === "small"));
+expectTrue("design-every-image-has-purpose", designJ01.images.every((e) => typeof e.purpose === "string" && e.purpose.length > 0));
+expectTrue("design-check-pass", checkImageDesign(designJ01).pass);
+const designBad = JSON.parse(JSON.stringify(designJ01));
+designBad.images.find((e) => e.kind !== "hero").depiction = "photorealistic";
+expectTrue("design-check-blocks-photoreal-explanatory", !checkImageDesign(designBad).pass);
+const designNoPurpose = JSON.parse(JSON.stringify(designJ01));
+designNoPurpose.images[0].purpose = null;
+expectTrue("design-check-blocks-purposeless", !checkImageDesign(designNoPurpose).pass);
+expectTrue("prompt-gate-blocks-truck-subject", !checkPromptGates("A large truck in front of a warehouse. Wide shot. photorealistic, no text").pass);
+expectTrue("prompt-gate-allows-building-subject", checkPromptGates("A warehouse building exterior in the morning. Wide establishing shot. photorealistic, no text").pass);
+{
+  const entry = designJ01.images.find((e) => e.kind === "hero");
+  const doctored = { ...entry, subject: "A warehouse exterior, with a truck parked in front", prompt: "" };
+  doctored.prompt = `${doctored.subject}. ${doctored.composition}. ${doctored.styleText}, no text, no numbers, no logos, no watermark`;
+  const rebuilt = rebuildPromptWithoutHits(doctored, ["truck"]);
+  expectTrue("sendback-removes-hit-clause", rebuilt.removed.length === 1 && checkPromptGates(rebuilt.entry.prompt).pass);
+}
 expectTrue("assembly-failure-hold", runB4.holds.some((h) => h.stage === "assembly"));
 
 // ---------- text entry (F1) ----------

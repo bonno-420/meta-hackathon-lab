@@ -27,9 +27,11 @@ import { buildPreview } from "./build-preview.mjs";
 import { checkPage } from "./pagecheck.mjs";
 import { buildCorrespondence, buildImagePrompt, buildKeyVisualChecklist, checkPromptCompliance, sha256Text, validatePlanning } from "./planning.mjs";
 import { buildFinishedImageHtml, evaluateFinishedImageGate } from "./page-layout.mjs";
+import { buildImageDesign, checkImageDesign, checkPromptGates, promptGateResults, rebuildPromptWithoutHits } from "./image-design.mjs";
 import { renderHtmlToImage } from "./render-page-image.mjs";
 import { pinPostingText, buildFactsFile, buildManifest } from "./pin-posting.mjs";
 import { decideImagePlanFromSpecs } from "./generate-images.mjs";
+import { assembleFromLayout, matchAppealSentences } from "./assemble-layout.mjs";
 
 const execFileAsync = promisify(execFile);
 
@@ -178,7 +180,7 @@ ${body}</main>
 // exists and contains both text and image, grounding re-run passes.
 // Image meaning is out of scope and is never judged here (N3: the note
 // below states this for the record reader).
-export function checkCompletion({ root, generation, imageFiles, lpFile, grounding, pagecheck }) {
+export function checkCompletion({ root, generation, imageFiles, lpFile, grounding, pagecheck, appealCoverage }) {
   const checks = [];
   let lpHtml = null;
   try { lpHtml = readFileSync(resolveRoot(root, lpFile), "utf8"); }
@@ -244,6 +246,20 @@ export function checkCompletion({ root, generation, imageFiles, lpFile, groundin
       pagecheck: { version: pagecheck.version ?? null, dictsVersion: pagecheck.dictsVersion ?? null, summary: s },
     });
   }
+  // C6: every appeal in the planning has at least one generated
+  // sentence. An appeal grounded in the original with no sentence
+  // means something important in the original fell out of the page.
+  if (Array.isArray(appealCoverage)) {
+    const uncovered = appealCoverage.filter((c) => !Array.isArray(c.sentenceIdxs) || c.sentenceIdxs.length === 0);
+    const c6Pass = uncovered.length === 0;
+    checks.push({
+      id: "C6",
+      pass: c6Pass,
+      detail: c6Pass
+        ? `企画の訴求 ${appealCoverage.length} 件すべてに対応する文がある`
+        : `対応する文がない訴求がある（${uncovered.map((c) => c.appealId).join("、")}）: 原本にある大事なことがページに落ちている`,
+    });
+  }
   const failures = checks.filter((c) => !c.pass).map((c) => ({ check: c.id, detail: c.detail }));
   const pass = checks.every((c) => c.pass);
   return {
@@ -292,11 +308,16 @@ export async function runDemo(options, deps = {}) {
   const extract = deps.extract ?? (async () => { throw new Error("no extraction executor wired"); });
   const generate = deps.generate ?? (async () => { throw new Error("no generation executor wired"); });
   const images = deps.images ?? (async () => { throw new Error("no image executor wired"); });
-  const assemble = deps.assemble ?? (async ({ root, generation, images, lpFile, heroChips }) => {
-    const built = assembleLP({ root, generation, images, lpDir: path.dirname(lpFile), heroChips });
+  const assemble = deps.assemble ?? (async ({ root, generation, images, lpFile, heroChips, layout, planning, facts }) => {
+    // With a confirmed finished-image layout, the LP is assembled in
+    // that composition (the confirmed placement and appeals as-is);
+    // without one, the legacy assembly is used unchanged.
+    const built = layout
+      ? assembleFromLayout({ root, generation, images, lpDir: path.dirname(lpFile), heroChips, layout, planning, facts })
+      : assembleLP({ root, generation, images, lpDir: path.dirname(lpFile), heroChips });
     mkdirSync(path.dirname(resolveRoot(root, lpFile)), { recursive: true });
     writeFileSync(resolveRoot(root, lpFile), built.html, "utf8");
-    return { file: lpFile, referenced: built.referenced, skipped: built.skipped };
+    return { file: lpFile, referenced: built.referenced, skipped: built.skipped, layoutUsed: Boolean(layout), assignments: built.assignments ?? null };
   });
   const keyVisualPhotos = deps.keyVisualPhotos ?? (async () => { throw new Error("no key-visual photo executor wired"); });
   const renderFinishedImage = deps.renderFinishedImage ?? (async () => { throw new Error("no finished-image renderer wired"); });
@@ -555,16 +576,46 @@ export async function runDemo(options, deps = {}) {
       // single image. The image model never draws the page itself, and
       // the finished image is a preview artifact: it is never assembled
       // into the LP (the copy and the real images take its places later).
-      const photoPlan = correspondence.elements.map((el) => ({ id: el.id, role: el.role, prompt: buildImagePrompt(el, correspondence) }));
-      const complianceResults = photoPlan.map((pp) => ({ id: pp.id, ...checkPromptCompliance(pp.prompt, correspondence) }));
-      const compliance = { pass: complianceResults.every((c) => c.pass), results: complianceResults };
-      if (!compliance.pass) {
+      // Image design (loop-023): the images are designed from the
+      // planning before anything is generated. A design that fails
+      // its checks stops the run here, before any spend, with the
+      // reasons recorded as a send-back to the design.
+      const factsForDesign = fixedFacts ?? loadJson(path.join(root, factsFile));
+      const imageDesign = buildImageDesign(planning, factsForDesign);
+      const designCheck = checkImageDesign(imageDesign);
+      const kvPageDirEarly = normalizePath(path.dirname(generationFile));
+      mkdirSync(resolveRoot(root, kvPageDirEarly), { recursive: true });
+      writeFileSync(resolveRoot(root, path.join(kvPageDirEarly, "image-design.json")), JSON.stringify(imageDesign, null, 2) + "\n", "utf8");
+      if (!designCheck.pass) {
+        stages.keyVisual = { executed: true, pass: false, correspondence, imageDesign, designCheck };
+        persistState(["extraction", "factsComparison", "approval", "planning"], { e02raw });
+        stop("key-visual", `画像の設計がチェックを通らなかったため、生成しない（${designCheck.failures.join("、")}）`);
+      }
+      // Prompts come from the design. A prompt that hits a gate or the
+      // standing compliance is sent back once and rebuilt from its
+      // design entry; the return is recorded with its reasons.
+      const sendBacks = [];
+      const photoPlan = stoppedAt ? [] : imageDesign.images.map((e) => {
+        let entry = e;
+        const gateCheck = checkPromptGates(entry.prompt);
+        const comp = checkPromptCompliance(entry.prompt, correspondence);
+        if (!gateCheck.pass || !comp.pass) {
+          const hitTerms = [...gateCheck.hits.map((h) => h.term), ...comp.hits.map((h) => h.term)];
+          const rebuilt = rebuildPromptWithoutHits(entry, hitTerms);
+          sendBacks.push({ id: entry.id, reasons: hitTerms, removedClauses: rebuilt.removed });
+          entry = rebuilt.entry;
+        }
+        return { id: entry.id, role: entry.role, prompt: entry.prompt };
+      });
+      const complianceResults = photoPlan.map((pp) => ({ id: pp.id, ...checkPromptCompliance(pp.prompt, correspondence), gates: checkPromptGates(pp.prompt) }));
+      const compliance = { pass: complianceResults.every((c) => c.pass && c.gates.pass), results: complianceResults };
+      if (!stoppedAt && !compliance.pass) {
         const hits = complianceResults.filter((c) => !c.pass).flatMap((c) => (c.hits ?? []).map((h) => `${c.id}: ${h.term}`));
-        stages.keyVisual = { executed: true, pass: false, correspondence, photoPlan, compliance };
+        stages.keyVisual = { executed: true, pass: false, correspondence, imageDesign, designCheck, sendBacks, photoPlan, compliance };
         stop("key-visual", `1枚画の写真のプロンプトが禁止モチーフ検査に触れたため、生成しない（${hits.join("、")}）。対応表か企画の側の不備であり、プロンプトの言い換えでは直さない`);
-      } else {
+      } else if (!stoppedAt) {
         const kvPhotosDir = normalizePath(path.join(imagesDir, "kv-photos"));
-        const kvPageDir = normalizePath(path.dirname(generationFile));
+        const kvPageDir = kvPageDirEarly;
         mkdirSync(resolveRoot(root, kvPhotosDir), { recursive: true });
         mkdirSync(resolveRoot(root, kvPageDir), { recursive: true });
         let attempts = 0;
@@ -580,11 +631,11 @@ export async function runDemo(options, deps = {}) {
         }
         if (!photosRun || photosRun.status !== "generated" || !photosRun.images || photosRun.images.length === 0) {
           holds.push({ stage: "key-visual", condition: "1枚画の写真の生成", detail: "上限まで再試行したが写真が生成できなかった", attempts });
-          stages.keyVisual = { executed: true, pass: false, correspondence, photoPlan, compliance, attempts, holds: [...holds] };
+          stages.keyVisual = { executed: true, pass: false, correspondence, imageDesign, designCheck, sendBacks, photoPlan, compliance, attempts, holds: [...holds] };
           persistState(["extraction", "factsComparison", "approval", "planning"], { e02raw });
           stop("key-visual", "1枚画の写真が生成できなかったため止める（保留として記録した）");
         } else {
-          const layout = buildFinishedImageHtml({ root, planning, photos: photosRun.images, pageDir: kvPageDir });
+          const layout = buildFinishedImageHtml({ root, planning, photos: photosRun.images, pageDir: kvPageDir, design: imageDesign });
           let rendered = null;
           try {
             rendered = await renderFinishedImage({ root, html: layout.html, outDir: kvPageDir, baseName: "lp-finished-image" });
@@ -593,14 +644,15 @@ export async function runDemo(options, deps = {}) {
           }
           if (!rendered || rendered.status !== "rendered" || !rendered.file) {
             holds.push({ stage: "key-visual", condition: "LPの完成イメージの描画", detail: rendered && rendered.reason ? rendered.reason : "描画できなかった", attempts });
-            stages.keyVisual = { executed: true, pass: false, correspondence, photoPlan, compliance, layout: layout.record, photos: photosRun.images, attempts, holds: [...holds] };
+            stages.keyVisual = { executed: true, pass: false, correspondence, imageDesign, designCheck, sendBacks, photoPlan, compliance, layout: layout.record, photos: photosRun.images, attempts, holds: [...holds] };
             persistState(["extraction", "factsComparison", "approval", "planning"], { e02raw });
             stop("key-visual", "LPの完成イメージを描画できなかったため止める（保留として記録した）");
           } else {
             const gate = evaluateFinishedImageGate(layout.record);
             if (!gate.pass) {
               stages.keyVisual = {
-                executed: true, pass: false, correspondence, photoPlan, compliance, attempts,
+                executed: true, pass: false, correspondence, imageDesign, designCheck, sendBacks, photoPlan, compliance, attempts,
+                gateResults: [...designCheck.gateResults.map((g) => ({ ...g, kind: "design" })), ...promptGateResults(photoPlan), { id: "G8", pass: false }],
                 layout: layout.record, photos: photosRun.images, gate,
                 model: photosRun.model ?? null, costUsd: photosRun.costUsd ?? null,
               };
@@ -610,7 +662,8 @@ export async function runDemo(options, deps = {}) {
             const sha = sha256File(resolveRoot(root, rendered.file));
             kvImage = { file: rendered.file, sha256: sha };
             stages.keyVisual = {
-              executed: true, pass: true, correspondence, photoPlan, compliance, attempts,
+              executed: true, pass: true, correspondence, imageDesign, designCheck, sendBacks, photoPlan, compliance, attempts,
+              gateResults: [...designCheck.gateResults.map((g) => ({ ...g, kind: "design" })), ...promptGateResults(photoPlan), { id: "G8", pass: true }],
               layout: layout.record,
               gate: { pass: true, failures: [] },
               photos: photosRun.images,
@@ -803,7 +856,7 @@ export async function runDemo(options, deps = {}) {
     while (assemblyAttempts < maxAssemblyAttempts && !assembly) {
       assemblyAttempts += 1;
       try {
-        assembly = await assemble({ root, generation: generationRun.generation, images: imageRun.images ?? [], imagesDir, lpFile, heroChips });
+        assembly = await assemble({ root, generation: generationRun.generation, images: imageRun.images ?? [], imagesDir, lpFile, heroChips, layout: (resumeState && resumeState.keyVisual && resumeState.keyVisual.layout) ?? (stages.keyVisual && stages.keyVisual.layout) ?? null, planning: planning ?? null, facts: fixedFacts ?? null });
         assemblyError = null;
       } catch (e) {
         assembly = null;
@@ -817,6 +870,8 @@ export async function runDemo(options, deps = {}) {
         file: assembly.file ?? lpFile,
         referenced: assembly.referenced ?? [],
         skipped: assembly.skipped ?? [],
+        layoutUsed: assembly.layoutUsed ?? false,
+        appealCoverage: assembly.assignments?.appealCoverage ?? null,
       };
     } else {
       const detail = `組み立てが${assemblyAttempts}回とも失敗した: ${String(assemblyError?.message ?? assemblyError)}`;
@@ -859,6 +914,9 @@ export async function runDemo(options, deps = {}) {
         const lpHtml = readFileSync(resolveRoot(root, lpFile), "utf8");
         pagecheck = checkPage(lpHtml);
       } catch { pagecheck = null; }
+      const appealCoverage = pipelineMode && planning && Array.isArray(planning.appeals)
+        ? planning.appeals.map((a) => ({ appealId: a.id, sentenceIdxs: matchAppealSentences(generationRun.generation, planning.appeals).byAppeal.get(a.id) ?? [] }))
+        : undefined;
       const completion = checkCompletion({
         root,
         generation: generationRun.generation,
@@ -866,6 +924,7 @@ export async function runDemo(options, deps = {}) {
         lpFile,
         grounding: verification.grounding,
         pagecheck,
+        appealCoverage,
       });
       stages.verification.completion = completion;
       if (pipelineMode) {
@@ -1033,8 +1092,18 @@ export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesR
   // images on the Meta API), each child gets the key for its own
   // endpoint. Without explicit keys, children inherit the environment
   // exactly as before.
-  const textRunner = textApiKey ? (args) => runNode(args, { ...process.env, MODEL_API_KEY: textApiKey }) : runner;
-  const imageRunner = imageApiKey ? (args) => runNode(args, { ...process.env, MODEL_API_KEY: imageApiKey }) : runner;
+  // Each stage's child env carries ONLY the key for its own endpoint
+  // (2026-11-04): the other provider's key is removed, and when the
+  // endpoint's key is missing the child gets none and blocks itself,
+  // instead of falling back to the wrong key.
+  const stageEnv = (key) => {
+    const e = { ...process.env };
+    delete e.BASETEN_API_KEY;
+    if (key) e.MODEL_API_KEY = key; else delete e.MODEL_API_KEY;
+    return e;
+  };
+  const textRunner = (args) => runner(args, stageEnv(textApiKey));
+  const imageRunner = (args) => runner(args, stageEnv(imageApiKey));
   const imgDir = imagesDir ?? path.join(path.dirname(generationFile), "images");
   const imgRunRel = imagesRunFile ?? path.join(outDir, "images-run.json");
   return {
@@ -1060,7 +1129,7 @@ export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesR
       }
       return loadJson(liveFile);
     },
-    generate: async ({ originalFile, factsFile, approvalFile }) => {
+    generate: async ({ originalFile, factsFile, approvalFile, planningFile: callPlanningFile, feedbackFile: callFeedbackFile }) => {
       const genAbs = path.join(root, generationFile);
       const runOutRel = path.join(outDir, "generation-run.json");
       const runOutAbs = path.join(root, runOutRel);
@@ -1069,11 +1138,13 @@ export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesR
       // Planning path (fix F2/F10): with a planning input the executor
       // is generate-planning.mjs, whose intent layer comes from the
       // planning file (and the feedback memo, when given).
-      const script = planningFile ? "generate-planning.mjs" : "generate.mjs";
+      const effPlanningFile = callPlanningFile ?? planningFile;
+      const effFeedbackFile = callFeedbackFile ?? feedbackFile;
+      const script = effPlanningFile ? "generate-planning.mjs" : "generate.mjs";
       const ran = await textRunner([
         path.join(here, script), "--approval", approvalFile, "--original", originalFile, "--facts", factsFile, "--out", generationFile, "--run-out", runOutRel,
-        ...(planningFile ? ["--planning", planningFile] : []),
-        ...(planningFile && feedbackFile ? ["--feedback", feedbackFile] : []),
+        ...(effPlanningFile ? ["--planning", effPlanningFile] : []),
+        ...(effPlanningFile && effFeedbackFile ? ["--feedback", effFeedbackFile] : []),
       ]);
       if (ran.exitCode !== 0) {
         return { ...childErrorResult("generation", ran.exitCode), generation: null, grounding: null };
@@ -1252,7 +1323,7 @@ async function main() {
       ...(kvConfirmation ? { kvConfirmation } : {}),
       stateFile: `${outDir.replaceAll("\\", "/")}/run-state.json`,
     },
-    liveDeps({ root, outDir, generationFile, imagesDir, imagesRunFile, planningFile, feedbackFile, textApiKey: process.env.BASETEN_API_KEY || undefined, imageApiKey: process.env.MODEL_API_KEY || undefined }),
+    liveDeps({ root, outDir, generationFile, imagesDir, imagesRunFile, planningFile, feedbackFile, textApiKey: ((process.env.PIPELINE_BASE_URL ?? "").includes("baseten") ? process.env.BASETEN_API_KEY : process.env.MODEL_API_KEY) || undefined, imageApiKey: process.env.MODEL_API_KEY || undefined }),
   );
 
   mkdirSync(path.join(root, outDir), { recursive: true });

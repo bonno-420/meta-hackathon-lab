@@ -1,0 +1,159 @@
+{
+  "checkpoint": "key-visual",
+  "presented": [
+    {
+      "kind": "image",
+      "file": "loops/loop-022/run14/lp-finished-image.png",
+      "sha256": "dd131c6991db2eea7a646d3ee6b6a224ecd3290540e1058484f2eb2d00cc4e92"
+    }
+  ],
+  "layout": {
+    "kind": "lp-finished-image",
+    "audience": "早朝から夕方までの勤務の形が合う人／土日祝日を休みたい人／豊橋市内へ通える範囲の人",
+    "form": {
+      "pageFrame": true,
+      "titleOverlap": true,
+      "reference": "loop-020 form, with the 2026-11-04 rules applied"
+    },
+    "anatomy": [
+      "hero photograph",
+      "title block (placeholder text)",
+      "condition cards x3 (planning firstCheckKeys)",
+      "explanatory image rows x1 (small insets)",
+      "detail blocks (placeholder text)",
+      "call to action"
+    ],
+    "messageMap": [
+      {
+        "block": "title",
+        "carries": {
+          "appealId": "A1"
+        },
+        "note": "the lead appeal's headline slot (placeholder text at this stage)"
+      },
+      {
+        "block": "condition-card",
+        "carries": {
+          "factKey": "salaryHourly",
+          "appealId": "A1"
+        }
+      },
+      {
+        "block": "condition-card",
+        "carries": {
+          "factKey": "workHours",
+          "appealId": "A2"
+        }
+      },
+      {
+        "block": "condition-card",
+        "carries": {
+          "factKey": "transportCap",
+          "appealId": "A4"
+        }
+      },
+      {
+        "block": "hero-photo",
+        "carries": {
+          "specId": "key-visual",
+          "basis": {
+            "appealId": "A2"
+          }
+        },
+        "purpose": "07:00〜16:00の勤務時間（休憩60分）"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "section-work",
+          "basis": {
+            "factKey": "workLocation"
+          }
+        },
+        "purpose": "workLocation"
+      },
+      {
+        "block": "details",
+        "carries": {
+          "factKeys": [
+            "breakMinutes",
+            "transport"
+          ],
+          "appealIds": [
+            "A3",
+            "A5"
+          ]
+        },
+        "note": "appeal facts not shown as first-check cards, and line-grounded appeals with no fact key; carried by the detail blocks and the copy"
+      },
+      {
+        "block": "cta",
+        "carries": {
+          "action": true
+        }
+      }
+    ],
+    "messageGaps": [],
+    "photos": [
+      {
+        "id": "key-visual",
+        "role": "key-visual",
+        "file": "loops/loop-022/run14/images/kv-photos/key-visual.webp"
+      },
+      {
+        "id": "section-work",
+        "role": "section",
+        "file": "loops/loop-022/run14/images/kv-photos/section-work.webp"
+      }
+    ],
+    "imageDesign": [
+      {
+        "id": "key-visual",
+        "placement": "hero",
+        "aspect": "5:3",
+        "heightPx": 288,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "07:00〜16:00の勤務時間（休憩60分）",
+        "subject": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light",
+        "depiction": "photorealistic",
+        "size": "large"
+      },
+      {
+        "id": "section-work",
+        "placement": "band",
+        "aspect": "13:6",
+        "heightPx": 78,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "workLocation",
+        "subject": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning",
+        "depiction": "illustration",
+        "size": "small"
+      }
+    ],
+    "note": "LPの完成イメージ。文章はプレースホルダで、実文と実画像は後段で同じレイアウトの同じ場所に入る"
+  },
+  "checklist": [
+    {
+      "element": "key-visual",
+      "basis": {
+        "appealId": "A2"
+      },
+      "description": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    }
+  ],
+  "holds": [],
+  "judgement": {
+    "result": null,
+    "confirmer": null,
+    "confirmedAt": null,
+    "corrections": []
+  }
+}
