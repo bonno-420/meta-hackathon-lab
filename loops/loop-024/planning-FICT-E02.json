@@ -1,0 +1,103 @@
+{
+  "language": "en",
+  "audience": "People who want to make things with their hands and are looking for weekday workshop work",
+  "appeals": [
+    {
+      "id": "A1",
+      "text": "The work itself: assembling wooden frames and sanding parts by hand, and seeing a finished product take shape",
+      "factKeys": [],
+      "sourceLines": [
+        "L01"
+      ]
+    },
+    {
+      "id": "A2",
+      "text": "Training is provided, so you can start even without woodworking experience",
+      "factKeys": [],
+      "sourceLines": [
+        "L08"
+      ]
+    },
+    {
+      "id": "A3",
+      "text": "The hourly wage is stated clearly at 1,400 yen",
+      "factKeys": [
+        "salaryHourly"
+      ],
+      "sourceLines": [
+        "L04"
+      ]
+    },
+    {
+      "id": "A4",
+      "text": "Weekdays only, 08:30 to 17:30 with a 60-minute break",
+      "factKeys": [
+        "workHours",
+        "breakMinutes"
+      ],
+      "sourceLines": [
+        "L05"
+      ]
+    },
+    {
+      "id": "A5",
+      "text": "Commuting costs are covered, up to 15,000 yen per month",
+      "factKeys": [
+        "transport",
+        "transportCap"
+      ],
+      "sourceLines": [
+        "L07"
+      ]
+    }
+  ],
+  "firstCheckKeys": [],
+  "imageSpecs": [
+    {
+      "id": "key-visual",
+      "role": "key-visual",
+      "basis": {
+        "appealId": "A1"
+      },
+      "description": "Hands assembling a small wooden frame on a workbench, parts and tools laid out beside it",
+      "purpose": "The work itself, first",
+      "design": {
+        "aspect": "5:3",
+        "fit": "cover",
+        "position": "center"
+      }
+    },
+    {
+      "id": "section-work",
+      "role": "work",
+      "basis": {
+        "factKey": "workLocation"
+      },
+      "description": "Sanding a wooden part by hand at a workbench in a small workshop",
+      "purpose": "The work scene in the body",
+      "design": {
+        "aspect": "13:6",
+        "fit": "cover",
+        "position": "center"
+      }
+    }
+  ],
+  "notSay": [
+    {
+      "key": "renewal",
+      "terms": [
+        "renewal guaranteed"
+      ],
+      "text": "Do not mention contract renewal"
+    },
+    {
+      "key": "housing",
+      "terms": [
+        "housing",
+        "dormitory"
+      ],
+      "text": "Do not mention housing"
+    }
+  ],
+  "style": "illustration"
+}

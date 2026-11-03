@@ -1,0 +1,274 @@
+{
+  "checkpoint": "key-visual",
+  "presented": [
+    {
+      "kind": "image",
+      "file": "loops/loop-024/runE1/lp-finished-image.png",
+      "sha256": "3b6f89dc6a5bf6132ff1663eefcf8dba2be6926a402789130896720bcad58938"
+    }
+  ],
+  "layout": {
+    "kind": "lp-finished-image",
+    "language": "en",
+    "audience": "Students and others looking for weekend-only part-time work near Kichijoji",
+    "form": {
+      "derivedFrom": "reader persona: the planning's audience, its first checks, and the appeals in order",
+      "pattern": null,
+      "personaBasis": {
+        "audience": "Students and others looking for weekend-only part-time work near Kichijoji",
+        "decisionOrder": [
+          "place impression (hero)",
+          "the offer (lead appeal, title)",
+          "appeals in order (explanatory rows)",
+          "first checks (condition cards)",
+          "remaining facts and appeals (details)",
+          "apply (cta)"
+        ]
+      }
+    },
+    "design": {
+      "version": "lp-design-v1",
+      "patternId": "P-LIFE",
+      "scores": {
+        "P-COND": 1,
+        "P-WORK": 0,
+        "P-LIFE": 2
+      },
+      "signals": [
+        "A1: 第一確認の事実を持つ訴求（条件）",
+        "A3: 生活適合の訴求",
+        "A4: 生活適合の訴求"
+      ],
+      "rationale": "訴求と第一確認の信号から P-LIFE を選択（条件 1 / 仕事 0 / 生活 2）。生活に合うかが主関心: 休み・通勤などの生活の訴求を場面で先に見せ、条件カードで裏付ける",
+      "blockOrder": [
+        "hero",
+        "title",
+        "rows",
+        "cards",
+        "details",
+        "cta"
+      ],
+      "palette": {
+        "titleBg": "#3d2c1c",
+        "accent": "#d96f32",
+        "chipBg": "#f8f1e6"
+      },
+      "paletteBasis": "パターンに紐づくトークン（候補。市場のリサーチ裏付けはなく、候補のまま記録する）",
+      "basis": "生活に合うかが主関心: 休み・通勤などの生活の訴求を場面で先に見せ、条件カードで裏付ける"
+    },
+    "anatomy": [
+      "hero photograph",
+      "title block (placeholder text)",
+      "explanatory image rows x4 (small insets)",
+      "condition cards x1 (planning firstCheckKeys)",
+      "detail blocks (placeholder text)",
+      "call to action"
+    ],
+    "messageMap": [
+      {
+        "block": "hero-photo",
+        "carries": {
+          "specId": "key-visual",
+          "basis": {
+            "appealId": "A3"
+          }
+        },
+        "purpose": "Weekends and public holidays only, so it fits around classes and family time"
+      },
+      {
+        "block": "title",
+        "carries": {
+          "appealId": "A1"
+        },
+        "note": "the lead appeal's headline slot (placeholder text at this stage)"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "section-work",
+          "basis": {
+            "factKey": "workLocation"
+          }
+        },
+        "purpose": "workLocation"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "appeal-A2",
+          "basis": {
+            "appealId": "A2"
+          }
+        },
+        "purpose": "Short morning shifts, 09:00 to 14:00 (five hours, no break)"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "appeal-A4",
+          "basis": {
+            "appealId": "A4"
+          }
+        },
+        "purpose": "Commuting costs are covered, up to 10,000 yen per month"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "appeal-A5",
+          "basis": {
+            "appealId": "A5"
+          }
+        },
+        "purpose": "No experience needed, and students are welcome"
+      },
+      {
+        "block": "condition-card",
+        "carries": {
+          "factKey": "salaryHourly",
+          "appealId": "A1"
+        }
+      },
+      {
+        "block": "details",
+        "carries": {
+          "factKeys": [
+            "workHours",
+            "actualHours",
+            "transport",
+            "transportCap"
+          ],
+          "appealIds": [
+            "A3",
+            "A5"
+          ]
+        },
+        "note": "appeal facts not shown as first-check cards, and line-grounded appeals with no fact key; carried by the detail blocks and the copy"
+      },
+      {
+        "block": "cta",
+        "carries": {
+          "action": true
+        }
+      }
+    ],
+    "messageGaps": [],
+    "photos": [
+      {
+        "id": "key-visual",
+        "role": "key-visual",
+        "file": "loops/loop-024/runE1/images/kv-photos/key-visual.webp"
+      },
+      {
+        "id": "section-work",
+        "role": "section",
+        "file": "loops/loop-024/runE1/images/kv-photos/section-work.webp"
+      },
+      {
+        "id": "appeal-A2",
+        "role": "section",
+        "file": "loops/loop-024/runE1/images/kv-photos/appeal-A2.webp"
+      },
+      {
+        "id": "appeal-A4",
+        "role": "section",
+        "file": "loops/loop-024/runE1/images/kv-photos/appeal-A4.webp"
+      },
+      {
+        "id": "appeal-A5",
+        "role": "section",
+        "file": "loops/loop-024/runE1/images/kv-photos/appeal-A5.webp"
+      }
+    ],
+    "imageDesign": [
+      {
+        "id": "key-visual",
+        "placement": "hero",
+        "aspect": "5:3",
+        "heightPx": 288,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "Weekends and public holidays only, so it fits around classes and family time",
+        "appealId": "A3",
+        "subject": "Inside a small neighbourhood café in the morning, a staff member serving a customer at the counter",
+        "depiction": "illustration",
+        "size": "large"
+      },
+      {
+        "id": "section-work",
+        "placement": "band",
+        "aspect": "13:6",
+        "heightPx": 78,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "workLocation",
+        "appealId": null,
+        "subject": "Preparing drinks behind a café counter",
+        "depiction": "illustration",
+        "size": "small"
+      },
+      {
+        "id": "appeal-A2",
+        "placement": "band",
+        "aspect": "4:3",
+        "heightPx": 127,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "Short morning shifts, 09:00 to 14:00 (five hours, no break)",
+        "appealId": "A2",
+        "subject": "An illustration of a worker starting the day at a work table in bright morning light",
+        "depiction": "illustration",
+        "size": "small"
+      },
+      {
+        "id": "appeal-A4",
+        "placement": "band",
+        "aspect": "4:3",
+        "heightPx": 127,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "Commuting costs are covered, up to 10,000 yen per month",
+        "appealId": "A4",
+        "subject": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table",
+        "depiction": "illustration",
+        "size": "small"
+      },
+      {
+        "id": "appeal-A5",
+        "placement": "band",
+        "aspect": "4:3",
+        "heightPx": 127,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "No experience needed, and students are welcome",
+        "appealId": "A5",
+        "subject": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table",
+        "depiction": "illustration",
+        "size": "small"
+      }
+    ],
+    "note": "LPの完成イメージ。文章はプレースホルダで、実文と実画像は後段で同じレイアウトの同じ場所に入る"
+  },
+  "checklist": [
+    {
+      "element": "key-visual",
+      "basis": {
+        "appealId": "A3"
+      },
+      "description": "Inside a small neighbourhood café in the morning, a staff member serving a customer at the counter",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    }
+  ],
+  "holds": [],
+  "judgement": {
+    "result": null,
+    "confirmer": null,
+    "confirmedAt": null,
+    "corrections": []
+  }
+}

@@ -177,8 +177,12 @@ export function checkGrounding(generation, facts, original) {
       issues.push({ ...at, issue: "sentence has no text" });
       return;
     }
-    if (!Array.isArray(s.factKeys) || s.factKeys.length === 0) {
-      issues.push({ ...at, issue: "sentence has no factKeys" });
+    // A sentence is grounded by its citations: FACT keys and/or the
+    // original's lines. Items the FACT schema does not carry (the
+    // work content, holidays, qualifications) are grounded by the
+    // line they cite; a sentence with neither has no grounding.
+    if ((!Array.isArray(s.factKeys) || s.factKeys.length === 0) && (!Array.isArray(s.sourceLines) || s.sourceLines.length === 0)) {
+      issues.push({ ...at, issue: "sentence has no factKeys and no sourceLines" });
     }
     if (!Array.isArray(s.sourceLines) || s.sourceLines.length === 0) {
       issues.push({ ...at, issue: "sentence has no sourceLines" });

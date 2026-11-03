@@ -1,0 +1,112 @@
+{
+  "language": "en",
+  "audience": "Students and others looking for weekend-only part-time work near Kichijoji",
+  "appeals": [
+    {
+      "id": "A1",
+      "text": "The hourly wage is stated clearly at 1,150 yen",
+      "factKeys": [
+        "salaryHourly"
+      ],
+      "sourceLines": [
+        "L04"
+      ]
+    },
+    {
+      "id": "A2",
+      "text": "Short morning shifts, 09:00 to 14:00 (five hours, no break)",
+      "factKeys": [
+        "workHours",
+        "actualHours"
+      ],
+      "sourceLines": [
+        "L05"
+      ]
+    },
+    {
+      "id": "A3",
+      "text": "Weekends and public holidays only, so it fits around classes and family time",
+      "factKeys": [],
+      "sourceLines": [
+        "L06"
+      ]
+    },
+    {
+      "id": "A4",
+      "text": "Commuting costs are covered, up to 10,000 yen per month",
+      "factKeys": [
+        "transport",
+        "transportCap"
+      ],
+      "sourceLines": [
+        "L07"
+      ]
+    },
+    {
+      "id": "A5",
+      "text": "No experience needed, and students are welcome",
+      "factKeys": [],
+      "sourceLines": [
+        "L08"
+      ]
+    }
+  ],
+  "firstCheckKeys": [
+    "salaryHourly"
+  ],
+  "imageSpecs": [
+    {
+      "id": "key-visual",
+      "role": "key-visual",
+      "basis": {
+        "appealId": "A3"
+      },
+      "description": "Inside a small neighbourhood café in the morning, a staff member serving a customer at the counter",
+      "purpose": "The feel of the café and the weekend shift",
+      "design": {
+        "aspect": "5:3",
+        "fit": "cover",
+        "position": "center"
+      }
+    },
+    {
+      "id": "section-work",
+      "role": "section",
+      "basis": {
+        "factKey": "workLocation"
+      },
+      "description": "Preparing drinks behind a café counter",
+      "purpose": "The work itself: drinks, serving, light cleaning",
+      "design": {
+        "aspect": "13:6",
+        "fit": "cover",
+        "position": "center"
+      }
+    }
+  ],
+  "notSay": [
+    {
+      "key": "renewal",
+      "terms": [
+        "renewal guaranteed"
+      ],
+      "text": "Do not mention contract renewal"
+    },
+    {
+      "key": "housing",
+      "terms": [
+        "housing",
+        "dormitory"
+      ],
+      "text": "Do not mention housing"
+    },
+    {
+      "key": "monthlyIncomeGuarantee",
+      "terms": [
+        "guaranteed monthly"
+      ],
+      "text": "Do not promise monthly income"
+    }
+  ],
+  "style": "illustration"
+}

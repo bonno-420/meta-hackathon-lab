@@ -1,0 +1,38 @@
+{
+  "id": "FICT-E02",
+  "version": "v1",
+  "lines": [
+    {
+      "id": "L01",
+      "text": "Work: Assembling small wooden frames and sanding parts by hand in a small workshop"
+    },
+    {
+      "id": "L02",
+      "text": "Employment type: Contract, 6 months"
+    },
+    {
+      "id": "L03",
+      "text": "Location: A workshop in Taito City, Tokyo"
+    },
+    {
+      "id": "L04",
+      "text": "Hourly wage: 1,400 yen"
+    },
+    {
+      "id": "L05",
+      "text": "Hours: 08:30 to 17:30 (break 60 minutes, 8 hours)"
+    },
+    {
+      "id": "L06",
+      "text": "Days: Monday to Friday"
+    },
+    {
+      "id": "L07",
+      "text": "Transport: Actual commuting cost covered, up to 15,000 yen per month"
+    },
+    {
+      "id": "L08",
+      "text": "Requirements: Experience with hand tools is welcome, training is provided"
+    }
+  ]
+}

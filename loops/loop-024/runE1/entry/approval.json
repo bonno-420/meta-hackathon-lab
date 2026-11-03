@@ -1,0 +1,23 @@
+{
+  "approvalId": "FICT-E01-approval-test-1",
+  "status": "approved",
+  "approver": "Coordinator test fixture (per the user's test-loop instruction, 2026-11-04)",
+  "approvedAt": "2026-11-04",
+  "target": {
+    "original": {
+      "id": "FICT-E01",
+      "version": "v1",
+      "file": "loops/loop-024/runE1/entry/original.json",
+      "sha256": "a0c0ce06437b5e8db11f5d93cb7dfd0f574213fe65f0b78079b654456449d9ed"
+    },
+    "facts": {
+      "factsId": "FICT-E01-facts",
+      "factsVersion": 1,
+      "file": "loops/loop-024/runE1/entry/facts.json",
+      "sha256": "9693f2eb0de45ddfd9d0f2f0dbfc00f4e6437e9939d662df2b85b22bb49ffb93"
+    }
+  },
+  "basis": {
+    "note": "Test-loop fixture approval for a fictional posting. Not the user's product approval act; recorded as such."
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "status": "generated",
+  "parseError": null,
+  "model": "meta-models/muse-spark-open-1026",
+  "requestedModel": "meta-models/muse-spark-open-1026",
+  "promptVersion": "lp-generate-v5-planning",
+  "intentRef": {
+    "source": "planning-input",
+    "file": "loops/loop-024/planning-FICT-E02.json",
+    "sha256": "b1c86cb00de591790de195acb93786a6ce1a4878bc2d1c91fad528721b1151ee"
+  },
+  "feedbackApplied": false,
+  "apiCalled": true,
+  "retries": 0,
+  "startedAt": "2026-11-03T20:14:28.870Z",
+  "finishedAt": "2026-11-03T20:14:44.711Z",
+  "durationMs": 15812,
+  "usage": {
+    "prompt_tokens": 1319,
+    "completion_tokens": 5256,
+    "total_tokens": 6575,
+    "prompt_tokens_details": {
+      "audio_tokens": 0,
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": 3990,
+      "audio_tokens": 0,
+      "reasoning_tokens": 4987,
+      "rejected_prediction_tokens": 4879
+    }
+  },
+  "costUsd": null,
+  "costNote": "未記録（PIPELINE_MODEL でモデルが差し替えられており、D4単価が適用できないため算出しない。使用量は usage に記録）",
+  "grounding": {
+    "pass": true,
+    "checked": 8,
+    "issues": []
+  }
+}

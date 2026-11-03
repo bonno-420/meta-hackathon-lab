@@ -8,6 +8,10 @@
 //      node node_modules/playwright-core/cli.js install chromium
 //    The browser build must match the installed playwright-core
 //    version; a mismatch surfaces as a launch error naming the build.
+//    If the default launch fails (e.g. the cached headless shell
+//    cannot start in this environment), a full Chromium build found
+//    in the Playwright browsers cache is tried with an explicit
+//    executable path and --no-sandbox.
 // 2. wkhtmltoimage (system package: apt install wkhtmltopdf), when the
 //    Chromium route is unavailable.
 // The layout CSS (page-layout.mjs) stays within block/float layout so
@@ -16,7 +20,8 @@
 // as a hold rather than a silent pass.
 
 import { execFile } from "node:child_process";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 
@@ -24,6 +29,23 @@ const execFileP = promisify(execFile);
 
 function resolveRoot(root, rel) {
   return path.isAbsolute(rel) ? rel : path.join(root, rel);
+}
+
+async function launchChromium(pw) {
+  try {
+    return await pw.chromium.launch();
+  } catch (firstError) {
+    const cache = process.env.PLAYWRIGHT_BROWSERS_PATH || path.join(os.homedir(), ".cache", "ms-playwright");
+    const dirs = existsSync(cache) ? readdirSync(cache).filter((d) => /^chromium-\d+$/.test(d)).sort().reverse() : [];
+    for (const d of dirs) {
+      const exe = path.join(cache, d, "chrome-linux64", "chrome");
+      if (!existsSync(exe)) continue;
+      try {
+        return await pw.chromium.launch({ executablePath: exe, args: ["--no-sandbox"] });
+      } catch { /* try the next build */ }
+    }
+    throw firstError;
+  }
 }
 
 async function renderWithChromium({ root, htmlFile, outFile, width }) {
@@ -38,7 +60,7 @@ async function renderWithChromium({ root, htmlFile, outFile, width }) {
     }
   }
   if (!pw) throw new Error(`playwright module not installed: ${importError ? importError.message : "not found"}`);
-  const browser = await pw.chromium.launch();
+  const browser = await launchChromium(pw);
   try {
     const page = await browser.newPage({ viewport: { width, height: 900 }, deviceScaleFactor: 2 });
     await page.goto(`file://${resolveRoot(root, htmlFile)}`, { waitUntil: "networkidle" });

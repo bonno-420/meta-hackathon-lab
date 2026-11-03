@@ -1,0 +1,16 @@
+{
+  "checkpoint": "text",
+  "presented": [
+    {
+      "kind": "generation",
+      "file": "loops/loop-022/run17/generated.json"
+    }
+  ],
+  "holds": [],
+  "judgement": {
+    "result": null,
+    "confirmer": null,
+    "confirmedAt": null,
+    "corrections": []
+  }
+}

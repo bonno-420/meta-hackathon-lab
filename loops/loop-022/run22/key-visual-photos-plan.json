@@ -1,0 +1,29 @@
+{
+  "images": [
+    {
+      "id": "key-visual",
+      "prompt": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table. Wide establishing shot of the scene described; the described subject fills the frame; impression-level, with no specific factual claim. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+      "line": null
+    },
+    {
+      "id": "section-work",
+      "prompt": "A worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+      "line": null
+    },
+    {
+      "id": "appeal-A3",
+      "prompt": "An illustration of a person enjoying a day off at home with family, relaxed weekend mood. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+      "line": null
+    },
+    {
+      "id": "appeal-A4",
+      "prompt": "An illustration of a person walking to work along a quiet street in the morning, calm and unhurried. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+      "line": null
+    },
+    {
+      "id": "appeal-A5",
+      "prompt": "An illustration of a new worker being shown the task by a senior worker, both at a work table. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+      "line": null
+    }
+  ]
+}

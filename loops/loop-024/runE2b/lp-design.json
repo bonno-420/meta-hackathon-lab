@@ -1,0 +1,31 @@
+{
+  "version": "lp-design-v1",
+  "patternId": "P-WORK",
+  "scores": {
+    "P-COND": 0,
+    "P-WORK": 3,
+    "P-LIFE": 1
+  },
+  "signals": [
+    "A1: 仕事そのものへの訴求",
+    "A2: 仕事そのものへの訴求",
+    "A5: 生活適合の訴求",
+    "imageSpecs: 仕事の場面の指定あり"
+  ],
+  "rationale": "訴求と第一確認の信号から P-WORK を選択（条件 0 / 仕事 3 / 生活 1）。読み手の最初の関心が仕事そのもの: 仕事の場面と文を前に置き、条件は後で確認させる",
+  "blockOrder": [
+    "title",
+    "hero",
+    "rows",
+    "cards",
+    "details",
+    "cta"
+  ],
+  "palette": {
+    "titleBg": "#1f3d2b",
+    "accent": "#e07b39",
+    "chipBg": "#edf4ec"
+  },
+  "paletteBasis": "パターンに紐づくトークン（候補。市場のリサーチ裏付けはなく、候補のまま記録する）",
+  "basis": "読み手の最初の関心が仕事そのもの: 仕事の場面と文を前に置き、条件は後で確認させる"
+}

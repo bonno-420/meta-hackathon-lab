@@ -1,0 +1,29 @@
+{
+  "status": "generated",
+  "reason": null,
+  "model": "muse-image-1.0",
+  "promptTemplate": "lp-image-v1",
+  "images": [
+    {
+      "id": "key-visual",
+      "file": "loops/loop-022/run5/images-sections/key-visual.webp",
+      "prompt": "Documentary photograph, exterior of a modern logistics warehouse in Toyohashi Japan in the early morning, soft dawn light, loading docks and a wide parking area, clean and quiet, no people, no readable signage, no text, no numbers, no logos",
+      "line": null,
+      "mime": "image/webp",
+      "bytes": 496600
+    },
+    {
+      "id": "section-work",
+      "file": "loops/loop-022/run5/images-sections/section-work.webp",
+      "prompt": "Documentary photograph inside a bright logistics warehouse in the morning, a worker sorting and inspecting cardboard parcels on a conveyor belt, shelves of boxes behind, natural window light, photorealistic, no text, no numbers, no logos",
+      "line": null,
+      "mime": "image/webp",
+      "bytes": 403330
+    }
+  ],
+  "usage": null,
+  "costUsd": 0.02,
+  "costNote": "画像 2 枚 × $0.01 の算出値。確定実費は dev.meta.ai Billing 実績との突合が必要。",
+  "startedAt": "2026-11-03T14:55:20.568Z",
+  "finishedAt": "2026-11-03T14:55:47.813Z"
+}

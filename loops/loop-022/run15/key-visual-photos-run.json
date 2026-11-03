@@ -1,0 +1,53 @@
+{
+  "status": "generated",
+  "reason": null,
+  "model": "muse-image-1.0",
+  "promptTemplate": "lp-image-v1",
+  "images": [
+    {
+      "id": "key-visual",
+      "file": "loops/loop-022/run15/images/kv-photos/key-visual.webp",
+      "prompt": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light. Wide establishing shot; the workplace building itself is the subject; impression-level, with no specific factual claim. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark",
+      "line": null,
+      "mime": "image/webp",
+      "bytes": 178502
+    },
+    {
+      "id": "section-work",
+      "file": "loops/loop-022/run15/images/kv-photos/section-work.webp",
+      "prompt": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark",
+      "line": null,
+      "mime": "image/webp",
+      "bytes": 251580
+    },
+    {
+      "id": "appeal-A3",
+      "file": "loops/loop-022/run15/images/kv-photos/appeal-A3.webp",
+      "prompt": "An illustration conveying the appeal: 土日祝日休み. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark",
+      "line": null,
+      "mime": "image/webp",
+      "bytes": 248318
+    },
+    {
+      "id": "appeal-A4",
+      "file": "loops/loop-022/run15/images/kv-photos/appeal-A4.webp",
+      "prompt": "An illustration conveying the appeal: 交通費は実費支給、月上限15,000円. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark",
+      "line": null,
+      "mime": "image/webp",
+      "bytes": 136238
+    },
+    {
+      "id": "appeal-A5",
+      "file": "loops/loop-022/run15/images/kv-photos/appeal-A5.webp",
+      "prompt": "An illustration conveying the appeal: 未経験可. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark",
+      "line": null,
+      "mime": "image/webp",
+      "bytes": 136146
+    }
+  ],
+  "usage": null,
+  "costUsd": 0.05,
+  "costNote": "画像 5 枚 × $0.01 の算出値。確定実費は dev.meta.ai Billing 実績との突合が必要。",
+  "startedAt": "2026-11-03T16:24:23.976Z",
+  "finishedAt": "2026-11-03T16:25:26.778Z"
+}

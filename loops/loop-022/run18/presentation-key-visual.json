@@ -1,0 +1,264 @@
+{
+  "checkpoint": "key-visual",
+  "presented": [
+    {
+      "kind": "image",
+      "file": "loops/loop-022/run18/lp-finished-image.png",
+      "sha256": "174939d739b8859d2be27bc550fd565e5a270778cfa1b845581e2f9d1573bf29"
+    }
+  ],
+  "layout": {
+    "kind": "lp-finished-image",
+    "audience": "早朝から夕方までの勤務の形が合う人／土日祝日を休みたい人／豊橋市内へ通える範囲の人",
+    "form": {
+      "derivedFrom": "reader persona: the planning's audience, its first checks, and the appeals in order",
+      "pattern": {
+        "id": "LIB-PAT-001",
+        "composition": [
+          "導入: 対象層への呼びかけ",
+          "条件: 勤務条件の提示",
+          "働く場面: 仕事の様子の描写",
+          "締め: 見学・応募への誘い"
+        ],
+        "source": "library/catalog-v1.json (approved 2026-10-29)"
+      },
+      "personaBasis": {
+        "audience": "早朝から夕方までの勤務の形が合う人／土日祝日を休みたい人／豊橋市内へ通える範囲の人",
+        "decisionOrder": [
+          "place impression (hero)",
+          "the offer (lead appeal, title)",
+          "first checks (condition cards)",
+          "appeals in order (explanatory rows)",
+          "remaining facts and appeals (details)",
+          "apply (cta)"
+        ]
+      }
+    },
+    "anatomy": [
+      "hero photograph",
+      "title block (placeholder text)",
+      "condition cards x3 (planning firstCheckKeys)",
+      "explanatory image rows x4 (small insets)",
+      "detail blocks (placeholder text)",
+      "call to action"
+    ],
+    "messageMap": [
+      {
+        "block": "title",
+        "carries": {
+          "appealId": "A1"
+        },
+        "note": "the lead appeal's headline slot (placeholder text at this stage)"
+      },
+      {
+        "block": "condition-card",
+        "carries": {
+          "factKey": "salaryHourly",
+          "appealId": "A1"
+        }
+      },
+      {
+        "block": "condition-card",
+        "carries": {
+          "factKey": "workHours",
+          "appealId": "A2"
+        }
+      },
+      {
+        "block": "condition-card",
+        "carries": {
+          "factKey": "transportCap",
+          "appealId": "A4"
+        }
+      },
+      {
+        "block": "hero-photo",
+        "carries": {
+          "specId": "key-visual",
+          "basis": {
+            "appealId": "A2"
+          }
+        },
+        "purpose": "07:00〜16:00の勤務時間（休憩60分）"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "section-work",
+          "basis": {
+            "factKey": "workLocation"
+          }
+        },
+        "purpose": "workLocation"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "appeal-A3",
+          "basis": {
+            "appealId": "A3"
+          }
+        },
+        "purpose": "土日祝日休み"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "appeal-A4",
+          "basis": {
+            "appealId": "A4"
+          }
+        },
+        "purpose": "交通費は実費支給、月上限15,000円"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "appeal-A5",
+          "basis": {
+            "appealId": "A5"
+          }
+        },
+        "purpose": "未経験可"
+      },
+      {
+        "block": "details",
+        "carries": {
+          "factKeys": [
+            "breakMinutes",
+            "transport"
+          ],
+          "appealIds": [
+            "A3",
+            "A5"
+          ]
+        },
+        "note": "appeal facts not shown as first-check cards, and line-grounded appeals with no fact key; carried by the detail blocks and the copy"
+      },
+      {
+        "block": "cta",
+        "carries": {
+          "action": true
+        }
+      }
+    ],
+    "messageGaps": [],
+    "photos": [
+      {
+        "id": "key-visual",
+        "role": "key-visual",
+        "file": "loops/loop-022/run18/images/kv-photos/key-visual.webp"
+      },
+      {
+        "id": "section-work",
+        "role": "section",
+        "file": "loops/loop-022/run18/images/kv-photos/section-work.webp"
+      },
+      {
+        "id": "appeal-A3",
+        "role": "section",
+        "file": "loops/loop-022/run18/images/kv-photos/appeal-A3.webp"
+      },
+      {
+        "id": "appeal-A4",
+        "role": "section",
+        "file": "loops/loop-022/run18/images/kv-photos/appeal-A4.webp"
+      },
+      {
+        "id": "appeal-A5",
+        "role": "section",
+        "file": "loops/loop-022/run18/images/kv-photos/appeal-A5.webp"
+      }
+    ],
+    "imageDesign": [
+      {
+        "id": "key-visual",
+        "placement": "hero",
+        "aspect": "5:3",
+        "heightPx": 288,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "07:00〜16:00の勤務時間（休憩60分）",
+        "appealId": "A2",
+        "subject": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table",
+        "depiction": "illustration",
+        "size": "large"
+      },
+      {
+        "id": "section-work",
+        "placement": "band",
+        "aspect": "13:6",
+        "heightPx": 78,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "workLocation",
+        "appealId": null,
+        "subject": "A worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning",
+        "depiction": "illustration",
+        "size": "small"
+      },
+      {
+        "id": "appeal-A3",
+        "placement": "band",
+        "aspect": "4:3",
+        "heightPx": 127,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "土日祝日休み",
+        "appealId": "A3",
+        "subject": "An illustration of a person enjoying a day off at home with family, relaxed weekend mood",
+        "depiction": "illustration",
+        "size": "small"
+      },
+      {
+        "id": "appeal-A4",
+        "placement": "band",
+        "aspect": "4:3",
+        "heightPx": 127,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "交通費は実費支給、月上限15,000円",
+        "appealId": "A4",
+        "subject": "An illustration of a person commuting on a local train in the morning, calm and unhurried",
+        "depiction": "illustration",
+        "size": "small"
+      },
+      {
+        "id": "appeal-A5",
+        "placement": "band",
+        "aspect": "4:3",
+        "heightPx": 127,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "未経験可",
+        "appealId": "A5",
+        "subject": "An illustration of a new worker being shown the task by a senior worker, both at a work table",
+        "depiction": "illustration",
+        "size": "small"
+      }
+    ],
+    "note": "LPの完成イメージ。文章はプレースホルダで、実文と実画像は後段で同じレイアウトの同じ場所に入る"
+  },
+  "checklist": [
+    {
+      "element": "key-visual",
+      "basis": {
+        "appealId": "A2"
+      },
+      "description": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    }
+  ],
+  "holds": [],
+  "judgement": {
+    "result": null,
+    "confirmer": null,
+    "confirmedAt": null,
+    "corrections": []
+  }
+}

@@ -12,6 +12,8 @@ import { buildApprovalDraft } from "./approve.mjs";
 import { checkQuoteVerbatim } from "./extract-and-check.mjs";
 import { fixtureFacts } from "./extract-and-check.mjs";
 import { checkGrounding, runGeneration } from "./generate.mjs";
+import { buildPlanningGenerationMessages } from "./generate-planning.mjs";
+import { deriveLpDesign } from "./lp-design.mjs";
 import { runPlanningGeneration } from "./generate-planning.mjs";
 import { decideImagePlanFromSpecs } from "./generate-images.mjs";
 import { buildCorrespondence, buildImagePrompt, checkPromptCompliance, intentFromPlanning, validatePlanning } from "./planning.mjs";
@@ -142,6 +144,14 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
   expectTrue("pagecheck-value-repetition-is-not-duplication", checkPage(valuePage).pass);
 }
 
+// ---------- pagecheck: internal identifiers in attributes (v2, run20 review) ----------
+{
+  const altPage = checkPage(`<!doctype html><html><body><main><img src="images/a.webp" alt="appeal-A3"><p>勤務時間は07:00から16:00までで、休憩は60分です。</p></main></body></html>`);
+  expectTrue("pagecheck-alt-internal-id-fails", !altPage.pass && altPage.summary.attributeExposureHits >= 1);
+  const altClean = checkPage(`<!doctype html><html><body><main><img src="images/a.webp" alt=""><p>勤務時間は07:00から16:00までで、休憩は60分です。</p></main></body></html>`);
+  expectTrue("pagecheck-alt-empty-passes", altClean.pass);
+}
+
 // ---------- assembly from the confirmed layout + appeal coverage (C6) ----------
 {
   const { assembleFromLayout, matchAppealSentences } = await import("./assemble-layout.mjs");
@@ -162,6 +172,23 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
   expectTrue("layout-assembly-has-cta", built.html.includes("応募する"));
   const completion = checkCompletion({ root: makeScratch(), generation: gen, imageFiles: [], lpFile: "out/lp.html", grounding: { pass: true }, pagecheck: null, appealCoverage: [{ appealId: "A1", sentenceIdxs: [0] }, { appealId: "A9", sentenceIdxs: [] }] });
   expectTrue("completion-c6-blocks-uncovered-appeal", !completion.pass && completion.checks.some((c) => c.id === "C6" && !c.pass));
+}
+
+// ---------- assembly: a band without text renders no empty box (run20 review) ----------
+{
+  const { assembleFromLayout } = await import("./assemble-layout.mjs");
+  const rootB = makeScratch();
+  mkdirSync(path.join(rootB, "images"), { recursive: true });
+  writeFileSync(path.join(rootB, "images", "appeal-A9.webp"), "x");
+  const genB = { sentences: [{ text: "時給は1,500円です。", factKeys: ["salaryHourly"], sourceLines: ["L03"] }] };
+  const layoutB = { messageMap: [
+    { block: "photo-band", carries: { specId: "appeal-A9", basis: { appealId: "A9" } } },
+    { block: "cta", carries: { action: true } },
+  ] };
+  const builtB = assembleFromLayout({ root: rootB, generation: genB, images: [{ id: "appeal-A9", file: "images/appeal-A9.webp" }], lpDir: "out", heroChips: [], layout: layoutB, planning, facts });
+  expectTrue("assembly-band-image-renders", builtB.html.includes("inline-photo"));
+  expectTrue("assembly-band-no-empty-text-box", !builtB.html.includes(`<div class="explain-text"></div>`));
+  expectTrue("assembly-images-have-no-internal-alt", !/alt="(appeal|section)-/.test(builtB.html) && builtB.html.includes(`alt=""`));
 }
 
 // ---------- per-endpoint keys (liveDeps stage envs) ----------
@@ -324,7 +351,65 @@ expectTrue("lp-hero-chips", lpHtml.includes("hero-chips") && lpHtml.includes("�
 expectTrue("lp-assembled-from-confirmed-layout", runD.stages.lpAssembly.layoutUsed === true);
 expectTrue("lp-appeal-coverage-recorded", Array.isArray(runD.stages.lpAssembly.appealCoverage) && runD.stages.lpAssembly.appealCoverage.every((c) => c.sentenceIdxs.length > 0));
 expectTrue("lp-presentation-saved", existsSync(path.join(scratchA, "out/presentation-lp.json")));
+{
+  const order = ['<section class="lp-hero">', '<section class="title-block">', '<section class="cards">', '<footer class="cta">'].map((m) => lpHtml.indexOf(m));
+  expectTrue("lp-block-order-matches-sample", order.every((v) => v >= 0) && order[0] < order[1] && order[1] < order[2] && order[2] < order[3]);
+  expectTrue("lp-skin-matches-sample", lpHtml.includes(".page{max-width:480px;margin:0 auto;background:#fff}") && !lpHtml.includes("border-radius:26px"));
+}
 expect("resume-status", runD.status, "pending-human-confirmation");
+
+// ---------- generation coverage: every appeal must be carried ----------
+function partialGenerate() {
+  return async (args) => {
+    const result = await runGeneration({
+      ...args,
+      callModel: async () => ({ content: JSON.stringify({ sentences: [faithfulSentences[0]] }), usage: { prompt_tokens: 10, completion_tokens: 10 }, model: "stub" }),
+    });
+    if (result.generation) {
+      writeFileSync(path.join(args.root, REAL.generationFile), JSON.stringify(result.generation, null, 2) + "\n", "utf8");
+    }
+    return result;
+  };
+}
+{
+  // attempt 1 drops appeal A2 (grounding still passes); the coverage
+  // check sends it back with feedback and attempt 2 covers everything.
+  let calls = 0;
+  const seqGenerate = async (args) => { calls++; return calls === 1 ? partialGenerate()(args) : faithfulGenerate()(args); };
+  const runCov = await runDemo(
+    { root: scratchA, ...REAL, checkpoints: "light", resumeState: stateA, kvConfirmation: confirmation },
+    { extract: async () => faithfulExtract(), generate: seqGenerate, ...stubKeyVisualDeps(), images: stubImages() },
+  );
+  expect("coverage-retry-attempts", runCov.stages.generation.attempts, 2);
+  expectTrue("coverage-retry-pass", runCov.stages.generation.coverage?.pass === true);
+  expectTrue("coverage-feedback-written", existsSync(path.join(scratchA, "out/coverage-feedback.txt")) && readFileSync(path.join(scratchA, "out/coverage-feedback.txt"), "utf8").includes("A2"));
+  // a generation that never covers the appeal stops the run
+  const runCovFail = await runDemo(
+    { root: scratchA, ...REAL, checkpoints: "light", resumeState: stateA, kvConfirmation: confirmation },
+    { extract: async () => faithfulExtract(), generate: partialGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
+  );
+  expect("coverage-fail-stops", runCovFail.stoppedAt, "generation");
+  expectTrue("coverage-fail-recorded", (runCovFail.stages.generation.coverage?.uncoveredAppeals ?? []).includes("A2"));
+}
+{
+  // the planning-path prompt carries the appeals and the original's
+  // lines, and none of the other posting's hardcoded passages
+  const msgs = buildPlanningGenerationMessages(fixtureFacts(), JSON.parse(readFileSync(path.join(root, REAL.originalFile), "utf8")), planning, intentFromPlanning(planning, null));
+  expectTrue("planning-prompt-has-appeals", msgs[0].content.includes("A1") && msgs[0].content.includes("A2"));
+  expectTrue("planning-prompt-has-original-lines", msgs[1].content.includes("L03"));
+  expectTrue("planning-prompt-no-j01-leftovers", !msgs[0].content.includes("Softened monthly-income") && !msgs[0].content.includes("W1 renewal"));
+{
+  // a sentence grounded only in an original line (the FACT schema
+  // carries no key for holidays) passes grounding; a sentence with
+  // no citation at all does not
+  const lineOnly = { sentences: [{ text: "休日は土日祝日休みです。", factKeys: [], sourceLines: ["L06"] }] };
+  const factsJ02Like = { items: [{ key: "salaryHourly", status: "stated", value: "1,350円", normalized: 1350, sourceLine: "L04" }] };
+  const origJ02Like = { lines: [{ id: "L04", text: "時給： 1,350円" }, { id: "L06", text: "休日： 土日祝日休み" }] };
+  expectTrue("grounding-line-only-passes", checkGrounding(lineOnly, factsJ02Like, origJ02Like).pass);
+  const noCite = { sentences: [{ text: "休日は土日祝日休みです。", factKeys: [], sourceLines: [] }] };
+  expectTrue("grounding-no-citation-fails", !checkGrounding(noCite, factsJ02Like, origJ02Like).pass);
+}
+}
 
 // ---------- text checkpoint (full set) stops after generation ----------
 const scratchF = makeScratch();
@@ -450,7 +535,19 @@ const stateRF = JSON.parse(readFileSync(path.join(scratchRF, "out/run-state.json
 expectTrue("render-failure-state-persisted", Array.isArray(stateRF.completedStages) && !stateRF.completedStages.includes("keyVisual"));
 
 // ---------- Finished-image gate: a page that fails is not presented ----------
-expectTrue("gate-pass", evaluateFinishedImageGate({ audience: "x", messageGaps: [], form: { pageFrame: true, titleOverlap: true }, photos: [{ id: "a", role: "key-visual" }], imageDesign: [{ id: "a", purpose: "p", aspect: "5:3", placement: "hero", size: "large", depiction: "photorealistic" }] }).pass);
+expectTrue("gate-pass", evaluateFinishedImageGate({ audience: "x", messageGaps: [], design: { patternId: "P-COND", rationale: "r" }, form: { personaBasis: { audience: "x", decisionOrder: ["hero"] } }, photos: [{ id: "a", role: "key-visual" }], imageDesign: [{ id: "a", purpose: "p", aspect: "5:3", placement: "hero", size: "large", depiction: "illustration" }] }).pass);
+expectTrue("gate-blocks-no-design", !evaluateFinishedImageGate({ audience: "x", messageGaps: [], form: { personaBasis: { audience: "x", decisionOrder: ["hero"] } }, photos: [{ id: "a", role: "key-visual" }], imageDesign: [{ id: "a", purpose: "p", aspect: "5:3", placement: "hero", size: "large", depiction: "illustration" }] }).pass);
+{
+  // design derivation: different plannings yield different designs
+  const dCond = deriveLpDesign(planning);
+  expect("design-j02-pattern", dCond.patternId, "P-COND");
+  const workPlanning = { ...planning, firstCheckKeys: [], appeals: [{ id: "A1", text: "仕事内容は小さな部品を組み立てる作業で、手作業が中心です", factKeys: ["workLocation"], sourceLines: ["L01"] }], imageSpecs: [{ id: "w", role: "work" }] };
+  const dWork = deriveLpDesign(workPlanning);
+  expect("design-work-pattern", dWork.patternId, "P-WORK");
+  expectTrue("design-orders-differ", dWork.blockOrder.join(",") !== dCond.blockOrder.join(","));
+  const lifePlanning = { ...planning, firstCheckKeys: [], appeals: [{ id: "A1", text: "土日祝休みで週末は家族と過ごせます", factKeys: [], sourceLines: ["L06"] }, { id: "A2", text: "通勤は電車が便利です", factKeys: [], sourceLines: ["L07"] }] };
+  expect("design-life-pattern", deriveLpDesign(lifePlanning).patternId, "P-LIFE");
+}
 expectTrue("gate-fails-no-audience", !evaluateFinishedImageGate({ audience: null, messageGaps: [], photos: [], imageDesign: [] }).pass);
 expectTrue("gate-fails-gap", !evaluateFinishedImageGate({ audience: "x", messageGaps: [{ appealId: "A9" }], photos: [], imageDesign: [] }).pass);
 expectTrue("gate-fails-undesigned-photo", !evaluateFinishedImageGate({ audience: "x", messageGaps: [], photos: [{ id: "a" }], imageDesign: [] }).pass);
@@ -466,13 +563,44 @@ const runG = await runDemo(
 );
 expect("gate-fail-stops-at-kv", runG.stoppedAt, "key-visual");
 expect("gate-fail-not-a-checkpoint", runG.status, "stopped");
-expectTrue("gate-fail-recorded", runG.stages.keyVisual.gate && runG.stages.keyVisual.gate.pass === false);
+expectTrue("gate-fail-recorded", (runG.stages.keyVisual.gate && runG.stages.keyVisual.gate.pass === false) || (runG.stages.keyVisual.designCheck && runG.stages.keyVisual.designCheck.pass === false));
 expectTrue("gate-fail-not-presented", !existsSync(path.join(scratchG, "out/presentation-key-visual.json")));
 
 // ---------- Image design step (loop-023) ----------
 const designJ01 = buildImageDesign(planning, facts);
 expect("design-count", designJ01.count, planning.imageSpecs.length);
-expectTrue("design-hero-photoreal", designJ01.images.find((e) => e.kind === "hero")?.depiction === "photorealistic");
+expectTrue("design-hero-illustration", designJ01.images.find((e) => e.kind === "hero")?.depiction === "illustration");
+expectTrue("design-hero-subject-not-exterior", !/exterior|facade|外観/i.test(designJ01.images.find((e) => e.kind === "hero")?.subject ?? ""));
+expectTrue("design-exterior-replacement-noted", (designJ01.designNotes ?? []).some((n) => n.rule === "G9" && n.action === "subject-replaced"));
+// run20 review: the composition text itself instructed an exterior
+// ("the workplace building itself is the subject") and the shipped LP
+// hero became an invented warehouse exterior while every check
+// passed. The full prompt is gated now, not only the subject.
+expectTrue("design-hero-prompt-has-no-exterior-instruction", !/building|exterior|facade/i.test(designJ01.images.find((e) => e.kind === "hero")?.prompt ?? ""));
+{
+  const designPoisoned = JSON.parse(JSON.stringify(designJ01));
+  const heroEntry = designPoisoned.images.find((e) => e.kind === "hero");
+  heroEntry.prompt = `${heroEntry.subject}. Wide establishing shot; the workplace building itself is the subject. flat vector-style illustration, no text`;
+  expectTrue("design-check-blocks-exterior-in-prompt", !checkImageDesign(designPoisoned).pass);
+}
+{
+  const { buildKeyVisualChecklist } = await import("./planning.mjs");
+  const corrStale = { elements: [{ id: "key-visual", role: "key-visual", basis: {}, description: "Photorealistic photo of the exterior of a large logistics warehouse" }] };
+  const listFromDesign = buildKeyVisualChecklist(corrStale, designJ01);
+  expectTrue("kv-checklist-uses-design-subjects", listFromDesign.length === designJ01.images.length && listFromDesign.every((i) => !/exterior/i.test(i.description ?? "")));
+}
+{
+  const designW = buildImageDesign({ ...planning, imageSpecs: [], appeals: [{ id: "AW", factKeys: [], sourceLines: ["L06"], text: "土日祝休みで、週末は家族と過ごせます。" }] }, facts);
+  expectTrue("design-appeal-scene-weekend", designW.images.some((i) => /day off/.test(i.subject)));
+  const designExt = JSON.parse(JSON.stringify(designJ01));
+  designExt.images[0].subject = "A warehouse exterior at dawn";
+  expectTrue("design-check-blocks-exterior-subject", !checkImageDesign(designExt).pass);
+}
+{
+  const designPhoto = JSON.parse(JSON.stringify(designJ01));
+  designPhoto.images[0].depiction = "photorealistic";
+  expectTrue("design-check-blocks-photoreal-hero", !checkImageDesign(designPhoto).pass);
+}
 expectTrue("design-explanatory-illustration", designJ01.images.filter((e) => e.kind !== "hero").every((e) => e.depiction === "illustration" && e.placement.size === "small"));
 expectTrue("design-every-image-has-purpose", designJ01.images.every((e) => typeof e.purpose === "string" && e.purpose.length > 0));
 expectTrue("design-check-pass", checkImageDesign(designJ01).pass);
@@ -490,6 +618,23 @@ expectTrue("prompt-gate-allows-building-subject", checkPromptGates("A warehouse 
   doctored.prompt = `${doctored.subject}. ${doctored.composition}. ${doctored.styleText}, no text, no numbers, no logos, no watermark`;
   const rebuilt = rebuildPromptWithoutHits(doctored, ["truck"]);
   expectTrue("sendback-removes-hit-clause", rebuilt.removed.length === 1 && checkPromptGates(rebuilt.entry.prompt).pass);
+}
+// run21: the design itself must pass the prompt gates, the transport
+// scene must not name a vehicle, and a send-back that would leave
+// only a mood fragment falls back to a real scene.
+{
+  const designTrain = JSON.parse(JSON.stringify(designJ01));
+  const sec = designTrain.images.find((e) => e.kind !== "hero");
+  sec.subject = "An illustration of a person commuting on a local train in the morning";
+  sec.prompt = `${sec.subject}. ${sec.composition}. ${sec.styleText}, no text, no numbers, no logos, no watermark`;
+  expectTrue("design-check-blocks-gated-prompt", !checkImageDesign(designTrain).pass);
+  const transportPlanning = { ...planning, firstCheckKeys: ["transportCap"], appeals: [...planning.appeals, { id: "AT", factKeys: ["transport"], sourceLines: ["L07"], text: "交通費は実費支給です" }] };
+  const designT = buildImageDesign(transportPlanning, facts);
+  const tImg = designT.images.find((e) => e.appealId === "AT");
+  expectTrue("design-transport-scene-has-no-vehicle", !!tImg && !/train|bus/i.test(tImg.subject) && checkPromptGates(tImg.prompt).pass && checkImageDesign(designT, transportPlanning).pass);
+  const frag = { id: "appeal-AT", kind: "section", subject: "An illustration of a person commuting on a local train in the morning, calm and unhurried", composition: "x", styleText: "y" };
+  const rebuiltFrag = rebuildPromptWithoutHits(frag, ["train"]);
+  expectTrue("sendback-fragment-falls-back-to-scene", rebuiltFrag.entry.subject !== "calm and unhurried" && /work/i.test(rebuiltFrag.entry.subject) && checkPromptGates(rebuiltFrag.entry.prompt).pass);
 }
 expectTrue("assembly-failure-hold", runB4.holds.some((h) => h.stage === "assembly"));
 

@@ -1,1 +1,97 @@
-{"gates":[{"criterion":"寮・寝室を思わせる要素を入れない","id":"G1","kind":"prompt","source":"standing ban: housing unstated means no residence imagery","terms":["bedroom","dormitory","dorm room","bed ","寝室","寮"]},{"criterion":"現金・金額の含意を入れない","id":"G2","kind":"prompt","source":"standing ban: cash / income imagery","terms":["cash","money bag","banknote","現金","札束"]},{"criterion":"特定の時刻を示す時計を入れない","id":"G3","kind":"prompt","source":"standing ban: specific clock times","terms":["clock showing","wall clock","時計"]},{"criterion":"通勤手段（バス・電車等）を主役にしない","id":"G4","kind":"prompt","source":"user 2026-11-04: commute means must not be the subject (the loop-020 bus)","terms":["bus","train","commuter","バス","電車"]},{"criterion":"車両を主役にしない（写真の主題は職場と仕事そのもの）","id":"G5","kind":"subject","source":"user 2026-11-04: a truck-led photo reads as a driving/loading job","terms":["truck","vehicle","van ","car ","トラック","車両","自動車"]},{"criterion":"説明画像は大きくしない・写実にしない（イラスト調で小さく置く）","id":"G6","kind":"design","source":"user 2026-11-04: a large explanatory image passes a generated image off as the real site"},{"criterion":"設計（目的・内容・描き方・置き場）のない画像を生成しない","id":"G7","kind":"design","source":"user 2026-11-04: the image-design step was missing"},{"criterion":"レイアウトは画像設計と参照形どおりに組む（ヒーローは大きく、説明は小さい差し込み）","id":"G8","kind":"layout","source":"user 2026-11-04: the layout is too crude; the layout follows the design"}],"note":"Gate registry for the image step. Pointed-out issues become gates here (learning flow: candidate -> verification -> the user's approval -> gate). The initial set was ordered as a specification by the user on 2026-11-04 together with the points themselves.","version":"image-gates-v1"}
+{
+  "gates": [
+    {
+      "criterion": "寮・寝室を思わせる要素を入れない",
+      "id": "G1",
+      "kind": "prompt",
+      "source": "standing ban: housing unstated means no residence imagery",
+      "terms": [
+        "bedroom",
+        "dormitory",
+        "dorm room",
+        "bed ",
+        "寝室",
+        "寮"
+      ]
+    },
+    {
+      "criterion": "現金・金額の含意を入れない",
+      "id": "G2",
+      "kind": "prompt",
+      "source": "standing ban: cash / income imagery",
+      "terms": [
+        "cash",
+        "money bag",
+        "banknote",
+        "現金",
+        "札束"
+      ]
+    },
+    {
+      "criterion": "特定の時刻を示す時計を入れない",
+      "id": "G3",
+      "kind": "prompt",
+      "source": "standing ban: specific clock times",
+      "terms": [
+        "clock showing",
+        "wall clock",
+        "時計"
+      ]
+    },
+    {
+      "criterion": "通勤手段（バス・電車等）を主役にしない",
+      "id": "G4",
+      "kind": "prompt",
+      "source": "user 2026-11-04: commute means must not be the subject (the loop-020 bus)",
+      "terms": [
+        "bus",
+        "train",
+        "commuter",
+        "バス",
+        "電車"
+      ]
+    },
+    {
+      "criterion": "車両を主役にしない（写真の主題は職場と仕事そのもの）",
+      "id": "G5",
+      "kind": "subject",
+      "source": "user 2026-11-04: a truck-led photo reads as a driving/loading job",
+      "terms": [
+        "truck",
+        "vehicle",
+        "van ",
+        "car ",
+        "トラック",
+        "車両",
+        "自動車"
+      ]
+    },
+    {
+      "criterion": "説明画像は大きくしない・写実にしない（イラスト調で小さく置く）",
+      "id": "G6",
+      "kind": "design",
+      "source": "user 2026-11-04: a large explanatory image passes a generated image off as the real site"
+    },
+    {
+      "criterion": "設計（目的・内容・描き方・置き場）のない画像を生成しない",
+      "id": "G7",
+      "kind": "design",
+      "source": "user 2026-11-04: the image-design step was missing"
+    },
+    {
+      "criterion": "レイアウトは読み手ペルソナの判断順序どおりに組む（対象・第一確認・訴求の順序から決まる。参照画像の模倣ではない）",
+      "id": "G8",
+      "kind": "layout",
+      "source": "user 2026-11-04: the layout was too crude; then 01:22 the preview is designed from the reader persona, not from the coordinator's earlier image"
+    },
+    {
+      "criterion": "職場・建物の外観を写実的な生成画像で見せない（実在しない場所を実物らしく見せない。全役割イラスト調）",
+      "id": "G9",
+      "kind": "design",
+      "source": "user 2026-11-04 01:20: imagining the building / workplace exterior is fraud-like",
+      "terms": []
+    }
+  ],
+  "note": "Gate registry for the image step. Pointed-out issues become gates here (learning flow: candidate -> verification -> the user's approval -> gate). The initial set was ordered as a specification by the user on 2026-11-04 together with the points themselves.",
+  "version": "image-gates-v1"
+}

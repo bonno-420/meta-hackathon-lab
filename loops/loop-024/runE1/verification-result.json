@@ -1,0 +1,282 @@
+{
+  "kind": "re-verification-result",
+  "version": 1,
+  "verifiedAt": "2026-11-03T19:32:30.887Z",
+  "target": {
+    "generationFile": "loops/loop-024/runE1/generated.json",
+    "generationSha256": "7c8b83908345c140608bee4aa29ba49fd9dd574a00d4a8e476efa890c30752f4",
+    "promptVersion": "lp-generate-v5-planning",
+    "model": "meta-models/muse-spark-open-1026",
+    "sentenceCount": 7
+  },
+  "inputIdentity": {
+    "pass": true,
+    "checks": [
+      {
+        "id": "original-file",
+        "pass": true,
+        "expected": "loops/loop-024/runE1/entry/original.json",
+        "actual": "loops/loop-024/runE1/entry/original.json"
+      },
+      {
+        "id": "facts-file",
+        "pass": true,
+        "expected": "loops/loop-024/runE1/entry/facts.json",
+        "actual": "loops/loop-024/runE1/entry/facts.json"
+      },
+      {
+        "id": "original-hash",
+        "pass": true,
+        "expected": "a0c0ce06437b5e8db11f5d93cb7dfd0f574213fe65f0b78079b654456449d9ed",
+        "actual": "a0c0ce06437b5e8db11f5d93cb7dfd0f574213fe65f0b78079b654456449d9ed",
+        "error": null
+      },
+      {
+        "id": "facts-hash",
+        "pass": true,
+        "expected": "9693f2eb0de45ddfd9d0f2f0dbfc00f4e6437e9939d662df2b85b22bb49ffb93",
+        "actual": "9693f2eb0de45ddfd9d0f2f0dbfc00f4e6437e9939d662df2b85b22bb49ffb93",
+        "error": null
+      },
+      {
+        "id": "approval-id",
+        "pass": true,
+        "expected": "FICT-E01-approval-test-1",
+        "actual": "FICT-E01-approval-test-1"
+      },
+      {
+        "id": "approval-status",
+        "pass": true,
+        "expected": "approved with approver and approvedAt",
+        "actual": {
+          "status": "approved",
+          "approver": "Coordinator test fixture (per the user's test-loop instruction, 2026-11-04)",
+          "approvedAt": "2026-11-04"
+        }
+      },
+      {
+        "id": "approval-validity",
+        "pass": true,
+        "expected": true,
+        "actual": true,
+        "validity": {
+          "valid": true,
+          "approvalId": "FICT-E01-approval-test-1",
+          "status": "approved",
+          "checks": [
+            {
+              "target": "original",
+              "file": "loops/loop-024/runE1/entry/original.json",
+              "expected": "a0c0ce06437b5e8db11f5d93cb7dfd0f574213fe65f0b78079b654456449d9ed",
+              "actual": "a0c0ce06437b5e8db11f5d93cb7dfd0f574213fe65f0b78079b654456449d9ed",
+              "match": true
+            },
+            {
+              "target": "facts",
+              "file": "loops/loop-024/runE1/entry/facts.json",
+              "expected": "9693f2eb0de45ddfd9d0f2f0dbfc00f4e6437e9939d662df2b85b22bb49ffb93",
+              "actual": "9693f2eb0de45ddfd9d0f2f0dbfc00f4e6437e9939d662df2b85b22bb49ffb93",
+              "match": true
+            }
+          ],
+          "reason": null
+        }
+      },
+      {
+        "id": "generation-input",
+        "pass": true,
+        "expected": true,
+        "actual": true,
+        "reasonCode": null,
+        "reason": null
+      }
+    ],
+    "failures": [],
+    "original": {
+      "id": "FICT-E01",
+      "version": "v1",
+      "file": "loops/loop-024/runE1/entry/original.json",
+      "headerSha256": "a0c0ce06437b5e8db11f5d93cb7dfd0f574213fe65f0b78079b654456449d9ed",
+      "actualSha256": "a0c0ce06437b5e8db11f5d93cb7dfd0f574213fe65f0b78079b654456449d9ed"
+    },
+    "facts": {
+      "factsId": "FICT-E01-facts",
+      "factsVersion": 1,
+      "file": "loops/loop-024/runE1/entry/facts.json",
+      "headerSha256": "9693f2eb0de45ddfd9d0f2f0dbfc00f4e6437e9939d662df2b85b22bb49ffb93",
+      "actualSha256": "9693f2eb0de45ddfd9d0f2f0dbfc00f4e6437e9939d662df2b85b22bb49ffb93"
+    },
+    "approvalId": {
+      "header": "FICT-E01-approval-test-1",
+      "record": "FICT-E01-approval-test-1",
+      "match": true
+    },
+    "approval": {
+      "approvalId": "FICT-E01-approval-test-1",
+      "status": "approved",
+      "approver": "Coordinator test fixture (per the user's test-loop instruction, 2026-11-04)",
+      "approvedAt": "2026-11-04"
+    },
+    "validity": {
+      "valid": true,
+      "approvalId": "FICT-E01-approval-test-1",
+      "status": "approved",
+      "checks": [
+        {
+          "target": "original",
+          "file": "loops/loop-024/runE1/entry/original.json",
+          "expected": "a0c0ce06437b5e8db11f5d93cb7dfd0f574213fe65f0b78079b654456449d9ed",
+          "actual": "a0c0ce06437b5e8db11f5d93cb7dfd0f574213fe65f0b78079b654456449d9ed",
+          "match": true
+        },
+        {
+          "target": "facts",
+          "file": "loops/loop-024/runE1/entry/facts.json",
+          "expected": "9693f2eb0de45ddfd9d0f2f0dbfc00f4e6437e9939d662df2b85b22bb49ffb93",
+          "actual": "9693f2eb0de45ddfd9d0f2f0dbfc00f4e6437e9939d662df2b85b22bb49ffb93",
+          "match": true
+        }
+      ],
+      "reason": null
+    },
+    "generationInput": {
+      "ok": true,
+      "reasonCode": null,
+      "reason": null,
+      "approvalId": "FICT-E01-approval-test-1",
+      "status": "approved",
+      "validity": {
+        "valid": true,
+        "approvalId": "FICT-E01-approval-test-1",
+        "status": "approved",
+        "checks": [
+          {
+            "target": "original",
+            "file": "loops/loop-024/runE1/entry/original.json",
+            "expected": "a0c0ce06437b5e8db11f5d93cb7dfd0f574213fe65f0b78079b654456449d9ed",
+            "actual": "a0c0ce06437b5e8db11f5d93cb7dfd0f574213fe65f0b78079b654456449d9ed",
+            "match": true
+          },
+          {
+            "target": "facts",
+            "file": "loops/loop-024/runE1/entry/facts.json",
+            "expected": "9693f2eb0de45ddfd9d0f2f0dbfc00f4e6437e9939d662df2b85b22bb49ffb93",
+            "actual": "9693f2eb0de45ddfd9d0f2f0dbfc00f4e6437e9939d662df2b85b22bb49ffb93",
+            "match": true
+          }
+        ],
+        "reason": null
+      }
+    }
+  },
+  "grounding": {
+    "pass": true,
+    "checked": 7,
+    "issues": [],
+    "skipped": false,
+    "skipReason": null
+  },
+  "humanConfirmation": {
+    "status": "pending",
+    "confirmer": null,
+    "confirmedAt": null,
+    "sentences": [
+      {
+        "sentence": 0,
+        "text": "You will be preparing drinks, serving customers and light cleaning at a small neighbourhood café.",
+        "factKeys": [],
+        "sourceLines": [
+          "L01"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 1,
+        "text": "This is a part-time position at a café in Kichijoji, Tokyo.",
+        "factKeys": [
+          "employmentType",
+          "workLocation"
+        ],
+        "sourceLines": [
+          "L02",
+          "L03"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 2,
+        "text": "The hourly wage is 1,150 yen.",
+        "factKeys": [
+          "salaryHourly"
+        ],
+        "sourceLines": [
+          "L04"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 3,
+        "text": "Shifts are 09:00 to 14:00, 5 hours with no break.",
+        "factKeys": [
+          "workHours",
+          "actualHours",
+          "breakMinutes"
+        ],
+        "sourceLines": [
+          "L05"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 4,
+        "text": "Work is on weekends and public holidays only, so it fits around classes and family time.",
+        "factKeys": [],
+        "sourceLines": [
+          "L06"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 5,
+        "text": "Actual commuting cost is covered, up to 10,000 yen per month.",
+        "factKeys": [
+          "transport",
+          "transportCap"
+        ],
+        "sourceLines": [
+          "L07"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 6,
+        "text": "No experience is needed, and students are welcome.",
+        "factKeys": [],
+        "sourceLines": [
+          "L08"
+        ],
+        "result": null,
+        "detail": null
+      }
+    ],
+    "note": "機械検査で覆えない意味の対応（文が使っている項目と factKeys・sourceLines の対応、期間・個数などの数量表現、否定・条件の反転、公開・申込と読める表現の混入）は人間の確認に残る。全文の確認が終わるまで再検証は合格にならない"
+  },
+  "mechanicalPass": true,
+  "verdict": {
+    "status": "pending-human-confirmation",
+    "pass": false,
+    "mechanicalPass": true,
+    "category": "human-confirmation",
+    "reason": "機械検査（入力同一性と根拠検査の再実行）は pass したが、人間の確認（意味の対応）が未完了のため、再検証の合格は未確定である",
+    "effect": "未確定。合格となった場合の効果はデモ内プレビューの許可までであり、公開の許可ではない（G-INV-4）"
+  },
+  "apiCalled": false,
+  "costUsd": 0,
+  "costNote": "再検証の道具は API を呼ばないため費用は発生しない。区分は D5 の製品実行とし、金額は 0 とする"
+}

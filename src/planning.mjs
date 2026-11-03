@@ -117,7 +117,27 @@ export function checkPromptCompliance(prompt, correspondence) {
 // presentation record (the loop-020 checklist). Values start null:
 // a human fills them when the key visual is presented; the run does
 // not claim a visual judgement it cannot make.
-export function buildKeyVisualChecklist(correspondence) {
+export function buildKeyVisualChecklist(correspondence, design = null) {
+  // When the image design exists, the checklist describes the DESIGN
+  // (subjects after the design-stage replacements), not the raw spec
+  // text: a checklist written from the pre-design spec describes an
+  // image that will never be generated (found in the independent
+  // review of run20, 2026-11-04).
+  if (design && Array.isArray(design.images) && design.images.length > 0) {
+    return design.images.map((e) => ({
+      element: e.id,
+      basis: e.appealId ?? e.source ?? null,
+      description: e.subject,
+      depiction: e.depiction,
+      placement: e.placement ? `${e.placement.area}/${e.placement.size}` : null,
+      checks: {
+        subjectIdentity: null,
+        unstatedImplication: null,
+        inventedSpecifics: null,
+        cashImagery: null,
+      },
+    }));
+  }
   return (correspondence.elements ?? [])
     .filter((e) => e.role === "key-visual")
     .map((e) => ({

@@ -1,0 +1,170 @@
+{
+  "version": "image-design-v2",
+  "count": 6,
+  "images": [
+    {
+      "id": "key-visual",
+      "role": "key-visual",
+      "kind": "hero",
+      "source": "spec",
+      "appealId": "A1",
+      "purpose": "The work itself: assembling wooden frames and sanding parts by hand, and seeing a finished product take shape",
+      "subject": "Hands assembling a small wooden frame on a workbench, parts and tools laid out beside it",
+      "composition": "Wide establishing shot of the scene described; the described subject fills the frame; impression-level, with no specific factual claim",
+      "depiction": "illustration",
+      "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms",
+      "placement": {
+        "area": "hero",
+        "size": "large",
+        "aspect": "5:3"
+      },
+      "mustNotImply": [
+        "寮・寝室を思わせる要素",
+        "現金・金額の含意",
+        "特定の時刻",
+        "通勤手段や車両を主役にすること",
+        "読める文字・数字・ロゴ",
+        "Do not mention contract renewal",
+        "Do not mention housing"
+      ],
+      "prompt": "Hands assembling a small wooden frame on a workbench, parts and tools laid out beside it. Wide establishing shot of the scene described; the described subject fills the frame; impression-level, with no specific factual claim. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+    },
+    {
+      "id": "section-work",
+      "role": "work",
+      "kind": "section",
+      "source": "spec",
+      "appealId": null,
+      "purpose": "workLocation",
+      "subject": "Sanding a wooden part by hand at a workbench in a small workshop",
+      "composition": "The work activity itself, as an explanatory image beside the text it explains",
+      "depiction": "illustration",
+      "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms",
+      "placement": {
+        "area": "inline",
+        "size": "small",
+        "aspect": "13:6"
+      },
+      "mustNotImply": [
+        "寮・寝室を思わせる要素",
+        "現金・金額の含意",
+        "特定の時刻",
+        "通勤手段や車両を主役にすること",
+        "読める文字・数字・ロゴ",
+        "Do not mention contract renewal",
+        "Do not mention housing"
+      ],
+      "prompt": "Sanding a wooden part by hand at a workbench in a small workshop. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+    },
+    {
+      "id": "appeal-A2",
+      "role": "section",
+      "kind": "section",
+      "source": "appeal",
+      "appealId": "A2",
+      "purpose": "Training is provided, so you can start even without woodworking experience",
+      "subject": "An illustration of the work itself: people doing the hands-on tasks of the job at a work table",
+      "composition": "The work activity itself, as an explanatory image beside the text it explains",
+      "depiction": "illustration",
+      "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms",
+      "placement": {
+        "area": "inline",
+        "size": "small",
+        "aspect": "4:3"
+      },
+      "mustNotImply": [
+        "寮・寝室を思わせる要素",
+        "現金・金額の含意",
+        "特定の時刻",
+        "通勤手段や車両を主役にすること",
+        "読める文字・数字・ロゴ",
+        "Do not mention contract renewal",
+        "Do not mention housing"
+      ],
+      "prompt": "An illustration of the work itself: people doing the hands-on tasks of the job at a work table. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+    },
+    {
+      "id": "appeal-A3",
+      "role": "section",
+      "kind": "section",
+      "source": "appeal",
+      "appealId": "A3",
+      "purpose": "The hourly wage is stated clearly at 1,400 yen",
+      "subject": "An illustration of the work itself: people doing the hands-on tasks of the job at a work table",
+      "composition": "The work activity itself, as an explanatory image beside the text it explains",
+      "depiction": "illustration",
+      "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms",
+      "placement": {
+        "area": "inline",
+        "size": "small",
+        "aspect": "4:3"
+      },
+      "mustNotImply": [
+        "寮・寝室を思わせる要素",
+        "現金・金額の含意",
+        "特定の時刻",
+        "通勤手段や車両を主役にすること",
+        "読める文字・数字・ロゴ",
+        "Do not mention contract renewal",
+        "Do not mention housing"
+      ],
+      "prompt": "An illustration of the work itself: people doing the hands-on tasks of the job at a work table. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+    },
+    {
+      "id": "appeal-A4",
+      "role": "section",
+      "kind": "section",
+      "source": "appeal",
+      "appealId": "A4",
+      "purpose": "Weekdays only, 08:30 to 17:30 with a 60-minute break",
+      "subject": "An illustration of the work itself: people doing the hands-on tasks of the job at a work table",
+      "composition": "The work activity itself, as an explanatory image beside the text it explains",
+      "depiction": "illustration",
+      "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms",
+      "placement": {
+        "area": "inline",
+        "size": "small",
+        "aspect": "4:3"
+      },
+      "mustNotImply": [
+        "寮・寝室を思わせる要素",
+        "現金・金額の含意",
+        "特定の時刻",
+        "通勤手段や車両を主役にすること",
+        "読める文字・数字・ロゴ",
+        "Do not mention contract renewal",
+        "Do not mention housing"
+      ],
+      "prompt": "An illustration of the work itself: people doing the hands-on tasks of the job at a work table. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+    },
+    {
+      "id": "appeal-A5",
+      "role": "section",
+      "kind": "section",
+      "source": "appeal",
+      "appealId": "A5",
+      "purpose": "Commuting costs are covered, up to 15,000 yen per month",
+      "subject": "An illustration of the work itself: people doing the hands-on tasks of the job at a work table",
+      "composition": "The work activity itself, as an explanatory image beside the text it explains",
+      "depiction": "illustration",
+      "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms",
+      "placement": {
+        "area": "inline",
+        "size": "small",
+        "aspect": "4:3"
+      },
+      "mustNotImply": [
+        "寮・寝室を思わせる要素",
+        "現金・金額の含意",
+        "特定の時刻",
+        "通勤手段や車両を主役にすること",
+        "読める文字・数字・ロゴ",
+        "Do not mention contract renewal",
+        "Do not mention housing"
+      ],
+      "prompt": "An illustration of the work itself: people doing the hands-on tasks of the job at a work table. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+    }
+  ],
+  "noImage": [],
+  "designNotes": []
+}

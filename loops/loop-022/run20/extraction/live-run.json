@@ -1,0 +1,234 @@
+{
+  "mode": "live",
+  "status": "completed",
+  "parseError": null,
+  "model": "meta-models/muse-spark-open-1026",
+  "requestedModel": "meta-models/muse-spark-open-1026",
+  "baseUrl": "https://inference.baseten.co/v1",
+  "promptVersion": "fact-extract-v1.1",
+  "input": "FICT-J02 v1",
+  "retries": 0,
+  "startedAt": "2026-11-03T16:46:07.953Z",
+  "finishedAt": "2026-11-03T16:46:17.396Z",
+  "durationMs": 9299,
+  "usage": {
+    "prompt_tokens": 494,
+    "completion_tokens": 3274,
+    "total_tokens": 3768,
+    "prompt_tokens_details": {
+      "audio_tokens": 0,
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": 2578,
+      "audio_tokens": 0,
+      "reasoning_tokens": 2776,
+      "rejected_prediction_tokens": 2287
+    }
+  },
+  "costUsd": null,
+  "costNote": "未記録（PIPELINE_MODEL でモデルが差し替えられており、D4単価が適用できないため算出しない。使用量は usage に記録）",
+  "rawContent": "{\"items\":[{\"key\":\"employer\",\"status\":\"unstated\",\"value\":null,\"normalized\":null,\"sourceLine\":null,\"quote\":null},{\"key\":\"jobId\",\"status\":\"unstated\",\"value\":null,\"normalized\":null,\"sourceLine\":null,\"quote\":null},{\"key\":\"workLocation\",\"status\":\"stated\",\"value\":\"愛知県豊橋市内の物流倉庫\",\"normalized\":null,\"sourceLine\":\"L03\",\"quote\":\"愛知県豊橋市内の物流倉庫\"},{\"key\":\"employmentType\",\"status\":\"stated\",\"value\":\"有期契約社員\",\"normalized\":null,\"sourceLine\":\"L02\",\"quote\":\"有期契約社員\"},{\"key\":\"contractPeriod\",\"status\":\"stated\",\"value\":\"3か月\",\"normalized\":null,\"sourceLine\":\"L02\",\"quote\":\"契約期間3か月\"},{\"key\":\"renewal\",\"status\":\"unstated\",\"value\":null,\"normalized\":null,\"sourceLine\":null,\"quote\":null},{\"key\":\"salaryHourly\",\"status\":\"stated\",\"value\":\"1,350円\",\"normalized\":1350,\"sourceLine\":\"L04\",\"quote\":\"1,350円\"},{\"key\":\"monthlyIncomeGuarantee\",\"status\":\"unstated\",\"value\":null,\"normalized\":null,\"sourceLine\":null,\"quote\":null},{\"key\":\"workHours\",\"status\":\"stated\",\"value\":\"07:00〜16:00\",\"normalized\":null,\"sourceLine\":\"L05\",\"quote\":\"07:00〜16:00\"},{\"key\":\"breakMinutes\",\"status\":\"stated\",\"value\":\"60分\",\"normalized\":60,\"sourceLine\":\"L05\",\"quote\":\"休憩60分\"},{\"key\":\"actualHours\",\"status\":\"unstated\",\"value\":null,\"normalized\":null,\"sourceLine\":null,\"quote\":null},{\"key\":\"monthlyDaysAssumption\",\"status\":\"unstated\",\"value\":null,\"normalized\":null,\"sourceLine\":null,\"quote\":null},{\"key\":\"transport\",\"status\":\"stated\",\"value\":\"実費支給\",\"normalized\":null,\"sourceLine\":\"L07\",\"quote\":\"実費支給\"},{\"key\":\"transportCap\",\"status\":\"stated\",\"value\":\"15,000円\",\"normalized\":15000,\"sourceLine\":\"L07\",\"quote\":\"月上限15,000円\"},{\"key\":\"housing\",\"status\":\"unstated\",\"value\":null,\"normalized\":null,\"sourceLine\":null,\"quote\":null}]}",
+  "facts": {
+    "items": [
+      {
+        "key": "employer",
+        "status": "unstated",
+        "value": null,
+        "normalized": null,
+        "sourceLine": null,
+        "quote": null
+      },
+      {
+        "key": "jobId",
+        "status": "unstated",
+        "value": null,
+        "normalized": null,
+        "sourceLine": null,
+        "quote": null
+      },
+      {
+        "key": "workLocation",
+        "status": "stated",
+        "value": "愛知県豊橋市内の物流倉庫",
+        "normalized": null,
+        "sourceLine": "L03",
+        "quote": "愛知県豊橋市内の物流倉庫"
+      },
+      {
+        "key": "employmentType",
+        "status": "stated",
+        "value": "有期契約社員",
+        "normalized": null,
+        "sourceLine": "L02",
+        "quote": "有期契約社員"
+      },
+      {
+        "key": "contractPeriod",
+        "status": "stated",
+        "value": "3か月",
+        "normalized": null,
+        "sourceLine": "L02",
+        "quote": "契約期間3か月"
+      },
+      {
+        "key": "renewal",
+        "status": "unstated",
+        "value": null,
+        "normalized": null,
+        "sourceLine": null,
+        "quote": null
+      },
+      {
+        "key": "salaryHourly",
+        "status": "stated",
+        "value": "1,350円",
+        "normalized": 1350,
+        "sourceLine": "L04",
+        "quote": "1,350円"
+      },
+      {
+        "key": "monthlyIncomeGuarantee",
+        "status": "unstated",
+        "value": null,
+        "normalized": null,
+        "sourceLine": null,
+        "quote": null
+      },
+      {
+        "key": "workHours",
+        "status": "stated",
+        "value": "07:00〜16:00",
+        "normalized": null,
+        "sourceLine": "L05",
+        "quote": "07:00〜16:00"
+      },
+      {
+        "key": "breakMinutes",
+        "status": "stated",
+        "value": "60分",
+        "normalized": 60,
+        "sourceLine": "L05",
+        "quote": "休憩60分"
+      },
+      {
+        "key": "actualHours",
+        "status": "unstated",
+        "value": null,
+        "normalized": null,
+        "sourceLine": null,
+        "quote": null
+      },
+      {
+        "key": "monthlyDaysAssumption",
+        "status": "unstated",
+        "value": null,
+        "normalized": null,
+        "sourceLine": null,
+        "quote": null
+      },
+      {
+        "key": "transport",
+        "status": "stated",
+        "value": "実費支給",
+        "normalized": null,
+        "sourceLine": "L07",
+        "quote": "実費支給"
+      },
+      {
+        "key": "transportCap",
+        "status": "stated",
+        "value": "15,000円",
+        "normalized": 15000,
+        "sourceLine": "L07",
+        "quote": "月上限15,000円"
+      },
+      {
+        "key": "housing",
+        "status": "unstated",
+        "value": null,
+        "normalized": null,
+        "sourceLine": null,
+        "quote": null
+      }
+    ]
+  },
+  "schemaCheck": {
+    "pass": true,
+    "expectedCount": 15,
+    "actualCount": 15,
+    "missingKeys": [],
+    "extraKeys": [],
+    "duplicateKeys": [],
+    "fieldIssues": []
+  },
+  "e01": {
+    "caseId": "E01",
+    "stage": "照合",
+    "verdict": "一致（人間承認待ち）",
+    "stoppedAtReconciliation": false,
+    "generationStarted": false,
+    "generationNote": "生成工程は作らない。人間承認前には生成を開始しない。",
+    "matched": [
+      {
+        "field": "勤務時間",
+        "value": "07:00〜16:00",
+        "source": "L05"
+      },
+      {
+        "field": "交通費（月上限）",
+        "value": "15,000円",
+        "source": "L07"
+      }
+    ],
+    "contradictions": [],
+    "unstated": [
+      {
+        "key": "employer",
+        "source": null,
+        "quote": null
+      },
+      {
+        "key": "jobId",
+        "source": null,
+        "quote": null
+      },
+      {
+        "key": "renewal",
+        "source": null,
+        "quote": null
+      },
+      {
+        "key": "monthlyIncomeGuarantee",
+        "source": null,
+        "quote": null
+      },
+      {
+        "key": "actualHours",
+        "source": null,
+        "quote": null
+      },
+      {
+        "key": "monthlyDaysAssumption",
+        "source": null,
+        "quote": null
+      },
+      {
+        "key": "housing",
+        "source": null,
+        "quote": null
+      }
+    ],
+    "claims": {
+      "workHours": {
+        "value": "07:00〜16:00",
+        "snippet": "07:00〜16:00"
+      },
+      "transportCap": {
+        "value": 15000,
+        "snippet": "月上限15,000円"
+      }
+    }
+  },
+  "e02": null
+}

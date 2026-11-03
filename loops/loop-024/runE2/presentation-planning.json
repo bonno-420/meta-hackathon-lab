@@ -1,0 +1,17 @@
+{
+  "checkpoint": "planning",
+  "presented": [
+    {
+      "kind": "planning",
+      "file": "loops/loop-024/planning-FICT-E02.json",
+      "sha256": "b1c86cb00de591790de195acb93786a6ce1a4878bc2d1c91fad528721b1151ee"
+    }
+  ],
+  "holds": [],
+  "judgement": {
+    "result": null,
+    "confirmer": null,
+    "confirmedAt": null,
+    "corrections": []
+  }
+}

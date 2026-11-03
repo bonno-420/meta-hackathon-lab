@@ -16,7 +16,7 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-export const PAGECHECK_VERSION = "src-pagecheck-v1";
+export const PAGECHECK_VERSION = "src-pagecheck-v2";
 export const DICTS_VERSION = "loop16-dicts-2026-11-02";
 
 const DEFAULT_VERIFICATION_DICT = [
@@ -276,6 +276,15 @@ export function checkPage(html, { dicts } = {}) {
   const verificationPhrases = detectVerification(pageScope, d.verification);
   const recordExposure = detectRecordExposure(pageScope, d.recordLabels);
   const heading = detectHeadingMismatch(sections, d.headingScope);
+  // Attribute exposure (v2): internal identifiers in alt attributes
+  // are part of the delivered HTML even though they are not visible
+  // text; the text scan cannot see them (independent review of
+  // run20 found alt="appeal-A3" / alt="section-work", 2026-11-04).
+  const attributeExposure = [];
+  for (const m of String(html).matchAll(/alt="([^"]*)"/g)) {
+    const v = m[1];
+    if (/(appeal|section|key-visual)-[A-Za-z0-9]/i.test(v) || v === "section-work") attributeExposure.push({ attribute: "alt", value: v });
+  }
   const summary = {
     duplicateGroups: duplication.length,
     verificationGroups: verificationPhrases.length,
@@ -283,8 +292,9 @@ export function checkPage(html, { dicts } = {}) {
     recordExposureGroups: recordExposure.length,
     recordExposureHits: recordExposure.reduce((s, h) => s + h.count, 0),
     headingMismatches: heading.mismatches.length,
+    attributeExposureHits: attributeExposure.length,
   };
-  const pass = summary.duplicateGroups === 0 && summary.verificationHits === 0 && summary.recordExposureHits === 0 && summary.headingMismatches === 0;
+  const pass = summary.duplicateGroups === 0 && summary.verificationHits === 0 && summary.recordExposureHits === 0 && summary.headingMismatches === 0 && summary.attributeExposureHits === 0;
   return {
     pass,
     version: PAGECHECK_VERSION,
@@ -294,6 +304,7 @@ export function checkPage(html, { dicts } = {}) {
     duplication,
     verificationPhrases,
     recordExposure,
+    attributeExposure,
     headingMismatch: heading.mismatches,
     allSections: heading.allSections,
   };

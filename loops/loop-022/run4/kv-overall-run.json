@@ -1,0 +1,21 @@
+{
+  "status": "generated",
+  "reason": null,
+  "model": "muse-image-1.0",
+  "promptTemplate": "lp-image-v1",
+  "images": [
+    {
+      "id": "key-visual",
+      "file": "loops/loop-022/run4/images/key-visual.webp",
+      "prompt": "One single image presenting the overall look of a job posting landing page, photorealistic, composed as one continuous scene: a large modern logistics warehouse in Toyohashi in the early morning, its bright interior visible with a worker sorting parcels on a conveyor belt, cardboard boxes and shelving, warm dawn sunlight streaming through tall windows, clean and calm atmosphere, documentary photography style, no text, no numbers, no logos, no watermark",
+      "line": null,
+      "mime": "image/webp",
+      "bytes": 501780
+    }
+  ],
+  "usage": null,
+  "costUsd": 0.01,
+  "costNote": "画像 1 枚 × $0.01 の算出値。確定実費は dev.meta.ai Billing 実績との突合が必要。",
+  "startedAt": "2026-11-03T14:44:42.058Z",
+  "finishedAt": "2026-11-03T14:44:59.936Z"
+}

@@ -81,9 +81,9 @@ export function decideImagePlanFromSpecs({ correspondence }) {
       id: el.role === "key-visual" ? "hero" : el.id,
       line: null,
       role: el.role,
-      prompt: el.role === "key-visual"
-        ? `${el.description}, ${correspondence.style ?? "photorealistic"}, no text, no numbers, no logos, no watermark`
-        : `${el.description}, ${ILLUSTRATION_STYLE}, no text, no numbers, no logos, no watermark`,
+      // Gate G9: no generated image presents the workplace as a real
+      // photograph, in any role — every prompt is illustration style.
+      prompt: `${el.description}, ${ILLUSTRATION_STYLE}, no text, no numbers, no logos, no watermark`,
     });
   }
   return { images };

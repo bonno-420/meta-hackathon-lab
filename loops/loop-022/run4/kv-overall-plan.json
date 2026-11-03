@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "model": "muse-image-1.0",
+  "images": [
+    {
+      "id": "key-visual",
+      "file": "key-visual-overall.webp",
+      "prompt": "One single image presenting the overall look of a job posting landing page, photorealistic, composed as one continuous scene: a large modern logistics warehouse in Toyohashi in the early morning, its bright interior visible with a worker sorting parcels on a conveyor belt, cardboard boxes and shelving, warm dawn sunlight streaming through tall windows, clean and calm atmosphere, documentary photography style, no text, no numbers, no logos, no watermark",
+      "basis": "planning-FICT-J02: appeals A2 (07:00-16:00 shape, early morning) and A4/A1 page tone; facts workLocation (logistics warehouse in Toyohashi) and work content (sorting parcels). Overall look-fixing visual per generation-flow-statement."
+    }
+  ]
+}

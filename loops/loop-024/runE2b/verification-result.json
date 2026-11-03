@@ -1,0 +1,295 @@
+{
+  "kind": "re-verification-result",
+  "version": 1,
+  "verifiedAt": "2026-11-03T20:15:50.216Z",
+  "target": {
+    "generationFile": "loops/loop-024/runE2b/generated.json",
+    "generationSha256": "d6817112b72a8d60dc408abab9cc392923c75f0e295e78bd8febfa0351df83d6",
+    "promptVersion": "lp-generate-v5-planning",
+    "model": "meta-models/muse-spark-open-1026",
+    "sentenceCount": 8
+  },
+  "inputIdentity": {
+    "pass": true,
+    "checks": [
+      {
+        "id": "original-file",
+        "pass": true,
+        "expected": "loops/loop-024/runE2/entry/original.json",
+        "actual": "loops/loop-024/runE2/entry/original.json"
+      },
+      {
+        "id": "facts-file",
+        "pass": true,
+        "expected": "loops/loop-024/runE2/entry/facts.json",
+        "actual": "loops/loop-024/runE2/entry/facts.json"
+      },
+      {
+        "id": "original-hash",
+        "pass": true,
+        "expected": "c15ffd10e353f57d406f5405429c669f58470a226cc2b929fb58f08f45fb6a26",
+        "actual": "c15ffd10e353f57d406f5405429c669f58470a226cc2b929fb58f08f45fb6a26",
+        "error": null
+      },
+      {
+        "id": "facts-hash",
+        "pass": true,
+        "expected": "a355f666e34efaa40461ebb82182ea4f16c991509e4d46de0fa7e571587e3ebe",
+        "actual": "a355f666e34efaa40461ebb82182ea4f16c991509e4d46de0fa7e571587e3ebe",
+        "error": null
+      },
+      {
+        "id": "approval-id",
+        "pass": true,
+        "expected": "FICT-E02-approval-test-1",
+        "actual": "FICT-E02-approval-test-1"
+      },
+      {
+        "id": "approval-status",
+        "pass": true,
+        "expected": "approved with approver and approvedAt",
+        "actual": {
+          "status": "approved",
+          "approver": "Coordinator test fixture (per the user's test-loop instruction, 2026-11-04)",
+          "approvedAt": "2026-11-04"
+        }
+      },
+      {
+        "id": "approval-validity",
+        "pass": true,
+        "expected": true,
+        "actual": true,
+        "validity": {
+          "valid": true,
+          "approvalId": "FICT-E02-approval-test-1",
+          "status": "approved",
+          "checks": [
+            {
+              "target": "original",
+              "file": "loops/loop-024/runE2/entry/original.json",
+              "expected": "c15ffd10e353f57d406f5405429c669f58470a226cc2b929fb58f08f45fb6a26",
+              "actual": "c15ffd10e353f57d406f5405429c669f58470a226cc2b929fb58f08f45fb6a26",
+              "match": true
+            },
+            {
+              "target": "facts",
+              "file": "loops/loop-024/runE2/entry/facts.json",
+              "expected": "a355f666e34efaa40461ebb82182ea4f16c991509e4d46de0fa7e571587e3ebe",
+              "actual": "a355f666e34efaa40461ebb82182ea4f16c991509e4d46de0fa7e571587e3ebe",
+              "match": true
+            }
+          ],
+          "reason": null
+        }
+      },
+      {
+        "id": "generation-input",
+        "pass": true,
+        "expected": true,
+        "actual": true,
+        "reasonCode": null,
+        "reason": null
+      }
+    ],
+    "failures": [],
+    "original": {
+      "id": "FICT-E02",
+      "version": "v1",
+      "file": "loops/loop-024/runE2/entry/original.json",
+      "headerSha256": "c15ffd10e353f57d406f5405429c669f58470a226cc2b929fb58f08f45fb6a26",
+      "actualSha256": "c15ffd10e353f57d406f5405429c669f58470a226cc2b929fb58f08f45fb6a26"
+    },
+    "facts": {
+      "factsId": "FICT-E02-facts",
+      "factsVersion": 1,
+      "file": "loops/loop-024/runE2/entry/facts.json",
+      "headerSha256": "a355f666e34efaa40461ebb82182ea4f16c991509e4d46de0fa7e571587e3ebe",
+      "actualSha256": "a355f666e34efaa40461ebb82182ea4f16c991509e4d46de0fa7e571587e3ebe"
+    },
+    "approvalId": {
+      "header": "FICT-E02-approval-test-1",
+      "record": "FICT-E02-approval-test-1",
+      "match": true
+    },
+    "approval": {
+      "approvalId": "FICT-E02-approval-test-1",
+      "status": "approved",
+      "approver": "Coordinator test fixture (per the user's test-loop instruction, 2026-11-04)",
+      "approvedAt": "2026-11-04"
+    },
+    "validity": {
+      "valid": true,
+      "approvalId": "FICT-E02-approval-test-1",
+      "status": "approved",
+      "checks": [
+        {
+          "target": "original",
+          "file": "loops/loop-024/runE2/entry/original.json",
+          "expected": "c15ffd10e353f57d406f5405429c669f58470a226cc2b929fb58f08f45fb6a26",
+          "actual": "c15ffd10e353f57d406f5405429c669f58470a226cc2b929fb58f08f45fb6a26",
+          "match": true
+        },
+        {
+          "target": "facts",
+          "file": "loops/loop-024/runE2/entry/facts.json",
+          "expected": "a355f666e34efaa40461ebb82182ea4f16c991509e4d46de0fa7e571587e3ebe",
+          "actual": "a355f666e34efaa40461ebb82182ea4f16c991509e4d46de0fa7e571587e3ebe",
+          "match": true
+        }
+      ],
+      "reason": null
+    },
+    "generationInput": {
+      "ok": true,
+      "reasonCode": null,
+      "reason": null,
+      "approvalId": "FICT-E02-approval-test-1",
+      "status": "approved",
+      "validity": {
+        "valid": true,
+        "approvalId": "FICT-E02-approval-test-1",
+        "status": "approved",
+        "checks": [
+          {
+            "target": "original",
+            "file": "loops/loop-024/runE2/entry/original.json",
+            "expected": "c15ffd10e353f57d406f5405429c669f58470a226cc2b929fb58f08f45fb6a26",
+            "actual": "c15ffd10e353f57d406f5405429c669f58470a226cc2b929fb58f08f45fb6a26",
+            "match": true
+          },
+          {
+            "target": "facts",
+            "file": "loops/loop-024/runE2/entry/facts.json",
+            "expected": "a355f666e34efaa40461ebb82182ea4f16c991509e4d46de0fa7e571587e3ebe",
+            "actual": "a355f666e34efaa40461ebb82182ea4f16c991509e4d46de0fa7e571587e3ebe",
+            "match": true
+          }
+        ],
+        "reason": null
+      }
+    }
+  },
+  "grounding": {
+    "pass": true,
+    "checked": 8,
+    "issues": [],
+    "skipped": false,
+    "skipReason": null
+  },
+  "humanConfirmation": {
+    "status": "pending",
+    "confirmer": null,
+    "confirmedAt": null,
+    "sentences": [
+      {
+        "sentence": 0,
+        "text": "You will be assembling small wooden frames and sanding parts by hand in a small workshop, where you can see a finished product take shape.",
+        "factKeys": [],
+        "sourceLines": [
+          "L01"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 1,
+        "text": "Experience with hand tools is welcome, and training is provided so you can start even without woodworking experience.",
+        "factKeys": [],
+        "sourceLines": [
+          "L08"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 2,
+        "text": "The hourly wage is 1,400 yen.",
+        "factKeys": [
+          "salaryHourly"
+        ],
+        "sourceLines": [
+          "L04"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 3,
+        "text": "Working days are Monday to Friday, with hours from 08:30 to 17:30 (break 60 minutes).",
+        "factKeys": [
+          "workHours",
+          "breakMinutes"
+        ],
+        "sourceLines": [
+          "L05",
+          "L06"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 4,
+        "text": "Actual commuting cost is covered, up to 15,000 yen per month.",
+        "factKeys": [
+          "transport",
+          "transportCap"
+        ],
+        "sourceLines": [
+          "L07"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 5,
+        "text": "The location is a workshop in Taito City, Tokyo.",
+        "factKeys": [
+          "workLocation"
+        ],
+        "sourceLines": [
+          "L03"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 6,
+        "text": "The employment type is Contract with a contract period of 6 months.",
+        "factKeys": [
+          "employmentType",
+          "contractPeriod"
+        ],
+        "sourceLines": [
+          "L02"
+        ],
+        "result": null,
+        "detail": null
+      },
+      {
+        "sentence": 7,
+        "text": "The actual working time is 8 hours.",
+        "factKeys": [
+          "actualHours"
+        ],
+        "sourceLines": [
+          "L05"
+        ],
+        "result": null,
+        "detail": null
+      }
+    ],
+    "note": "機械検査で覆えない意味の対応（文が使っている項目と factKeys・sourceLines の対応、期間・個数などの数量表現、否定・条件の反転、公開・申込と読める表現の混入）は人間の確認に残る。全文の確認が終わるまで再検証は合格にならない"
+  },
+  "mechanicalPass": true,
+  "verdict": {
+    "status": "pending-human-confirmation",
+    "pass": false,
+    "mechanicalPass": true,
+    "category": "human-confirmation",
+    "reason": "機械検査（入力同一性と根拠検査の再実行）は pass したが、人間の確認（意味の対応）が未完了のため、再検証の合格は未確定である",
+    "effect": "未確定。合格となった場合の効果はデモ内プレビューの許可までであり、公開の許可ではない（G-INV-4）"
+  },
+  "apiCalled": false,
+  "costUsd": 0,
+  "costNote": "再検証の道具は API を呼ばないため費用は発生しない。区分は D5 の製品実行とし、金額は 0 とする"
+}

@@ -16,7 +16,7 @@
 
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { FACT_LABEL } from "./page-layout.mjs";
+import { FACT_LABEL, FACT_LABEL_EN } from "./page-layout.mjs";
 
 function resolveRoot(root, rel) {
   return path.isAbsolute(rel) ? rel : path.join(root, rel);
@@ -82,7 +82,7 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
     const carries = block?.carries ?? {};
     if (block.block === "condition-card") {
       const item = factByKey.get(carries.factKey);
-      const label = FACT_LABEL[carries.factKey] ?? carries.factKey ?? "";
+      const label = (layout?.language === "en" ? FACT_LABEL_EN : FACT_LABEL)[carries.factKey] ?? carries.factKey ?? "";
       const value = item && item.status === "stated" ? item.value : "";
       cardBuffer.push(`<div class="card"><div class="card-label">${esc(label)}</div><div class="card-value">${esc(value)}</div>${carries.appealId ? appealSentences(carries.appealId) : ""}</div>`);
       continue;
@@ -94,7 +94,7 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
         const chips = Array.isArray(heroChips) && heroChips.length > 0
           ? `<div class="hero-chips">${heroChips.map((c) => `<span class="hero-chip">${esc(c)}</span>`).join("")}</div>`
           : "";
-        body += `<section class="lp-hero"><img src="${esc(srcFor(hero))}" alt="hero">${chips}</section>\n`;
+        body += `<section class="lp-hero"><img src="${esc(srcFor(hero))}" alt="">${chips}</section>\n`;
         placedFiles.push(hero.file);
       }
     } else if (block.block === "title") {
@@ -103,9 +103,13 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
     } else if (block.block === "photo-band") {
       const img = carries.specId ? imgById.get(carries.specId) : null;
       const text = carries.basis?.appealId ? appealSentences(carries.basis.appealId) : "";
-      const fig = img && existing.has(img.id) ? `<img class="inline-photo" src="${esc(srcFor(img))}" alt="${esc(img.id)}">` : "";
+      const fig = img && existing.has(img.id) ? `<img class="inline-photo" src="${esc(srcFor(img))}" alt="">` : "";
       if (img && existing.has(img.id)) placedFiles.push(img.file);
-      if (fig || text) body += `<section class="explain-row">${fig}<div class="explain-text">${text}</div><div class="clear"></div></section>\n`;
+      // A band whose sentences were claimed by a condition card
+      // renders its image without an (empty) text box: an empty
+      // explain-text div reads as an unfinished page (independent
+      // review of run20, 2026-11-04).
+      if (fig || text) body += `<section class="explain-row">${fig}${text ? `<div class="explain-text">${text}</div>` : ""}<div class="clear"></div></section>\n`;
     } else if (block.block === "details") {
       let inner = "";
       for (const id of carries.appealIds ?? []) inner += appealSentences(id);
@@ -114,23 +118,34 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
       });
       if (inner) body += `<section class="details">${inner}</section>\n`;
     } else if (block.block === "cta") {
-      body += `<footer class="cta"><button class="cta-button" type="button">応募する</button></footer>\n`;
+      body += `<footer class="cta"><button class="cta-button" type="button">${layout?.language === "en" ? "Apply" : "応募する"}</button></footer>\n`;
     }
   }
   flushCards();
   // Nothing is dropped: any sentence no block claimed goes to a final
   // details section (the completion check C1 also verifies presence).
+  // Details belong before the call to action in the confirmed
+  // composition, so a CTA already emitted is moved after them.
   let rest = "";
   sentences.forEach((s, idx) => { rest += sentenceHtml(idx); });
-  if (rest) body += `<section class="details">${rest}</section>\n`;
-  if (!blocks.some((b) => b.block === "cta")) body += `<footer class="cta"><button class="cta-button" type="button">応募する</button></footer>\n`;
+  if (rest) {
+    const ctaHtml = `<footer class="cta"><button class="cta-button" type="button">${layout?.language === "en" ? "Apply" : "応募する"}</button></footer>\n`;
+    if (body.includes(ctaHtml)) {
+      body = body.replace(ctaHtml, "");
+      body += `<section class="details">${rest}</section>\n` + ctaHtml;
+    } else {
+      body += `<section class="details">${rest}</section>\n`;
+    }
+  }
+  if (!blocks.some((b) => b.block === "cta")) body += `<footer class="cta"><button class="cta-button" type="button">${layout?.language === "en" ? "Apply" : "応募する"}</button></footer>\n`;
   // Images no block claimed are appended (existence/reference is C2).
   for (const img of images ?? []) {
     if (existing.has(img.id) && !placedFiles.includes(img.file)) {
-      body += `<figure class="lp-image"><img src="${esc(srcFor(img))}" alt="${esc(img.id)}"></figure>\n`;
+      body += `<figure class="lp-image"><img src="${esc(srcFor(img))}" alt=""></figure>\n`;
       placedFiles.push(img.file);
     }
   }
+  const pal = layout?.design?.palette ?? { titleBg: "#173550", accent: "#f2762e" };
   const html = `<!doctype html>
 <html lang="ja">
 <head>
@@ -138,11 +153,11 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>完成LP（デモ）</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#dde4ee;font-family:sans-serif;padding:24px 0;color:#222}
-.page{max-width:480px;margin:0 auto;background:#fff;border-radius:26px;box-shadow:0 10px 34px rgba(23,42,66,.18);overflow:hidden}
+*{box-sizing:border-box}body{margin:0;background:#fff;font-family:sans-serif;color:#222}
+.page{max-width:480px;margin:0 auto;background:#fff}
 .lp-hero img{width:100%;display:block}
 .hero-chips{padding:12px 18px 0}.hero-chip{display:inline-block;background:#eef3f8;border-radius:999px;padding:4px 12px;margin:0 8px 8px 0;font-size:13px}
-.title-block{background:#173550;margin:18px 34px 0;border-radius:20px;padding:24px 26px}
+.title-block{background:${pal.titleBg};padding:34px 30px 38px}
 .title-block .lp-sentence{color:#fff;margin:0;line-height:1.7}
 .cards{padding:20px 18px 6px}
 .card{float:left;width:48%;border-radius:18px;box-shadow:0 4px 16px rgba(23,42,66,.10);padding:16px 14px;margin:0 0 14px}
@@ -156,8 +171,8 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
 .details{padding:16px 26px 6px}
 .details .lp-sentence{margin:0 0 10px;line-height:1.7}
 .clear{clear:both}
-.cta{background:#173550;padding:24px 30px 30px;text-align:center;margin-top:18px}
-.cta-button{background:#f2762e;color:#fff;border:none;border-radius:999px;padding:14px 44px;font-size:16px;width:56%}
+.cta{background:${pal.titleBg};padding:24px 30px 30px;text-align:center;margin-top:18px}
+.cta-button{background:${pal.accent};color:#fff;border:none;border-radius:999px;padding:14px 44px;font-size:16px;width:56%}
 .lp-image img{max-width:100%}
 </style>
 </head>

@@ -27,6 +27,7 @@ import { buildPreview } from "./build-preview.mjs";
 import { checkPage } from "./pagecheck.mjs";
 import { buildCorrespondence, buildImagePrompt, buildKeyVisualChecklist, checkPromptCompliance, sha256Text, validatePlanning } from "./planning.mjs";
 import { buildFinishedImageHtml, evaluateFinishedImageGate } from "./page-layout.mjs";
+import { deriveLpDesign } from "./lp-design.mjs";
 import { buildImageDesign, checkImageDesign, checkPromptGates, promptGateResults, rebuildPromptWithoutHits } from "./image-design.mjs";
 import { renderHtmlToImage } from "./render-page-image.mjs";
 import { pinPostingText, buildFactsFile, buildManifest } from "./pin-posting.mjs";
@@ -137,7 +138,7 @@ export function assembleLP({ root, generation, images, lpDir, heroChips }) {
     const chips = Array.isArray(heroChips) && heroChips.length > 0
       ? `<div class="hero-chips">${heroChips.map((c) => `<span class="hero-chip">${esc(c)}</span>`).join("")}</div>`
       : "";
-    body += `<section class="lp-hero"><img src="${esc(srcFor(hero))}" alt="hero">${chips}</section>\n`;
+    body += `<section class="lp-hero"><img src="${esc(srcFor(hero))}" alt="">${chips}</section>\n`;
     placed.push(hero.file);
   }
   sentences.forEach((s, idx) => {
@@ -147,14 +148,14 @@ export function assembleLP({ root, generation, images, lpDir, heroChips }) {
     for (const img of images ?? []) {
       if (img.id === "hero" || placed.includes(img.file)) continue;
       if (img.line != null && lines.includes(img.line)) {
-        body += `<figure class="lp-image"><img src="${esc(srcFor(img))}" alt="${esc(img.id)}"></figure>\n`;
+        body += `<figure class="lp-image"><img src="${esc(srcFor(img))}" alt=""></figure>\n`;
         placed.push(img.file);
       }
     }
   });
   for (const img of images ?? []) {
     if (existing.has(img.id) && !placed.includes(img.file)) {
-      body += `<figure class="lp-image"><img src="${esc(srcFor(img))}" alt="${esc(img.id)}"></figure>\n`;
+      body += `<figure class="lp-image"><img src="${esc(srcFor(img))}" alt=""></figure>\n`;
       placed.push(img.file);
     }
   }
@@ -582,10 +583,11 @@ export async function runDemo(options, deps = {}) {
       // reasons recorded as a send-back to the design.
       const factsForDesign = fixedFacts ?? loadJson(path.join(root, factsFile));
       const imageDesign = buildImageDesign(planning, factsForDesign);
-      const designCheck = checkImageDesign(imageDesign);
+      const designCheck = checkImageDesign(imageDesign, planning);
       const kvPageDirEarly = normalizePath(path.dirname(generationFile));
       mkdirSync(resolveRoot(root, kvPageDirEarly), { recursive: true });
       writeFileSync(resolveRoot(root, path.join(kvPageDirEarly, "image-design.json")), JSON.stringify(imageDesign, null, 2) + "\n", "utf8");
+      writeFileSync(resolveRoot(root, path.join(kvPageDirEarly, "lp-design.json")), JSON.stringify(deriveLpDesign(planning), null, 2) + "\n", "utf8");
       if (!designCheck.pass) {
         stages.keyVisual = { executed: true, pass: false, correspondence, imageDesign, designCheck };
         persistState(["extraction", "factsComparison", "approval", "planning"], { e02raw });
@@ -610,7 +612,7 @@ export async function runDemo(options, deps = {}) {
       const complianceResults = photoPlan.map((pp) => ({ id: pp.id, ...checkPromptCompliance(pp.prompt, correspondence), gates: checkPromptGates(pp.prompt) }));
       const compliance = { pass: complianceResults.every((c) => c.pass && c.gates.pass), results: complianceResults };
       if (!stoppedAt && !compliance.pass) {
-        const hits = complianceResults.filter((c) => !c.pass).flatMap((c) => (c.hits ?? []).map((h) => `${c.id}: ${h.term}`));
+        const hits = complianceResults.filter((c) => !c.pass || !c.gates.pass).flatMap((c) => [...(c.hits ?? []).map((h) => `${c.id}: ${h.term}`), ...((c.gates && c.gates.hits) ?? []).map((h) => `${c.id}: ${h.term}（${h.gate}）`)]);
         stages.keyVisual = { executed: true, pass: false, correspondence, imageDesign, designCheck, sendBacks, photoPlan, compliance };
         stop("key-visual", `1枚画の写真のプロンプトが禁止モチーフ検査に触れたため、生成しない（${hits.join("、")}）。対応表か企画の側の不備であり、プロンプトの言い換えでは直さない`);
       } else if (!stoppedAt) {
@@ -670,17 +672,17 @@ export async function runDemo(options, deps = {}) {
               image: kvImage,
               model: photosRun.model ?? null,
               costUsd: photosRun.costUsd ?? null,
-              checklist: buildKeyVisualChecklist(correspondence),
+              checklist: buildKeyVisualChecklist(correspondence, imageDesign),
             };
             writePresentationRecord("key-visual", {
               checkpoint: "key-visual",
               presented: [{ kind: "image", file: kvImage.file, sha256: sha }],
               layout: layout.record,
-              checklist: buildKeyVisualChecklist(correspondence),
+              checklist: buildKeyVisualChecklist(correspondence, imageDesign),
               holds: [...holds],
               judgement: { result: null, confirmer: null, confirmedAt: null, corrections: [] },
             });
-            persistState(["extraction", "factsComparison", "approval", "planning", "keyVisual"], { keyVisual: { image: kvImage, layout: layout.record, photos: photosRun.images }, e02raw });
+            persistState(["extraction", "factsComparison", "approval", "planning", "keyVisual"], { keyVisual: { image: kvImage, layout: layout.record, photos: photosRun.images, imageDesign, designCheck, gate: stages.keyVisual.gate ?? null, gateResults: stages.keyVisual.gateResults ?? [], photoPlan, sendBacks, compliance }, e02raw });
             stop("key-visual", "1枚画（LPの完成イメージ）のプレビュー確認のため止める（チェックポイント）", "checkpoint");
             }
           }
@@ -698,7 +700,27 @@ export async function runDemo(options, deps = {}) {
   // (API/parse errors, grounding failures) retry up to 3 attempts in
   // total; a refusal never retries. On resume the generation is not
   // re-run; it is reloaded and its grounding re-checked in-process.
+  // Appeal and work-content coverage of a generation: every appeal
+  // in the planning must be carried by a sentence, and the original's
+  // work-content line must be cited. Grounding alone does not catch
+  // an appeal that was simply never written (FICT-J02 run17: the
+  // holidays and no-experience appeals, and the work content, were
+  // dropped while grounding passed).
+  const coverageOf = (generation) => {
+    if (!planning || !generation) return null;
+    const { byAppeal } = matchAppealSentences(generation, planning.appeals ?? []);
+    const uncoveredAppeals = [...byAppeal.entries()].filter(([, idxs]) => idxs.length === 0).map(([id]) => id);
+    let workLine = null;
+    try {
+      const orig = JSON.parse(readFileSync(resolveRoot(root, originalFile), "utf8"));
+      workLine = (orig?.lines ?? []).find((l) => /^(仕事内容|Work\s*:|Duties\s*:|Job description)/i.test(l?.text ?? "")) ?? null;
+    } catch { workLine = null; }
+    const cited = new Set((generation.sentences ?? []).flatMap((x) => x?.sourceLines ?? []));
+    const workUncovered = Boolean(workLine) && !cited.has(workLine.id);
+    return { pass: uncoveredAppeals.length === 0 && !workUncovered, uncoveredAppeals, workLineId: workLine?.id ?? null, workUncovered };
+  };
   let generationRun = null;
+  let generationCoverage = null;
   if (!stoppedAt && resumedStages.has("generation")) {
     const generation = loadJson(path.join(root, generationFile));
     const factsForGrounding = fixedFacts ?? loadJson(path.join(root, factsFile));
@@ -720,15 +742,38 @@ export async function runDemo(options, deps = {}) {
     if (!grounding.pass) {
       stop("generation", "再開時に読み直した生成物の根拠検査が pass しなかったため、後段を実行しない");
     }
+    generationCoverage = coverageOf(generationRun.generation);
+    if (generationCoverage && !generationCoverage.pass) {
+      stop("generation", `再開時に読み直した生成物で、訴求・仕事内容の充足が不足しているため、後段を実行しない（未充足の訴求: ${generationCoverage.uncoveredAppeals.join(", ") || "なし"}${generationCoverage.workUncovered ? `、仕事内容の行 ${generationCoverage.workLineId} が未引用` : ""}）`);
+    }
   } else if (!stoppedAt) {
     const maxAttempts = pipelineMode ? 3 : 1;
     let attempts = 0;
     let lastRun = null;
+    let attemptFeedback = options.feedbackFile ?? undefined;
     while (attempts < maxAttempts) {
       attempts++;
-      lastRun = await generate({ root, originalFile, factsFile, approvalFile, planningFile: options.planningFile ?? undefined, feedbackFile: options.feedbackFile ?? undefined });
+      lastRun = await generate({ root, originalFile, factsFile, approvalFile, planningFile: options.planningFile ?? undefined, feedbackFile: attemptFeedback });
       if (!lastRun || lastRun.status === "refused") break;
-      if (lastRun.status === "generated" && lastRun.generation && lastRun.grounding && lastRun.grounding.pass === true) break;
+      if (lastRun.status === "generated" && lastRun.generation && lastRun.grounding && lastRun.grounding.pass === true) {
+        generationCoverage = coverageOf(lastRun.generation);
+        if (!generationCoverage || generationCoverage.pass) break;
+        if (attempts < maxAttempts) {
+          // Send the missing coverage back as feedback and retry:
+          // the next attempt is told exactly which appeals and which
+          // part of the original are not yet in the copy.
+          const missing = [
+            ...generationCoverage.uncoveredAppeals.map((id) => `訴求 ${id} が文章に入っていない`),
+            ...(generationCoverage.workUncovered ? [`仕事内容（原本の行 ${generationCoverage.workLineId}）が文章に入っていない`] : []),
+          ];
+          const prior = attemptFeedback ? (() => { try { return readFileSync(resolveRoot(root, attemptFeedback), "utf8"); } catch { return ""; } })() : "";
+          const note = `${prior}${prior ? "\n" : ""}前回の生成で不足していた点（必ず入れること）:\n${missing.map((m) => `- ${m}`).join("\n")}\n`;
+          const fbPath = path.join(path.dirname(generationFile), "coverage-feedback.txt");
+          mkdirSync(resolveRoot(root, path.dirname(fbPath)), { recursive: true });
+          writeFileSync(resolveRoot(root, fbPath), note, "utf8");
+          attemptFeedback = fbPath;
+        }
+      }
     }
     generationRun = lastRun;
     stages.generation = {
@@ -743,6 +788,7 @@ export async function runDemo(options, deps = {}) {
       costUsd: generationRun ? (generationRun.costUsd ?? null) : null,
       costNote: generationRun ? (generationRun.costNote ?? null) : null,
       grounding: generationRun ? (generationRun.grounding ?? null) : null,
+      coverage: generationCoverage,
       reasonCode: generationRun ? (generationRun.reasonCode ?? null) : null,
       reason: generationRun ? (generationRun.reason ?? null) : null,
     };
@@ -754,6 +800,9 @@ export async function runDemo(options, deps = {}) {
     } else if (!generationRun.grounding || generationRun.grounding.pass !== true) {
       if (pipelineMode) holds.push({ stage: "generation", condition: "根拠検査 pass", detail: "上限まで再試行したが根拠検査が pass しなかった", attempts });
       stop("generation", "生成の根拠検査が pass しなかったため、後段を実行しない");
+    } else if (generationCoverage && !generationCoverage.pass) {
+      if (pipelineMode) holds.push({ stage: "generation", condition: "訴求と仕事内容の充足", detail: `未充足の訴求: ${generationCoverage.uncoveredAppeals.join(", ") || "なし"}${generationCoverage.workUncovered ? `、仕事内容の行 ${generationCoverage.workLineId} が未引用` : ""}`, attempts });
+      stop("generation", "訴求と仕事内容が文章に入っていないため、後段を実行しない");
     } else if (pipelineMode && options.checkpoints === "full") {
       writePresentationRecord("text", {
         checkpoint: "text",
@@ -781,10 +830,57 @@ export async function runDemo(options, deps = {}) {
   let imageRun = null;
   let expectedImageFiles = null;
   if (!stoppedAt && pipelineMode && correspondence) {
-    const specPlan = decideImagePlanFromSpecs({ correspondence });
+    // The LP images follow the image design (loop-023): the designed
+    // set — spec images plus the appeals' own images — with the
+    // design's prompts. Without a design record, the spec plan is
+    // used as before.
+    const kvStage = stages.keyVisual ?? null;
+    const designForImages = (kvStage && kvStage.imageDesign) ?? null;
+    // The effective prompts are the key-visual stage's photo plan
+    // (the design prompts after any recorded send-back rebuild) when
+    // it exists: the LP images must be generated from the very
+    // prompts that passed the gates for the sample, not re-derived
+    // from the raw design (run21: the raw design prompt for the
+    // transport appeal still carried the gated term).
+    const photoPlanForImages = kvStage && Array.isArray(kvStage.photoPlan) && kvStage.photoPlan.length > 0 ? kvStage.photoPlan : null;
+    const specPlan = photoPlanForImages
+      ? { images: photoPlanForImages.map((e) => ({ id: e.role === "key-visual" ? "hero" : e.id, line: null, role: e.role, prompt: e.prompt })) }
+      : designForImages && Array.isArray(designForImages.images)
+        ? { images: designForImages.images.map((e) => ({ id: e.kind === "hero" ? "hero" : e.id, line: null, role: e.role, prompt: e.prompt })) }
+        : decideImagePlanFromSpecs({ correspondence });
+    // LP-image gate (loop-024, from the independent review of run20):
+    // the finished LP's images previously had NO gate at all — the
+    // plan was re-derived here and its prompts were never checked, so
+    // an exterior instruction in a prompt reached the shipped page
+    // while every check passed. Now: every LP image prompt must pass
+    // the prompt gates and the design-stage prompt scan, and when a
+    // design record exists the plan must BE the design (same prompts,
+    // nothing re-derived). A failure stops the run before generation.
+    const planGateFailures = [];
+    const expectedPrompts = new Map();
+    if (photoPlanForImages) {
+      for (const e of photoPlanForImages) expectedPrompts.set(e.role === "key-visual" ? "hero" : e.id, e.prompt);
+    } else if (designForImages) {
+      for (const e of designForImages.images) expectedPrompts.set(e.kind === "hero" ? "hero" : e.id, e.prompt);
+    }
+    for (const img of specPlan.images) {
+      const g = checkPromptGates(img.prompt);
+      if (!g.pass) planGateFailures.push(`${img.id}: プロンプトゲート不通過（${g.hits.map((h) => h.term).join("、")}）`);
+      if (/building|exterior|facade|外観|建物/i.test(img.prompt)) planGateFailures.push(`${img.id}: プロンプトが職場・建物の外観を指示している（G9）`);
+      if (expectedPrompts.size > 0) {
+        if (!expectedPrompts.has(img.id)) planGateFailures.push(`${img.id}: 設計・1枚画の計画にない画像が生成計画にある`);
+        else if (expectedPrompts.get(img.id) !== img.prompt) planGateFailures.push(`${img.id}: 生成計画のプロンプトが設計・1枚画の計画と一致しない`);
+      }
+    }
+    if (designForImages && specPlan.images.length !== designForImages.images.length) {
+      planGateFailures.push(`生成計画の枚数（${specPlan.images.length}）が設計（${designForImages.images.length}）と一致しない`);
+    }
     let attempts = 0;
     let lastRun = null;
-    if (specPlan.images.length === 0) {
+    if (planGateFailures.length > 0) {
+      stages.images = { executed: true, pass: false, failures: planGateFailures };
+      stop("images", `LP画像の生成計画が設計・ゲートと一致しないため、生成しない（${planGateFailures.join("、")}）`);
+    } else if (specPlan.images.length === 0) {
       lastRun = { status: "generated", model: null, images: [], costUsd: 0, costNote: "企画の画像仕様に1枚画以外の要素がないため、追加の画像生成はない", reason: null };
     } else {
       while (attempts < 3) {
@@ -800,7 +896,7 @@ export async function runDemo(options, deps = {}) {
         executed: true, attempts, status: imageRun.status ?? null, model: imageRun.model ?? null,
         images: imageRun.images, costUsd: imageRun.costUsd ?? null, costNote: imageRun.costNote ?? null, reason: null,
       };
-    } else {
+    } else if (!stoppedAt) {
       holds.push({ stage: "images", condition: "企画の画像仕様どおりの画像生成", detail: "上限まで再試行したが画像生成が完了しなかった", attempts });
       imageRun = {
         status: "generated-with-holds", model: lastRun ? (lastRun.model ?? null) : null,
@@ -1309,6 +1405,13 @@ async function main() {
   if (kvConfFile) {
     kvConfirmation = loadJson(path.join(root, kvConfFile));
   }
+  // On a resume, the run's directory is the resumed run's own
+  // directory: writing the advanced state (or any output) into the
+  // default directory would corrupt another run's records and the
+  // resumed run would never advance past its checkpoint.
+  const effOutDir = argValue(argv, "--out-dir") ?? (resumeFile ? resumeFile.replaceAll("\\", "/").split("/").slice(0, -1).join("/") : outDir);
+  const effGenerationFile = resumeState?.files?.generationFile ?? generationFile;
+  const effGenDir = effGenerationFile.replaceAll("\\", "/").split("/").slice(0, -1).join("/");
 
   const result = await runDemo(
     {
@@ -1319,19 +1422,21 @@ async function main() {
       ...(checkpoints ? { checkpoints } : {}),
       ...(inputId ? { inputId } : {}),
       ...(inputVersion ? { inputVersion } : {}),
+      ...(resumeState ? { verificationFile: `${effOutDir}/verification-result.json` } : {}),
+      ...(resumeState?.files?.generationFile ? { lpFile: `${resumeState.files.generationFile.replaceAll("\\", "/").split("/").slice(0, -1).join("/")}/lp.html`, generationFile: resumeState.files.generationFile, imagesDir: `${resumeState.files.generationFile.replaceAll("\\", "/").split("/").slice(0, -1).join("/")}/images`, imagesRunFile: `${resumeState.files.generationFile.replaceAll("\\", "/").split("/").slice(0, -1).join("/")}/images-run.json` } : {}),
       ...(resumeState ? { resumeState } : {}),
       ...(kvConfirmation ? { kvConfirmation } : {}),
-      stateFile: `${outDir.replaceAll("\\", "/")}/run-state.json`,
+      stateFile: `${effOutDir}/run-state.json`,
     },
-    liveDeps({ root, outDir, generationFile, imagesDir, imagesRunFile, planningFile, feedbackFile, textApiKey: ((process.env.PIPELINE_BASE_URL ?? "").includes("baseten") ? process.env.BASETEN_API_KEY : process.env.MODEL_API_KEY) || undefined, imageApiKey: process.env.MODEL_API_KEY || undefined }),
+    liveDeps({ root, outDir: effOutDir, generationFile: effGenerationFile, imagesDir: `${effGenDir}/images`, imagesRunFile: `${effGenDir}/images-run.json`, planningFile, feedbackFile, textApiKey: ((process.env.PIPELINE_BASE_URL ?? "").includes("baseten") ? process.env.BASETEN_API_KEY : process.env.MODEL_API_KEY) || undefined, imageApiKey: process.env.MODEL_API_KEY || undefined }),
   );
 
-  mkdirSync(path.join(root, outDir), { recursive: true });
+  mkdirSync(path.join(root, effOutDir), { recursive: true });
   if (result.verification) {
-    writeFileSync(path.join(root, verificationFile), JSON.stringify(result.verification, null, 2) + "\n", "utf8");
+    writeFileSync(path.join(root, `${effOutDir}/verification-result.json`), JSON.stringify(result.verification, null, 2) + "\n", "utf8");
   }
   const { generation, verification, previewHtml, ...record } = result;
-  writeFileSync(path.join(root, runResultFile), JSON.stringify({ ...record, generationFile, verificationFile, lpFile }, null, 2) + "\n", "utf8");
+  writeFileSync(path.join(root, `${effOutDir}/run-result.json`), JSON.stringify({ ...record, generationFile, verificationFile, lpFile }, null, 2) + "\n", "utf8");
   console.log(JSON.stringify({
     status: result.status,
     stoppedAt: result.stoppedAt,

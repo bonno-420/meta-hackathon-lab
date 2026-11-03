@@ -1,0 +1,20 @@
+{
+  "checkpoint": "lp",
+  "presented": [
+    {
+      "kind": "lp",
+      "file": "loops/loop-022/run20/lp.html"
+    }
+  ],
+  "completion": {
+    "pass": true,
+    "failures": []
+  },
+  "holds": [],
+  "judgement": {
+    "result": null,
+    "confirmer": null,
+    "confirmedAt": null,
+    "corrections": []
+  }
+}

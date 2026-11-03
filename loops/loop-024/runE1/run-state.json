@@ -1,0 +1,1206 @@
+{
+  "version": 1,
+  "mode": {
+    "checkpoints": "full",
+    "entry": false
+  },
+  "files": {
+    "originalFile": "loops/loop-024/runE1/entry/original.json",
+    "factsFile": "loops/loop-024/runE1/entry/facts.json",
+    "approvalFile": "loops/loop-024/runE1/entry/approval.json",
+    "generationFile": "loops/loop-024/runE1/generated.json",
+    "planningFile": "loops/loop-024/planning-FICT-E01.json",
+    "feedbackFile": null,
+    "postingId": null
+  },
+  "completedStages": [
+    "extraction",
+    "factsComparison",
+    "approval",
+    "planning",
+    "keyVisual",
+    "generation"
+  ],
+  "keyVisual": {
+    "image": {
+      "file": "loops/loop-024/runE1/lp-finished-image.png",
+      "sha256": "3b6f89dc6a5bf6132ff1663eefcf8dba2be6926a402789130896720bcad58938"
+    },
+    "layout": {
+      "kind": "lp-finished-image",
+      "language": "en",
+      "audience": "Students and others looking for weekend-only part-time work near Kichijoji",
+      "form": {
+        "derivedFrom": "reader persona: the planning's audience, its first checks, and the appeals in order",
+        "pattern": null,
+        "personaBasis": {
+          "audience": "Students and others looking for weekend-only part-time work near Kichijoji",
+          "decisionOrder": [
+            "place impression (hero)",
+            "the offer (lead appeal, title)",
+            "appeals in order (explanatory rows)",
+            "first checks (condition cards)",
+            "remaining facts and appeals (details)",
+            "apply (cta)"
+          ]
+        }
+      },
+      "design": {
+        "version": "lp-design-v1",
+        "patternId": "P-LIFE",
+        "scores": {
+          "P-COND": 1,
+          "P-WORK": 0,
+          "P-LIFE": 2
+        },
+        "signals": [
+          "A1: 第一確認の事実を持つ訴求（条件）",
+          "A3: 生活適合の訴求",
+          "A4: 生活適合の訴求"
+        ],
+        "rationale": "訴求と第一確認の信号から P-LIFE を選択（条件 1 / 仕事 0 / 生活 2）。生活に合うかが主関心: 休み・通勤などの生活の訴求を場面で先に見せ、条件カードで裏付ける",
+        "blockOrder": [
+          "hero",
+          "title",
+          "rows",
+          "cards",
+          "details",
+          "cta"
+        ],
+        "palette": {
+          "titleBg": "#3d2c1c",
+          "accent": "#d96f32",
+          "chipBg": "#f8f1e6"
+        },
+        "paletteBasis": "パターンに紐づくトークン（候補。市場のリサーチ裏付けはなく、候補のまま記録する）",
+        "basis": "生活に合うかが主関心: 休み・通勤などの生活の訴求を場面で先に見せ、条件カードで裏付ける"
+      },
+      "anatomy": [
+        "hero photograph",
+        "title block (placeholder text)",
+        "explanatory image rows x4 (small insets)",
+        "condition cards x1 (planning firstCheckKeys)",
+        "detail blocks (placeholder text)",
+        "call to action"
+      ],
+      "messageMap": [
+        {
+          "block": "hero-photo",
+          "carries": {
+            "specId": "key-visual",
+            "basis": {
+              "appealId": "A3"
+            }
+          },
+          "purpose": "Weekends and public holidays only, so it fits around classes and family time"
+        },
+        {
+          "block": "title",
+          "carries": {
+            "appealId": "A1"
+          },
+          "note": "the lead appeal's headline slot (placeholder text at this stage)"
+        },
+        {
+          "block": "photo-band",
+          "carries": {
+            "specId": "section-work",
+            "basis": {
+              "factKey": "workLocation"
+            }
+          },
+          "purpose": "workLocation"
+        },
+        {
+          "block": "photo-band",
+          "carries": {
+            "specId": "appeal-A2",
+            "basis": {
+              "appealId": "A2"
+            }
+          },
+          "purpose": "Short morning shifts, 09:00 to 14:00 (five hours, no break)"
+        },
+        {
+          "block": "photo-band",
+          "carries": {
+            "specId": "appeal-A4",
+            "basis": {
+              "appealId": "A4"
+            }
+          },
+          "purpose": "Commuting costs are covered, up to 10,000 yen per month"
+        },
+        {
+          "block": "photo-band",
+          "carries": {
+            "specId": "appeal-A5",
+            "basis": {
+              "appealId": "A5"
+            }
+          },
+          "purpose": "No experience needed, and students are welcome"
+        },
+        {
+          "block": "condition-card",
+          "carries": {
+            "factKey": "salaryHourly",
+            "appealId": "A1"
+          }
+        },
+        {
+          "block": "details",
+          "carries": {
+            "factKeys": [
+              "workHours",
+              "actualHours",
+              "transport",
+              "transportCap"
+            ],
+            "appealIds": [
+              "A3",
+              "A5"
+            ]
+          },
+          "note": "appeal facts not shown as first-check cards, and line-grounded appeals with no fact key; carried by the detail blocks and the copy"
+        },
+        {
+          "block": "cta",
+          "carries": {
+            "action": true
+          }
+        }
+      ],
+      "messageGaps": [],
+      "photos": [
+        {
+          "id": "key-visual",
+          "role": "key-visual",
+          "file": "loops/loop-024/runE1/images/kv-photos/key-visual.webp"
+        },
+        {
+          "id": "section-work",
+          "role": "section",
+          "file": "loops/loop-024/runE1/images/kv-photos/section-work.webp"
+        },
+        {
+          "id": "appeal-A2",
+          "role": "section",
+          "file": "loops/loop-024/runE1/images/kv-photos/appeal-A2.webp"
+        },
+        {
+          "id": "appeal-A4",
+          "role": "section",
+          "file": "loops/loop-024/runE1/images/kv-photos/appeal-A4.webp"
+        },
+        {
+          "id": "appeal-A5",
+          "role": "section",
+          "file": "loops/loop-024/runE1/images/kv-photos/appeal-A5.webp"
+        }
+      ],
+      "imageDesign": [
+        {
+          "id": "key-visual",
+          "placement": "hero",
+          "aspect": "5:3",
+          "heightPx": 288,
+          "fit": "cover",
+          "position": "center",
+          "purpose": "Weekends and public holidays only, so it fits around classes and family time",
+          "appealId": "A3",
+          "subject": "Inside a small neighbourhood café in the morning, a staff member serving a customer at the counter",
+          "depiction": "illustration",
+          "size": "large"
+        },
+        {
+          "id": "section-work",
+          "placement": "band",
+          "aspect": "13:6",
+          "heightPx": 78,
+          "fit": "cover",
+          "position": "center",
+          "purpose": "workLocation",
+          "appealId": null,
+          "subject": "Preparing drinks behind a café counter",
+          "depiction": "illustration",
+          "size": "small"
+        },
+        {
+          "id": "appeal-A2",
+          "placement": "band",
+          "aspect": "4:3",
+          "heightPx": 127,
+          "fit": "cover",
+          "position": "center",
+          "purpose": "Short morning shifts, 09:00 to 14:00 (five hours, no break)",
+          "appealId": "A2",
+          "subject": "An illustration of a worker starting the day at a work table in bright morning light",
+          "depiction": "illustration",
+          "size": "small"
+        },
+        {
+          "id": "appeal-A4",
+          "placement": "band",
+          "aspect": "4:3",
+          "heightPx": 127,
+          "fit": "cover",
+          "position": "center",
+          "purpose": "Commuting costs are covered, up to 10,000 yen per month",
+          "appealId": "A4",
+          "subject": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table",
+          "depiction": "illustration",
+          "size": "small"
+        },
+        {
+          "id": "appeal-A5",
+          "placement": "band",
+          "aspect": "4:3",
+          "heightPx": 127,
+          "fit": "cover",
+          "position": "center",
+          "purpose": "No experience needed, and students are welcome",
+          "appealId": "A5",
+          "subject": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table",
+          "depiction": "illustration",
+          "size": "small"
+        }
+      ],
+      "note": "LPの完成イメージ。文章はプレースホルダで、実文と実画像は後段で同じレイアウトの同じ場所に入る"
+    },
+    "photos": [
+      {
+        "id": "key-visual",
+        "file": "loops/loop-024/runE1/images/kv-photos/key-visual.webp",
+        "prompt": "Inside a small neighbourhood café in the morning, a staff member serving a customer at the counter. Wide establishing shot; the workplace building itself is the subject; impression-level, with no specific factual claim. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+        "line": null,
+        "mime": "image/webp",
+        "bytes": 164310,
+        "role": "key-visual"
+      },
+      {
+        "id": "section-work",
+        "file": "loops/loop-024/runE1/images/kv-photos/section-work.webp",
+        "prompt": "Preparing drinks behind a café counter. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+        "line": null,
+        "mime": "image/webp",
+        "bytes": 197550,
+        "role": "section"
+      },
+      {
+        "id": "appeal-A2",
+        "file": "loops/loop-024/runE1/images/kv-photos/appeal-A2.webp",
+        "prompt": "An illustration of a worker starting the day at a work table in bright morning light. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+        "line": null,
+        "mime": "image/webp",
+        "bytes": 201298,
+        "role": "section"
+      },
+      {
+        "id": "appeal-A4",
+        "file": "loops/loop-024/runE1/images/kv-photos/appeal-A4.webp",
+        "prompt": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+        "line": null,
+        "mime": "image/webp",
+        "bytes": 169154,
+        "role": "section"
+      },
+      {
+        "id": "appeal-A5",
+        "file": "loops/loop-024/runE1/images/kv-photos/appeal-A5.webp",
+        "prompt": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+        "line": null,
+        "mime": "image/webp",
+        "bytes": 126308,
+        "role": "section"
+      }
+    ],
+    "imageDesign": {
+      "version": "image-design-v2",
+      "count": 5,
+      "images": [
+        {
+          "id": "key-visual",
+          "role": "key-visual",
+          "kind": "hero",
+          "source": "spec",
+          "appealId": "A3",
+          "purpose": "Weekends and public holidays only, so it fits around classes and family time",
+          "subject": "Inside a small neighbourhood café in the morning, a staff member serving a customer at the counter",
+          "composition": "Wide establishing shot; the workplace building itself is the subject; impression-level, with no specific factual claim",
+          "depiction": "illustration",
+          "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms",
+          "placement": {
+            "area": "hero",
+            "size": "large",
+            "aspect": "5:3"
+          },
+          "mustNotImply": [
+            "寮・寝室を思わせる要素",
+            "現金・金額の含意",
+            "特定の時刻",
+            "通勤手段や車両を主役にすること",
+            "読める文字・数字・ロゴ",
+            "Do not mention contract renewal",
+            "Do not mention housing",
+            "Do not promise monthly income"
+          ],
+          "prompt": "Inside a small neighbourhood café in the morning, a staff member serving a customer at the counter. Wide establishing shot; the workplace building itself is the subject; impression-level, with no specific factual claim. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+        },
+        {
+          "id": "section-work",
+          "role": "section",
+          "kind": "section",
+          "source": "spec",
+          "appealId": null,
+          "purpose": "workLocation",
+          "subject": "Preparing drinks behind a café counter",
+          "composition": "The work activity itself, as an explanatory image beside the text it explains",
+          "depiction": "illustration",
+          "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms",
+          "placement": {
+            "area": "inline",
+            "size": "small",
+            "aspect": "13:6"
+          },
+          "mustNotImply": [
+            "寮・寝室を思わせる要素",
+            "現金・金額の含意",
+            "特定の時刻",
+            "通勤手段や車両を主役にすること",
+            "読める文字・数字・ロゴ",
+            "Do not mention contract renewal",
+            "Do not mention housing",
+            "Do not promise monthly income"
+          ],
+          "prompt": "Preparing drinks behind a café counter. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+        },
+        {
+          "id": "appeal-A2",
+          "role": "section",
+          "kind": "section",
+          "source": "appeal",
+          "appealId": "A2",
+          "purpose": "Short morning shifts, 09:00 to 14:00 (five hours, no break)",
+          "subject": "An illustration of a worker starting the day at a work table in bright morning light",
+          "composition": "The work activity itself, as an explanatory image beside the text it explains",
+          "depiction": "illustration",
+          "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms",
+          "placement": {
+            "area": "inline",
+            "size": "small",
+            "aspect": "4:3"
+          },
+          "mustNotImply": [
+            "寮・寝室を思わせる要素",
+            "現金・金額の含意",
+            "特定の時刻",
+            "通勤手段や車両を主役にすること",
+            "読める文字・数字・ロゴ",
+            "Do not mention contract renewal",
+            "Do not mention housing",
+            "Do not promise monthly income"
+          ],
+          "prompt": "An illustration of a worker starting the day at a work table in bright morning light. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+        },
+        {
+          "id": "appeal-A4",
+          "role": "section",
+          "kind": "section",
+          "source": "appeal",
+          "appealId": "A4",
+          "purpose": "Commuting costs are covered, up to 10,000 yen per month",
+          "subject": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table",
+          "composition": "The work activity itself, as an explanatory image beside the text it explains",
+          "depiction": "illustration",
+          "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms",
+          "placement": {
+            "area": "inline",
+            "size": "small",
+            "aspect": "4:3"
+          },
+          "mustNotImply": [
+            "寮・寝室を思わせる要素",
+            "現金・金額の含意",
+            "特定の時刻",
+            "通勤手段や車両を主役にすること",
+            "読める文字・数字・ロゴ",
+            "Do not mention contract renewal",
+            "Do not mention housing",
+            "Do not promise monthly income"
+          ],
+          "prompt": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+        },
+        {
+          "id": "appeal-A5",
+          "role": "section",
+          "kind": "section",
+          "source": "appeal",
+          "appealId": "A5",
+          "purpose": "No experience needed, and students are welcome",
+          "subject": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table",
+          "composition": "The work activity itself, as an explanatory image beside the text it explains",
+          "depiction": "illustration",
+          "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms",
+          "placement": {
+            "area": "inline",
+            "size": "small",
+            "aspect": "4:3"
+          },
+          "mustNotImply": [
+            "寮・寝室を思わせる要素",
+            "現金・金額の含意",
+            "特定の時刻",
+            "通勤手段や車両を主役にすること",
+            "読める文字・数字・ロゴ",
+            "Do not mention contract renewal",
+            "Do not mention housing",
+            "Do not promise monthly income"
+          ],
+          "prompt": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+        }
+      ],
+      "noImage": [
+        {
+          "appealId": "A1",
+          "reason": "この訴求は条件カード（第一確認の事実）が担うため、画像は作らない"
+        }
+      ],
+      "designNotes": []
+    },
+    "designCheck": {
+      "pass": true,
+      "failures": [],
+      "gateResults": [
+        {
+          "id": "G6",
+          "pass": true
+        },
+        {
+          "id": "G7",
+          "pass": true
+        },
+        {
+          "id": "G9",
+          "pass": true
+        }
+      ]
+    }
+  },
+  "priorStages": {
+    "extraction": {
+      "executed": true,
+      "resumed": true,
+      "status": "completed",
+      "model": "meta-models/muse-spark-open-1026",
+      "promptVersion": "fact-extract-v1.1",
+      "durationMs": 10334,
+      "usage": {
+        "prompt_tokens": 483,
+        "completion_tokens": 3879,
+        "total_tokens": 4362,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 3042,
+          "audio_tokens": 0,
+          "reasoning_tokens": 3370,
+          "rejected_prediction_tokens": 2824
+        }
+      },
+      "costUsd": null,
+      "costNote": "未記録（PIPELINE_MODEL でモデルが差し替えられており、D4単価が適用できないため算出しない。使用量は usage に記録）",
+      "schemaCheck": {
+        "pass": true,
+        "expectedCount": 15,
+        "actualCount": 15,
+        "missingKeys": [],
+        "extraKeys": [],
+        "duplicateKeys": [],
+        "fieldIssues": []
+      },
+      "e01": {
+        "caseId": "E01",
+        "stage": "照合",
+        "verdict": "一致（人間承認待ち）",
+        "stoppedAtReconciliation": false,
+        "generationStarted": false,
+        "generationNote": "生成工程は作らない。人間承認前には生成を開始しない。",
+        "matched": [],
+        "contradictions": [],
+        "unstated": [
+          {
+            "key": "employer",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "jobId",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "contractPeriod",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "renewal",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "monthlyIncomeGuarantee",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "monthlyDaysAssumption",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "housing",
+            "source": null,
+            "quote": null
+          }
+        ],
+        "claims": {}
+      },
+      "e02": null
+    },
+    "factsComparison": {
+      "executed": true,
+      "resumed": true,
+      "verbatim": {
+        "pass": true,
+        "checked": 15,
+        "issues": []
+      },
+      "agrees": true,
+      "diffs": [],
+      "textualDiffs": [
+        {
+          "key": "workLocation",
+          "field": "quote",
+          "fixed": "Location: A café in Kichijoji, Tokyo",
+          "candidate": "A café in Kichijoji, Tokyo"
+        },
+        {
+          "key": "employmentType",
+          "field": "quote",
+          "fixed": "Employment type: Part-time",
+          "candidate": "Part-time"
+        },
+        {
+          "key": "salaryHourly",
+          "field": "quote",
+          "fixed": "Hourly wage: 1,150 yen",
+          "candidate": "1,150 yen"
+        },
+        {
+          "key": "transport",
+          "field": "quote",
+          "fixed": "Transport: Actual commuting cost covered, up to 10,000 yen per month",
+          "candidate": "Actual commuting cost covered, up to 10,000 yen per month"
+        },
+        {
+          "key": "transportCap",
+          "field": "quote",
+          "fixed": "up to 10,000 yen per month",
+          "candidate": "10,000 yen per month"
+        }
+      ]
+    },
+    "approval": {
+      "executed": true,
+      "pass": true,
+      "reasonCode": null,
+      "reason": null,
+      "approvalId": "FICT-E01-approval-test-1",
+      "status": "approved",
+      "approver": "Coordinator test fixture (per the user's test-loop instruction, 2026-11-04)",
+      "approvedAt": "2026-11-04",
+      "validity": {
+        "valid": true,
+        "approvalId": "FICT-E01-approval-test-1",
+        "status": "approved",
+        "checks": [
+          {
+            "target": "original",
+            "file": "loops/loop-024/runE1/entry/original.json",
+            "expected": "a0c0ce06437b5e8db11f5d93cb7dfd0f574213fe65f0b78079b654456449d9ed",
+            "actual": "a0c0ce06437b5e8db11f5d93cb7dfd0f574213fe65f0b78079b654456449d9ed",
+            "match": true
+          },
+          {
+            "target": "facts",
+            "file": "loops/loop-024/runE1/entry/facts.json",
+            "expected": "9693f2eb0de45ddfd9d0f2f0dbfc00f4e6437e9939d662df2b85b22bb49ffb93",
+            "actual": "9693f2eb0de45ddfd9d0f2f0dbfc00f4e6437e9939d662df2b85b22bb49ffb93",
+            "match": true
+          }
+        ],
+        "reason": null
+      },
+      "generationInput": {
+        "ok": true,
+        "reasonCode": null,
+        "reason": null,
+        "approvalId": "FICT-E01-approval-test-1",
+        "status": "approved",
+        "validity": {
+          "valid": true,
+          "approvalId": "FICT-E01-approval-test-1",
+          "status": "approved",
+          "checks": [
+            {
+              "target": "original",
+              "file": "loops/loop-024/runE1/entry/original.json",
+              "expected": "a0c0ce06437b5e8db11f5d93cb7dfd0f574213fe65f0b78079b654456449d9ed",
+              "actual": "a0c0ce06437b5e8db11f5d93cb7dfd0f574213fe65f0b78079b654456449d9ed",
+              "match": true
+            },
+            {
+              "target": "facts",
+              "file": "loops/loop-024/runE1/entry/facts.json",
+              "expected": "9693f2eb0de45ddfd9d0f2f0dbfc00f4e6437e9939d662df2b85b22bb49ffb93",
+              "actual": "9693f2eb0de45ddfd9d0f2f0dbfc00f4e6437e9939d662df2b85b22bb49ffb93",
+              "match": true
+            }
+          ],
+          "reason": null
+        }
+      }
+    },
+    "planning": {
+      "executed": true,
+      "pass": true,
+      "file": "loops/loop-024/planning-FICT-E01.json",
+      "sha256": "3bd8a76c40695277d242b598e8d1a9991c3a2c89c4a8a41e093afde70521be60",
+      "audience": "Students and others looking for weekend-only part-time work near Kichijoji",
+      "validation": {
+        "ok": true,
+        "errors": []
+      }
+    },
+    "keyVisual": {
+      "executed": false,
+      "resumed": true,
+      "image": {
+        "file": "loops/loop-024/runE1/lp-finished-image.png",
+        "sha256": "3b6f89dc6a5bf6132ff1663eefcf8dba2be6926a402789130896720bcad58938"
+      },
+      "layout": {
+        "kind": "lp-finished-image",
+        "language": "en",
+        "audience": "Students and others looking for weekend-only part-time work near Kichijoji",
+        "form": {
+          "derivedFrom": "reader persona: the planning's audience, its first checks, and the appeals in order",
+          "pattern": null,
+          "personaBasis": {
+            "audience": "Students and others looking for weekend-only part-time work near Kichijoji",
+            "decisionOrder": [
+              "place impression (hero)",
+              "the offer (lead appeal, title)",
+              "appeals in order (explanatory rows)",
+              "first checks (condition cards)",
+              "remaining facts and appeals (details)",
+              "apply (cta)"
+            ]
+          }
+        },
+        "design": {
+          "version": "lp-design-v1",
+          "patternId": "P-LIFE",
+          "scores": {
+            "P-COND": 1,
+            "P-WORK": 0,
+            "P-LIFE": 2
+          },
+          "signals": [
+            "A1: 第一確認の事実を持つ訴求（条件）",
+            "A3: 生活適合の訴求",
+            "A4: 生活適合の訴求"
+          ],
+          "rationale": "訴求と第一確認の信号から P-LIFE を選択（条件 1 / 仕事 0 / 生活 2）。生活に合うかが主関心: 休み・通勤などの生活の訴求を場面で先に見せ、条件カードで裏付ける",
+          "blockOrder": [
+            "hero",
+            "title",
+            "rows",
+            "cards",
+            "details",
+            "cta"
+          ],
+          "palette": {
+            "titleBg": "#3d2c1c",
+            "accent": "#d96f32",
+            "chipBg": "#f8f1e6"
+          },
+          "paletteBasis": "パターンに紐づくトークン（候補。市場のリサーチ裏付けはなく、候補のまま記録する）",
+          "basis": "生活に合うかが主関心: 休み・通勤などの生活の訴求を場面で先に見せ、条件カードで裏付ける"
+        },
+        "anatomy": [
+          "hero photograph",
+          "title block (placeholder text)",
+          "explanatory image rows x4 (small insets)",
+          "condition cards x1 (planning firstCheckKeys)",
+          "detail blocks (placeholder text)",
+          "call to action"
+        ],
+        "messageMap": [
+          {
+            "block": "hero-photo",
+            "carries": {
+              "specId": "key-visual",
+              "basis": {
+                "appealId": "A3"
+              }
+            },
+            "purpose": "Weekends and public holidays only, so it fits around classes and family time"
+          },
+          {
+            "block": "title",
+            "carries": {
+              "appealId": "A1"
+            },
+            "note": "the lead appeal's headline slot (placeholder text at this stage)"
+          },
+          {
+            "block": "photo-band",
+            "carries": {
+              "specId": "section-work",
+              "basis": {
+                "factKey": "workLocation"
+              }
+            },
+            "purpose": "workLocation"
+          },
+          {
+            "block": "photo-band",
+            "carries": {
+              "specId": "appeal-A2",
+              "basis": {
+                "appealId": "A2"
+              }
+            },
+            "purpose": "Short morning shifts, 09:00 to 14:00 (five hours, no break)"
+          },
+          {
+            "block": "photo-band",
+            "carries": {
+              "specId": "appeal-A4",
+              "basis": {
+                "appealId": "A4"
+              }
+            },
+            "purpose": "Commuting costs are covered, up to 10,000 yen per month"
+          },
+          {
+            "block": "photo-band",
+            "carries": {
+              "specId": "appeal-A5",
+              "basis": {
+                "appealId": "A5"
+              }
+            },
+            "purpose": "No experience needed, and students are welcome"
+          },
+          {
+            "block": "condition-card",
+            "carries": {
+              "factKey": "salaryHourly",
+              "appealId": "A1"
+            }
+          },
+          {
+            "block": "details",
+            "carries": {
+              "factKeys": [
+                "workHours",
+                "actualHours",
+                "transport",
+                "transportCap"
+              ],
+              "appealIds": [
+                "A3",
+                "A5"
+              ]
+            },
+            "note": "appeal facts not shown as first-check cards, and line-grounded appeals with no fact key; carried by the detail blocks and the copy"
+          },
+          {
+            "block": "cta",
+            "carries": {
+              "action": true
+            }
+          }
+        ],
+        "messageGaps": [],
+        "photos": [
+          {
+            "id": "key-visual",
+            "role": "key-visual",
+            "file": "loops/loop-024/runE1/images/kv-photos/key-visual.webp"
+          },
+          {
+            "id": "section-work",
+            "role": "section",
+            "file": "loops/loop-024/runE1/images/kv-photos/section-work.webp"
+          },
+          {
+            "id": "appeal-A2",
+            "role": "section",
+            "file": "loops/loop-024/runE1/images/kv-photos/appeal-A2.webp"
+          },
+          {
+            "id": "appeal-A4",
+            "role": "section",
+            "file": "loops/loop-024/runE1/images/kv-photos/appeal-A4.webp"
+          },
+          {
+            "id": "appeal-A5",
+            "role": "section",
+            "file": "loops/loop-024/runE1/images/kv-photos/appeal-A5.webp"
+          }
+        ],
+        "imageDesign": [
+          {
+            "id": "key-visual",
+            "placement": "hero",
+            "aspect": "5:3",
+            "heightPx": 288,
+            "fit": "cover",
+            "position": "center",
+            "purpose": "Weekends and public holidays only, so it fits around classes and family time",
+            "appealId": "A3",
+            "subject": "Inside a small neighbourhood café in the morning, a staff member serving a customer at the counter",
+            "depiction": "illustration",
+            "size": "large"
+          },
+          {
+            "id": "section-work",
+            "placement": "band",
+            "aspect": "13:6",
+            "heightPx": 78,
+            "fit": "cover",
+            "position": "center",
+            "purpose": "workLocation",
+            "appealId": null,
+            "subject": "Preparing drinks behind a café counter",
+            "depiction": "illustration",
+            "size": "small"
+          },
+          {
+            "id": "appeal-A2",
+            "placement": "band",
+            "aspect": "4:3",
+            "heightPx": 127,
+            "fit": "cover",
+            "position": "center",
+            "purpose": "Short morning shifts, 09:00 to 14:00 (five hours, no break)",
+            "appealId": "A2",
+            "subject": "An illustration of a worker starting the day at a work table in bright morning light",
+            "depiction": "illustration",
+            "size": "small"
+          },
+          {
+            "id": "appeal-A4",
+            "placement": "band",
+            "aspect": "4:3",
+            "heightPx": 127,
+            "fit": "cover",
+            "position": "center",
+            "purpose": "Commuting costs are covered, up to 10,000 yen per month",
+            "appealId": "A4",
+            "subject": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table",
+            "depiction": "illustration",
+            "size": "small"
+          },
+          {
+            "id": "appeal-A5",
+            "placement": "band",
+            "aspect": "4:3",
+            "heightPx": 127,
+            "fit": "cover",
+            "position": "center",
+            "purpose": "No experience needed, and students are welcome",
+            "appealId": "A5",
+            "subject": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table",
+            "depiction": "illustration",
+            "size": "small"
+          }
+        ],
+        "note": "LPの完成イメージ。文章はプレースホルダで、実文と実画像は後段で同じレイアウトの同じ場所に入る"
+      },
+      "photos": [
+        {
+          "id": "key-visual",
+          "file": "loops/loop-024/runE1/images/kv-photos/key-visual.webp",
+          "prompt": "Inside a small neighbourhood café in the morning, a staff member serving a customer at the counter. Wide establishing shot; the workplace building itself is the subject; impression-level, with no specific factual claim. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+          "line": null,
+          "mime": "image/webp",
+          "bytes": 164310,
+          "role": "key-visual"
+        },
+        {
+          "id": "section-work",
+          "file": "loops/loop-024/runE1/images/kv-photos/section-work.webp",
+          "prompt": "Preparing drinks behind a café counter. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+          "line": null,
+          "mime": "image/webp",
+          "bytes": 197550,
+          "role": "section"
+        },
+        {
+          "id": "appeal-A2",
+          "file": "loops/loop-024/runE1/images/kv-photos/appeal-A2.webp",
+          "prompt": "An illustration of a worker starting the day at a work table in bright morning light. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+          "line": null,
+          "mime": "image/webp",
+          "bytes": 201298,
+          "role": "section"
+        },
+        {
+          "id": "appeal-A4",
+          "file": "loops/loop-024/runE1/images/kv-photos/appeal-A4.webp",
+          "prompt": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+          "line": null,
+          "mime": "image/webp",
+          "bytes": 169154,
+          "role": "section"
+        },
+        {
+          "id": "appeal-A5",
+          "file": "loops/loop-024/runE1/images/kv-photos/appeal-A5.webp",
+          "prompt": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark",
+          "line": null,
+          "mime": "image/webp",
+          "bytes": 126308,
+          "role": "section"
+        }
+      ],
+      "imageDesign": {
+        "version": "image-design-v2",
+        "count": 5,
+        "images": [
+          {
+            "id": "key-visual",
+            "role": "key-visual",
+            "kind": "hero",
+            "source": "spec",
+            "appealId": "A3",
+            "purpose": "Weekends and public holidays only, so it fits around classes and family time",
+            "subject": "Inside a small neighbourhood café in the morning, a staff member serving a customer at the counter",
+            "composition": "Wide establishing shot; the workplace building itself is the subject; impression-level, with no specific factual claim",
+            "depiction": "illustration",
+            "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms",
+            "placement": {
+              "area": "hero",
+              "size": "large",
+              "aspect": "5:3"
+            },
+            "mustNotImply": [
+              "寮・寝室を思わせる要素",
+              "現金・金額の含意",
+              "特定の時刻",
+              "通勤手段や車両を主役にすること",
+              "読める文字・数字・ロゴ",
+              "Do not mention contract renewal",
+              "Do not mention housing",
+              "Do not promise monthly income"
+            ],
+            "prompt": "Inside a small neighbourhood café in the morning, a staff member serving a customer at the counter. Wide establishing shot; the workplace building itself is the subject; impression-level, with no specific factual claim. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+          },
+          {
+            "id": "section-work",
+            "role": "section",
+            "kind": "section",
+            "source": "spec",
+            "appealId": null,
+            "purpose": "workLocation",
+            "subject": "Preparing drinks behind a café counter",
+            "composition": "The work activity itself, as an explanatory image beside the text it explains",
+            "depiction": "illustration",
+            "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms",
+            "placement": {
+              "area": "inline",
+              "size": "small",
+              "aspect": "13:6"
+            },
+            "mustNotImply": [
+              "寮・寝室を思わせる要素",
+              "現金・金額の含意",
+              "特定の時刻",
+              "通勤手段や車両を主役にすること",
+              "読める文字・数字・ロゴ",
+              "Do not mention contract renewal",
+              "Do not mention housing",
+              "Do not promise monthly income"
+            ],
+            "prompt": "Preparing drinks behind a café counter. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+          },
+          {
+            "id": "appeal-A2",
+            "role": "section",
+            "kind": "section",
+            "source": "appeal",
+            "appealId": "A2",
+            "purpose": "Short morning shifts, 09:00 to 14:00 (five hours, no break)",
+            "subject": "An illustration of a worker starting the day at a work table in bright morning light",
+            "composition": "The work activity itself, as an explanatory image beside the text it explains",
+            "depiction": "illustration",
+            "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms",
+            "placement": {
+              "area": "inline",
+              "size": "small",
+              "aspect": "4:3"
+            },
+            "mustNotImply": [
+              "寮・寝室を思わせる要素",
+              "現金・金額の含意",
+              "特定の時刻",
+              "通勤手段や車両を主役にすること",
+              "読める文字・数字・ロゴ",
+              "Do not mention contract renewal",
+              "Do not mention housing",
+              "Do not promise monthly income"
+            ],
+            "prompt": "An illustration of a worker starting the day at a work table in bright morning light. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+          },
+          {
+            "id": "appeal-A4",
+            "role": "section",
+            "kind": "section",
+            "source": "appeal",
+            "appealId": "A4",
+            "purpose": "Commuting costs are covered, up to 10,000 yen per month",
+            "subject": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table",
+            "composition": "The work activity itself, as an explanatory image beside the text it explains",
+            "depiction": "illustration",
+            "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms",
+            "placement": {
+              "area": "inline",
+              "size": "small",
+              "aspect": "4:3"
+            },
+            "mustNotImply": [
+              "寮・寝室を思わせる要素",
+              "現金・金額の含意",
+              "特定の時刻",
+              "通勤手段や車両を主役にすること",
+              "読める文字・数字・ロゴ",
+              "Do not mention contract renewal",
+              "Do not mention housing",
+              "Do not promise monthly income"
+            ],
+            "prompt": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+          },
+          {
+            "id": "appeal-A5",
+            "role": "section",
+            "kind": "section",
+            "source": "appeal",
+            "appealId": "A5",
+            "purpose": "No experience needed, and students are welcome",
+            "subject": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table",
+            "composition": "The work activity itself, as an explanatory image beside the text it explains",
+            "depiction": "illustration",
+            "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms",
+            "placement": {
+              "area": "inline",
+              "size": "small",
+              "aspect": "4:3"
+            },
+            "mustNotImply": [
+              "寮・寝室を思わせる要素",
+              "現金・金額の含意",
+              "特定の時刻",
+              "通勤手段や車両を主役にすること",
+              "読める文字・数字・ロゴ",
+              "Do not mention contract renewal",
+              "Do not mention housing",
+              "Do not promise monthly income"
+            ],
+            "prompt": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+          }
+        ],
+        "noImage": [
+          {
+            "appealId": "A1",
+            "reason": "この訴求は条件カード（第一確認の事実）が担うため、画像は作らない"
+          }
+        ],
+        "designNotes": []
+      },
+      "designCheck": {
+        "pass": true,
+        "failures": [],
+        "gateResults": [
+          {
+            "id": "G6",
+            "pass": true
+          },
+          {
+            "id": "G7",
+            "pass": true
+          },
+          {
+            "id": "G9",
+            "pass": true
+          }
+        ]
+      },
+      "confirmation": {
+        "file": "loops/loop-024/runE1/lp-finished-image.png",
+        "sha256": "3b6f89dc6a5bf6132ff1663eefcf8dba2be6926a402789130896720bcad58938",
+        "confirmer": "test-loop (user instruction 2026-11-04)",
+        "confirmedAt": "2026-11-04T04:25:00+09:00",
+        "note": "Test run on a fictional posting under the user's test-loop instruction. Not a judgement of the image."
+      },
+      "confirmationPass": true
+    },
+    "generation": {
+      "executed": true,
+      "attempts": 2,
+      "status": "generated",
+      "apiCalled": true,
+      "model": "meta-models/muse-spark-open-1026",
+      "promptVersion": "lp-generate-v5-planning",
+      "durationMs": 9196,
+      "usage": {
+        "prompt_tokens": 1317,
+        "completion_tokens": 2961,
+        "total_tokens": 4278,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 2279,
+          "audio_tokens": 0,
+          "reasoning_tokens": 2734,
+          "rejected_prediction_tokens": 2495
+        }
+      },
+      "costUsd": null,
+      "costNote": "未記録（PIPELINE_MODEL でモデルが差し替えられており、D4単価が適用できないため算出しない。使用量は usage に記録）",
+      "grounding": {
+        "pass": true,
+        "checked": 7,
+        "issues": []
+      },
+      "coverage": {
+        "pass": true,
+        "uncoveredAppeals": [],
+        "workLineId": "L01",
+        "workUncovered": false
+      },
+      "reasonCode": null,
+      "reason": null
+    }
+  },
+  "e02raw": null
+}

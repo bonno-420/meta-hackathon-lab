@@ -1,0 +1,38 @@
+{
+  "id": "FICT-E01",
+  "version": "v1",
+  "lines": [
+    {
+      "id": "L01",
+      "text": "Work: Preparing drinks, serving customers and light cleaning at a small neighbourhood café"
+    },
+    {
+      "id": "L02",
+      "text": "Employment type: Part-time"
+    },
+    {
+      "id": "L03",
+      "text": "Location: A café in Kichijoji, Tokyo"
+    },
+    {
+      "id": "L04",
+      "text": "Hourly wage: 1,150 yen"
+    },
+    {
+      "id": "L05",
+      "text": "Hours: 09:00 to 14:00 (no break, 5 hours)"
+    },
+    {
+      "id": "L06",
+      "text": "Days: Weekends and public holidays only"
+    },
+    {
+      "id": "L07",
+      "text": "Transport: Actual commuting cost covered, up to 10,000 yen per month"
+    },
+    {
+      "id": "L08",
+      "text": "Requirements: No experience needed, students welcome"
+    }
+  ]
+}

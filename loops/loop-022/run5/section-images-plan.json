@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "model": "muse-image-1.0",
+  "images": [
+    {
+      "id": "key-visual",
+      "prompt": "Documentary photograph, exterior of a modern logistics warehouse in Toyohashi Japan in the early morning, soft dawn light, loading docks and a wide parking area, clean and quiet, no people, no readable signage, no text, no numbers, no logos",
+      "basis": "Loop-016 form (workplace itself, hero). Facts: workLocation 愛知県豊橋市内の物流倉庫; early morning from workHours 07:00 start (planning style: photorealistic, morning)."
+    },
+    {
+      "id": "section-work",
+      "prompt": "Documentary photograph inside a bright logistics warehouse in the morning, a worker sorting and inspecting cardboard parcels on a conveyor belt, shelves of boxes behind, natural window light, photorealistic, no text, no numbers, no logos",
+      "basis": "Loop-016 form (work scene). Facts: work content 仕分け・検品作業 from the original posting."
+    }
+  ]
+}

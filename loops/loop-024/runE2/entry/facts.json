@@ -1,0 +1,131 @@
+{
+  "factsId": "FICT-E02-facts",
+  "factsVersion": 1,
+  "originalId": "FICT-E02",
+  "originalVersion": "v1",
+  "promptVersion": "fact-extract-v1.1",
+  "model": "meta-models/muse-spark-open-1026",
+  "sourceRun": "text-entry",
+  "items": [
+    {
+      "key": "employer",
+      "status": "unstated",
+      "value": null,
+      "normalized": null,
+      "sourceLine": null,
+      "quote": null
+    },
+    {
+      "key": "jobId",
+      "status": "unstated",
+      "value": null,
+      "normalized": null,
+      "sourceLine": null,
+      "quote": null
+    },
+    {
+      "key": "workLocation",
+      "status": "stated",
+      "value": "A workshop in Taito City, Tokyo",
+      "normalized": null,
+      "sourceLine": "L03",
+      "quote": "A workshop in Taito City, Tokyo"
+    },
+    {
+      "key": "employmentType",
+      "status": "stated",
+      "value": "Contract",
+      "normalized": null,
+      "sourceLine": "L02",
+      "quote": "Contract"
+    },
+    {
+      "key": "contractPeriod",
+      "status": "stated",
+      "value": "6 months",
+      "normalized": null,
+      "sourceLine": "L02",
+      "quote": "6 months"
+    },
+    {
+      "key": "renewal",
+      "status": "unstated",
+      "value": null,
+      "normalized": null,
+      "sourceLine": null,
+      "quote": null
+    },
+    {
+      "key": "salaryHourly",
+      "status": "stated",
+      "value": "1,400 yen",
+      "normalized": 1400,
+      "sourceLine": "L04",
+      "quote": "1,400 yen"
+    },
+    {
+      "key": "monthlyIncomeGuarantee",
+      "status": "unstated",
+      "value": null,
+      "normalized": null,
+      "sourceLine": null,
+      "quote": null
+    },
+    {
+      "key": "workHours",
+      "status": "stated",
+      "value": "08:30 to 17:30",
+      "normalized": null,
+      "sourceLine": "L05",
+      "quote": "08:30 to 17:30"
+    },
+    {
+      "key": "breakMinutes",
+      "status": "stated",
+      "value": "60 minutes",
+      "normalized": 60,
+      "sourceLine": "L05",
+      "quote": "break 60 minutes"
+    },
+    {
+      "key": "actualHours",
+      "status": "stated",
+      "value": "8 hours",
+      "normalized": 8,
+      "sourceLine": "L05",
+      "quote": "8 hours"
+    },
+    {
+      "key": "monthlyDaysAssumption",
+      "status": "unstated",
+      "value": null,
+      "normalized": null,
+      "sourceLine": null,
+      "quote": null
+    },
+    {
+      "key": "transport",
+      "status": "stated",
+      "value": "Actual commuting cost covered, up to 15,000 yen per month",
+      "normalized": null,
+      "sourceLine": "L07",
+      "quote": "Actual commuting cost covered, up to 15,000 yen per month"
+    },
+    {
+      "key": "transportCap",
+      "status": "stated",
+      "value": "15,000 yen per month",
+      "normalized": 15000,
+      "sourceLine": "L07",
+      "quote": "up to 15,000 yen per month"
+    },
+    {
+      "key": "housing",
+      "status": "unstated",
+      "value": null,
+      "normalized": null,
+      "sourceLine": null,
+      "quote": null
+    }
+  ]
+}

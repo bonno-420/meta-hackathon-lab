@@ -1,0 +1,1037 @@
+{
+  "kind": "demo-run-result",
+  "version": 1,
+  "startedAt": "2026-11-03T16:24:13.309Z",
+  "finishedAt": "2026-11-03T16:25:28.245Z",
+  "durationMs": 74936,
+  "status": "stopped-at-checkpoint",
+  "stoppedAt": "key-visual",
+  "stopReason": "1枚画（LPの完成イメージ）のプレビュー確認のため止める（チェックポイント）",
+  "input": {
+    "original": {
+      "file": "loops/loop-022/run2/entry/original.json"
+    },
+    "facts": {
+      "file": "loops/loop-022/run2/entry/facts.json"
+    },
+    "approval": {
+      "file": "loops/loop-022/run2/entry/approval.json"
+    }
+  },
+  "stages": {
+    "extraction": {
+      "executed": true,
+      "status": "completed",
+      "model": "meta-models/muse-spark-open-1026",
+      "promptVersion": "fact-extract-v1.1",
+      "durationMs": 10319,
+      "usage": {
+        "prompt_tokens": 494,
+        "completion_tokens": 4079,
+        "total_tokens": 4573,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 384
+        },
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 3259,
+          "audio_tokens": 0,
+          "reasoning_tokens": 3574,
+          "rejected_prediction_tokens": 2481
+        }
+      },
+      "costUsd": null,
+      "costNote": "未記録（PIPELINE_MODEL でモデルが差し替えられており、D4単価が適用できないため算出しない。使用量は usage に記録）",
+      "schemaCheck": {
+        "pass": true,
+        "expectedCount": 15,
+        "actualCount": 15,
+        "missingKeys": [],
+        "extraKeys": [],
+        "duplicateKeys": [],
+        "fieldIssues": []
+      },
+      "e01": {
+        "caseId": "E01",
+        "stage": "照合",
+        "verdict": "一致（人間承認待ち）",
+        "stoppedAtReconciliation": false,
+        "generationStarted": false,
+        "generationNote": "生成工程は作らない。人間承認前には生成を開始しない。",
+        "matched": [
+          {
+            "field": "勤務時間",
+            "value": "07:00〜16:00",
+            "source": "L05"
+          },
+          {
+            "field": "交通費（月上限）",
+            "value": "15,000円",
+            "source": "L07"
+          }
+        ],
+        "contradictions": [],
+        "unstated": [
+          {
+            "key": "employer",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "jobId",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "renewal",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "monthlyIncomeGuarantee",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "actualHours",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "monthlyDaysAssumption",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "housing",
+            "source": null,
+            "quote": null
+          }
+        ],
+        "claims": {
+          "workHours": {
+            "value": "07:00〜16:00",
+            "snippet": "07:00〜16:00"
+          },
+          "transportCap": {
+            "value": 15000,
+            "snippet": "月上限15,000円"
+          }
+        }
+      },
+      "e02": null
+    },
+    "factsComparison": {
+      "executed": true,
+      "verbatim": {
+        "pass": true,
+        "checked": 15,
+        "issues": []
+      },
+      "agrees": true,
+      "diffs": [],
+      "textualDiffs": [
+        {
+          "key": "workHours",
+          "field": "quote",
+          "fixed": "07:00〜16:00",
+          "candidate": "07:00〜16:00（休憩60分）"
+        }
+      ]
+    },
+    "approval": {
+      "executed": true,
+      "pass": true,
+      "reasonCode": null,
+      "reason": null,
+      "approvalId": "FICT-J02-approval-1",
+      "status": "approved",
+      "approver": "原田徳一（本人）",
+      "approvedAt": "2026-11-03",
+      "validity": {
+        "valid": true,
+        "approvalId": "FICT-J02-approval-1",
+        "status": "approved",
+        "checks": [
+          {
+            "target": "original",
+            "file": "loops/loop-022/run2/entry/original.json",
+            "expected": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+            "actual": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+            "match": true
+          },
+          {
+            "target": "facts",
+            "file": "loops/loop-022/run2/entry/facts.json",
+            "expected": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+            "actual": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+            "match": true
+          }
+        ],
+        "reason": null
+      },
+      "generationInput": {
+        "ok": true,
+        "reasonCode": null,
+        "reason": null,
+        "approvalId": "FICT-J02-approval-1",
+        "status": "approved",
+        "validity": {
+          "valid": true,
+          "approvalId": "FICT-J02-approval-1",
+          "status": "approved",
+          "checks": [
+            {
+              "target": "original",
+              "file": "loops/loop-022/run2/entry/original.json",
+              "expected": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+              "actual": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+              "match": true
+            },
+            {
+              "target": "facts",
+              "file": "loops/loop-022/run2/entry/facts.json",
+              "expected": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+              "actual": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+              "match": true
+            }
+          ],
+          "reason": null
+        }
+      }
+    },
+    "planning": {
+      "executed": true,
+      "pass": true,
+      "file": "loops/loop-022/planning-FICT-J02.json",
+      "sha256": "26c9c59aae0dbd3ed17b52002463f6f1630b0c60ee33ba93d45de7557bc6a24c",
+      "audience": "早朝から夕方までの勤務の形が合う人／土日祝日を休みたい人／豊橋市内へ通える範囲の人",
+      "validation": {
+        "ok": true,
+        "errors": []
+      }
+    },
+    "keyVisual": {
+      "executed": true,
+      "pass": true,
+      "correspondence": {
+        "elements": [
+          {
+            "id": "key-visual",
+            "role": "key-visual",
+            "basis": {
+              "appealId": "A2"
+            },
+            "description": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light"
+          },
+          {
+            "id": "section-work",
+            "role": "section",
+            "basis": {
+              "factKey": "workLocation"
+            },
+            "description": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning"
+          }
+        ],
+        "prohibited": [
+          {
+            "source": "planning notSay: 契約更新の有無は言わない",
+            "terms": [
+              "更新あり",
+              "更新可",
+              "長期勤務"
+            ]
+          },
+          {
+            "source": "planning notSay: 寮・住宅の補助は言わない",
+            "terms": [
+              "寮",
+              "住宅補助",
+              "社宅"
+            ]
+          },
+          {
+            "source": "planning notSay: 月収の額や保証は言わない",
+            "terms": [
+              "月収",
+              "月給"
+            ]
+          },
+          {
+            "source": "standing ban: cash / income imagery",
+            "terms": [
+              "現金",
+              "札束",
+              "紙幣",
+              "硬貨",
+              "財布",
+              "お金",
+              "cash",
+              "banknote",
+              "banknotes",
+              "coin",
+              "coins",
+              "wallet",
+              "money",
+              "yen bills"
+            ]
+          },
+          {
+            "source": "standing ban: specific clock times",
+            "terms": [
+              "時計",
+              "clock",
+              "watch face",
+              "wall clock",
+              "wristwatch"
+            ]
+          },
+          {
+            "source": "standing ban: housing is unstated, so no residence imagery",
+            "terms": [
+              "住宅",
+              "一軒家",
+              "寮",
+              "社宅",
+              "マイホーム",
+              "戸建",
+              "residence",
+              "residential house",
+              "dormitory",
+              "house exterior",
+              "detached house",
+              "apartment building"
+            ]
+          }
+        ],
+        "firstCheckKeys": [
+          "salaryHourly",
+          "workHours",
+          "transportCap"
+        ],
+        "style": "Photorealistic, natural morning light, documentary style."
+      },
+      "imageDesign": {
+        "version": "image-design-v2",
+        "count": 5,
+        "images": [
+          {
+            "id": "key-visual",
+            "role": "key-visual",
+            "kind": "hero",
+            "source": "spec",
+            "appealId": "A2",
+            "purpose": "07:00〜16:00の勤務時間（休憩60分）",
+            "subject": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light",
+            "composition": "Wide establishing shot; the workplace building itself is the subject; impression-level, with no specific factual claim",
+            "depiction": "illustration",
+            "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette",
+            "placement": {
+              "area": "hero",
+              "size": "large",
+              "aspect": "5:3"
+            },
+            "mustNotImply": [
+              "寮・寝室を思わせる要素",
+              "現金・金額の含意",
+              "特定の時刻",
+              "通勤手段や車両を主役にすること",
+              "読める文字・数字・ロゴ",
+              "契約更新の有無は言わない",
+              "寮・住宅の補助は言わない",
+              "月収の額や保証は言わない"
+            ],
+            "prompt": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light. Wide establishing shot; the workplace building itself is the subject; impression-level, with no specific factual claim. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark"
+          },
+          {
+            "id": "section-work",
+            "role": "section",
+            "kind": "section",
+            "source": "spec",
+            "appealId": null,
+            "purpose": "workLocation",
+            "subject": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning",
+            "composition": "The work activity itself, as an explanatory image beside the text it explains",
+            "depiction": "illustration",
+            "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette",
+            "placement": {
+              "area": "inline",
+              "size": "small",
+              "aspect": "13:6"
+            },
+            "mustNotImply": [
+              "寮・寝室を思わせる要素",
+              "現金・金額の含意",
+              "特定の時刻",
+              "通勤手段や車両を主役にすること",
+              "読める文字・数字・ロゴ",
+              "契約更新の有無は言わない",
+              "寮・住宅の補助は言わない",
+              "月収の額や保証は言わない"
+            ],
+            "prompt": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark"
+          },
+          {
+            "id": "appeal-A3",
+            "role": "section",
+            "kind": "section",
+            "source": "appeal",
+            "appealId": "A3",
+            "purpose": "土日祝日休み",
+            "subject": "An illustration conveying the appeal: 土日祝日休み",
+            "composition": "The work activity itself, as an explanatory image beside the text it explains",
+            "depiction": "illustration",
+            "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette",
+            "placement": {
+              "area": "inline",
+              "size": "small",
+              "aspect": "4:3"
+            },
+            "mustNotImply": [
+              "寮・寝室を思わせる要素",
+              "現金・金額の含意",
+              "特定の時刻",
+              "通勤手段や車両を主役にすること",
+              "読める文字・数字・ロゴ",
+              "契約更新の有無は言わない",
+              "寮・住宅の補助は言わない",
+              "月収の額や保証は言わない"
+            ],
+            "prompt": "An illustration conveying the appeal: 土日祝日休み. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark"
+          },
+          {
+            "id": "appeal-A4",
+            "role": "section",
+            "kind": "section",
+            "source": "appeal",
+            "appealId": "A4",
+            "purpose": "交通費は実費支給、月上限15,000円",
+            "subject": "An illustration conveying the appeal: 交通費は実費支給、月上限15,000円",
+            "composition": "The work activity itself, as an explanatory image beside the text it explains",
+            "depiction": "illustration",
+            "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette",
+            "placement": {
+              "area": "inline",
+              "size": "small",
+              "aspect": "4:3"
+            },
+            "mustNotImply": [
+              "寮・寝室を思わせる要素",
+              "現金・金額の含意",
+              "特定の時刻",
+              "通勤手段や車両を主役にすること",
+              "読める文字・数字・ロゴ",
+              "契約更新の有無は言わない",
+              "寮・住宅の補助は言わない",
+              "月収の額や保証は言わない"
+            ],
+            "prompt": "An illustration conveying the appeal: 交通費は実費支給、月上限15,000円. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark"
+          },
+          {
+            "id": "appeal-A5",
+            "role": "section",
+            "kind": "section",
+            "source": "appeal",
+            "appealId": "A5",
+            "purpose": "未経験可",
+            "subject": "An illustration conveying the appeal: 未経験可",
+            "composition": "The work activity itself, as an explanatory image beside the text it explains",
+            "depiction": "illustration",
+            "styleText": "flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette",
+            "placement": {
+              "area": "inline",
+              "size": "small",
+              "aspect": "4:3"
+            },
+            "mustNotImply": [
+              "寮・寝室を思わせる要素",
+              "現金・金額の含意",
+              "特定の時刻",
+              "通勤手段や車両を主役にすること",
+              "読める文字・数字・ロゴ",
+              "契約更新の有無は言わない",
+              "寮・住宅の補助は言わない",
+              "月収の額や保証は言わない"
+            ],
+            "prompt": "An illustration conveying the appeal: 未経験可. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark"
+          }
+        ],
+        "noImage": [
+          {
+            "appealId": "A1",
+            "reason": "この訴求は条件カード（第一確認の事実）が担うため、画像は作らない"
+          }
+        ]
+      },
+      "designCheck": {
+        "pass": true,
+        "failures": [],
+        "gateResults": [
+          {
+            "id": "G6",
+            "pass": true
+          },
+          {
+            "id": "G7",
+            "pass": true
+          },
+          {
+            "id": "G9",
+            "pass": true
+          }
+        ]
+      },
+      "sendBacks": [],
+      "photoPlan": [
+        {
+          "id": "key-visual",
+          "role": "key-visual",
+          "prompt": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light. Wide establishing shot; the workplace building itself is the subject; impression-level, with no specific factual claim. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark"
+        },
+        {
+          "id": "section-work",
+          "role": "section",
+          "prompt": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark"
+        },
+        {
+          "id": "appeal-A3",
+          "role": "section",
+          "prompt": "An illustration conveying the appeal: 土日祝日休み. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark"
+        },
+        {
+          "id": "appeal-A4",
+          "role": "section",
+          "prompt": "An illustration conveying the appeal: 交通費は実費支給、月上限15,000円. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark"
+        },
+        {
+          "id": "appeal-A5",
+          "role": "section",
+          "prompt": "An illustration conveying the appeal: 未経験可. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark"
+        }
+      ],
+      "compliance": {
+        "pass": true,
+        "results": [
+          {
+            "id": "key-visual",
+            "pass": true,
+            "hits": [],
+            "gates": {
+              "pass": true,
+              "hits": []
+            }
+          },
+          {
+            "id": "section-work",
+            "pass": true,
+            "hits": [],
+            "gates": {
+              "pass": true,
+              "hits": []
+            }
+          },
+          {
+            "id": "appeal-A3",
+            "pass": true,
+            "hits": [],
+            "gates": {
+              "pass": true,
+              "hits": []
+            }
+          },
+          {
+            "id": "appeal-A4",
+            "pass": true,
+            "hits": [],
+            "gates": {
+              "pass": true,
+              "hits": []
+            }
+          },
+          {
+            "id": "appeal-A5",
+            "pass": true,
+            "hits": [],
+            "gates": {
+              "pass": true,
+              "hits": []
+            }
+          }
+        ]
+      },
+      "attempts": 1,
+      "gateResults": [
+        {
+          "id": "G6",
+          "pass": true,
+          "kind": "design"
+        },
+        {
+          "id": "G7",
+          "pass": true,
+          "kind": "design"
+        },
+        {
+          "id": "G9",
+          "pass": true,
+          "kind": "design"
+        },
+        {
+          "id": "G1",
+          "pass": true
+        },
+        {
+          "id": "G2",
+          "pass": true
+        },
+        {
+          "id": "G3",
+          "pass": true
+        },
+        {
+          "id": "G4",
+          "pass": true
+        },
+        {
+          "id": "G5",
+          "pass": true
+        },
+        {
+          "id": "G8",
+          "pass": true
+        }
+      ],
+      "layout": {
+        "kind": "lp-finished-image",
+        "audience": "早朝から夕方までの勤務の形が合う人／土日祝日を休みたい人／豊橋市内へ通える範囲の人",
+        "form": {
+          "derivedFrom": "reader persona: the planning's audience, its first checks, and the appeals in order",
+          "pattern": {
+            "id": "LIB-PAT-001",
+            "composition": [
+              "導入: 対象層への呼びかけ",
+              "条件: 勤務条件の提示",
+              "働く場面: 仕事の様子の描写",
+              "締め: 見学・応募への誘い"
+            ],
+            "source": "library/catalog-v1.json (approved 2026-10-29)"
+          },
+          "personaBasis": {
+            "audience": "早朝から夕方までの勤務の形が合う人／土日祝日を休みたい人／豊橋市内へ通える範囲の人",
+            "decisionOrder": [
+              "place impression (hero)",
+              "the offer (lead appeal, title)",
+              "first checks (condition cards)",
+              "appeals in order (explanatory rows)",
+              "remaining facts and appeals (details)",
+              "apply (cta)"
+            ]
+          }
+        },
+        "anatomy": [
+          "hero photograph",
+          "title block (placeholder text)",
+          "condition cards x3 (planning firstCheckKeys)",
+          "explanatory image rows x4 (small insets)",
+          "detail blocks (placeholder text)",
+          "call to action"
+        ],
+        "messageMap": [
+          {
+            "block": "title",
+            "carries": {
+              "appealId": "A1"
+            },
+            "note": "the lead appeal's headline slot (placeholder text at this stage)"
+          },
+          {
+            "block": "condition-card",
+            "carries": {
+              "factKey": "salaryHourly",
+              "appealId": "A1"
+            }
+          },
+          {
+            "block": "condition-card",
+            "carries": {
+              "factKey": "workHours",
+              "appealId": "A2"
+            }
+          },
+          {
+            "block": "condition-card",
+            "carries": {
+              "factKey": "transportCap",
+              "appealId": "A4"
+            }
+          },
+          {
+            "block": "hero-photo",
+            "carries": {
+              "specId": "key-visual",
+              "basis": {
+                "appealId": "A2"
+              }
+            },
+            "purpose": "07:00〜16:00の勤務時間（休憩60分）"
+          },
+          {
+            "block": "photo-band",
+            "carries": {
+              "specId": "section-work",
+              "basis": {
+                "factKey": "workLocation"
+              }
+            },
+            "purpose": "workLocation"
+          },
+          {
+            "block": "photo-band",
+            "carries": {
+              "specId": "appeal-A3",
+              "basis": {
+                "appealId": "A3"
+              }
+            },
+            "purpose": "土日祝日休み"
+          },
+          {
+            "block": "photo-band",
+            "carries": {
+              "specId": "appeal-A4",
+              "basis": {
+                "appealId": "A4"
+              }
+            },
+            "purpose": "交通費は実費支給、月上限15,000円"
+          },
+          {
+            "block": "photo-band",
+            "carries": {
+              "specId": "appeal-A5",
+              "basis": {
+                "appealId": "A5"
+              }
+            },
+            "purpose": "未経験可"
+          },
+          {
+            "block": "details",
+            "carries": {
+              "factKeys": [
+                "breakMinutes",
+                "transport"
+              ],
+              "appealIds": [
+                "A3",
+                "A5"
+              ]
+            },
+            "note": "appeal facts not shown as first-check cards, and line-grounded appeals with no fact key; carried by the detail blocks and the copy"
+          },
+          {
+            "block": "cta",
+            "carries": {
+              "action": true
+            }
+          }
+        ],
+        "messageGaps": [],
+        "photos": [
+          {
+            "id": "key-visual",
+            "role": "key-visual",
+            "file": "loops/loop-022/run15/images/kv-photos/key-visual.webp"
+          },
+          {
+            "id": "section-work",
+            "role": "section",
+            "file": "loops/loop-022/run15/images/kv-photos/section-work.webp"
+          },
+          {
+            "id": "appeal-A3",
+            "role": "section",
+            "file": "loops/loop-022/run15/images/kv-photos/appeal-A3.webp"
+          },
+          {
+            "id": "appeal-A4",
+            "role": "section",
+            "file": "loops/loop-022/run15/images/kv-photos/appeal-A4.webp"
+          },
+          {
+            "id": "appeal-A5",
+            "role": "section",
+            "file": "loops/loop-022/run15/images/kv-photos/appeal-A5.webp"
+          }
+        ],
+        "imageDesign": [
+          {
+            "id": "key-visual",
+            "placement": "hero",
+            "aspect": "5:3",
+            "heightPx": 288,
+            "fit": "cover",
+            "position": "center",
+            "purpose": "07:00〜16:00の勤務時間（休憩60分）",
+            "appealId": "A2",
+            "subject": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light",
+            "depiction": "illustration",
+            "size": "large"
+          },
+          {
+            "id": "section-work",
+            "placement": "band",
+            "aspect": "13:6",
+            "heightPx": 78,
+            "fit": "cover",
+            "position": "center",
+            "purpose": "workLocation",
+            "appealId": null,
+            "subject": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning",
+            "depiction": "illustration",
+            "size": "small"
+          },
+          {
+            "id": "appeal-A3",
+            "placement": "band",
+            "aspect": "4:3",
+            "heightPx": 127,
+            "fit": "cover",
+            "position": "center",
+            "purpose": "土日祝日休み",
+            "appealId": "A3",
+            "subject": "An illustration conveying the appeal: 土日祝日休み",
+            "depiction": "illustration",
+            "size": "small"
+          },
+          {
+            "id": "appeal-A4",
+            "placement": "band",
+            "aspect": "4:3",
+            "heightPx": 127,
+            "fit": "cover",
+            "position": "center",
+            "purpose": "交通費は実費支給、月上限15,000円",
+            "appealId": "A4",
+            "subject": "An illustration conveying the appeal: 交通費は実費支給、月上限15,000円",
+            "depiction": "illustration",
+            "size": "small"
+          },
+          {
+            "id": "appeal-A5",
+            "placement": "band",
+            "aspect": "4:3",
+            "heightPx": 127,
+            "fit": "cover",
+            "position": "center",
+            "purpose": "未経験可",
+            "appealId": "A5",
+            "subject": "An illustration conveying the appeal: 未経験可",
+            "depiction": "illustration",
+            "size": "small"
+          }
+        ],
+        "note": "LPの完成イメージ。文章はプレースホルダで、実文と実画像は後段で同じレイアウトの同じ場所に入る"
+      },
+      "gate": {
+        "pass": true,
+        "failures": []
+      },
+      "photos": [
+        {
+          "id": "key-visual",
+          "file": "loops/loop-022/run15/images/kv-photos/key-visual.webp",
+          "prompt": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light. Wide establishing shot; the workplace building itself is the subject; impression-level, with no specific factual claim. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark",
+          "line": null,
+          "mime": "image/webp",
+          "bytes": 178502,
+          "role": "key-visual"
+        },
+        {
+          "id": "section-work",
+          "file": "loops/loop-022/run15/images/kv-photos/section-work.webp",
+          "prompt": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark",
+          "line": null,
+          "mime": "image/webp",
+          "bytes": 251580,
+          "role": "section"
+        },
+        {
+          "id": "appeal-A3",
+          "file": "loops/loop-022/run15/images/kv-photos/appeal-A3.webp",
+          "prompt": "An illustration conveying the appeal: 土日祝日休み. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark",
+          "line": null,
+          "mime": "image/webp",
+          "bytes": 248318,
+          "role": "section"
+        },
+        {
+          "id": "appeal-A4",
+          "file": "loops/loop-022/run15/images/kv-photos/appeal-A4.webp",
+          "prompt": "An illustration conveying the appeal: 交通費は実費支給、月上限15,000円. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark",
+          "line": null,
+          "mime": "image/webp",
+          "bytes": 136238,
+          "role": "section"
+        },
+        {
+          "id": "appeal-A5",
+          "file": "loops/loop-022/run15/images/kv-photos/appeal-A5.webp",
+          "prompt": "An illustration conveying the appeal: 未経験可. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark",
+          "line": null,
+          "mime": "image/webp",
+          "bytes": 136146,
+          "role": "section"
+        }
+      ],
+      "image": {
+        "file": "loops/loop-022/run15/lp-finished-image.png",
+        "sha256": "cb3b5e4928c6f61b5dc0bfbdba0bbdc12dfe08544ec43192501faa9c3062edae"
+      },
+      "model": "muse-image-1.0",
+      "costUsd": 0.05,
+      "checklist": [
+        {
+          "element": "key-visual",
+          "basis": {
+            "appealId": "A2"
+          },
+          "description": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light",
+          "checks": {
+            "subjectIdentity": null,
+            "unstatedImplication": null,
+            "inventedSpecifics": null,
+            "cashImagery": null
+          }
+        }
+      ]
+    },
+    "generation": {
+      "executed": false,
+      "reason": "前段で停止したため、生成を実行しない"
+    },
+    "images": {
+      "executed": false,
+      "reason": "前段で停止したため、画像生成を実行しない"
+    },
+    "lpAssembly": {
+      "executed": false,
+      "reason": "前段で停止したため、LP の組み立てを実行しない"
+    },
+    "verification": {
+      "executed": false,
+      "reason": "前段で停止したため、再検証を実行しない"
+    },
+    "preview": {
+      "executed": false,
+      "reason": "前段で停止したため、プレビューを生成しない"
+    }
+  },
+  "e02": {
+    "caseId": "E02",
+    "stage": "照合",
+    "verdict": null,
+    "stoppedAtReconciliation": null,
+    "contradictions": [],
+    "approval": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため承認を実行しない（矛盾で停止した対象に承認記録を作らない、G-INV-3）"
+    },
+    "generation": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため生成を実行しない"
+    },
+    "images": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため画像生成を実行しない"
+    },
+    "lpAssembly": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため LP の組み立てを実行しない"
+    },
+    "verification": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため再検証を実行しない"
+    },
+    "preview": {
+      "executed": false,
+      "reason": "E02 は照合で停止したためプレビューを実行しない"
+    }
+  },
+  "checkpoints": "full",
+  "stopKind": "checkpoint",
+  "holds": [],
+  "presentationRecords": [
+    {
+      "checkpoint": "planning",
+      "file": "loops/loop-022/run15/presentation-planning.json"
+    },
+    {
+      "checkpoint": "key-visual",
+      "file": "loops/loop-022/run15/presentation-key-visual.json"
+    }
+  ],
+  "planning": {
+    "file": "loops/loop-022/planning-FICT-J02.json",
+    "sha256": "26c9c59aae0dbd3ed17b52002463f6f1630b0c60ee33ba93d45de7557bc6a24c"
+  },
+  "stateFile": "loops/loop-022/run15/run-state.json",
+  "entry": null,
+  "artifacts": {
+    "generationFile": null,
+    "verificationFile": "loops/loop-022/run15/verification-result.json",
+    "lpFile": null,
+    "imagesRunFile": null,
+    "preview": null
+  },
+  "costs": {
+    "category": "製品実行",
+    "currency": "USD",
+    "extractionCostUsd": null,
+    "generationCostUsd": null,
+    "imageCostUsd": null,
+    "totalCostUsd": null,
+    "breakdown": [
+      {
+        "stage": "抽出（工程1、ライブ）",
+        "costUsd": null,
+        "usage": {
+          "prompt_tokens": 494,
+          "completion_tokens": 4079,
+          "total_tokens": 4573,
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cached_tokens": 384
+          },
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 3259,
+            "audio_tokens": 0,
+            "reasoning_tokens": 3574,
+            "rejected_prediction_tokens": 2481
+          }
+        }
+      },
+      {
+        "stage": "生成（工程3、ライブ）",
+        "costUsd": null,
+        "usage": null
+      },
+      {
+        "stage": "画像生成（muse-image-1.0、ライブ）",
+        "costUsd": null,
+        "usage": null,
+        "note": "未記録（画像生成が実行されなかったため推定しない）"
+      },
+      {
+        "stage": "再検証・プレビュー生成",
+        "costUsd": 0,
+        "usage": null,
+        "note": "API を呼ばないため費用は発生しない"
+      }
+    ],
+    "note": "抽出と生成と画像の算出値がそろわなかったため、合計は未記録（推定しない）。内訳の算出値は各道具の D4 単価による算出値で、確定実費は dev.meta.ai Billing 実績との突合が必要"
+  },
+  "generationFile": "loops/loop-022/run15/generated.json",
+  "verificationFile": "loops/loop-022/run15/verification-result.json",
+  "lpFile": "loops/loop-022/run15/lp.html"
+}

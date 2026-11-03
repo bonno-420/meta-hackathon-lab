@@ -1,0 +1,34 @@
+{
+  "images": [
+    {
+      "id": "hero",
+      "line": null,
+      "role": "key-visual",
+      "prompt": "Inside a small neighbourhood café in the morning, a staff member serving a customer at the counter. Wide establishing shot; the workplace building itself is the subject; impression-level, with no specific factual claim. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+    },
+    {
+      "id": "section-work",
+      "line": null,
+      "role": "section",
+      "prompt": "Preparing drinks behind a café counter. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+    },
+    {
+      "id": "appeal-A2",
+      "line": null,
+      "role": "section",
+      "prompt": "An illustration of a worker starting the day at a work table in bright morning light. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+    },
+    {
+      "id": "appeal-A4",
+      "line": null,
+      "role": "section",
+      "prompt": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+    },
+    {
+      "id": "appeal-A5",
+      "line": null,
+      "role": "section",
+      "prompt": "An illustration of the work itself: people sorting and inspecting parcels at a conveyor table. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no icons, no symbols, no pictograms, no text, no numbers, no logos, no watermark"
+    }
+  ]
+}

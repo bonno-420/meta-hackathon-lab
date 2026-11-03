@@ -1,0 +1,362 @@
+{
+  "checkpoint": "key-visual",
+  "presented": [
+    {
+      "kind": "image",
+      "file": "loops/loop-024/runE2b/lp-finished-image.png",
+      "sha256": "b0970386cd733208c71773683c4c2647984aaef911c929084f0aa5c87f6f23ec"
+    }
+  ],
+  "layout": {
+    "kind": "lp-finished-image",
+    "language": "en",
+    "audience": "People who want to make things with their hands and are looking for weekday workshop work",
+    "form": {
+      "derivedFrom": "reader persona: the planning's audience, its first checks, and the appeals in order",
+      "pattern": null,
+      "personaBasis": {
+        "audience": "People who want to make things with their hands and are looking for weekday workshop work",
+        "decisionOrder": [
+          "the offer (lead appeal, title)",
+          "place impression (hero)",
+          "appeals in order (explanatory rows)",
+          "first checks (condition cards)",
+          "remaining facts and appeals (details)",
+          "apply (cta)"
+        ]
+      }
+    },
+    "design": {
+      "version": "lp-design-v1",
+      "patternId": "P-WORK",
+      "scores": {
+        "P-COND": 0,
+        "P-WORK": 3,
+        "P-LIFE": 1
+      },
+      "signals": [
+        "A1: 仕事そのものへの訴求",
+        "A2: 仕事そのものへの訴求",
+        "A5: 生活適合の訴求",
+        "imageSpecs: 仕事の場面の指定あり"
+      ],
+      "rationale": "訴求と第一確認の信号から P-WORK を選択（条件 0 / 仕事 3 / 生活 1）。読み手の最初の関心が仕事そのもの: 仕事の場面と文を前に置き、条件は後で確認させる",
+      "blockOrder": [
+        "title",
+        "hero",
+        "rows",
+        "cards",
+        "details",
+        "cta"
+      ],
+      "palette": {
+        "titleBg": "#1f3d2b",
+        "accent": "#e07b39",
+        "chipBg": "#edf4ec"
+      },
+      "paletteBasis": "パターンに紐づくトークン（候補。市場のリサーチ裏付けはなく、候補のまま記録する）",
+      "basis": "読み手の最初の関心が仕事そのもの: 仕事の場面と文を前に置き、条件は後で確認させる"
+    },
+    "anatomy": [
+      "title block (placeholder text)",
+      "hero photograph",
+      "explanatory image rows x5 (small insets)",
+      "condition cards x0 (planning firstCheckKeys)",
+      "detail blocks (placeholder text)",
+      "call to action"
+    ],
+    "messageMap": [
+      {
+        "block": "title",
+        "carries": {
+          "appealId": "A1"
+        },
+        "note": "the lead appeal's headline slot (placeholder text at this stage)"
+      },
+      {
+        "block": "hero-photo",
+        "carries": {
+          "specId": "key-visual",
+          "basis": {
+            "appealId": "A1"
+          }
+        },
+        "purpose": "The work itself: assembling wooden frames and sanding parts by hand, and seeing a finished product take shape"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "section-work",
+          "basis": {
+            "factKey": "workLocation"
+          }
+        },
+        "purpose": "workLocation"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "appeal-A2",
+          "basis": {
+            "appealId": "A2"
+          }
+        },
+        "purpose": "Training is provided, so you can start even without woodworking experience"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "appeal-A3",
+          "basis": {
+            "appealId": "A3"
+          }
+        },
+        "purpose": "The hourly wage is stated clearly at 1,400 yen"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "appeal-A4",
+          "basis": {
+            "appealId": "A4"
+          }
+        },
+        "purpose": "Weekdays only, 08:30 to 17:30 with a 60-minute break"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "appeal-A5",
+          "basis": {
+            "appealId": "A5"
+          }
+        },
+        "purpose": "Commuting costs are covered, up to 15,000 yen per month"
+      },
+      {
+        "block": "details",
+        "carries": {
+          "factKeys": [
+            "salaryHourly",
+            "workHours",
+            "breakMinutes",
+            "transport",
+            "transportCap"
+          ],
+          "appealIds": [
+            "A1",
+            "A2"
+          ]
+        },
+        "note": "appeal facts not shown as first-check cards, and line-grounded appeals with no fact key; carried by the detail blocks and the copy"
+      },
+      {
+        "block": "cta",
+        "carries": {
+          "action": true
+        }
+      }
+    ],
+    "messageGaps": [],
+    "photos": [
+      {
+        "id": "key-visual",
+        "role": "key-visual",
+        "file": "loops/loop-024/runE2b/images/kv-photos/key-visual.webp"
+      },
+      {
+        "id": "section-work",
+        "role": "work",
+        "file": "loops/loop-024/runE2b/images/kv-photos/section-work.webp"
+      },
+      {
+        "id": "appeal-A2",
+        "role": "section",
+        "file": "loops/loop-024/runE2b/images/kv-photos/appeal-A2.webp"
+      },
+      {
+        "id": "appeal-A3",
+        "role": "section",
+        "file": "loops/loop-024/runE2b/images/kv-photos/appeal-A3.webp"
+      },
+      {
+        "id": "appeal-A4",
+        "role": "section",
+        "file": "loops/loop-024/runE2b/images/kv-photos/appeal-A4.webp"
+      },
+      {
+        "id": "appeal-A5",
+        "role": "section",
+        "file": "loops/loop-024/runE2b/images/kv-photos/appeal-A5.webp"
+      }
+    ],
+    "imageDesign": [
+      {
+        "id": "key-visual",
+        "placement": "hero",
+        "aspect": "5:3",
+        "heightPx": 288,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "The work itself: assembling wooden frames and sanding parts by hand, and seeing a finished product take shape",
+        "appealId": "A1",
+        "subject": "Hands assembling a small wooden frame on a workbench, parts and tools laid out beside it",
+        "depiction": "illustration",
+        "size": "large"
+      },
+      {
+        "id": "section-work",
+        "placement": "band",
+        "aspect": "13:6",
+        "heightPx": 78,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "workLocation",
+        "appealId": null,
+        "subject": "Sanding a wooden part by hand at a workbench in a small workshop",
+        "depiction": "illustration",
+        "size": "small"
+      },
+      {
+        "id": "appeal-A2",
+        "placement": "band",
+        "aspect": "4:3",
+        "heightPx": 127,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "Training is provided, so you can start even without woodworking experience",
+        "appealId": "A2",
+        "subject": "An illustration of the work itself: people doing the hands-on tasks of the job at a work table",
+        "depiction": "illustration",
+        "size": "small"
+      },
+      {
+        "id": "appeal-A3",
+        "placement": "band",
+        "aspect": "4:3",
+        "heightPx": 127,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "The hourly wage is stated clearly at 1,400 yen",
+        "appealId": "A3",
+        "subject": "An illustration of the work itself: people doing the hands-on tasks of the job at a work table",
+        "depiction": "illustration",
+        "size": "small"
+      },
+      {
+        "id": "appeal-A4",
+        "placement": "band",
+        "aspect": "4:3",
+        "heightPx": 127,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "Weekdays only, 08:30 to 17:30 with a 60-minute break",
+        "appealId": "A4",
+        "subject": "An illustration of the work itself: people doing the hands-on tasks of the job at a work table",
+        "depiction": "illustration",
+        "size": "small"
+      },
+      {
+        "id": "appeal-A5",
+        "placement": "band",
+        "aspect": "4:3",
+        "heightPx": 127,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "Commuting costs are covered, up to 15,000 yen per month",
+        "appealId": "A5",
+        "subject": "An illustration of the work itself: people doing the hands-on tasks of the job at a work table",
+        "depiction": "illustration",
+        "size": "small"
+      }
+    ],
+    "note": "LPの完成イメージ。文章はプレースホルダで、実文と実画像は後段で同じレイアウトの同じ場所に入る"
+  },
+  "checklist": [
+    {
+      "element": "key-visual",
+      "basis": "A1",
+      "description": "Hands assembling a small wooden frame on a workbench, parts and tools laid out beside it",
+      "depiction": "illustration",
+      "placement": "hero/large",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    },
+    {
+      "element": "section-work",
+      "basis": "spec",
+      "description": "Sanding a wooden part by hand at a workbench in a small workshop",
+      "depiction": "illustration",
+      "placement": "inline/small",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    },
+    {
+      "element": "appeal-A2",
+      "basis": "A2",
+      "description": "An illustration of the work itself: people doing the hands-on tasks of the job at a work table",
+      "depiction": "illustration",
+      "placement": "inline/small",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    },
+    {
+      "element": "appeal-A3",
+      "basis": "A3",
+      "description": "An illustration of the work itself: people doing the hands-on tasks of the job at a work table",
+      "depiction": "illustration",
+      "placement": "inline/small",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    },
+    {
+      "element": "appeal-A4",
+      "basis": "A4",
+      "description": "An illustration of the work itself: people doing the hands-on tasks of the job at a work table",
+      "depiction": "illustration",
+      "placement": "inline/small",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    },
+    {
+      "element": "appeal-A5",
+      "basis": "A5",
+      "description": "An illustration of the work itself: people doing the hands-on tasks of the job at a work table",
+      "depiction": "illustration",
+      "placement": "inline/small",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    }
+  ],
+  "holds": [],
+  "judgement": {
+    "result": null,
+    "confirmer": null,
+    "confirmedAt": null,
+    "corrections": []
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "kind": "lp-copy-generation",
+  "version": 1,
+  "promptVersion": "lp-generate-v5-planning",
+  "model": "meta-models/muse-spark-open-1026",
+  "intentRef": {
+    "source": "planning-input",
+    "file": "loops/loop-024/planning-FICT-E02.json",
+    "sha256": "b1c86cb00de591790de195acb93786a6ce1a4878bc2d1c91fad528721b1151ee"
+  },
+  "input": {
+    "original": {
+      "id": "FICT-E02",
+      "version": "v1",
+      "file": "loops/loop-024/runE2/entry/original.json",
+      "sha256": "c15ffd10e353f57d406f5405429c669f58470a226cc2b929fb58f08f45fb6a26"
+    },
+    "facts": {
+      "factsId": "FICT-E02-facts",
+      "factsVersion": 1,
+      "file": "loops/loop-024/runE2/entry/facts.json",
+      "sha256": "a355f666e34efaa40461ebb82182ea4f16c991509e4d46de0fa7e571587e3ebe"
+    },
+    "approvalId": "FICT-E02-approval-test-1"
+  },
+  "sentences": [
+    {
+      "text": "You will be assembling small wooden frames and sanding parts by hand in a small workshop, where you can see a finished product take shape.",
+      "factKeys": [],
+      "sourceLines": [
+        "L01"
+      ]
+    },
+    {
+      "text": "Experience with hand tools is welcome, and training is provided so you can start even without woodworking experience.",
+      "factKeys": [],
+      "sourceLines": [
+        "L08"
+      ]
+    },
+    {
+      "text": "The hourly wage is 1,400 yen.",
+      "factKeys": [
+        "salaryHourly"
+      ],
+      "sourceLines": [
+        "L04"
+      ]
+    },
+    {
+      "text": "Working days are Monday to Friday, with hours from 08:30 to 17:30 (break 60 minutes).",
+      "factKeys": [
+        "workHours",
+        "breakMinutes"
+      ],
+      "sourceLines": [
+        "L05",
+        "L06"
+      ]
+    },
+    {
+      "text": "Actual commuting cost is covered, up to 15,000 yen per month.",
+      "factKeys": [
+        "transport",
+        "transportCap"
+      ],
+      "sourceLines": [
+        "L07"
+      ]
+    },
+    {
+      "text": "The location is a workshop in Taito City, Tokyo.",
+      "factKeys": [
+        "workLocation"
+      ],
+      "sourceLines": [
+        "L03"
+      ]
+    },
+    {
+      "text": "The employment type is Contract with a contract period of 6 months.",
+      "factKeys": [
+        "employmentType",
+        "contractPeriod"
+      ],
+      "sourceLines": [
+        "L02"
+      ]
+    },
+    {
+      "text": "The actual working time is 8 hours.",
+      "factKeys": [
+        "actualHours"
+      ],
+      "sourceLines": [
+        "L05"
+      ]
+    }
+  ]
+}

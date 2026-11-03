@@ -1,0 +1,30 @@
+{
+  "version": "lp-design-v1",
+  "patternId": "P-LIFE",
+  "scores": {
+    "P-COND": 1,
+    "P-WORK": 0,
+    "P-LIFE": 2
+  },
+  "signals": [
+    "A1: 第一確認の事実を持つ訴求（条件）",
+    "A3: 生活適合の訴求",
+    "A4: 生活適合の訴求"
+  ],
+  "rationale": "訴求と第一確認の信号から P-LIFE を選択（条件 1 / 仕事 0 / 生活 2）。生活に合うかが主関心: 休み・通勤などの生活の訴求を場面で先に見せ、条件カードで裏付ける",
+  "blockOrder": [
+    "hero",
+    "title",
+    "rows",
+    "cards",
+    "details",
+    "cta"
+  ],
+  "palette": {
+    "titleBg": "#3d2c1c",
+    "accent": "#d96f32",
+    "chipBg": "#f8f1e6"
+  },
+  "paletteBasis": "パターンに紐づくトークン（候補。市場のリサーチ裏付けはなく、候補のまま記録する）",
+  "basis": "生活に合うかが主関心: 休み・通勤などの生活の訴求を場面で先に見せ、条件カードで裏付ける"
+}

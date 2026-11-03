@@ -1,0 +1,29 @@
+{
+  "images": [
+    {
+      "id": "key-visual",
+      "prompt": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light. Wide establishing shot; the workplace building itself is the subject; impression-level, with no specific factual claim. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark",
+      "line": null
+    },
+    {
+      "id": "section-work",
+      "prompt": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark",
+      "line": null
+    },
+    {
+      "id": "appeal-A3",
+      "prompt": "An illustration conveying the appeal: 土日祝日休み. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark",
+      "line": null
+    },
+    {
+      "id": "appeal-A4",
+      "prompt": "An illustration conveying the appeal: 交通費は実費支給、月上限15,000円. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark",
+      "line": null
+    },
+    {
+      "id": "appeal-A5",
+      "prompt": "An illustration conveying the appeal: 未経験可. The work activity itself, as an explanatory image beside the text it explains. flat vector-style illustration, clearly an illustration and not a photograph, calm neutral palette, no text, no numbers, no logos, no watermark",
+      "line": null
+    }
+  ]
+}

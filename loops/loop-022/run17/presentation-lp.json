@@ -1,0 +1,25 @@
+{
+  "checkpoint": "lp",
+  "presented": [
+    {
+      "kind": "lp",
+      "file": "loops/loop-010/lp.html"
+    }
+  ],
+  "completion": {
+    "pass": false,
+    "failures": [
+      {
+        "check": "C6",
+        "detail": "対応する文がない訴求がある（A3、A5）: 原本にある大事なことがページに落ちている"
+      }
+    ]
+  },
+  "holds": [],
+  "judgement": {
+    "result": null,
+    "confirmer": null,
+    "confirmedAt": null,
+    "corrections": []
+  }
+}
