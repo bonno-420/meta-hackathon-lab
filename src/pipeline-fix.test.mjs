@@ -191,6 +191,42 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
   expectTrue("assembly-images-have-no-internal-alt", !/alt="(appeal|section)-/.test(builtB.html) && builtB.html.includes(`alt=""`));
 }
 
+// ---------- assembly: the title is the job itself; every image band carries text (run25 verdict) ----------
+{
+  const { assembleFromLayout } = await import("./assemble-layout.mjs");
+  const rootC = makeScratch();
+  mkdirSync(path.join(rootC, "images"), { recursive: true });
+  writeFileSync(path.join(rootC, "images", "section-work.webp"), "x");
+  writeFileSync(path.join(rootC, "images", "appeal-A9.webp"), "x");
+  const genC = { sentences: [
+    { text: "物流倉庫での仕分け・検品作業です。", factKeys: [], sourceLines: ["L01"] },
+    { text: "交通費は月上限15,000円まで支給されます。", factKeys: ["transportCap"], sourceLines: ["L07"] },
+    { text: "勤務地は愛知県豊橋市内の物流倉庫です。", factKeys: ["workLocation"], sourceLines: ["L02"] },
+  ] };
+  const planningC = { appeals: [
+    { id: "A1", factKeys: ["salaryHourly"], sourceLines: ["L03"] },
+    { id: "A9", factKeys: ["transportCap"], sourceLines: ["L07"] },
+  ] };
+  const factsC = { items: [
+    { key: "salaryHourly", status: "stated", value: "1,500円" },
+    { key: "transportCap", status: "stated", value: "15,000円" },
+    { key: "workLocation", status: "stated", value: "愛知県豊橋市内の物流倉庫" },
+  ] };
+  const layoutC = { messageMap: [
+    { block: "title", carries: { workContent: true, appealId: "A1" } },
+    { block: "condition-card", carries: { factKey: "transportCap", appealId: "A9" } },
+    { block: "photo-band", carries: { specId: "section-work", basis: { factKey: "workLocation" } } },
+    { block: "photo-band", carries: { specId: "appeal-A9", basis: { appealId: "A9" } } },
+    { block: "cta", carries: { action: true } },
+  ] };
+  const builtC = assembleFromLayout({ root: rootC, generation: genC, images: [{ id: "section-work", file: "images/section-work.webp" }, { id: "appeal-A9", file: "images/appeal-A9.webp" }], lpDir: "out", heroChips: [], layout: layoutC, planning: planningC, facts: factsC });
+  const titleSeg = builtC.html.slice(builtC.html.indexOf(`<section class="title-block">`), builtC.html.indexOf(`<section class="title-block">`) + 300);
+  expectTrue("assembly-title-is-work-content", titleSeg.includes("物流倉庫での仕分け・検品作業です。"));
+  expectTrue("assembly-work-band-has-text", builtC.html.includes("勤務地は愛知県豊橋市内の物流倉庫です。"));
+  expectTrue("assembly-band-not-card-carries-appeal-sentence", (builtC.html.match(/交通費は月上限15,000円まで支給されます。/g) ?? []).length === 1 && builtC.html.indexOf("交通費は月上限15,000円まで支給されます。") > builtC.html.indexOf("appeal-A9.webp"));
+  expectTrue("assembly-no-mute-band", (builtC.html.match(/<div class="explain-text">/g) ?? []).length === 2);
+}
+
 // ---------- per-endpoint keys (liveDeps stage envs) ----------
 {
   const seen = [];
@@ -357,6 +393,44 @@ expectTrue("lp-presentation-saved", existsSync(path.join(scratchA, "out/presenta
   expectTrue("lp-skin-matches-sample", lpHtml.includes(".page{max-width:480px;margin:0 auto;background:#fff}") && !lpHtml.includes("border-radius:26px"));
 }
 expect("resume-status", runD.status, "pending-human-confirmation");
+
+// ---------- review gate: a failing review sends back once, then stops the run ----------
+const scratchRV = makeScratch();
+const runRV0 = await runDemo(
+  { root: scratchRV, ...REAL, checkpoints: "light" },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
+);
+const stateRV = JSON.parse(readFileSync(path.join(scratchRV, "out/run-state.json"), "utf8"));
+const confRV = { file: stateRV.keyVisual.image.file, sha256: stateRV.keyVisual.image.sha256, confirmer: "本人", confirmedAt: "2026-11-03" };
+let reviewCallsVF = 0;
+let generateCallsVF = 0;
+const runRVF = await runDemo(
+  { root: scratchRV, ...REAL, checkpoints: "light", resumeState: stateRV, kvConfirmation: confRV },
+  { extract: async () => faithfulExtract(), generate: async (a) => { generateCallsVF++; return faithfulGenerate()(a); }, ...stubKeyVisualDeps(), images: stubImages(),
+    review: async () => { reviewCallsVF++; return { status: "reviewed", verdict: "fail", findings: [{ criterion: "appeal-works", target: "all sentences", problem: "事実の言い換えだけで訴求になっていない", instruction: "事実と読み手をつないで書き直す" }], model: "stub", promptVersion: "lp-review-v1" }; } },
+);
+expect("review-fail-stops-run", runRVF.stoppedAt, "review");
+expectTrue("review-fail-attempts-two", runRVF.stages.review.attempts === 2 && reviewCallsVF === 2);
+expectTrue("review-sendback-regenerated", generateCallsVF >= 2 && runRVF.stages.review.sendBacks.length === 1);
+// ---------- review gate: fail once, pass after the send-back ----------
+let reviewCallsVP = 0;
+const runRVP = await runDemo(
+  { root: scratchRV, ...REAL, checkpoints: "light", resumeState: stateRV, kvConfirmation: confRV },
+  { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages(),
+    review: async () => { reviewCallsVP++; return reviewCallsVP === 1 ? { status: "reviewed", verdict: "fail", findings: [{ criterion: "job-first", target: "title", problem: "見出しが条件だけ", instruction: "仕事そのものを見出しにする" }], model: "stub", promptVersion: "lp-review-v1" } : { status: "reviewed", verdict: "pass", findings: [], model: "stub", promptVersion: "lp-review-v1" }; } },
+);
+expect("review-pass-after-sendback-status", runRVP.status, "pending-human-confirmation");
+expectTrue("review-pass-after-sendback-recorded", runRVP.stages.review.verdict === "pass" && runRVP.stages.review.attempts === 2 && runRVP.stages.review.sendBacks.length === 1);
+// ---------- review module: outline / parse / feedback ----------
+{
+  const { pageOutlineFromHtml, parseReview, reviewFeedbackText } = await import("./review.mjs");
+  const outline = pageOutlineFromHtml(`<main><section class="lp-hero"><img src="images/hero.webp" alt=""><div class="hero-chips"><span class="hero-chip">時給1,350円</span></div></section><section class="title-block"><p>時給は1,350円です。</p></section><section class="explain-row"><img class="inline-photo" src="images/section-work.webp" alt=""></section></main><footer class="cta"><button class="cta-button" type="button">応募する</button></footer>`, { "hero.webp": "workers sorting parcels", "section-work.webp": "a worker at a conveyor" });
+  expectTrue("review-outline-blocks", outline.length === 4 && outline[0].chips[0] === "時給1,350円" && outline[2].images[0].shows === "a worker at a conveyor" && outline[2].text === "");
+  expectTrue("review-parse-pass", parseReview('{"verdict":"pass","findings":[]}').verdict === "pass");
+  expectTrue("review-parse-fail-needs-findings", parseReview('{"verdict":"fail","findings":[]}') === null);
+  const fb = reviewFeedbackText({ findings: [{ criterion: "appeal-works", target: "A1", problem: "p", instruction: "読み手につなぐ" }] });
+  expectTrue("review-feedback-text", fb.includes("appeal-works") && fb.includes("読み手につなぐ"));
+}
 
 // ---------- generation coverage: every appeal must be carried ----------
 function partialGenerate() {

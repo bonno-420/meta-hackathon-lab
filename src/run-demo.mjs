@@ -33,6 +33,7 @@ import { renderHtmlToImage } from "./render-page-image.mjs";
 import { pinPostingText, buildFactsFile, buildManifest } from "./pin-posting.mjs";
 import { decideImagePlanFromSpecs } from "./generate-images.mjs";
 import { assembleFromLayout, matchAppealSentences } from "./assemble-layout.mjs";
+import { reviewFeedbackText } from "./review.mjs";
 
 const execFileAsync = promisify(execFile);
 
@@ -322,6 +323,7 @@ export async function runDemo(options, deps = {}) {
   });
   const keyVisualPhotos = deps.keyVisualPhotos ?? (async () => { throw new Error("no key-visual photo executor wired"); });
   const renderFinishedImage = deps.renderFinishedImage ?? (async () => { throw new Error("no finished-image renderer wired"); });
+  const reviewPage = deps.review ?? null;
   const verify = deps.verify ?? ((args) => runVerification(args));
   const preview = deps.preview ?? (({ generation, verification, facts, e02, repoUrl }) => buildPreview({ generation, verification, facts, e02, repoUrl }));
 
@@ -1035,6 +1037,86 @@ export async function runDemo(options, deps = {}) {
       if (!completion.pass) {
         stop("verification", completion.reason);
       }
+      // Stage 7.5 (review): the assembled page is judged by the
+      // reader persona and the client (src/review.mjs). A fail sends
+      // the findings back to generation once; a second fail stops
+      // the run with the findings on record. Until this stage
+      // existed, no preview or checklist in the pipeline ever failed
+      // a page the user then rejected (2026-11-04).
+      if (pipelineMode && !stoppedAt) {
+        if (!reviewPage) {
+          stages.review = { executed: false, reason: "レビュー実行器が接続されていないため、審査を実行しない" };
+        } else {
+          let reviewAttempts = 0;
+          let reviewResult = null;
+          const reviewSendBacks = [];
+          while (reviewAttempts < 2) {
+            reviewAttempts++;
+            try {
+              reviewResult = await reviewPage({ root, planningFile: options.planningFile ?? null, lpFile });
+            } catch (e) {
+              reviewResult = { status: "error", reason: String(e?.message ?? e) };
+            }
+            if (!reviewResult || reviewResult.status !== "reviewed") {
+              stages.review = { executed: true, attempts: reviewAttempts, status: reviewResult?.status ?? null, reason: reviewResult?.reason ?? null, sendBacks: reviewSendBacks };
+              stop("review", `レビューが実行できなかったため、後段を実行しない（${reviewResult?.reason ?? "実行器の応答なし"}）`);
+              break;
+            }
+            stages.review = { executed: true, attempts: reviewAttempts, verdict: reviewResult.verdict, findings: reviewResult.findings ?? [], model: reviewResult.model ?? null, promptVersion: reviewResult.promptVersion ?? null, sendBacks: reviewSendBacks };
+            if (reviewResult.verdict !== "fail") break;
+            if (reviewAttempts >= 2) break;
+            const prior = options.feedbackFile && existsSync(resolveRoot(root, options.feedbackFile)) ? readFileSync(resolveRoot(root, options.feedbackFile), "utf8") : "";
+            const fbPath = path.join(path.dirname(generationFile), "review-feedback.txt");
+            mkdirSync(resolveRoot(root, path.dirname(fbPath)), { recursive: true });
+            writeFileSync(resolveRoot(root, fbPath), reviewFeedbackText(reviewResult, prior), "utf8");
+            reviewSendBacks.push({ attempt: reviewAttempts, findings: reviewResult.findings ?? [] });
+            stages.review.sendBacks = reviewSendBacks;
+            const regen = await generate({ root, originalFile, factsFile, approvalFile, planningFile: options.planningFile ?? undefined, feedbackFile: fbPath });
+            if (!regen || regen.status !== "generated" || !regen.generation || !regen.grounding || regen.grounding.pass !== true) {
+              stop("review", "レビューの差し戻し後の再生成が完了しなかったため、後段を実行しない");
+              break;
+            }
+            const regenCoverage = coverageOf(regen.generation);
+            if (regenCoverage && !regenCoverage.pass) {
+              stop("review", "レビューの差し戻し後の生成で訴求・仕事内容の充足が不足したため、後段を実行しない");
+              break;
+            }
+            generationRun = { ...generationRun, ...regen };
+            const heroChips2 = correspondence
+              ? (correspondence.firstCheckKeys ?? [])
+                .map((k) => {
+                  const item = ((fixedFacts && fixedFacts.items) ?? []).find((i) => i.key === k);
+                  return item && item.status === "stated" ? item.value : null;
+                })
+                .filter((v) => typeof v === "string" && v.length > 0)
+              : undefined;
+            const rebuilt = await assemble({ root, generation: generationRun.generation, images: imageRun.images ?? [], imagesDir, lpFile, heroChips: heroChips2, layout: (resumeState && resumeState.keyVisual && resumeState.keyVisual.layout) ?? (stages.keyVisual && stages.keyVisual.layout) ?? null, planning: planning ?? null, facts: fixedFacts ?? null });
+            stages.lpAssembly = { ...stages.lpAssembly, attempts: (stages.lpAssembly?.attempts ?? 1) + 1, file: rebuilt.file ?? lpFile, referenced: rebuilt.referenced ?? [], layoutUsed: rebuilt.layoutUsed ?? false, appealCoverage: rebuilt.assignments?.appealCoverage ?? null, afterReviewSendBack: true };
+            let pagecheck2 = null;
+            try { pagecheck2 = checkPage(readFileSync(resolveRoot(root, lpFile), "utf8")); } catch { pagecheck2 = null; }
+            const coverage2 = planning && Array.isArray(planning.appeals) ? planning.appeals.map((a) => ({ appealId: a.id, sentenceIdxs: matchAppealSentences(generationRun.generation, planning.appeals).byAppeal.get(a.id) ?? [] })) : undefined;
+            const completion2 = checkCompletion({ root, generation: generationRun.generation, imageFiles: expectedImageFiles ?? (imageRun.images ?? []).map((i) => i.file), lpFile, grounding: regen.grounding, pagecheck: pagecheck2, appealCoverage: coverage2 });
+            stages.verification.completion = completion2;
+            if (!completion2.pass) {
+              stop("verification", completion2.reason);
+              break;
+            }
+          }
+          if (!stoppedAt && reviewResult && reviewResult.status === "reviewed" && reviewResult.verdict === "fail") {
+            stop("review", `ペルソナ／クライアントレビューが不合格のため、後段を実行しない（${(reviewResult.findings ?? []).map((f) => `${f.criterion}: ${f.problem}`).join(" / ")}）`);
+          }
+          if (stages.review && stages.review.executed) {
+            writePresentationRecord("lp", {
+              checkpoint: "lp",
+              presented: [{ kind: "lp", file: lpFile }],
+              completion: { pass: stages.verification.completion?.pass ?? null, failures: stages.verification.completion?.failures ?? [] },
+              review: { verdict: stages.review.verdict ?? null, findings: stages.review.findings ?? [], attempts: stages.review.attempts ?? null },
+              holds: [...holds],
+              judgement: { result: null, confirmer: null, confirmedAt: null, corrections: [] },
+            });
+          }
+        }
+      }
     }
   } else {
     stages.verification = stageNotExecuted("前段で停止したため、再検証を実行しない");
@@ -1266,6 +1348,20 @@ export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesR
         return { ...record, generation: loadJson(genAbs) };
       }
       return { ...record, generation: null };
+    },
+    review: async ({ planningFile: callPlanningFile, lpFile: callLpFile } = {}) => {
+      const runOutRel = path.join(outDir, "review-run.json");
+      const runOutAbs = path.join(root, runOutRel);
+      removeIfExists(runOutAbs);
+      const effPlanningFile = callPlanningFile ?? planningFile;
+      if (!effPlanningFile) return { status: "error", reason: "レビューには企画入力が必要だが、 planningFile が指定されていない" };
+      const ran = await textRunner([
+        path.join(here, "review-page.mjs"), "--planning", effPlanningFile, "--lp", callLpFile ?? path.join(path.dirname(generationFile), "lp.html"), "--image-plan", path.join(path.dirname(generationFile), "image-plan.json"), "--out", path.join(outDir, "review.json"), "--run-out", runOutRel,
+      ]);
+      if (!existsSync(runOutAbs)) {
+        return { ...childErrorResult("review", ran.exitCode), verdict: null, findings: [] };
+      }
+      return loadJson(runOutAbs);
     },
     images: async ({ generationFile: genFile, factsFile: factsF, specPlan }) => {
       const runOutAbs = resolveRoot(root, imgRunRel);

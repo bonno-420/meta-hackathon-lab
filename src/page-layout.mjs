@@ -185,7 +185,12 @@ ${body}</main>
     mapGroups.hero.push({ block: "hero-photo", carries: { specId: heroDesign.id, basis: spec.basis ?? (heroDesign.appealId ? { appealId: heroDesign.appealId } : null) }, purpose: heroDesign.purpose });
   }
   if (appeals.length > 0) {
-    mapGroups.title.push({ block: "title", carries: { appealId: appeals[0].id }, note: "the lead appeal's headline slot (placeholder text at this stage)" });
+    // The title is the job itself, not a condition: a page whose
+    // headline is a wage restatement does not read as a job posting
+    // (the user's verdict on run25, 2026-11-04). The assembly places
+    // the work-content sentence here; the lead appeal stays recorded
+    // on the entry so coverage accounting is unchanged.
+    mapGroups.title.push({ block: "title", carries: { workContent: true, appealId: appeals[0].id }, note: "the job itself: the work-content sentence is the headline (placeholder text at this stage)" });
   }
   for (const key of firstCheckKeys) {
     mapGroups.cards.push({ block: "condition-card", carries: { factKey: key, appealId: appealByKey.get(key) ?? null } });
@@ -229,7 +234,7 @@ ${body}</main>
         : null,
       personaBasis: {
         audience: planning?.audience ?? null,
-        decisionOrder: lpDesign.blockOrder.map((g) => ({ hero: "place impression (hero)", title: "the offer (lead appeal, title)", cards: "first checks (condition cards)", rows: "appeals in order (explanatory rows)", details: "remaining facts and appeals (details)", cta: "apply (cta)" }[g])),
+        decisionOrder: lpDesign.blockOrder.map((g) => ({ hero: "place impression (hero)", title: "the job itself (work content, title)", cards: "first checks (condition cards)", rows: "appeals in order (explanatory rows)", details: "remaining facts and appeals (details)", cta: "apply (cta)" }[g])),
       },
     },
     design: lpDesign,

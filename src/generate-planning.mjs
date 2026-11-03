@@ -15,7 +15,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { MODEL, BASE_URL, MAX_TOKENS, RATES_KNOWN, checkGenerationInput, checkGrounding } from "./generate.mjs";
 import { intentFromPlanning, sha256Text } from "./planning.mjs";
 
-export const PLANNING_PROMPT_VERSION = "lp-generate-v5-planning";
+export const PLANNING_PROMPT_VERSION = "lp-generate-v6-planning";
 
 // Planning-path messages. The materials are the approved FACTs AND
 // the original posting's lines: items the FACT schema does not carry
@@ -45,6 +45,14 @@ export function buildPlanningGenerationMessages(facts, original, planning, inten
     ...(workLine ? [`- Write a sentence stating the work content from the original line ${workLine.id} (what the work itself is), citing ${workLine.id}.`] : []),
     "- Also cover the stated conditions. Order the sentences in the appeals' order, with the work content early.",
     "Voice:",
+    // The review finding wired in (loop-016 persona reviews; spec
+    // inventory #22, recorded as unfulfilled through run25): the
+    // sentences were bare restatements of the facts ("XはYです"),
+    // so the appeals never worked. A finding changes nothing until
+    // it reaches the production path — this rule is that wiring
+    // (the user's learning-flow doctrine, 2026-11-03/04).
+    "- A sentence that only restates a fact does not carry an appeal. For every appeal, state the fact AND what it means for the reader described in the audience, in the recruiter's voice. The meaning must come only from the fact itself and the appeal's framing: never add a new fact, condition, benefit, or promise that the materials do not state.",
+    "- The work-content sentence is the page's headline. State plainly what the job is, so a reader knows what job this posting is for from that sentence alone.",
     ...(intent?.voice?.rules ?? []).map((r) => `- ${r}`),
     `- Audience: ${planning?.audience ?? ""}`,
     "Appeals to carry (id / text / factKeys / sourceLines):",

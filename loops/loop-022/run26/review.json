@@ -1,0 +1,89 @@
+{
+  "verdict": "pass",
+  "findings": [],
+  "outline": [
+    {
+      "kind": "lp-hero",
+      "text": "1,350円 07:00〜16:00 15,000円",
+      "chips": [
+        "1,350円",
+        "07:00〜16:00",
+        "15,000円"
+      ],
+      "images": [
+        {
+          "file": "hero.webp",
+          "shows": null
+        }
+      ]
+    },
+    {
+      "kind": "title-block",
+      "text": "物流倉庫での仕分け・検品作業のお仕事です。",
+      "chips": [],
+      "images": []
+    },
+    {
+      "kind": "cards",
+      "text": "時給 1,350円 時給は1,350円です。時給を明示していますので、条件をご確認のうえご検討ください。 勤務時間 07:00〜16:00 勤務時間は07:00〜16:00（休憩60分）です。早朝から夕方までの勤務の形が合う方は、ご自身の生活リズムに合わせてご検討ください。 交通費上限 15,000円",
+      "chips": [],
+      "images": []
+    },
+    {
+      "kind": "explain-row",
+      "text": "勤務地は愛知県豊橋市内の物流倉庫です。豊橋市内へ通える範囲の方は勤務地をご確認のうえご検討ください。",
+      "chips": [],
+      "images": [
+        {
+          "file": "section-work.webp",
+          "shows": null
+        }
+      ]
+    },
+    {
+      "kind": "explain-row",
+      "text": "休日は土日祝日休みです。土日祝日を休みたいとお考えの方は、こちらの休日設定をご確認ください。",
+      "chips": [],
+      "images": [
+        {
+          "file": "appeal-A3.webp",
+          "shows": null
+        }
+      ]
+    },
+    {
+      "kind": "explain-row",
+      "text": "交通費は実費支給（月上限15,000円）です。豊橋市内へ通える範囲で通勤をご検討の方は、こちらの支給条件をご確認ください。",
+      "chips": [],
+      "images": [
+        {
+          "file": "appeal-A4.webp",
+          "shows": null
+        }
+      ]
+    },
+    {
+      "kind": "explain-row",
+      "text": "応募資格は未経験可です。未経験からご応募いただけますのでご検討ください。",
+      "chips": [],
+      "images": [
+        {
+          "file": "appeal-A5.webp",
+          "shows": null
+        }
+      ]
+    },
+    {
+      "kind": "details",
+      "text": "雇用形態は有期契約社員で、契約期間は3か月です。",
+      "chips": [],
+      "images": []
+    },
+    {
+      "kind": "cta",
+      "text": "応募する",
+      "chips": [],
+      "images": []
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "status": "reviewed",
+  "verdict": "pass",
+  "findings": [],
+  "apiCalled": true,
+  "model": "meta-models/muse-spark-open-1026",
+  "requestedModel": "meta-models/muse-spark-open-1026",
+  "promptVersion": "lp-review-v1",
+  "startedAt": "2026-11-03T22:13:41.416Z",
+  "finishedAt": "2026-11-03T22:13:55.230Z",
+  "durationMs": 13814,
+  "usage": {
+    "prompt_tokens": 1176,
+    "completion_tokens": 4549,
+    "total_tokens": 5725,
+    "prompt_tokens_details": {
+      "audio_tokens": 0,
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": 3358,
+      "audio_tokens": 0,
+      "reasoning_tokens": 4529,
+      "rejected_prediction_tokens": 4979
+    }
+  },
+  "costUsd": null,
+  "costNote": "算出値は未記録（レビューの単価計算は生成と別に突合が必要）",
+  "outlineBlocks": 9
+}

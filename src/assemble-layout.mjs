@@ -49,6 +49,16 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
   const appeals = planning?.appeals ?? [];
   const { byAppeal } = matchAppealSentences(generation, appeals);
   const appealCoverage = appeals.map((a) => ({ appealId: a.id, sentenceIdxs: byAppeal.get(a.id) ?? [] }));
+  // The work-content sentence: it cites an original line, carries no
+  // FACT key, and its line is claimed by no appeal. It is the page's
+  // headline (the job itself), placed by the title block.
+  const appealLines = new Set(appeals.flatMap((a) => a?.sourceLines ?? []));
+  const workIdx = sentences.findIndex((s) => (s?.factKeys ?? []).length === 0 && (s?.sourceLines ?? []).length > 0 && (s?.sourceLines ?? []).some((l) => !appealLines.has(l)));
+  // Appeals that have a photo band: their sentences belong to the
+  // band, not to a condition card (whichever comes first in the
+  // block order, a card must not take the band's text and leave the
+  // band mute — run25's transport band, 2026-11-04).
+  const bandAppealIds = new Set((Array.isArray(layout?.messageMap) ? layout.messageMap : []).filter((b) => b?.block === "photo-band" && b?.carries?.basis?.appealId).map((b) => b.carries.basis.appealId));
   const factByKey = new Map((facts?.items ?? []).map((i) => [i.key, i]));
   const existing = new Set();
   const skipped = [];
@@ -84,7 +94,7 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
       const item = factByKey.get(carries.factKey);
       const label = (layout?.language === "en" ? FACT_LABEL_EN : FACT_LABEL)[carries.factKey] ?? carries.factKey ?? "";
       const value = item && item.status === "stated" ? item.value : "";
-      cardBuffer.push(`<div class="card"><div class="card-label">${esc(label)}</div><div class="card-value">${esc(value)}</div>${carries.appealId ? appealSentences(carries.appealId) : ""}</div>`);
+      cardBuffer.push(`<div class="card"><div class="card-label">${esc(label)}</div><div class="card-value">${esc(value)}</div>${carries.appealId && !bandAppealIds.has(carries.appealId) ? appealSentences(carries.appealId) : ""}</div>`);
       continue;
     }
     flushCards();
@@ -98,11 +108,18 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
         placedFiles.push(hero.file);
       }
     } else if (block.block === "title") {
-      const inner = carries.appealId ? appealSentences(carries.appealId) : "";
+      let inner = "";
+      if (carries.workContent && workIdx >= 0) inner = sentenceHtml(workIdx);
+      if (!inner && carries.appealId) inner = appealSentences(carries.appealId);
       if (inner) body += `<section class="title-block">${inner}</section>\n`;
     } else if (block.block === "photo-band") {
       const img = carries.specId ? imgById.get(carries.specId) : null;
-      const text = carries.basis?.appealId ? appealSentences(carries.basis.appealId) : "";
+      let text = carries.basis?.appealId ? appealSentences(carries.basis.appealId) : "";
+      if (!text && carries.basis?.factKey) {
+        sentences.forEach((s, idx) => {
+          if ((s?.factKeys ?? []).includes(carries.basis.factKey)) text += sentenceHtml(idx);
+        });
+      }
       const fig = img && existing.has(img.id) ? `<img class="inline-photo" src="${esc(srcFor(img))}" alt="">` : "";
       if (img && existing.has(img.id)) placedFiles.push(img.file);
       // A band whose sentences were claimed by a condition card

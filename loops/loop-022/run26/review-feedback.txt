@@ -1,0 +1,2 @@
+レビュー（読み手ペルソナ／クライアント審査）の所見。前回の文章は次の点で不合格だった。事実は変えず、構成と訴求を直すこと:
+- [job-first] block 1 (lp-hero) headline '1,350円 07:00〜16:00 15,000円': Make the work the headline at the top by moving/repeating the existing job title from block 2 ('物流倉庫での仕分け・検品作業のお仕事です') into the hero as the main headline, keeping the current pay/time/transport as chips/sub-text; do not add new facts

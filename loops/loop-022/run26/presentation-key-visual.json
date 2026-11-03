@@ -1,0 +1,349 @@
+{
+  "checkpoint": "key-visual",
+  "presented": [
+    {
+      "kind": "image",
+      "file": "loops/loop-022/run26/lp-finished-image.png",
+      "sha256": "b56649e4b0e507e4cfffdcf3ba0aa700ab1a3339d813348e93bb7c896f40282c"
+    }
+  ],
+  "layout": {
+    "kind": "lp-finished-image",
+    "language": "ja",
+    "audience": "早朝から夕方までの勤務の形が合う人／土日祝日を休みたい人／豊橋市内へ通える範囲の人",
+    "form": {
+      "derivedFrom": "reader persona: the planning's audience, its first checks, and the appeals in order",
+      "pattern": {
+        "id": "LIB-PAT-001",
+        "composition": [
+          "導入: 対象層への呼びかけ",
+          "条件: 勤務条件の提示",
+          "働く場面: 仕事の様子の描写",
+          "締め: 見学・応募への誘い"
+        ],
+        "source": "library/catalog-v1.json (approved 2026-10-29)"
+      },
+      "personaBasis": {
+        "audience": "早朝から夕方までの勤務の形が合う人／土日祝日を休みたい人／豊橋市内へ通える範囲の人",
+        "decisionOrder": [
+          "place impression (hero)",
+          "the job itself (work content, title)",
+          "first checks (condition cards)",
+          "appeals in order (explanatory rows)",
+          "remaining facts and appeals (details)",
+          "apply (cta)"
+        ]
+      }
+    },
+    "design": {
+      "version": "lp-design-v1",
+      "patternId": "P-COND",
+      "scores": {
+        "P-COND": 3,
+        "P-WORK": 0,
+        "P-LIFE": 1
+      },
+      "signals": [
+        "A1: 第一確認の事実を持つ訴求（条件）",
+        "A2: 第一確認の事実を持つ訴求（条件）",
+        "A3: 生活適合の訴求",
+        "A4: 第一確認の事実を持つ訴求（条件）"
+      ],
+      "rationale": "訴求と第一確認の信号から P-COND を選択（条件 3 / 仕事 0 / 生活 1）。LIB-PAT-001（導入→条件→働く場面→締め）: 第一確認の条件を先に置く",
+      "blockOrder": [
+        "hero",
+        "title",
+        "cards",
+        "rows",
+        "details",
+        "cta"
+      ],
+      "palette": {
+        "titleBg": "#173550",
+        "accent": "#f2762e",
+        "chipBg": "#eef3f8"
+      },
+      "paletteBasis": "パターンに紐づくトークン（候補。市場のリサーチ裏付けはなく、候補のまま記録する）",
+      "basis": "LIB-PAT-001（導入→条件→働く場面→締め）: 第一確認の条件を先に置く"
+    },
+    "anatomy": [
+      "hero photograph",
+      "title block (placeholder text)",
+      "condition cards x3 (planning firstCheckKeys)",
+      "explanatory image rows x4 (small insets)",
+      "detail blocks (placeholder text)",
+      "call to action"
+    ],
+    "messageMap": [
+      {
+        "block": "hero-photo",
+        "carries": {
+          "specId": "key-visual",
+          "basis": {
+            "appealId": "A2"
+          }
+        },
+        "purpose": "07:00〜16:00の勤務時間（休憩60分）"
+      },
+      {
+        "block": "title",
+        "carries": {
+          "workContent": true,
+          "appealId": "A1"
+        },
+        "note": "the job itself: the work-content sentence is the headline (placeholder text at this stage)"
+      },
+      {
+        "block": "condition-card",
+        "carries": {
+          "factKey": "salaryHourly",
+          "appealId": "A1"
+        }
+      },
+      {
+        "block": "condition-card",
+        "carries": {
+          "factKey": "workHours",
+          "appealId": "A2"
+        }
+      },
+      {
+        "block": "condition-card",
+        "carries": {
+          "factKey": "transportCap",
+          "appealId": "A4"
+        }
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "section-work",
+          "basis": {
+            "factKey": "workLocation"
+          }
+        },
+        "purpose": "workLocation"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "appeal-A3",
+          "basis": {
+            "appealId": "A3"
+          }
+        },
+        "purpose": "土日祝日休み"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "appeal-A4",
+          "basis": {
+            "appealId": "A4"
+          }
+        },
+        "purpose": "交通費は実費支給、月上限15,000円"
+      },
+      {
+        "block": "photo-band",
+        "carries": {
+          "specId": "appeal-A5",
+          "basis": {
+            "appealId": "A5"
+          }
+        },
+        "purpose": "未経験可"
+      },
+      {
+        "block": "details",
+        "carries": {
+          "factKeys": [
+            "breakMinutes",
+            "transport"
+          ],
+          "appealIds": [
+            "A3",
+            "A5"
+          ]
+        },
+        "note": "appeal facts not shown as first-check cards, and line-grounded appeals with no fact key; carried by the detail blocks and the copy"
+      },
+      {
+        "block": "cta",
+        "carries": {
+          "action": true
+        }
+      }
+    ],
+    "messageGaps": [],
+    "photos": [
+      {
+        "id": "key-visual",
+        "role": "key-visual",
+        "file": "loops/loop-022/run26/images/kv-photos/key-visual.webp"
+      },
+      {
+        "id": "section-work",
+        "role": "section",
+        "file": "loops/loop-022/run26/images/kv-photos/section-work.webp"
+      },
+      {
+        "id": "appeal-A3",
+        "role": "section",
+        "file": "loops/loop-022/run26/images/kv-photos/appeal-A3.webp"
+      },
+      {
+        "id": "appeal-A4",
+        "role": "section",
+        "file": "loops/loop-022/run26/images/kv-photos/appeal-A4.webp"
+      },
+      {
+        "id": "appeal-A5",
+        "role": "section",
+        "file": "loops/loop-022/run26/images/kv-photos/appeal-A5.webp"
+      }
+    ],
+    "imageDesign": [
+      {
+        "id": "key-visual",
+        "placement": "hero",
+        "aspect": "5:3",
+        "heightPx": 288,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "07:00〜16:00の勤務時間（休憩60分）",
+        "appealId": "A2",
+        "subject": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning",
+        "depiction": "photorealistic",
+        "size": "large"
+      },
+      {
+        "id": "section-work",
+        "placement": "band",
+        "aspect": "13:6",
+        "heightPx": 78,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "workLocation",
+        "appealId": null,
+        "subject": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning",
+        "depiction": "photorealistic",
+        "size": "small"
+      },
+      {
+        "id": "appeal-A3",
+        "placement": "band",
+        "aspect": "4:3",
+        "heightPx": 127,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "土日祝日休み",
+        "appealId": "A3",
+        "subject": "A person enjoying a day off at home with family, relaxed weekend mood",
+        "depiction": "photorealistic",
+        "size": "small"
+      },
+      {
+        "id": "appeal-A4",
+        "placement": "band",
+        "aspect": "4:3",
+        "heightPx": 127,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "交通費は実費支給、月上限15,000円",
+        "appealId": "A4",
+        "subject": "A person walking to work along a quiet street in the morning, calm and unhurried",
+        "depiction": "photorealistic",
+        "size": "small"
+      },
+      {
+        "id": "appeal-A5",
+        "placement": "band",
+        "aspect": "4:3",
+        "heightPx": 127,
+        "fit": "cover",
+        "position": "center",
+        "purpose": "未経験可",
+        "appealId": "A5",
+        "subject": "A new worker being shown the task by a senior worker, both at a work table",
+        "depiction": "photorealistic",
+        "size": "small"
+      }
+    ],
+    "note": "LPの完成イメージ。文章はプレースホルダで、実文と実画像は後段で同じレイアウトの同じ場所に入る"
+  },
+  "checklist": [
+    {
+      "element": "key-visual",
+      "basis": "A2",
+      "description": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning",
+      "depiction": "photorealistic",
+      "placement": "hero/large",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    },
+    {
+      "element": "section-work",
+      "basis": "spec",
+      "description": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning",
+      "depiction": "photorealistic",
+      "placement": "inline/small",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    },
+    {
+      "element": "appeal-A3",
+      "basis": "A3",
+      "description": "A person enjoying a day off at home with family, relaxed weekend mood",
+      "depiction": "photorealistic",
+      "placement": "inline/small",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    },
+    {
+      "element": "appeal-A4",
+      "basis": "A4",
+      "description": "A person walking to work along a quiet street in the morning, calm and unhurried",
+      "depiction": "photorealistic",
+      "placement": "inline/small",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    },
+    {
+      "element": "appeal-A5",
+      "basis": "A5",
+      "description": "A new worker being shown the task by a senior worker, both at a work table",
+      "depiction": "photorealistic",
+      "placement": "inline/small",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    }
+  ],
+  "holds": [],
+  "judgement": {
+    "result": null,
+    "confirmer": null,
+    "confirmedAt": null,
+    "corrections": []
+  }
+}
