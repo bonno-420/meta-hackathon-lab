@@ -41,3 +41,22 @@ Rules for the remake:
 - Transitions connect the segments (varied, meaningful — per the staging requirements above).
 - Each material carries its designation: REAL SCREEN (as-is, own segment) or DISPLAY (recomposable). The public preview is DISPLAY.
 - Text-overlap detection stays on as a production/audit check; with this composition it should pass by construction.
+
+## Script — content level (coordinator, 2026-11-03)
+
+Content is fixed here; fine expression (exact staging, motion, transitions) is delegated to UltraFlame. Narration texts are the audited final script (design v1, F1/F2 applied) — wording changes go back through design → audit.
+
+1. **Opening (title / infographic)** — Disclosure + definition.
+   "The concept predates the hackathon; everything built for it was created during the event. This is Loopwright, a platform that improves AI development through records, audits, and human judgement."
+2. **Workflow overview (infographic)** — The five steps, then into the real screen.
+   "Loopwright runs an editorial workflow for job postings — fictional ones only. The source is pinned by hash. Facts are extracted with a Meta model, cross-checked against the source, approved by a human, turned into page copy, and then re-verified by an independent check. Every step is recorded."
+3. **REAL SCREEN segment** — The time-lapse capture: posting in → extraction and cross-check → human approval (operated by the user) → generation → re-verification. Labeled as a sped-up recording. No overlays on the footage.
+   "Here is a passing run. The extractor pulls the facts: employer, location, pay, hours — each tied to a source line. Anything the source does not state stays unstated: contract renewal and housing come out as null, not guesses. I approve the fact set — approval is a human act here, and it expires if the source changes. Generation writes nine sentences, each traceable to an approved fact. Re-verification then checks every sentence against its source lines: pass — which permits a preview inside the demo, never publication."
+4. **The stop (infographic)** — Source ¥1,500 vs summary ¥1,700; the stop, stated plainly.
+   "Now the same workflow, with one change: the summary claims an hourly wage of 1,700 yen, while the source says 1,500. The cross-check catches the contradiction — and the workflow stops. No approval, no generation, no preview. A system that writes recruiting copy cannot be allowed to smooth over a wrong wage; stopping is the feature."
+5. **An audit changed the output (infographic, before → after)** — Unstated values: string/empty → null under prompt v1.1.
+   "The process itself is also audited. Early extraction runs represented unstated items inconsistently — sometimes a string, sometimes empty. An audit flagged it; a one-factor experiment fixed the prompt, and the records show the before and after. Findings like this go into a learnings ledger, with the fix recorded next to the finding. The platform does not improve itself in secret — every change is a recorded, reviewed experiment."
+6. **Records and experiments (infographic)** — The loop list (12 folders, numbered to Loop 16), the ledger; Baseten series shown as separate experiments.
+   "Every loop is recorded in the repository — inputs, models, prompts, outputs, audit verdicts, costs. Later loops tested a pattern library and reader personas, and a separate verification series ran on Baseten with Muse Spark Open. Those are experiments, kept distinct from the platform — and disclosed as such."
+7. **Close (card)** — One line + repository and preview links + TTS credit.
+   "Loopwright: AI does the work, records make it checkable, and humans keep the judgement. The repository and the recorded preview are public — links in the description."
