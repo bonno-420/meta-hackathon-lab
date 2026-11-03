@@ -20,3 +20,4 @@
 | 14 | 本体の完全性 修正の実施（①→②→③） | `loops/loop-014/run-record.md`、`docs/design/core-integrity-fix-design-v1.md`（設計監査・再監査いずれも合格、2026-10-31） |
 | 15 | Baseten 検証ループの実施 | `loops/loop-015/run-record.md`（パイロットとして終了、2026-11-01。完成LPのHTML・画像は記録対象外としローカルに残す） |
 | 16 | Baseten 検証ループ 拡張版（6ケース英語版） | `loops/loop-016/run-record.md`、`loops/loop-016/insights-consolidation-by-line-20261102.md`（2026-11-02。完成LPのHTML・画像は記録対象外としローカルに残す） |
+| 18 | LP フルパイプライン化の実施（画像生成 → 組み立て → 完成照合） | `loops/loop-018/run-record.md`（2026-11-03。監査待ちのため未コミット） |

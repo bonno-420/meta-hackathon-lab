@@ -35,6 +35,10 @@ function normalizePath(p) {
   return p ? String(p).split(path.sep).join("/") : p;
 }
 
+function resolveRoot(root, p) {
+  return path.isAbsolute(p) ? p : path.join(root, p);
+}
+
 function itemsByKey(facts) {
   return new Map((facts && Array.isArray(facts.items) ? facts.items : []).map((i) => [i.key, i]));
 }
@@ -97,6 +101,133 @@ export function checkApprovalStage({ root, originalFile, factsFile, approvalFile
   };
 }
 
+// Assemble the complete LP page: the generation sentences verbatim
+// (no editing) plus the existing section images. Images whose files do
+// not exist are left out and reported as skipped; the completion check
+// decides pass/fail. Image meaning is out of scope and is never judged
+// here (only existence and reference are handled).
+export function assembleLP({ root, generation, images, lpDir }) {
+  const sentences = generation && Array.isArray(generation.sentences) ? generation.sentences : [];
+  const existing = new Set();
+  const skipped = [];
+  for (const img of images ?? []) {
+    let ok = false;
+    try { ok = existsSync(resolveRoot(root, img.file)); } catch { ok = false; }
+    if (ok) existing.add(img.id);
+    else skipped.push(img.file);
+  }
+  const esc = (s) => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+  const lpDirAbs = resolveRoot(root, lpDir);
+  const srcFor = (img) => path.relative(lpDirAbs, resolveRoot(root, img.file)).split(path.sep).join("/");
+  const placed = [];
+  let body = "";
+  const hero = (images ?? []).find((i) => i.id === "hero");
+  if (hero && existing.has(hero.id)) {
+    body += `<section class="lp-hero"><img src="${esc(srcFor(hero))}" alt="hero"></section>\n`;
+    placed.push(hero.file);
+  }
+  sentences.forEach((s, idx) => {
+    const text = s && typeof s.text === "string" ? s.text : "";
+    body += `<p class="lp-sentence" data-sentence="${idx}">${esc(text)}</p>\n`;
+    const lines = s && Array.isArray(s.sourceLines) ? s.sourceLines : [];
+    for (const img of images ?? []) {
+      if (img.id === "hero" || placed.includes(img.file)) continue;
+      if (img.line != null && lines.includes(img.line)) {
+        body += `<figure class="lp-image"><img src="${esc(srcFor(img))}" alt="${esc(img.id)}"></figure>\n`;
+        placed.push(img.file);
+      }
+    }
+  });
+  for (const img of images ?? []) {
+    if (existing.has(img.id) && !placed.includes(img.file)) {
+      body += `<figure class="lp-image"><img src="${esc(srcFor(img))}" alt="${esc(img.id)}"></figure>\n`;
+      placed.push(img.file);
+    }
+  }
+  const html = `<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FICT-J01 — 完成LP（デモ）</title>
+<style>body{font-family:sans-serif;margin:2rem;line-height:1.7;color:#222;max-width:60rem}.lp-hero img,.lp-image img{max-width:100%;height:auto}</style>
+</head>
+<body>
+<main>
+${body}</main>
+</body>
+</html>
+`;
+  return { html, referenced: [...placed], skipped };
+}
+
+// Completion check (design: C1–C4). Mechanical containment only:
+// sentences present verbatim, images exist and are referenced, the page
+// exists and contains both text and image, grounding re-run passes.
+// Image meaning is out of scope and is never judged here (N3: the note
+// below states this for the record reader).
+export function checkCompletion({ root, generation, imageFiles, lpFile, grounding }) {
+  const checks = [];
+  let lpHtml = null;
+  try { lpHtml = readFileSync(resolveRoot(root, lpFile), "utf8"); }
+  catch { lpHtml = null; }
+  const sentences = generation && Array.isArray(generation.sentences) ? generation.sentences : [];
+  const missingSentences = sentences.filter((s) => typeof s?.text !== "string" || s.text.length === 0 || lpHtml === null || !lpHtml.includes(s.text));
+  const c1Pass = sentences.length > 0 && missingSentences.length === 0;
+  checks.push({
+    id: "C1",
+    pass: c1Pass,
+    detail: c1Pass
+      ? `生成文 ${sentences.length} 件がすべてページにそのまま入っている`
+      : `ページに欠けている文が ${missingSentences.length} 件ある（生成文 ${sentences.length} 件中）`,
+  });
+  const files = imageFiles ?? [];
+  const missingFiles = [];
+  const unreferenced = [];
+  const lpDirAbs = path.dirname(resolveRoot(root, lpFile));
+  for (const f of files) {
+    let exists = false;
+    try { exists = existsSync(resolveRoot(root, f)); } catch { exists = false; }
+    if (!exists) { missingFiles.push(f); continue; }
+    const src = path.relative(lpDirAbs, resolveRoot(root, f)).split(path.sep).join("/");
+    if (lpHtml === null || !lpHtml.includes(src)) unreferenced.push(f);
+  }
+  const c2Pass = files.length > 0 && missingFiles.length === 0 && unreferenced.length === 0;
+  checks.push({
+    id: "C2",
+    pass: c2Pass,
+    detail: c2Pass
+      ? `画像 ${files.length} 件がすべて実在し、ページから参照されている`
+      : `画像の欠け: 存在しない ${missingFiles.length} 件、参照されていない ${unreferenced.length} 件（記録 ${files.length} 件中）`,
+  });
+  const hasSentence = lpHtml !== null && sentences.some((s) => typeof s?.text === "string" && s.text.length > 0 && lpHtml.includes(s.text));
+  const hasImage = lpHtml !== null && files.some((f) => {
+    const src = path.relative(lpDirAbs, resolveRoot(root, f)).split(path.sep).join("/");
+    return lpHtml.includes(src);
+  });
+  const c3Pass = lpHtml !== null && hasSentence && hasImage;
+  checks.push({
+    id: "C3",
+    pass: c3Pass,
+    detail: c3Pass ? "LP のページが存在し、文と画像の両方を含んでいる" : `ページの存在または両含有を満たさない（ページ: ${lpHtml === null ? "なし" : "あり"}、文の含有: ${hasSentence ? "あり" : "なし"}、画像の含有: ${hasImage ? "あり" : "なし"}）`,
+  });
+  const c4Pass = grounding?.pass === true;
+  checks.push({
+    id: "C4",
+    pass: c4Pass,
+    detail: c4Pass ? "根拠検査の再実行が pass である" : "根拠検査の再実行が pass ではない",
+  });
+  const failures = checks.filter((c) => !c.pass).map((c) => ({ check: c.id, detail: c.detail }));
+  const pass = checks.every((c) => c.pass);
+  return {
+    pass,
+    checks,
+    failures,
+    reason: pass ? null : `未完成のため止める（${failures.map((f) => f.check).join("、")}）: ${failures[0].detail}`,
+    note: "画像の意味は範囲外である。人間の確認と完成の判定は文章と機械的な含有を対象とし、画像が内容として適切かは今回の判定に含めない。",
+  };
+}
+
 function stageNotExecuted(reason) {
   return { executed: false, reason };
 }
@@ -112,11 +243,21 @@ export async function runDemo(options, deps = {}) {
   const factsFile = options.factsFile ?? "src/facts/FICT-J01-facts-v1.json";
   const approvalFile = options.approvalFile ?? "src/facts/FICT-J01-facts-v1.approval.json";
   const generationFile = options.generationFile ?? "loops/loop-010/generated-lp-v1.json";
+  const imagesDir = normalizePath(options.imagesDir ?? path.join(path.dirname(generationFile), "images"));
+  const lpFile = normalizePath(options.lpFile ?? path.join(path.dirname(generationFile), "lp.html"));
+  const imagesRunFile = normalizePath(options.imagesRunFile ?? path.join(path.dirname(generationFile), "images-run.json"));
   const startedAt = new Date().toISOString();
   const t0 = performance.now();
 
   const extract = deps.extract ?? (async () => { throw new Error("no extraction executor wired"); });
   const generate = deps.generate ?? (async () => { throw new Error("no generation executor wired"); });
+  const images = deps.images ?? (async () => { throw new Error("no image executor wired"); });
+  const assemble = deps.assemble ?? (async ({ root, generation, images, lpFile }) => {
+    const built = assembleLP({ root, generation, images, lpDir: path.dirname(lpFile) });
+    mkdirSync(path.dirname(resolveRoot(root, lpFile)), { recursive: true });
+    writeFileSync(resolveRoot(root, lpFile), built.html, "utf8");
+    return { file: lpFile, referenced: built.referenced, skipped: built.skipped };
+  });
   const verify = deps.verify ?? ((args) => runVerification(args));
   const preview = deps.preview ?? (({ generation, verification, facts, e02, repoUrl }) => buildPreview({ generation, verification, facts, e02, repoUrl }));
 
@@ -150,6 +291,8 @@ export async function runDemo(options, deps = {}) {
     contradictions: e02raw ? (e02raw.contradictions ?? []) : [],
     approval: stageNotExecuted("E02 は照合で停止したため承認を実行しない（矛盾で停止した対象に承認記録を作らない、G-INV-3）"),
     generation: stageNotExecuted("E02 は照合で停止したため生成を実行しない"),
+    images: stageNotExecuted("E02 は照合で停止したため画像生成を実行しない"),
+    lpAssembly: stageNotExecuted("E02 は照合で停止したため LP の組み立てを実行しない"),
     verification: stageNotExecuted("E02 は照合で停止したため再検証を実行しない"),
     preview: stageNotExecuted("E02 は照合で停止したためプレビューを実行しない"),
   };
@@ -222,7 +365,46 @@ export async function runDemo(options, deps = {}) {
     stages.generation = stageNotExecuted("前段で停止したため、生成を実行しない");
   }
 
-  // Stage 5 (re-verification): mechanical checks by the tool itself.
+  // Stage 5 (images): typed image generation for the LP. A failure
+  // stops the run; leftover files are never treated as success.
+  let imageRun = null;
+  if (!stoppedAt) {
+    imageRun = await images({ root, generation: generationRun.generation, generationFile, factsFile, imagesDir, imagesRunFile });
+    stages.images = {
+      executed: true,
+      status: imageRun ? (imageRun.status ?? null) : null,
+      model: imageRun ? (imageRun.model ?? null) : null,
+      images: imageRun ? (imageRun.images ?? []) : [],
+      costUsd: imageRun ? (imageRun.costUsd ?? null) : null,
+      costNote: imageRun ? (imageRun.costNote ?? null) : null,
+      reason: imageRun ? (imageRun.reason ?? null) : null,
+    };
+    if (!imageRun || imageRun.status !== "generated") {
+      stop("images", imageRun && imageRun.reason ? imageRun.reason : "画像生成が完了しなかったため、後段を実行しない");
+    }
+  } else {
+    stages.images = stageNotExecuted("前段で停止したため、画像生成を実行しない");
+  }
+
+  // Stage 6 (LP assembly): combine the generation sentences (verbatim)
+  // with the existing image files into the complete LP page. Missing
+  // files are left out and reported; the completion check decides.
+  let assembly = null;
+  if (!stoppedAt) {
+    assembly = await assemble({ root, generation: generationRun.generation, images: imageRun.images ?? [], imagesDir, lpFile });
+    stages.lpAssembly = {
+      executed: true,
+      file: assembly ? (assembly.file ?? lpFile) : lpFile,
+      referenced: assembly ? (assembly.referenced ?? []) : [],
+      skipped: assembly ? (assembly.skipped ?? []) : [],
+    };
+  } else {
+    stages.lpAssembly = stageNotExecuted("前段で停止したため、LP の組み立てを実行しない");
+  }
+
+  // Stage 7 (re-verification): mechanical checks by the tool itself,
+  // plus the completion check (C1–C4) recorded here (design M2 keeps
+  // verify.mjs unchanged; verify's own judgement is untouched).
   let verification = null;
   if (!stoppedAt) {
     verification = verify({
@@ -239,9 +421,22 @@ export async function runDemo(options, deps = {}) {
       mechanicalPass: verification.mechanicalPass,
       humanConfirmation: verification.humanConfirmation,
       verdict: verification.verdict,
+      completion: null,
     };
     if (verification.verdict.status === "fail") {
       stop("verification", verification.verdict.reason ?? "再検証が不合格のため、後段を実行しない");
+    } else {
+      const completion = checkCompletion({
+        root,
+        generation: generationRun.generation,
+        imageFiles: (imageRun.images ?? []).map((i) => i.file),
+        lpFile,
+        grounding: verification.grounding,
+      });
+      stages.verification.completion = completion;
+      if (!completion.pass) {
+        stop("verification", completion.reason);
+      }
     }
   } else {
     stages.verification = stageNotExecuted("前段で停止したため、再検証を実行しない");
@@ -273,8 +468,10 @@ export async function runDemo(options, deps = {}) {
 
   const extractionCost = stages.extraction.costUsd;
   const generationCost = stages.generation && typeof stages.generation === "object" ? stages.generation.costUsd : null;
-  const costsKnown = typeof extractionCost === "number" && typeof generationCost === "number";
-  const totalCostUsd = costsKnown ? extractionCost + generationCost : null;
+  const imageCost = stages.images && typeof stages.images === "object" ? stages.images.costUsd : null;
+  const costsKnown = typeof extractionCost === "number" && typeof generationCost === "number" && typeof imageCost === "number";
+  const totalCostUsd = costsKnown ? extractionCost + generationCost + imageCost : null;
+  const imageCount = stages.images && Array.isArray(stages.images.images) ? stages.images.images.length : null;
 
   let status;
   if (stoppedAt) status = stoppedAt === "preview" ? "failed" : "stopped";
@@ -303,6 +500,8 @@ export async function runDemo(options, deps = {}) {
     artifacts: {
       generationFile: !stoppedAt || stages.generation.executed ? normalizePath(generationFile) : null,
       verificationFile: normalizePath(options.verificationFile ?? "loops/loop-010/verification-result.json"),
+      lpFile: !stoppedAt || (stages.lpAssembly && stages.lpAssembly.executed) ? normalizePath(lpFile) : null,
+      imagesRunFile: !stoppedAt || (stages.images && stages.images.executed) ? normalizePath(imagesRunFile) : null,
       preview: null,
     },
     costs: {
@@ -310,15 +509,17 @@ export async function runDemo(options, deps = {}) {
       currency: "USD",
       extractionCostUsd: extractionCost ?? null,
       generationCostUsd: generationCost ?? null,
+      imageCostUsd: imageCost ?? null,
       totalCostUsd,
       breakdown: [
         { stage: "抽出（工程1、ライブ）", costUsd: extractionCost ?? null, usage: stages.extraction.usage ?? null },
         { stage: "生成（工程3、ライブ）", costUsd: generationCost ?? null, usage: stages.generation && stages.generation.usage !== undefined ? stages.generation.usage : null },
+        { stage: "画像生成（muse-image-1.0、ライブ）", costUsd: imageCost ?? null, usage: null, note: typeof imageCost === "number" && typeof imageCount === "number" ? `画像 ${imageCount} 枚 × $0.01 の算出値。確定実費は dev.meta.ai Billing 実績との突合が必要` : "未記録（画像生成が実行されなかったため推定しない）" },
         { stage: "再検証・プレビュー生成", costUsd: 0, usage: null, note: "API を呼ばないため費用は発生しない" },
       ],
       note: totalCostUsd === null
-        ? "抽出と生成の算出値がそろわなかったため、合計は未記録（推定しない）。内訳の算出値は各道具の D4 単価による算出値で、確定実費は dev.meta.ai Billing 実績との突合が必要"
-        : "統合実行1回の費用は抽出と生成の算出値の合計。いずれも D4 単価による算出値で、確定実費は dev.meta.ai Billing 実績との突合が必要",
+        ? "抽出と生成と画像の算出値がそろわなかったため、合計は未記録（推定しない）。内訳の算出値は各道具の D4 単価による算出値で、確定実費は dev.meta.ai Billing 実績との突合が必要"
+        : "統合実行1回の費用は抽出と生成と画像の算出値の合計。いずれも D4 単価による算出値で、確定実費は dev.meta.ai Billing 実績との突合が必要",
     },
   };
 }
@@ -371,10 +572,12 @@ function childErrorResult(stage, exitCode) {
   };
 }
 
-export function liveDeps({ root, outDir, generationFile, run }) {
+export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesRunFile }) {
   const here = path.dirname(fileURLToPath(import.meta.url));
   const extractionOutDir = path.join(outDir, "extraction");
   const runner = run ?? runNode;
+  const imgDir = imagesDir ?? path.join(path.dirname(generationFile), "images");
+  const imgRunRel = imagesRunFile ?? path.join(outDir, "images-run.json");
   return {
     extract: async () => {
       const liveFile = path.join(root, extractionOutDir, "live-run.json");
@@ -425,6 +628,36 @@ export function liveDeps({ root, outDir, generationFile, run }) {
       }
       return { ...record, generation: null };
     },
+    images: async ({ generationFile: genFile, factsFile: factsF }) => {
+      const runOutAbs = resolveRoot(root, imgRunRel);
+      removeIfExists(runOutAbs);
+      const ran = await runner([path.join(here, "generate-images.mjs"), "--generation", genFile, "--facts", factsF, "--out-dir", imgDir, "--run-out", imgRunRel]);
+      if (ran.exitCode !== 0) {
+        return { ...childErrorResult("images", ran.exitCode), images: [] };
+      }
+      if (!existsSync(runOutAbs)) {
+        return {
+          ...childErrorResult("images", ran.exitCode),
+          status: "stale-output",
+          reason: `子プロセスは終了コード 0 で終わったが、実行記録ファイル ${normalizePath(imgRunRel)} が今回の実行で更新されなかったため、成功として扱わない`,
+          images: [],
+        };
+      }
+      const record = loadJson(runOutAbs);
+      if (record.status === "generated") {
+        const missing = (record.images ?? []).filter((i) => !existsSync(resolveRoot(root, i.file)));
+        if (missing.length > 0) {
+          return {
+            ...childErrorResult("images", ran.exitCode),
+            status: "stale-output",
+            reason: `画像の実行記録は generated だが、画像ファイル ${missing.length} 件が今回の実行で書かれていないため、成功として扱わない`,
+            images: record.images ?? [],
+          };
+        }
+        return { ...record, images: record.images ?? [] };
+      }
+      return { ...record, images: record.images ?? [] };
+    },
   };
 }
 
@@ -444,10 +677,13 @@ async function main() {
   const generationFile = argValue(argv, "--generation-out") ?? `${outDir.replaceAll("\\", "/")}/generated-lp-v1.json`;
   const verificationFile = `${outDir.replaceAll("\\", "/")}/verification-result.json`;
   const runResultFile = `${outDir.replaceAll("\\", "/")}/run-result.json`;
+  const imagesDir = argValue(argv, "--images-dir") ?? `${generationFile.replaceAll("\\", "/").split("/").slice(0, -1).join("/")}/images`;
+  const imagesRunFile = argValue(argv, "--images-run-out") ?? `${outDir.replaceAll("\\", "/")}/images-run.json`;
+  const lpFile = argValue(argv, "--lp-out") ?? `${generationFile.replaceAll("\\", "/").split("/").slice(0, -1).join("/")}/lp.html`;
 
   const result = await runDemo(
-    { root, originalFile, factsFile, approvalFile, generationFile, verificationFile, allowPreview: false },
-    liveDeps({ root, outDir, generationFile }),
+    { root, originalFile, factsFile, approvalFile, generationFile, verificationFile, imagesDir, lpFile, imagesRunFile, allowPreview: false },
+    liveDeps({ root, outDir, generationFile, imagesDir, imagesRunFile }),
   );
 
   mkdirSync(path.join(root, outDir), { recursive: true });
@@ -455,7 +691,7 @@ async function main() {
     writeFileSync(path.join(root, verificationFile), JSON.stringify(result.verification, null, 2) + "\n", "utf8");
   }
   const { generation, verification, previewHtml, ...record } = result;
-  writeFileSync(path.join(root, runResultFile), JSON.stringify({ ...record, generationFile, verificationFile }, null, 2) + "\n", "utf8");
+  writeFileSync(path.join(root, runResultFile), JSON.stringify({ ...record, generationFile, verificationFile, lpFile }, null, 2) + "\n", "utf8");
   console.log(JSON.stringify({
     status: result.status,
     stoppedAt: result.stoppedAt,

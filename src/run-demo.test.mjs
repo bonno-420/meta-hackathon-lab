@@ -10,7 +10,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildPreview, checkPreviewPairing, writePreview } from "./build-preview.mjs";
-import { checkApprovalStage, compareFactSets, liveDeps, runDemo } from "./run-demo.mjs";
+import { checkApprovalStage, compareFactSets, liveDeps, runDemo, assembleLP, checkCompletion } from "./run-demo.mjs";
 import { runVerification } from "./verify.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -69,6 +69,27 @@ function faithfulGenerate(counter) {
   };
 }
 
+// Faithful image stubs: create the listed files under dir and report
+// them, mirroring the real convention (count x $0.01).
+function faithfulImagesStub(dir, names = ["hero.png", "sec-L01.png"]) {
+  return async () => {
+    const files = names.map((n) => {
+      const p = path.join(dir, n);
+      writeFileSync(p, Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
+      return p;
+    });
+    return {
+      status: "generated",
+      model: "stub",
+      promptTemplate: "lp-image-v1-test",
+      images: files.map((f, i) => ({ id: i === 0 ? "hero" : "sec-L01", file: f, prompt: "test", line: i === 0 ? null : "L01" })),
+      usage: null,
+      costUsd: files.length * 0.01,
+      costNote: "stub",
+    };
+  };
+}
+
 // --- FACT comparison: textual granularity diffs are recorded but do not
 // stop the run; a substantive change does. ---
 const textualCandidate = clone(fixedFacts);
@@ -92,7 +113,13 @@ expect("demo-approval-stage-validity", approvalStage.validity.valid, true);
 // E02 stops at reconciliation and never reaches later stages. The
 // automatic run stops before preview while the verdict is pending. ---
 const counter1 = { calls: 0 };
-const run1 = await runDemo({ ...REAL, generationFile: "loops/loop-008/generated-lp-v1.json" }, { extract: async () => stubExtractOk(), generate: faithfulGenerate(counter1) });
+const lpTmp1 = mkdtempSync(path.join(tmpdir(), "run-demo-lp1-"));
+const imgTmp1 = mkdtempSync(path.join(tmpdir(), "run-demo-img1-"));
+const lpFile1 = path.join(lpTmp1, "lp.html");
+const run1 = await runDemo(
+  { ...REAL, generationFile: "loops/loop-008/generated-lp-v1.json", imagesDir: imgTmp1, lpFile: lpFile1 },
+  { extract: async () => stubExtractOk(), generate: faithfulGenerate(counter1), images: faithfulImagesStub(imgTmp1) },
+);
 expect("demo-e01-extraction-e01-verdict", run1.stages.extraction.e01.verdict, "一致（人間承認待ち）");
 expect("demo-e01-not-stopped", run1.stoppedAt, null);
 expect("demo-e01-approval-pass", run1.stages.approval.pass, true);
@@ -107,10 +134,14 @@ expect("demo-e02-verdict-stop", run1.e02.verdict, "停止（矛盾あり）");
 expect("demo-e02-contradiction-names-salary", run1.e02.contradictions.some((c) => String(c.factValue).includes("1,500") && String(c.summaryValue).includes("1,700")), true);
 expect("demo-e02-approval-not-executed", run1.e02.approval.executed, false);
 expect("demo-e02-generation-not-executed", run1.e02.generation.executed, false);
+expect("demo-e02-images-not-executed", run1.e02.images.executed, false);
+expect("demo-e02-lpAssembly-not-executed", run1.e02.lpAssembly.executed, false);
 expect("demo-e02-verification-not-executed", run1.e02.verification.executed, false);
 expect("demo-e02-preview-not-executed", run1.e02.preview.executed, false);
 expect("demo-costs-category-product", run1.costs.category, "製品実行");
-expect("demo-costs-total-known-from-stubs", run1.costs.totalCostUsd, 0);
+expect("demo-costs-total-known-from-stubs", run1.costs.totalCostUsd, 0.02);
+const imgBreak1 = run1.costs.breakdown.find((b) => String(b.stage).includes("画像生成"));
+expect("demo-costs-image-breakdown", imgBreak1 && imgBreak1.costUsd, 0.02);
 
 // --- Integration: with a completed human confirmation injected, the
 // verdict becomes pass, but the mechanical-stage run still generates no
@@ -122,10 +153,99 @@ const humanAllOk = {
   sentences: realGeneration.sentences.map((s, idx) => ({ sentence: idx, text: s.text, factKeys: s.factKeys, sourceLines: s.sourceLines, result: "対応あり", detail: null })),
 };
 const counter2 = { calls: 0 };
-const run2 = await runDemo({ ...REAL, generationFile: "loops/loop-008/generated-lp-v1.json", humanConfirmation: humanAllOk }, { extract: async () => stubExtractOk(), generate: faithfulGenerate(counter2) });
+const lpTmp2 = mkdtempSync(path.join(tmpdir(), "run-demo-lp2-"));
+const imgTmp2 = mkdtempSync(path.join(tmpdir(), "run-demo-img2-"));
+const lpFile2 = path.join(lpTmp2, "lp.html");
+const run2 = await runDemo(
+  { ...REAL, generationFile: "loops/loop-008/generated-lp-v1.json", imagesDir: imgTmp2, lpFile: lpFile2, humanConfirmation: humanAllOk },
+  { extract: async () => stubExtractOk(), generate: faithfulGenerate(counter2), images: faithfulImagesStub(imgTmp2) },
+);
 expect("demo-human-verdict-pass", run2.verification.verdict.status, "pass");
 expect("demo-human-status-pass", run2.status, "pass");
 expect("demo-human-preview-still-not-executed-in-mechanical-run", run2.stages.preview.executed, false);
+expect("demo-completion-pass", run2.stages.verification.completion.pass, true);
+expect("demo-completion-image-cost", run2.costs.imageCostUsd, 0.02);
+expect("demo-completion-total", run2.costs.totalCostUsd, 0.02);
+
+// --- T1: image generation failure stops the run before assembly; the
+// missing LP is never recorded as complete. ---
+const t1ImagesFail = async () => ({ status: "failed", reason: "画像生成に失敗した（stub）", model: "stub", images: [], usage: null, costUsd: 0, costNote: "stub" });
+const lpTmpT1 = mkdtempSync(path.join(tmpdir(), "run-demo-lp-t1-"));
+const imgTmpT1 = mkdtempSync(path.join(tmpdir(), "run-demo-img-t1-"));
+const counterT1 = { calls: 0 };
+const runT1 = await runDemo(
+  { ...REAL, generationFile: "loops/loop-008/generated-lp-v1.json", imagesDir: imgTmpT1, lpFile: path.join(lpTmpT1, "lp.html") },
+  { extract: async () => stubExtractOk(), generate: faithfulGenerate(counterT1), images: t1ImagesFail },
+);
+expect("demo-t1-images-failure-stops", runT1.stoppedAt, "images");
+expect("demo-t1-lp-not-assembled", runT1.stages.lpAssembly.executed, false);
+expect("demo-t1-verification-not-executed", runT1.stages.verification.executed, false);
+expect("demo-t1-not-complete", runT1.stages.verification.completion ?? null, null);
+
+// --- T2: a recorded image file missing on disk fails completion (C2),
+// stopping at verification. ---
+const imgTmpT2 = mkdtempSync(path.join(tmpdir(), "run-demo-img-t2-"));
+const lpTmpT2 = mkdtempSync(path.join(tmpdir(), "run-demo-lp-t2-"));
+const t2ImagesPartial = async () => {
+  const kept = path.join(imgTmpT2, "hero.png");
+  writeFileSync(kept, Buffer.from([0x89, 0x50, 0x4e, 0x47]));
+  return {
+    status: "generated", model: "stub", promptTemplate: "lp-image-v1-test",
+    images: [
+      { id: "hero", file: kept, prompt: "test", line: null },
+      { id: "sec-L01", file: path.join(imgTmpT2, "sec-L01.png"), prompt: "test", line: "L01" },
+    ],
+    usage: null, costUsd: 0.02, costNote: "stub",
+  };
+};
+const counterT2 = { calls: 0 };
+const runT2 = await runDemo(
+  { ...REAL, generationFile: "loops/loop-008/generated-lp-v1.json", imagesDir: imgTmpT2, lpFile: path.join(lpTmpT2, "lp.html"), humanConfirmation: humanAllOk },
+  { extract: async () => stubExtractOk(), generate: faithfulGenerate(counterT2), images: t2ImagesPartial },
+);
+expect("demo-t2-missing-image-stops", runT2.stoppedAt, "verification");
+expect("demo-t2-completion-fail", runT2.stages.verification.completion.pass, false);
+expect("demo-t2-completion-names-c2", runT2.stages.verification.completion.failures.some((f) => f.check === "C2"), true);
+
+// --- T3 (unit): a page missing one generated sentence fails C1 only;
+// C3 stays about existence plus both-contained (M1: 文の欠けの判定は
+// C1 に一本化). ---
+const t3Root = mkdtempSync(path.join(tmpdir(), "run-demo-t3-"));
+mkdirSync(path.join(t3Root, "img"));
+for (const n of ["hero.png", "sec-L01.png"]) {
+  writeFileSync(path.join(t3Root, "img", n), Buffer.from([0x89, 0x50, 0x4e, 0x47]));
+}
+const t3Built = assembleLP({
+  root: t3Root,
+  generation: realGeneration,
+  images: [
+    { id: "hero", file: "img/hero.png", prompt: "t", line: null },
+    { id: "sec-L01", file: "img/sec-L01.png", prompt: "t", line: "L01" },
+  ],
+  lpDir: ".",
+});
+const dropped = realGeneration.sentences[0].text;
+writeFileSync(path.join(t3Root, "lp.html"), t3Built.html.replace(dropped, ""), "utf8");
+const t3Completion = checkCompletion({
+  root: t3Root,
+  generation: realGeneration,
+  imageFiles: ["img/hero.png", "img/sec-L01.png"],
+  lpFile: "lp.html",
+  grounding: { pass: true },
+});
+expect("demo-t3-missing-sentence-not-pass", t3Completion.pass, false);
+expect("demo-t3-missing-sentence-is-c1", t3Completion.failures.some((f) => f.check === "C1"), true);
+expect("demo-t3-missing-sentence-not-c3", t3Completion.failures.some((f) => f.check === "C3"), false);
+
+// --- T5: E02 stops at reconciliation; images, LP assembly and
+// re-verification never run. ---
+const counterT5 = { calls: 0 };
+const stoppedExtractT5 = stubExtractOk();
+stoppedExtractT5.e01 = { ...clone(E01_OK), verdict: "停止（矛盾あり）", stoppedAtReconciliation: true, contradictions: clone(E02_STOP.contradictions) };
+const runT5 = await runDemo({ ...REAL }, { extract: async () => stoppedExtractT5, generate: faithfulGenerate(counterT5) });
+expect("demo-t5-e02-images-not-executed", runT5.stages.images.executed, false);
+expect("demo-t5-e02-lpAssembly-not-executed", runT5.stages.lpAssembly.executed, false);
+expect("demo-t5-e02-verification-not-executed", runT5.stages.verification.executed, false);
 
 // --- Stop: E01 reconciliation stops, so later stages never run. ---
 const counter3 = { calls: 0 };
