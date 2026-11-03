@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loopwright デモプレビュー（記録の再生）</title>
+<style>
+  :root {
+    --navy: #1b2a4a; --amber: #f0a22e; --ink: #1d2733; --muted: #5b6b7d;
+    --line: #d8dee6; --bg: #f6f8fa; --card: #ffffff;
+    --red: #b3261e; --red-bg: #fdf1f0; --green: #1e7a3c; --green-bg: #eef7f0;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+         color: var(--ink); background: var(--bg); line-height: 1.75; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px 64px; }
+  .langbar { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 0 0; font-size: 0.85rem; }
+  .langbar a { color: var(--muted); text-decoration: none; }
+  .langbar .cur { color: var(--ink); font-weight: 700; }
+  header.hero { padding: 26px 0 8px; }
+  h1 { font-size: 2.1rem; margin: 0 0 4px; color: var(--navy); letter-spacing: 0.01em; }
+  .tagline { font-size: 1.02rem; color: var(--ink); margin: 0 0 14px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 18px; }
+  .badge { font-size: 0.78rem; font-weight: 600; padding: 4px 10px; border-radius: 999px;
+           border: 1px solid var(--line); background: var(--card); color: var(--muted); }
+  .badge strong { color: var(--navy); }
+  .notice { background: #fff8ec; border: 1px solid #ecd9ae; border-radius: 10px;
+            padding: 12px 16px; font-size: 0.92rem; }
+  .pipeline { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 18px 0 4px;
+              font-size: 0.85rem; font-weight: 600; color: var(--navy); }
+  .pipeline .step { background: var(--navy); color: #fff; border-radius: 8px; padding: 5px 10px; }
+  .pipeline .arrow { color: var(--muted); }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+            padding: 20px 22px; margin: 18px 0; }
+  section h2 { margin: 0 0 10px; font-size: 1.15rem; color: var(--navy); }
+  section p { margin: 8px 0; }
+  .kicker { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em;
+            color: var(--muted); margin-bottom: 6px; }
+  .stop { border: 1px solid #ecc9c6; background: var(--red-bg); }
+  .stop h2 { color: var(--red); }
+  .vs { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
+  .vs .cell { flex: 1 1 200px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
+  .vs .cell .label { font-size: 0.78rem; color: var(--muted); font-weight: 600; }
+  .vs .cell .value { font-size: 1.35rem; font-weight: 700; }
+  .vs .cell.bad .value { color: var(--red); }
+  .verdict { display: inline-block; font-weight: 700; padding: 3px 10px; border-radius: 6px; font-size: 0.9rem; }
+  .verdict.stop-v { background: var(--red); color: #fff; }
+  .verdict.pass-v { background: var(--green); color: #fff; }
+  .lp-sentence { margin: 8px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.88rem; margin: 10px 0; }
+  th, td { border: 1px solid var(--line); padding: 6px 8px; vertical-align: top; text-align: left; }
+  th { background: var(--bg); color: var(--navy); }
+  code { background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; font-size: 0.85em; }
+  .frame-dashed { border: 2px dashed #a7b3c2; background: #fbfcfd; }
+  .roles td:first-child { font-weight: 600; white-space: nowrap; }
+  footer { color: var(--muted); font-size: 0.9rem; margin-top: 26px; }
+  footer a { color: var(--navy); }
+  @media (max-width: 560px) { h1 { font-size: 1.6rem; } section { padding: 16px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="langbar"><a href="index.html">English</a> | <span class="cur">日本語</span></div>
+
+  <header class="hero">
+    <h1>Loopwright</h1>
+    <p class="tagline">AI の開発プロセスを、記録・監査・人間の判断を通じて改善する開発・実行基盤。その実演として、架空求人の編集ワークフローを動かすデモ。</p>
+    <div class="badges">
+      <span class="badge"><strong>記録の再生</strong> — リアルタイムの実行ではありません</span>
+      <span class="badge"><strong>架空データのみ</strong></span>
+      <span class="badge">再検証の合格はデモ内プレビューの許可まで — <strong>公開の許可ではありません</strong></span>
+    </div>
+    <p class="notice">このページは、記録された実行と監査の再生です。ワークフローは、原本の固定 → FACT 抽出・照合 → 人間の承認 → LP 生成 → 独立した再検証、の順に進み、矛盾があれば生成せずに止まります。</p>
+    <div class="pipeline">
+      <span class="step">1. 原本の固定</span><span class="arrow">→</span>
+      <span class="step">2. FACT抽出・照合</span><span class="arrow">→</span>
+      <span class="step">3. 人間の承認</span><span class="arrow">→</span>
+      <span class="step">4. LP生成</span><span class="arrow">→</span>
+      <span class="step">5. 独立した再検証</span>
+    </div>
+  </header>
+
+  <main>
+
+  <section class="stop" id="stop-example">
+    <div class="kicker">止まる例</div>
+    <h2>原本 1,500円 に対して要約が 1,700円</h2>
+    <div class="vs">
+      <div class="cell"><div class="label">原本の FACT（L03）</div><div class="value">時給 1,500円</div></div>
+      <div class="cell bad"><div class="label">要約の記載</div><div class="value">時給 1,700円</div></div>
+    </div>
+    <p><span class="verdict stop-v">停止（矛盾あり）</span></p>
+    <p>E02 は照合で停止した。承認・生成・再検証・プレビューは実行していない。停止理由: 給与（時給）: FACT 時給1,500円（L03「給与は時給1,500円。」）に対し、要約は 時給1,700円。これは生成物ではなく、停止の記録の表示である。</p>
+  </section>
+
+  <section id="audit-change">
+    <div class="kicker">監査で出力が変わった例</div>
+    <h2>未記載項目の value を null に統一</h2>
+    <p>ループ2の抽出では、未記載項目の value が実行ごとに「未記載」という文字列と空文字列で揺れた（監査の指摘）。改善実験（プロンプト v1.1）で「未記載項目の value は JSON の null とする」ことを指示文とスキーマ例の両方で明示し、未記載2件（renewal・housing）の value が null に統一された。以後の抽出の標準プロンプトとしている。詳細はリポジトリの <code>experiments/exp-002-fact-extract-prompt-v1.1.md</code> にある。</p>
+  </section>
+
+  <section id="lp">
+    <div class="kicker">E01 — 承認済み・生成済み</div>
+    <h2>LP 本文（承認済み FACT からの生成）</h2>
+      <p class="lp-sentence" data-sentence="0">企業名は架空のソラノ輪具研究所で、求人番号はFICT-J01。</p>
+      <p class="lp-sentence" data-sentence="1">勤務地は架空の青空実験区A棟。</p>
+      <p class="lp-sentence" data-sentence="2">雇用形態は有期契約社員で、契約期間3か月。</p>
+      <p class="lp-sentence" data-sentence="3">更新の有無は未記載。</p>
+      <p class="lp-sentence" data-sentence="4">給与は時給1,500円で、月収は保証しない。</p>
+      <p class="lp-sentence" data-sentence="5">勤務時間は09:00〜18:00で、休憩60分、実働8時間。</p>
+      <p class="lp-sentence" data-sentence="6">月20日勤務は試算用の仮定である。</p>
+      <p class="lp-sentence" data-sentence="7">交通費は実費支給で、月上限10,000円。</p>
+      <p class="lp-sentence" data-sentence="8">寮の有無と費用は未記載。</p>
+  </section>
+
+  <section id="verification">
+    <div class="kicker">再検証の記録</div>
+    <h2>検証パネル</h2>
+    <p>承認: FICT-J01-approval-1（status: approved、承認日時: 2026-10-27T19:58:09+09:00、有効性の再計算: valid: true）。入力同一性: pass。根拠検査: pass（9文、issues 0件）。人間の確認（意味の対応）: completed（確認者: 統括（Muse）＋本人、確認日時: 2026-10-28T11:09:00+09:00、全9文）。</p>
+    <p><span class="verdict pass-v">最終判定: pass</span> — デモ内プレビューの許可までであり、公開の許可ではない（G-INV-4）。</p>
+    <table>
+      <thead><tr><th>#</th><th>文</th><th>factKeys</th><th>sourceLines</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>企業名は架空のソラノ輪具研究所で、求人番号はFICT-J01。</td><td>employer, jobId</td><td>L01</td></tr>
+        <tr><td>2</td><td>勤務地は架空の青空実験区A棟。</td><td>workLocation</td><td>L01</td></tr>
+        <tr><td>3</td><td>雇用形態は有期契約社員で、契約期間3か月。</td><td>employmentType, contractPeriod</td><td>L02</td></tr>
+        <tr><td>4</td><td>更新の有無は未記載。</td><td>renewal</td><td>L02</td></tr>
+        <tr><td>5</td><td>給与は時給1,500円で、月収は保証しない。</td><td>salaryHourly, monthlyIncomeGuarantee</td><td>L03</td></tr>
+        <tr><td>6</td><td>勤務時間は09:00〜18:00で、休憩60分、実働8時間。</td><td>workHours, breakMinutes, actualHours</td><td>L04</td></tr>
+        <tr><td>7</td><td>月20日勤務は試算用の仮定である。</td><td>monthlyDaysAssumption</td><td>L04</td></tr>
+        <tr><td>8</td><td>交通費は実費支給で、月上限10,000円。</td><td>transport, transportCap</td><td>L05</td></tr>
+        <tr><td>9</td><td>寮の有無と費用は未記載。</td><td>housing</td><td>L06</td></tr>
+      </tbody>
+    </table>
+    <p>未記載項目の扱い: 更新の有無は未記載。寮は未記載。未記載は未記載として表示に残し、承認の対象に含めない。</p>
+  </section>
+
+  <section class="frame-dashed" id="unmerged">
+    <div class="kicker">別枠 — 本体の一部ではありません</div>
+    <h2>未組み入れの拡張実験（loop-012 → 013）</h2>
+    <p>以下は本体の実績ではなく、組み入れ判断前の拡張の実験記録である。型目録（library）とペルソナ設定を生成の前段に置く試みで、loop-012 から loop-013 への変更（参照セットの差し替えと散文評価の変化）は記録に残っているが、本体の工程には組み入れていない。</p>
+  </section>
+
+  <section id="about">
+    <div class="kicker">担当と判断</div>
+    <h2>プロジェクト説明と記録への参照</h2>
+    <table class="roles">
+      <tbody>
+        <tr><td>進行と受け入れ</td><td>進め方は本人と統括（Muse）の会話で決め、各工程の受け入れは本人と統括が行った</td></tr>
+        <tr><td>承認</td><td>Norikazu Harada、2026-10-27（承認記録 FICT-J01-approval-1）</td></tr>
+        <tr><td>意味の対応の確認</td><td>統括（Muse）＋本人、2026-10-28 — 人間の行為であり、自動化の成果と並べて示す</td></tr>
+        <tr><td>設計・監理・制作・書き込み</td><td>各ライン（設計ライン・監理ライン・制作ライン・書き込み用ライン）が分担し、独立監査は監理ラインが担った</td></tr>
+      </tbody>
+    </table>
+    <p>このデモは、架空の求人の原本から FACT を抽出・照合し、人間の承認を経て LP 文を生成し、生成とは独立に再検証する流れを示す。記録の正本は GitHub リポジトリにある: <a href="https://github.com/bonno-420/meta-hackathon-lab">https://github.com/bonno-420/meta-hackathon-lab</a></p>
+  </section>
+
+  </main>
+
+  <footer>
+    <p>英語版（審査員向け）は <a href="index.html">index.html</a>。この日本語版は、内容確認用に同じデザインで残したもの。</p>
+  </footer>
+
+</div>
+</body>
+</html>

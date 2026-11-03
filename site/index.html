@@ -1,52 +1,138 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Loopwright デモプレビュー（記録の再生）</title>
+<title>Loopwright — demo preview (recorded playback)</title>
 <style>
-body { font-family: sans-serif; margin: 2rem; line-height: 1.7; color: #222; }
-.lp-sentence { margin: 0.4rem 0; }
-table { border-collapse: collapse; }
-td, th { border: 1px solid #999; padding: 0.3rem 0.6rem; vertical-align: top; }
-.notice { border: 1px solid #999; padding: 0.6rem 1rem; }
-.frame { border: 2px dashed #999; padding: 0.6rem 1rem; margin: 1rem 0; }
+  :root {
+    --navy: #1b2a4a; --amber: #f0a22e; --ink: #1d2733; --muted: #5b6b7d;
+    --line: #d8dee6; --bg: #f6f8fa; --card: #ffffff;
+    --red: #b3261e; --red-bg: #fdf1f0; --green: #1e7a3c; --green-bg: #eef7f0;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+         color: var(--ink); background: var(--bg); line-height: 1.65; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px 64px; }
+  .langbar { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 0 0; font-size: 0.85rem; }
+  .langbar a { color: var(--muted); text-decoration: none; }
+  .langbar .cur { color: var(--ink); font-weight: 700; }
+  header.hero { padding: 26px 0 8px; }
+  h1 { font-size: 2.1rem; margin: 0 0 4px; color: var(--navy); letter-spacing: 0.01em; }
+  .tagline { font-size: 1.05rem; color: var(--ink); margin: 0 0 14px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 18px; }
+  .badge { font-size: 0.78rem; font-weight: 600; padding: 4px 10px; border-radius: 999px;
+           border: 1px solid var(--line); background: var(--card); color: var(--muted); }
+  .badge strong { color: var(--navy); }
+  .notice { background: #fff8ec; border: 1px solid #ecd9ae; border-radius: 10px;
+            padding: 12px 16px; font-size: 0.92rem; }
+  .pipeline { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 18px 0 4px;
+              font-size: 0.85rem; font-weight: 600; color: var(--navy); }
+  .pipeline .step { background: var(--navy); color: #fff; border-radius: 8px; padding: 5px 10px; }
+  .pipeline .arrow { color: var(--muted); }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+            padding: 20px 22px; margin: 18px 0; }
+  section h2 { margin: 0 0 10px; font-size: 1.15rem; color: var(--navy); }
+  section p { margin: 8px 0; }
+  .kicker { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--muted); margin-bottom: 6px; }
+  .stop { border: 1px solid #ecc9c6; background: var(--red-bg); }
+  .stop h2 { color: var(--red); }
+  .vs { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
+  .vs .cell { flex: 1 1 200px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
+  .vs .cell .label { font-size: 0.78rem; color: var(--muted); font-weight: 600; }
+  .vs .cell .value { font-size: 1.35rem; font-weight: 700; }
+  .vs .cell.bad .value { color: var(--red); }
+  .verdict { display: inline-block; font-weight: 700; padding: 3px 10px; border-radius: 6px; font-size: 0.9rem; }
+  .verdict.stop-v { background: var(--red); color: #fff; }
+  .verdict.pass-v { background: var(--green); color: #fff; }
+  .lp-sentence { margin: 10px 0 2px; }
+  .gloss { color: var(--muted); font-size: 0.9rem; margin: 0 0 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.88rem; margin: 10px 0; }
+  th, td { border: 1px solid var(--line); padding: 6px 8px; vertical-align: top; text-align: left; }
+  th { background: var(--bg); color: var(--navy); }
+  code { background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; font-size: 0.85em; }
+  .frame-dashed { border: 2px dashed #a7b3c2; background: #fbfcfd; }
+  .roles td:first-child { font-weight: 600; white-space: nowrap; }
+  footer { color: var(--muted); font-size: 0.9rem; margin-top: 26px; }
+  footer a { color: var(--navy); }
+  @media (max-width: 560px) { h1 { font-size: 1.6rem; } section { padding: 16px; } }
 </style>
 </head>
 <body>
-<header>
-<p class="notice">このページは記録された実行と監査の再生です。リアルタイムの実行ではありません。架空の求人だけを使ったデモであり、実在の求人ではありません。再検証の合格はデモ内プレビューの許可までであり、公開の許可ではありません。</p>
-<h1>Loopwright デモプレビュー</h1>
-<p>Loopwright は、AI の開発プロセスを記録・監査・人間の判断で回して改善する開発・実行基盤のデモである。架空求人の編集ワークフロー（原本の固定 → FACT 抽出・照合 → 人間の承認 → LP 生成 → 独立した再検証）を動かし、矛盾があれば生成せずに止まる。</p>
-<p>進め方は本人と統括（Muse）の会話で決め、設計・監理（監査）・制作・書き込みの各ラインが分担した。受け入れの判断は本人と統括が行い、独立監査は監理ラインが担った。承認・確認・受け入れは人間の行為であり、自動化の成果と並べて示す。</p>
-</header>
-<main>
-<section id="stop-example">
-<h2>止まる例: 原本 1,500円 に対して要約が 1,700円</h2>
-<p>E02 は照合で停止した（停止（矛盾あり））。承認・生成・再検証・プレビューは実行していない。停止理由: 給与（時給）: FACT 時給1,500円（L03「給与は時給1,500円。」）に対し、要約は 時給1,700円。これは生成物ではなく、停止の記録の表示である。</p>
-</section>
-<section id="audit-change">
-<h2>監査で出力が変わった例: 未記載項目の value を null に統一</h2>
-<p>ループ2の抽出では、未記載項目の value が実行ごとに「未記載」という文字列と空文字列で揺れた（監査の指摘）。改善実験（プロンプト v1.1）で「未記載項目の value は JSON の null とする」ことを指示文とスキーマ例の両方で明示し、未記載2件（renewal・housing）の value が null に統一された。以後の抽出の標準プロンプトとしている。詳細はリポジトリの <code>experiments/exp-002-fact-extract-prompt-v1.1.md</code> にある。</p>
-</section>
-<section id="lp">
-<h2>LP 本文（承認済み FACT からの生成）</h2>
-      <p class="lp-sentence" data-sentence="0">企業名は架空のソラノ輪具研究所で、求人番号はFICT-J01。</p>
-      <p class="lp-sentence" data-sentence="1">勤務地は架空の青空実験区A棟。</p>
-      <p class="lp-sentence" data-sentence="2">雇用形態は有期契約社員で、契約期間3か月。</p>
-      <p class="lp-sentence" data-sentence="3">更新の有無は未記載。</p>
-      <p class="lp-sentence" data-sentence="4">給与は時給1,500円で、月収は保証しない。</p>
-      <p class="lp-sentence" data-sentence="5">勤務時間は09:00〜18:00で、休憩60分、実働8時間。</p>
-      <p class="lp-sentence" data-sentence="6">月20日勤務は試算用の仮定である。</p>
-      <p class="lp-sentence" data-sentence="7">交通費は実費支給で、月上限10,000円。</p>
-      <p class="lp-sentence" data-sentence="8">寮の有無と費用は未記載。</p>
-</section>
-<section id="verification">
-<h2>検証パネル（再検証の記録）</h2>
-<p>承認: FICT-J01-approval-1（status: approved、承認日時: 2026-10-27T19:58:09+09:00、有効性の再計算: valid: true）。入力同一性: pass。根拠検査: pass（9文、issues 0件）。人間の確認（意味の対応）: completed（確認者: 統括（Muse）＋本人、確認日時: 2026-10-28T11:09:00+09:00、全9文）。最終判定: pass（デモ内プレビューの許可までであり、公開の許可ではない（G-INV-4））</p>
-<table>
-<thead><tr><th>#</th><th>文</th><th>factKeys</th><th>sourceLines</th></tr></thead>
-<tbody>
+<div class="wrap">
+
+  <div class="langbar"><span class="cur">English</span> | <a href="ja.html">日本語</a></div>
+
+  <header class="hero">
+    <h1>Loopwright</h1>
+    <p class="tagline">An AI development and execution platform that improves its own process through records, audits, and human judgement — shown here running an editorial workflow for fictional job postings.</p>
+    <div class="badges">
+      <span class="badge"><strong>Recorded playback</strong> — not a live run</span>
+      <span class="badge"><strong>Fictional data only</strong></span>
+      <span class="badge">A verification pass permits an in-demo preview only — <strong>never publication</strong></span>
+    </div>
+    <p class="notice">This page replays a recorded run and its audit trail. The workflow pins the source posting, extracts and cross-checks FACTs, waits for human approval, generates the page copy, and then re-verifies the result independently. When the source contradicts itself, it stops instead of generating.</p>
+    <div class="pipeline">
+      <span class="step">1. Pin the source</span><span class="arrow">→</span>
+      <span class="step">2. Extract &amp; check FACTs</span><span class="arrow">→</span>
+      <span class="step">3. Human approval</span><span class="arrow">→</span>
+      <span class="step">4. Generate copy</span><span class="arrow">→</span>
+      <span class="step">5. Independent re-verification</span>
+    </div>
+  </header>
+
+  <main>
+
+  <section class="stop" id="stop-example">
+    <div class="kicker">The workflow stops</div>
+    <h2>Source says ¥1,500 — the summary says ¥1,700</h2>
+    <div class="vs">
+      <div class="cell"><div class="label">FACT from the source (line L03)</div><div class="value">¥1,500 / hour</div></div>
+      <div class="cell bad"><div class="label">Conflicting summary</div><div class="value">¥1,700 / hour</div></div>
+    </div>
+    <p><span class="verdict stop-v">STOPPED — contradiction</span></p>
+    <p>Run E02 stopped at the cross-check. Approval, generation, re-verification, and preview were not executed. Reason recorded: hourly pay — the FACT is ¥1,500 (source line L03: “給与は時給1,500円。”), while the summary states ¥1,700. What you are reading is the stop record, not a generated artifact.</p>
+  </section>
+
+  <section id="audit-change">
+    <div class="kicker">An audit changed the output</div>
+    <h2>Unstated items are now JSON <code>null</code>, every run</h2>
+    <p>In loop 2, the extractor represented unstated items inconsistently across runs — sometimes the string “未記載” (“not stated”), sometimes an empty string. The audit flagged this. In the improvement experiment (extraction prompt v1.1), both the instructions and the schema example were made explicit: the value of an unstated item is JSON <code>null</code>. The two unstated items in this posting (renewal, housing) came out as <code>null</code> consistently, and v1.1 has been the standard extraction prompt since. Detail: <code>experiments/exp-002-fact-extract-prompt-v1.1.md</code> in the repository.</p>
+  </section>
+
+  <section id="lp">
+    <div class="kicker">Run E01 — approved and generated</div>
+    <h2>Page copy generated from approved FACTs</h2>
+    <p>The nine sentences below are the recorded output, verbatim. English glosses are translations for readability only — the record is the Japanese text.</p>
+    <p class="lp-sentence" data-sentence="0">企業名は架空のソラノ輪具研究所で、求人番号はFICT-J01。</p>
+    <p class="gloss">— The employer is the fictional Sorano Ringgear Laboratory; the job ID is FICT-J01.</p>
+    <p class="lp-sentence" data-sentence="1">勤務地は架空の青空実験区A棟。</p>
+    <p class="gloss">— The work location is Building A of the fictional Aozora Experimental District.</p>
+    <p class="lp-sentence" data-sentence="2">雇用形態は有期契約社員で、契約期間3か月。</p>
+    <p class="gloss">— Employment type: fixed-term contract employee; contract period 3 months.</p>
+    <p class="lp-sentence" data-sentence="3">更新の有無は未記載。</p>
+    <p class="gloss">— Whether the contract is renewed is not stated.</p>
+    <p class="lp-sentence" data-sentence="4">給与は時給1,500円で、月収は保証しない。</p>
+    <p class="gloss">— Pay is ¥1,500 per hour; monthly income is not guaranteed.</p>
+    <p class="lp-sentence" data-sentence="5">勤務時間は09:00〜18:00で、休憩60分、実働8時間。</p>
+    <p class="gloss">— Working hours 09:00–18:00, with a 60-minute break; 8 actual working hours.</p>
+    <p class="lp-sentence" data-sentence="6">月20日勤務は試算用の仮定である。</p>
+    <p class="gloss">— Working 20 days per month is an assumption used for the estimate.</p>
+    <p class="lp-sentence" data-sentence="7">交通費は実費支給で、月上限10,000円。</p>
+    <p class="gloss">— Transportation is reimbursed at actual cost, capped at ¥10,000 per month.</p>
+    <p class="lp-sentence" data-sentence="8">寮の有無と費用は未記載。</p>
+    <p class="gloss">— Housing availability and cost are not stated.</p>
+  </section>
+
+  <section id="verification">
+    <div class="kicker">Re-verification record</div>
+    <h2>Verification panel</h2>
+    <p>Approval: <code>FICT-J01-approval-1</code> (status: approved, 2026-10-27T19:58:09+09:00; validity recomputed: valid). Input identity: pass. Grounding check: pass (9 sentences, 0 issues). Human confirmation of meaning: completed — coordinator (Muse) + Norikazu Harada, 2026-10-28T11:09:00+09:00, all 9 sentences.</p>
+    <p><span class="verdict pass-v">PASS</span> — permission for an in-demo preview only, not for publication (G-INV-4).</p>
+    <table>
+      <thead><tr><th>#</th><th>Sentence (record)</th><th>factKeys</th><th>sourceLines</th></tr></thead>
+      <tbody>
         <tr><td>1</td><td>企業名は架空のソラノ輪具研究所で、求人番号はFICT-J01。</td><td>employer, jobId</td><td>L01</td></tr>
         <tr><td>2</td><td>勤務地は架空の青空実験区A棟。</td><td>workLocation</td><td>L01</td></tr>
         <tr><td>3</td><td>雇用形態は有期契約社員で、契約期間3か月。</td><td>employmentType, contractPeriod</td><td>L02</td></tr>
@@ -56,20 +142,37 @@ td, th { border: 1px solid #999; padding: 0.3rem 0.6rem; vertical-align: top; }
         <tr><td>7</td><td>月20日勤務は試算用の仮定である。</td><td>monthlyDaysAssumption</td><td>L04</td></tr>
         <tr><td>8</td><td>交通費は実費支給で、月上限10,000円。</td><td>transport, transportCap</td><td>L05</td></tr>
         <tr><td>9</td><td>寮の有無と費用は未記載。</td><td>housing</td><td>L06</td></tr>
-</tbody>
-</table>
-<p>未記載項目の扱い: 更新の有無は未記載。寮は未記載。未記載は未記載として表示に残し、承認の対象に含めない。</p>
-</section>
-<section id="unmerged">
-<h2>別枠: 未組み入れの拡張実験（loop-012 → 013）</h2>
-<div class="frame">
-<p>以下は本体の実績ではなく、組み入れ判断前の拡張の実験記録である。型目録（library）とペルソナ設定を生成の前段に置く試みで、loop-012 から loop-013 への変更（参照セットの差し替えと散文評価の変化）は記録に残っているが、本体の工程には組み入れていない。組み入れない判断の場合はこの枠ごと置かない。</p>
+      </tbody>
+    </table>
+    <p>Unstated items: renewal and housing are not stated in the source. They remain visible as “not stated” in the output and are excluded from approval — nothing is filled in on the reader's behalf.</p>
+  </section>
+
+  <section class="frame-dashed" id="unmerged">
+    <div class="kicker">Separate frame — not part of the platform</div>
+    <h2>Extension experiments (loop-012 → loop-013), not merged</h2>
+    <p>The following is not a platform result. It is the record of an extension experiment — placing a pattern library and a reader persona before generation — kept separate pending an inclusion decision. The change from loop-012 to loop-013 (a different reference set, and the resulting change in prose evaluation) is preserved in the records, but the extension is not merged into the platform pipeline above.</p>
+  </section>
+
+  <section id="about">
+    <div class="kicker">Who did what</div>
+    <h2>Human judgement stays human</h2>
+    <table class="roles">
+      <tbody>
+        <tr><td>Direction &amp; acceptance</td><td>Decided in conversation between Norikazu Harada and Muse (coordination). Acceptance at each step: Harada + coordinator.</td></tr>
+        <tr><td>Approval in this run</td><td>Norikazu Harada, 2026-10-27 (approval record <code>FICT-J01-approval-1</code>)</td></tr>
+        <tr><td>Semantic confirmation</td><td>Coordinator (Muse) + Harada, 2026-10-28 — a human act, shown alongside the automated checks, not replaced by them</td></tr>
+        <tr><td>Design / audit / production / writing</td><td>Separate OpenCode lines (design line, audit line, production line, writing line); the audit line audits independently of production</td></tr>
+      </tbody>
+    </table>
+    <p>This demo shows one run end to end: FACTs extracted and checked from a fictional source posting, a human approval, copy generation, and independent re-verification. The canonical records live in the GitHub repository.</p>
+  </section>
+
+  </main>
+
+  <footer>
+    <p>Repository: <a href="https://github.com/bonno-420/meta-hackathon-lab">github.com/bonno-420/meta-hackathon-lab</a> — the records there are the source of truth for everything shown on this page.</p>
+  </footer>
+
 </div>
-</section>
-<section id="about">
-<h2>プロジェクト説明と記録への参照</h2>
-<p>このデモは、架空の求人の原本から FACT を抽出・照合し、人間の承認を経て LP 文を生成し、生成とは独立に再検証する流れを示す。人間が判断した箇所: 承認（Norikazu Harada、2026-10-27）、意味の対応の確認（統括＋本人、2026-10-28）、各工程の受け入れ（統括と本人）。記録の正本は GitHub リポジトリにある: <a href="https://github.com/bonno-420/meta-hackathon-lab">https://github.com/bonno-420/meta-hackathon-lab</a></p>
-</section>
-</main>
 </body>
 </html>
