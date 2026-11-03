@@ -21,7 +21,7 @@ Build the submission demo video for Loopwright. Flow: design → audit → produ
 
 1:10–1:40 "Now the same workflow, with one change: the summary claims an hourly wage of 1,700 yen, while the source says 1,500. The cross-check catches the contradiction — and the workflow stops. No approval, no generation, no preview. A system that writes recruiting copy cannot be allowed to smooth over a wrong wage; stopping is the feature."
 
-1:40–2:15 "The process itself is also audited. Early extraction runs represented unstated items inconsistently — sometimes a string, sometimes empty. An audit flagged it; a one-factor experiment fixed the prompt, and the records show the before and after. Findings like this go into a learnings ledger, and audited gates are added so the same failure cannot quietly return. The platform does not improve itself in secret — every change is a recorded, reviewed experiment."
+1:40–2:15 "The process itself is also audited. Early extraction runs represented unstated items inconsistently — sometimes a string, sometimes empty. An audit flagged it; a one-factor experiment fixed the prompt, and the records show the before and after. Findings like this go into a learnings ledger, with the fix recorded next to the finding. The platform does not improve itself in secret — every change is a recorded, reviewed experiment."
 
 2:15–2:45 "Sixteen loops are recorded in the repository — inputs, models, prompts, outputs, audit verdicts, costs. Later loops tested a pattern library and reader personas, and a separate verification series ran on Baseten with Muse Spark Open. Those are experiments, kept distinct from the platform — and disclosed as such."
 
@@ -36,7 +36,7 @@ Build the submission demo video for Loopwright. Flow: design → audit → produ
 
 ## Appendix: video-production know-how (accumulate here)
 
-- Script sized from the time limit: message within 2:55, ~445 English words allocated across the 7 segments before writing sentences
+- Script sized from the time limit: message within 2:55, ~370 English words (measured) allocated across the 7 segments before writing sentences
 - Disclosures consolidated into the opening line, not scattered later
 - Experiments (Baseten) stated as separate on-script
 - The flow does not depend on the subject: design → audit → production → audit, even when the subject is not a job posting
