@@ -25,6 +25,11 @@ Each is a draft for the user's confirmation, like Step 0. They are baselines for
 6. The cycle converges to delivery. Looping without ever delivering is a failure mode: the run ends by handing over the finished LP.
 7. Weight in the learning flow: routine fixes close at audit; the user's approval is reserved for gate promotion/withdrawal and recorded decisions (D8). Feedback on a preview reaches the next generation — today that path is a manual relay by the coordinator, not a tool function; the statement records that as the current state.
 
+
+### Standing rule (user, 2026-11-03)
+
+The user's own instructions — "do it this way", stated from the start — are specification requirements, not candidates. They are never deferred to an inventory or a later decision. The candidate → verification → approval path applies only to findings the system itself produces (audit findings, experiment learnings), never to the user's stated requirements.
+
 ## Step 1 — investigate, then design
 
 Design line: investigate, then design, in one short document (docs/design/gap-fill-design-v1.md), measured against the confirmed intent statement.
