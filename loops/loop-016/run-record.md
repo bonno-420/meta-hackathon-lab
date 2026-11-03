@@ -53,14 +53,14 @@
 |---|---|---|---|
 | Baseten 生成 | 40 | **20**（成功20、実呼び出し23） | 20 |
 | Meta 画像生成 | 別枠 | 18回（成功18/18） | — |
-| Meta ペルソナレビュー | 別枠 | 18回（gen-001 6 + gen-002 6 + gen-004 6 + gen-005 6） | — |
-| Meta Judge | 別枠 | 24回（gen-001 6 + gen-002 6 + gen-003 6 + gen-004 6 + gen-005 6） | — |
+| Meta ペルソナレビュー | 別枠 | 30回（gen-001 6 + gen-002 6 + gen-003 6 + gen-004 6 + gen-005 6） | — |
+| Meta Judge | 別枠 | 30回（gen-001 6 + gen-002 6 + gen-003 6 + gen-004 6 + gen-005 6） | — |
 
 - Baseten内訳: 較正probe 2回（`cache/debug-baseten.mjs` max_tokens=4,000でcontent null失敗 1回＋`cache/debug-baseten2.mjs` max_tokens=8,000で成功確認 1回）＋本生成 6回（C-A〜C-F gen-001）＋ gen-002 6回（成功、ただしC-Bでmax_tokens 8,000時にNo content失敗2回を含むと実呼び出し8回で計16回、成功14回で管理）＋ gen-004 6回（C-Eで再試行1含む実7 calls）→ 20成功/23 calls。gen-003/005は文章再利用で0。疎通確認（`cache/connectivity-check.json` ok=true, prompt146/completion16/total162）はK2に数えない（loop-015の継承）
 - 1回あたり上限の変更（回す側の判断・記録）: READMEの正式値 max_tokens=4,000 では reasoning が約4,000を占め content null で失敗したため（probeで実測）、本ループの生成は max_tokens=8,000 / temperature=0.4 に引き上げて実施した。C-A gen-001で成功を確認し、以後の全ケースに適用した。gen-002では research適用でreasoningが増え、C-Bで8,000時にNo content失敗2回（reasoning 7,997占有）したためC-B以降は12,000で安定させた。gen-004では max_tokens 12,000で固定しC-Eで1回再試行。K2の数え方は変えず、呼び出し回数で管理する（成功20/実23の別記を残す）
 - Meta画像: `muse-image-1.0` で3点/ケース×6ケース=18点。manifest集計 totalInput 400,405 / totalOutput 34,650。ファイル確認のみ行い文脈への大量読込なし（gen-002以降は再利用、gen-004/005は再配分のみ）
-- Metaレビュー: `muse-spark-1.3-contributor` で18回（gen-001 6 + gen-002 6 + gen-004 6 + gen-005 6）。max_tokens=2,000では空応答のため4,000に引き上げて実施（reasoning約1,800–2,900）。Baseten枠に含めない
-- Meta Judge: `muse-spark-1.3-contributor` で24回（gen-001 6 + gen-002 6 + gen-003 6 + gen-004 6 + gen-005 6）、max_tokens 8,000（C-C/Dで12,000に引上げ）。Baseten枠外
+- Metaレビュー: `muse-spark-1.3-contributor` で30回（gen-001 6 + gen-002 6 + gen-003 6 + gen-004 6 + gen-005 6）。max_tokens=2,000では空応答のため4,000に引き上げて実施（reasoning約1,800–2,900）。Baseten枠に含めない
+- Meta Judge: `muse-spark-1.3-contributor` で30回（gen-001 6 + gen-002 6 + gen-003 6 + gen-004 6 + gen-005 6）、max_tokens 8,000（C-C/Dで12,000に引上げ）。Baseten枠外
 
 ---
 
@@ -716,11 +716,11 @@ node loops/loop-016/tools/loop16-judge.mjs --all                             # c
 |---|---|---|---|---|---|---|---|
 | gen-001 | 基準（facts+plan→生成、insightsなし、legacyテンプレ） | 6 success | 18新規 | 20 (25,25,25,23,20,21 occ) | 0/6 (全 ある) | loop-015から6ケース英語版を立ち上げ、全case適合pass/散文0で確定 | 事実表内反復3回・二重掲載・検証文・企画メモ・見出しずれ（統括目視）→ 2層検出で全拾得 |
 | gen-002 | research v1.0適用（common+case別、事実根拠はcasesのみ） | +6 success (C-Bで8,000→12,000に引上げ) | 再利用 | 23.5 (25,25,25,25,20,21) | 0/6 | 集約→分散・期間分離・日勤否定・駅名明示等の研究型改善。生成文面の知見は次のケースへ自動注入 | pagecheck/judgeは不変（gen-001と同テンプレのため）。researchの文面改善では拾えないページ級欠陥は検出に残存 |
-| gen-003 | テンプレ T1-T5（hero facts由来化・二重掲載除去・検証ブロック除去・記録ラベル除去・見出し整合） | 0（文章はgen-002逐語再利用） | 再利用 | 7.5 (7,7,7,6,8,8) | 2/6 (C-B/C-D) | 2層検出の指摘をテンプレで一括解消: dup 23→7、verification 10→2、record 53→0、heading 1→0。heroP6 6/6 PRESENT化 | R1競合（conformance verbatim vs 重複減）の種が残る、R3-R8の6項目は次世代へ |
+| gen-003 | テンプレ T1-T5（hero facts由来化・二重掲載除去・検証ブロック除去・記録ラベル除去・見出し整合） | 0（文章はgen-002逐語再利用） | 再利用 | 7.5 (7,7,7,6,8,8) | 4/6 (C-A/C-B/C-C/C-D) | 2層検出の指摘をテンプレで一括解消: dup 23→7、verification 10→2、record 53→0、heading 1→0。heroP6 6/6 PRESENT化 | R1競合（conformance verbatim vs 重複減）の種が残る、R3-R8の6項目は次世代へ |
 | gen-004 | reflection v-next-gen004 R1-R8 + ケース別（R1,R2+ケース別→生成意図、R3-R8→組み立て） | +6 success (12,000, C-E再試行1) | 再配分 (place小) | 8.5 (9,8,9,9,7,9) | 1/6 (C-B) | R3-R8組立系6/6解消、ケース別生成意図5/6解消。flexコア説明・15kg前出し・weekend preferred正確化等の意図反映 | R1再発5/部分1（conformanceと衝突）、pagecheck 5悪化/1微改善、judge P1 3再発（hero-highlightの逐語重複が原因） |
 | gen-005 | S1+S2 競合解消（hero値チップ化 + sentences単一配置、T1-T5+R3-R8維持、文内言い換えは対象外） | 0（文章はgen-004逐語再利用） | 再配分維持 | 7 (7,7,10,8,6,7) | 4/6 (C-A/D/E/F) | R1のassembly側緩和: 4解消/2再発、pagecheck dup 5改善/1微増(ラベル重複)、occ全ケース減(-2〜-9)、judge P1 4解消。heroP6維持、verification/record/heading維持 | 文内繰り返し（facts値の跨文逐語含有一致）2再発は組み立て対象外として残す |
 
-> vanilla lines（`vanilla/{wonder,spark}/`）は gen-001時点の facts-only単一プロンプト一発の並行ラインとして作成（2026-11-02、Baseten外・Meta枠）。research適用後の gen-002 以降の本ライン（research+知見+テンプレ）とのブラインド対照評価は別途実施し、本ループの締めでは「作成済み・評価未実施」として記録する。
+> vanilla lines（`vanilla/{wonder,spark}/`）は gen-001時点の facts-only単一プロンプト一発の並行ラインとして作成（2026-11-02、Baseten外・Meta枠）。ブラインド対照評価は実施済み（`vanilla/evaluation/blind-evaluation-20261102.md` 2026-11-02 12:16 JST、judge 18＋review 18＋対応表＋3軸）。[訂正 2026-11-03: 監査レビュー §6-A A6・裁定R7により「作成済み・評価未実施」から更新]
 
 ### Baseten 最終消費（40枠）
 
@@ -728,8 +728,8 @@ node loops/loop-016/tools/loop16-judge.mjs --all                             # c
 |---|---|---|---|---|
 | Baseten 生成 | 40 | **20** success (23 calls) | 20 | 較正probe 2 (4,000でfail 1 + 8,000でsuccess 1) + gen-001 6 + gen-002 6 (C-Bで実8 calls, fail2含む) + gen-004 6 (C-E再試行1含む) = 23 calls / 20 success。gen-003/005は0（文章再利用） |
 | Meta 画像生成 | 別枠 | 18 success | — | gen-001で 3点×6ケース新規、gen-002以降再利用、gen-004/005は再配分のみ |
-| Meta ペルソナレビュー | 別枠 | 18 (gen-001 6 + gen-002 6 + gen-004 6 + gen-005 6) | — | 1件あたり prompt ~700-800 / completion ~2,600-3,400 / reasoning ~1,800-2,900。gen-004から 4,000 max_tokensで安定 |
-| Meta Judge | 別枠 | 24 (gen-001 6 + gen-002 6 + gen-003 6 + gen-004 6 + gen-005 6) | — | 1件あたり prompt ~4,000-4,400 / completion ~2,400-8,000 / reasoning ~2,100-7,800。C-C gen-003/gen-004/gen-005で 8,000→12,000に引上げ要 |
+| Meta ペルソナレビュー | 別枠 | 30 (gen-001 6 + gen-002 6 + gen-003 6 + gen-004 6 + gen-005 6) | — | 1件あたり prompt ~700-800 / completion ~2,600-3,400 / reasoning ~1,800-2,900。gen-004から 4,000 max_tokensで安定 |
+| Meta Judge | 別枠 | 30 (gen-001 6 + gen-002 6 + gen-003 6 + gen-004 6 + gen-005 6) | — | 1件あたり prompt ~4,000-4,400 / completion ~2,400-8,000 / reasoning ~2,100-7,800。C-C gen-003/gen-004/gen-005で 8,000→12,000に引上げ要 |
 | 対照 vanilla | 別枠/Meta | 12 (wonder 6 + spark 6) | — | facts-only入力、prompt-v1.0共有、単一応答手直しなし。wonder 3件が8000で切断 |
 
 > Baseten 40枠は半分を残して閉鎖（20/40 success）。締切2026-11-05 11:00 JSTに対しK3（11/04日中までに最終生成）はgen-004時点で達成、gen-005は組み立てのみで11/02中に完了。
@@ -741,7 +741,7 @@ node loops/loop-016/tools/loop16-judge.mjs --all                             # c
 | 1 | 文内繰り返し（facts値の跨文逐語含有一致） | 残件 | C-B `Day shift 08:30-17:00, 5 days/week; no scheduled night duty` と C-C `Contract, 12 months / Renewal review at month 11` が4箇所（hero要約・facts表・本文・チェック）で逐語を含む。pagecheck dup 2 groups残、judge P1 2再発（C-B/C-C）。assemblyでは直せず、生成文の言い換え（数値はverbatim維持しつつ冗長なfacts値言及を避ける）が必要 | 次ループの生成プロンプト（R1）で「facts表が担う値の再述を避け、関係性や含意を書く」方針を継続するが、conformanceの verbatim チェックと調整が必要（数値は必須だが文面での再列挙は避ける指示の精緻化） |
 | 2 | 検証文 2 groupsの扱い | 残件 | `All conditions above are from the X sentences of C-* gen-*. No new facts are added.` のCTA由来2 groupsが全世代で残存（pagecheck verify 2、judge P2 全 ある）。T3で highlightの `What this means / numbers stay exactly as stated` は除去済みだがCTA由来はR外 | CTAブロックの `All conditions above` 文言を「条件は上記のとおり（X文で再掲）」等の検証的表現から「不明点は店舗・担当へ」等の問い合わせ誘導へ置換する候補。恒常化は本人承認を経る |
 | 3 | 候補の恒常化判断 | 未決 | pagecheckの4項目（重複・検証辞書・記録露出・見出しずれ）+ heroP6 + dicts/pairsは candidate（v1.1-candidate）として運用。gen-003-005で改善を確認したが、恒常化は本人承認待ち | `tools/dicts/*.json` と `checks/pairs/*.md` の版を固定し、恒常化時は `docs/design/baseten-verification-loop-design-v1.md` の検出条項へ昇格。本ループでは candidate のまま残す |
-| 4 | vanilla ブラインド対照評価 | 未実施 | vanilla vs 本ライン（research+知見+テンプレ+T1-T5+R3-R8+S1+S2）のブラインド対照は作成済みだが未評価。wonder 3件の切断（A/D/F）は手直し禁止のためそのまま | 次回ブラインド審査で `vanilla/{wonder,spark}/` 12LP と本ラインの最新6LP（gen-005）を並置し、適合/散文/pagecheck/judgeの4軸で評価。本体工程1-6は触れない |
+| 4 | vanilla ブラインド対照評価 | 実施済み | ブラインド対照評価は実施済み（`vanilla/evaluation/blind-evaluation-20261102.md` 2026-11-02 12:16 JST、judge 18＋review 18＋対応表＋3軸）。vanilla vs 本ライン（research+知見+テンプレ+T1-T5+R3-R8+S1+S2）を匿名化ブラインドで評価。wonder 3件の切断（A/D/F）は手直し禁止のためそのまま評価対象。[訂正 2026-11-03: 監査レビュー §6-A A6・裁定R7により「未実施→実施済み」に更新] | 本評価で適合/散文/pagecheck/judgeの4軸での対照は完了。以後の追加評価は次ループで実施（本体工程1-6は変更しない） |
 
 ### 本体（工程1-6）・cases/・researchの不変確認
 
@@ -749,6 +749,18 @@ node loops/loop-016/tools/loop16-judge.mjs --all                             # c
 - `cases/case-*.json` の sha256 は入力版と一致: C-A `B45890145326923470AB15562BAFECF617D3B1CD48DE8188A47A3D77D1B3EC62` / C-B `2A805D6017C20CC930BBEF789619CBCC0910C83996603129AFCBA8A23A9C2FFB` / C-C `CE2BC2D04A67D1AAE4FF0373810D6CD0C8A172C767E7B5276E90A130E0B3D554` / C-D `826E731B9744796392D5F094967E26E9CC3B62F41EB50E1E4A7DC5331723C9D8` / C-E `CCF63AA18AA59B1C179265B5D9A4D4E6E8E5E0E6FC45CC204B761F22901867C8` / C-F `D60B77BA695931B8A6D7A4793C186251DF8E75AA6D05B64CCA5E6B10066074D5`。gen-005は生成再利用のため casesへの書き戻しなし。
 - `research/common.md` + `case-a..f.md` v1.0 は版固定のまま（gen-002以降の適用版として記録、変更なし）。
 - コミット・push なし（HEAD `fbd576f` 維持）。成果物は `loops/loop-016/` 内の untracked + 未コミット作業ツリーとして残す。
+
+## 訂正履歴（監査レビュー §6-A 対応 — 本体・cases・research 変更なし、コミット・push なし）
+
+| 日付 | 対象 | 訂正内容 | 根拠・裁定 |
+|---|---|---|---|
+| 2026-11-03 | run-record.md:719 | gen-003 judge P1「2/6 (C-B/C-D)」→「4/6 (C-A/C-B/C-C/C-D)」 | 監査レビュー §6-A A1・裁定R1。実物 `checks/case-*-gen-003-judge.md` P1 4件反転（A-D）で確認 |
+| 2026-11-03 | run-record.md:56,62,731 | Metaレビュー「18回（gen-001 6+002 6+004 6+005 6）」→「30回（+gen-003 6）」、表内「18」→「30」 | 監査レビュー §6-A A3・自己監査1-01。実測 `git ls-files loops/loop-016/reviews` 31（30+README） |
+| 2026-11-03 | run-record.md:57,63,732 | Meta Judge「24回」→「30回（6×5）」 | 監査レビュー §6-A A3・自己監査1-02。算術誤り 6×5=30。実測 `checks` 60 judgeファイル=30件 |
+| 2026-11-03 | run-record.md:723 | vanilla「作成済み・評価未実施」→「実施済み（`vanilla/evaluation/blind-evaluation-20261102.md` 参照）」 | 監査レビュー §6-A A6・裁定R7。時差解消、評価ファイル実在 2026-11-02 12:16 JST |
+| 2026-11-03 | run-record.md:744 残件#4 | 状態「未実施」→「実施済み」、詳細・対応方針を評価完了記述に更新 | 同上 |
+| 2026-11-03 | run-record.md:723,744 | 行内に [訂正 2026-11-03] 注記を付記 | 本表と対応 |
+| 2026-11-03 | checks/case-e-gen-005-judge.md | `## P4` 空欄・`## P5`/`## P6` 欠落を同条件で再実行し補完。初回は `case-e-gen-005-judge.original-20261102.md/.json` に保管 | 監査レビュー §6-A A2。P1「ない」は不変のため run-record:721・統括版:74 の計数は影響なし。P4 ない / P5 ある / P6 ない で完備（prompt4103/comp7127/total11230 reasoning6701） |
 
 ## 実測・記録・判断の区別
 ```

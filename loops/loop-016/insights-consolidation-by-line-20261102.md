@@ -131,7 +131,7 @@
 | gen-004 R1-R8 | reflection v-next（生成意図+組立） | +6(実7) | 再配分 | 8.5 (9,8,9,9,7,9) | 1/6 | R3-R8 6/6・ケース別5/6解消 | R1 5再発/1部分、dup5悪化、P1 3再発（hero逐語重複） |
 | gen-005 S1+S2 | heroチップ化+単一配置（T1-T5+R3-R8維持） | 0 | 再配分維持 | 7 (7,7,10,8,6,7) | 4/6 | R1 4/6解消、dup5改善 occ全減、P1 4解消 hero維持 | 文内繰り返し2再発は対象外として残す |
 
-- Baseten最終: 20/40 success（23 calls: probe2+gen-001 6+gen-002 6実8+gen-004 6実7、gen-003/005 0）、Meta画像18・レビュー18・judge24・vanilla12（prompt計 wonder2968/comp45606/total48574 spark2968/19075/22043、wonder 3件A/D/Fが8000で切断）、締切2026-11-05 11:00 JST に対し K3は gen-004時点で達成
+- Baseten最終: 20/40 success（23 calls: probe2+gen-001 6+gen-002 6実8+gen-004 6実7、gen-003/005 0）、Meta画像18・レビュー30・judge30・vanilla12（prompt計 wonder2968/comp45606/total48574 spark2968/19075/22043、wonder 3件A/D/Fが8000で切断）、締切2026-11-05 11:00 JST に対し K3は gen-004時点で達成 [訂正 2026-11-03: レビュー18→30・judge24→30は監査レビュー §6-A A3による]
 
 ---
 
@@ -260,7 +260,7 @@
 |---|---|---|---|---|
 | 1 | 文内繰り返し（facts値の跨文逐語含有一致） | 残件 | C-B `Day shift 08:30-17:00, 5 days/week; no scheduled night duty` と C-C `Contract, 12 months / Renewal review at month 11` が hero要約・facts表・本文・チェックの4箇所で逐語を含む。pagecheck dup 2 groups残、judge P1 2再発（C-B/C-C）、gen-004 R1 5再発→gen-005 S1+S2で C-B/C-Cのみ再発として残存。Assemblyでは除去不能（run-record「生成文の差と組立ての差」に「文内での言い換え繰り返しは conformance verbatim 要件と衝突するため組立てでは直せず対象外として残す」と明記） | 次ループの生成プロンプト（R1）で「facts表が担う値の再述を避け、関係性を書く」方針を継続するが、conformanceの verbatim チェック（数値は必須）と調整が必要。例: 数値は事実表で保持しつつ本文では「日勤帯」等の言い換えを許す精緻化を検討（推測: 現行は数値verbatimを機械検査でpass必須のため、生成側の抑制と検査側の許容を両方いじる必要がある） |
 | 2 | 検証文 2 groupsの扱い | 残件 | `All conditions above are from the X sentences of C-* gen-*. No new facts are added.` の CTA由来2 groupsが全世代で残存（gen-001 9/8 → gen-002 10/10 → gen-003 2/2 → gen-004 2/2 → gen-005 2/2、judge P2 全 ある）。T3で highlight `What this means / numbers stay exactly as stated` は除去済みだが CTA由来は R外として残留 | CTAブロックの文言を「条件は上記のとおり（X文で再掲）」等の検証的表現から「不明点は店舗・担当へ」等の問い合わせ誘導へ置換する候補（run-record「残件 #2」より）。恒常化は本人承認を経る |
-| 3 | vanilla ブラインド対照評価の未実施 | 未実施 | vanilla `wonder 6 + spark 6 =12LP`（prompt-v1.0 facts-only一発、単一応答手直しなし。wonder 3件A/D/Fが8000で切断して `</html>` なしのまま、手直し禁止のためそのまま残す）と本ライン最新6LP（gen-005 T1-T5+R3-R8+S1+S2）を並置する評価は未実施（run-record「締め」に「作成済み・評価未実施」として記録）。vanilla usage: wonder prompt2968/comp45606/total48574（3件上限到達）/ spark 2968/19075/22043 | 次回ブラインド審査で 適合/散文/pagecheck/judge の4軸で並置評価（run-record「残件 #4」）。本体工程1-6は触れない。切断3件は手直しせず評価材料に含める |
+| 3 | vanilla ブラインド対照評価 | 実施済み | ブラインド対照評価は実施済み（`vanilla/evaluation/blind-evaluation-20261102.md` 2026-11-02 12:16 JST、judge 18＋review 18＋対応表＋3軸）。vanilla `wonder 6 + spark 6 =12LP`（prompt-v1.0 facts-only一発、wonder 3件A/D/Fが8000で切断して `</html>` なしのまま手直し禁止のためそのまま評価対象）と本ライン最新6LP（gen-005 T1-T5+R3-R8+S1+S2）を匿名化ブラインドで評価済み。vanilla usage: wonder prompt2968/comp45606/total48574（3件上限到達）/ spark 2968/19075/22043 [訂正 2026-11-03: 監査レビュー §6-A A6・裁定R7により「未実施→実施済み」に更新] | 本評価で適合/散文/pagecheck/judgeの4軸対照は完了。以後の追加評価は次ループで実施（本体工程1-6は変更しない） |
 | 4 | 画像の目視確認 | 未実施 | 生成画像 18点（gen-001 3点×6、input400,405/output34,650、manifest記録、プロンプト末尾 no text/numbers/logos）はファイル確認のみで文脈への大量読込は行わず、画像中の文字・数字・ロゴ混入の目視は未実施として記録（loop-015は「文字なしを目視確認」済みだが loop-016は「未実施」と明記）。gen-004/005は再配分（place photo-sm）のみで新規生成なし | 次ループまたは恒常化判断時に画像の文字混入を目視で再確認（推測: 目視未実施は記録上の留保で、画像規格自体は loop-015 と同型で維持されている） |
 | 5 | 候補の恒常化判断（全体） | 未決 | 上記1-4を含め、pagecheck 4項目＋heroP6＋dicts/pairs＋judge P1-P6＋research v1.0＋reflection/R1-R8/S1+S2 は全て candidate のまま（run-record「残件 #3」に「gen-003-005で改善を確認したが恒常化は本人承認待ち、dicts/pairsの版を固定し昇格時は設計書へ」と明記） | `tools/dicts/*.json` と `checks/pairs/*.md` の版を固定し、恒常化時は `docs/design/baseten-verification-loop-design-v1.md` の検出条項へ昇格。本ループでは candidate のまま残す |
 | 6 | P5 当事者の声の欠落・P3 Generation記録露出の優先度 | 未決 | P5は全世代 全ケース ある 持続（声欠落）、P3は gen-003以降 `Generation: loops/...gen-*.json · model ... prompt.../comp...` の露出と判定され 全 ある 持続（run-record各 judge 表）。いずれも gen-002時点で「P1-P4を優先しP5は参照に留める」と判断済み | 本件は「改善点ではなく観察」として扱い、gen-002以降は P1-P4優先で運用（run-record「ページ級検出の初回トライアル」より）。恒常化判断時に P5の条項化可否と P3の除外（generation注記を P3 から除外するか）を検討 |
@@ -282,7 +282,7 @@
 | 世代列の数値（適合/散文/pagecheck/judge/トークン/呼び出し回数） | 本ファイル1章 vs 統括版の同表 | 本ファイルの数値は run-record の実測（prompt/comp/total/reasoning/dup/verify/record/heading/heroP6/usage）を原文から転記。統括版が異なる数値を用いている場合は実測側を正とする |
 | 知見の束ね（大文字持続・欠落起因等） | 本ファイル2章 I-1〜I-8 vs 統括版の知見章 | 本ファイルは `insights/001-012` の原文を束ねたもので、統括版が別の束ね方をしている場合は両方を残し、台帳昇格時は統合する |
 | 候補の状態（検出ルール・辞書・P6・researchの型・反映の仕組み） | 本ファイル3章 vs 統括版の候補章 | 本ファイルは `tools/dicts/*.json` / `tools/loop16-*.mjs` / `research/*.md` の在庫を棚卸しした結果。統括版が候補の恒常化判断を異なる箇所に置いている場合は本ループの「candidate のまま」を優先（本人承認前は loopが勝手に昇格しない） |
-| 残件（文内繰り返し・検証文2 groups・vanilla未実施・画像目視） | 本ファイル4章 vs 統括版の残件章 | 本ファイル4章は run-record「残件 #1-4」の実測を転記。統括版が追加の残件を挙げている場合は追記し、解消済みとしている場合は実測（pagecheck/judgeの最新値）で検証する |
+| 残件（文内繰り返し・検証文2 groups・vanillaブラインド対照評価・画像目視） | 本ファイル4章 vs 統括版の残件章 | 本ファイル4章は run-record「残件 #1-4」の実測を転記。vanillaは訂正により「実施済み」に更新済み。統括版が追加の残件を挙げている場合は追記し、解消済みとしている場合は実測（pagecheck/judgeの最新値）で検証する |
 
 3. 突合後は、本ファイルと統括版のどちらが正本かを明記し、次ループの反映元（`insights/` 連鎖・research版・dicts版）をどちらに寄せるか合意する
 
@@ -299,4 +299,14 @@
 - 検出候補在庫: `tools/loop16-pagecheck.mjs` v1.1-candidate（4項目＋P6 HERO_P6_CONFIG、dict数13/13/4/6、出力 pages） / `tools/dicts/verification-phrases.json` 13 / `record-labels.json` 13 / `heading-scope.json` 4（全status candidate） / `tools/loop16-judge.mjs`（P1-P6カタログ、pairs読込、researchヒント、8000/12000） / `checks/pairs/pair-01/02/03.md`（3件 candidate） / `checks/case-*-gen-*-pagecheck.json/.md`・`judge.md/.json` 全30点（dup/verify/record/heading/heroP6の実測）
 - vanilla: `vanilla/prompt-v1.0.md` v1.0（{{TICKET}} facts-only） / `vanilla/inputs/case-a.md`〜`case-f.md`（L01-L10 verbatim、sha256、v1.0 facts-only） / `vanilla/{wonder,spark}/case-*.html`（12LP、手直しなし、wonder 3件A/D/F 8000切断） / `vanilla/{wonder,spark}/case-*.meta.json`（prompt/completion/total・quota Meta） / `previews/images/` 18点並置コピー
 - 統括版の不在確認: `docs/loop-015-016-insights-summary-20261102.md` は `read` で不存在（Git HEAD `fbd576f` 時点、手元 `docs/` 一覧でも不在）
+
+---
+
+## 訂正履歴（監査レビュー §6-A 対応 — 本体・cases・research 変更なし、コミット・push なし）
+
+| 日付 | 対象 | 訂正内容 | 根拠・裁定 |
+|---|---|---|---|
+| 2026-11-03 | 1章 Baseten最終行 | Meta レビュー18→30・judge24→30 | 監査レビュー §6-A A3・自己監査1-01/1-02。実測 reviews 30+README / checks judge 60ファイル=30件 |
+| 2026-11-03 | 4章 #3 | 状態「未実施」→「実施済み」、詳細・対応方針を評価完了記述に更新 | 監査レビュー §6-A A6・裁定R7。評価ファイル `vanilla/evaluation/blind-evaluation-20261102.md` 実在 |
+| 2026-11-03 | 5章 観点表 | 「vanilla未実施」→「vanillaブラインド対照評価」に文言更新 | 同上 |
 
