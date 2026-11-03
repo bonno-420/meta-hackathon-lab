@@ -15,6 +15,16 @@ Design line also drafts, each short and in the same document series:
 - `docs/design/learning-flow-statement.md` — the flow by which learnings are learned: how what a run produces (evaluations, failures, the user's annotations) becomes learnings, how learnings are consolidated, and how they feed the next plan and the next gate (candidate → verification → approval, per decision D8).
 Each is a draft for the user's confirmation, like Step 0. They are baselines for judging the gap alongside the intent statement.
 
+### Flow requirements (user, 2026-11-03) — both statements must incorporate all of these
+
+1. Production order after fact approval: planning (audience and appeal) → one overall key visual fixing the look → real images generated to that specification → copy → assembly.
+2. Two guaranteed preview points: when the key visual is made, and after the LP is assembled. A preview is always emitted there — never optional. Approvals and learning start from what the user actually sees at those points.
+3. Until a preview point is reached, the system self-corrects and does not stop. Stop points are only: fact approval, the two previews, and a contradiction in the facts (which stops as before).
+4. Confirmation style: show the artifact first; do not stall the work with repeated questions; if the user has no specific correction, confirmation happens on the push.
+5. The correction cycle is seamless: review comes out → decide whether to fix → fix → review comes out again, with no ceremony between steps; re-review follows a fix automatically.
+6. The cycle converges to delivery. Looping without ever delivering is a failure mode: the run ends by handing over the finished LP.
+7. Weight in the learning flow: routine fixes close at audit; the user's approval is reserved for gate promotion/withdrawal and recorded decisions (D8). Feedback on a preview reaches the next generation — today that path is a manual relay by the coordinator, not a tool function; the statement records that as the current state.
+
 ## Step 1 — investigate, then design
 
 Design line: investigate, then design, in one short document (docs/design/gap-fill-design-v1.md), measured against the confirmed intent statement.
