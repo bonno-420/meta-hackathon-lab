@@ -450,9 +450,41 @@ expectTrue("review-pass-after-sendback-recorded", runRVP.stages.review.verdict =
   expect("copy-review-fail-stops-at-generation", runCV.stoppedAt, "generation");
   expectTrue("copy-review-retried-to-bound", copyCalls === 3 && runCV.stages.generation.review.verdict === "fail");
 }
+// ---------- boilerplate scan overrides a judge pass (loop-025) ----------
+// run26's lesson: a judge passed copy whose sentences all closed
+// with boilerplate requests. The researched-pattern scan is
+// deterministic: judge pass + boilerplate hits = fail, retry, stop.
+{
+  const scratchBP = makeScratch();
+  await runDemo(
+    { root: scratchBP, ...REAL, checkpoints: "light" },
+    { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
+  );
+  const stateBP = JSON.parse(readFileSync(path.join(scratchBP, "out/run-state.json"), "utf8"));
+  const confBP = { file: stateBP.keyVisual.image.file, sha256: stateBP.keyVisual.image.sha256, confirmer: "本人", confirmedAt: "2026-11-03" };
+  let genCallsBP = 0;
+  const boilerGenerate = async (a) => {
+    genCallsBP++;
+    const r = await faithfulGenerate()(a);
+    if (r && r.generation && Array.isArray(r.generation.sentences) && r.generation.sentences[0]) {
+      r.generation.sentences[0] = { ...r.generation.sentences[0], text: String(r.generation.sentences[0].text).replace(/。?$/, "をご確認ください。") };
+    }
+    return r;
+  };
+  const runBP = await runDemo(
+    { root: scratchBP, ...REAL, checkpoints: "light", resumeState: stateBP, kvConfirmation: confBP },
+    { extract: async () => faithfulExtract(), generate: boilerGenerate, ...stubKeyVisualDeps(), images: stubImages(),
+      review: async () => ({ status: "reviewed", verdict: "pass", findings: [], model: "stub", promptVersion: "lp-review-v3" }) },
+  );
+  expect("boilerplate-override-stops", runBP.stoppedAt, "generation");
+  expectTrue("boilerplate-override-retried", genCallsBP === 3);
+  expectTrue("boilerplate-override-recorded", runBP.stages.generation.review.verdict === "fail");
+}
 // ---------- review module: outline / parse / feedback ----------
 {
-  const { pageOutlineFromHtml, parseReview, reviewFeedbackText } = await import("./review.mjs");
+  const { pageOutlineFromHtml, parseReview, reviewFeedbackText, boilerplateHits } = await import("./review.mjs");
+  expectTrue("boilerplate-scan-catches-closings", boilerplateHits([{ text: "時給は1,350円です。ご確認のうえご検討ください。" }, { text: "土日祝日はお休みです。" }]).length === 1);
+  expectTrue("boilerplate-scan-exempts-unstated", boilerplateHits([{ text: "更新の有無は未記載です。お気軽にお問い合わせください。" }]).length === 0);
   const outline = pageOutlineFromHtml(`<main><section class="lp-hero"><img src="images/hero.webp" alt=""><div class="hero-chips"><span class="hero-chip">時給1,350円</span></div></section><section class="title-block"><p>時給は1,350円です。</p></section><section class="explain-row"><img class="inline-photo" src="images/section-work.webp" alt=""></section></main><footer class="cta"><button class="cta-button" type="button">応募する</button></footer>`, { "hero.webp": "workers sorting parcels", "section-work.webp": "a worker at a conveyor" });
   expectTrue("review-outline-blocks", outline.length === 4 && outline[0].chips[0] === "時給1,350円" && outline[2].images[0].shows === "a worker at a conveyor" && outline[2].text === "");
   expectTrue("review-parse-pass", parseReview('{"verdict":"pass","findings":[]}').verdict === "pass");

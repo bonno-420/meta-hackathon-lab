@@ -1,0 +1,14 @@
+{
+  "version": "appeal-patterns-v1",
+  "market": "ja",
+  "source": "loops/loop-025/research-appeal-patterns.md — patterns abstracted from public Japanese job-media ads (バイトル/タウンワーク/マイナビバイト/リクナビ派遣ほか, read 2026-11-04). No ad text is copied; only the structures are recorded.",
+  "patterns": [
+    { "id": "AP1", "name": "headline-is-the-job", "rule": "The headline is the job itself, with the deciding conditions attached; never a greeting and never conditions alone." },
+    { "id": "AP2", "name": "short-assertions", "rule": "Appeals are short assertions, one point per sentence. No long explanatory prose; a sentence says one thing." },
+    { "id": "AP3", "name": "condition-with-meaning", "rule": "State each condition together with what it means in the reader's life (from the audience), in the same breath. Never end at a restatement of the condition." },
+    { "id": "AP4", "name": "barrier-with-ground", "rule": "A low-barrier appeal (no experience needed, etc.) is paired with the concrete ground the materials give — the work's concrete tasks. Never invent support systems, training, or staff that the materials do not state." },
+    { "id": "AP5", "name": "numbers-early-and-exact", "rule": "The concrete numbers (wage, hours, caps) stay in the sentences that carry them, exactly as stated; do not bury, round, or convert them." },
+    { "id": "AP6", "name": "no-boilerplate-closings", "rule": "Never close an appeal sentence with a boilerplate request (ご確認ください / ご検討ください / お問い合わせください). End assertions plainly. An inquiry invitation may appear only on a sentence that states an item is not stated (未記載), at most once in the copy." },
+    { "id": "AP7", "name": "cta-at-the-end-only", "rule": "Application and inquiry calls live at the page's closing, not inside appeal sentences." }
+  ]
+}

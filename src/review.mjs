@@ -11,9 +11,26 @@
 // back to generation once, and a second fail stops the run with the
 // findings on record.
 
-export const REVIEW_PROMPT_VERSION = "lp-review-v2";
+export const REVIEW_PROMPT_VERSION = "lp-review-v3";
 
 const VERDICT_SCHEMA = 'Schema: {"verdict":"pass"|"fail","findings":[{"criterion":"...","target":"the block, sentence, or planning item","problem":"what is wrong","instruction":"what to change"}]}';
+// The researched market patterns (loop-025) include one rule that
+// does not need a judge: appeal sentences never close with a
+// boilerplate request. run26's copy passed a judge while every
+// sentence ended in one, so the scan is deterministic and run-demo
+// treats its hits as a fail regardless of the judge's verdict. A
+// sentence stating an item is not stated (未記載) is exempt: the
+// inquiry invitation there is the user's decided pattern.
+export function boilerplateHits(sentences) {
+  const hits = [];
+  (sentences ?? []).forEach((s, i) => {
+    const text = typeof s === "string" ? s : (s?.text ?? "");
+    if (/未記載/.test(text)) return;
+    if (/(ご確認|ご検討|お問い合わせ|ご応募)ください/.test(text)) hits.push({ index: i, text });
+  });
+  return hits;
+}
+
 const REVIEW_RULES = "Rules: judge only what you are shown. Do not demand facts the posting does not have. A finding's instruction must say concretely what to change, without inventing new facts. If both reviewers can accept it, verdict is \"pass\" with an empty findings list. Output JSON only, no markdown fences.";
 
 // Planning review: the plan is judged before anything is generated —
@@ -29,7 +46,7 @@ export function buildPlanningReviewMessages({ planning }) {
     "1. audience-fit: the audience is vague, or the appeals do not match what this reader would actually check and care about.",
     "2. appeal-grounding: an appeal is not grounded in a fact key or an original line, or promises something the posting does not state.",
     "3. decision-order: the first-check items are not what this reader would check first, or the appeals' order fights the reader's decision order.",
-    "4. image-design: the image specs do not cover the appeals they should carry, or an image spec asks for a workplace/building exterior, a vehicle or cash as the subject, or text/numbers inside the image.",
+    "4. image-design: the image specs do not cover the appeals they should carry, or text/numbers inside the image. Standing design rules apply after planning: a spec whose subject is a workplace/building exterior is replaced at design time with an interior work scene, and vehicle/cash/clock subjects are sent back — so do not fail a spec for wording the design step replaces; DO fail when an appeal or the plan's structure depends on a prohibited subject (for example an appeal that sells the building's appearance).",
     "5. client-test: as the client, this plan would not lead to a posting you could approve (for example it leads with a condition instead of the job itself).",
     REVIEW_RULES,
     VERDICT_SCHEMA,
@@ -59,6 +76,7 @@ export function buildCopyReviewMessages({ planning, generation }) {
     "2. appeal-works: sentences that only restate facts (\"X is Y\") without connecting them to the reader. Judge as a whole; if the copy reads as a list of conditions, fail, naming the sentences.",
     "3. reader-fit: the copy does not speak to this audience (their hours, their area, their situation), or its tone/register is wrong for a job posting from the employer.",
     "4. client-test: as the client, this copy could not go out as your posting (awkward, templated to the point of insincerity, or missing the essentials a posting needs).",
+    "5. appeal-patterns: judged against the researched patterns of this market (public job ads, abstracted in loop-025): appeals are short assertions, one point per sentence; each condition is paired with what it means in the reader's life; a low-barrier appeal is paired with its concrete ground. Boilerplate request closings (ご確認ください / ご検討ください / お問い合わせください) on appeal sentences fail this criterion — an inquiry invitation is allowed only on a sentence that states an item is not stated (未記載).",
     REVIEW_RULES,
     VERDICT_SCHEMA,
   ].join("\n");
@@ -78,7 +96,8 @@ export function buildCopyReviewMessages({ planning, generation }) {
 // shows, and the purposes they serve — against the persona's
 // decision order and the appeals.
 export function sampleOutlineFromLayout(layoutRecord, imageDesign) {
-  const designById = new Map((imageDesign ?? []).map((d) => [d.id, d]));
+  const entries = Array.isArray(imageDesign) ? imageDesign : (imageDesign?.images ?? []);
+  const designById = new Map(entries.map((d) => [d.id, d]));
   const blocks = [];
   for (const m of layoutRecord?.messageMap ?? []) {
     const carries = m?.carries ?? {};
@@ -170,7 +189,7 @@ export function buildReviewMessages({ planning, outline }) {
     "",
     "Fail the page (verdict \"fail\") when any of these hold, and report each as a finding:",
     "1. job-first: the reader cannot tell what job this is from the top of the page (hero, headline, first cards). The work itself must be the headline or immediately identifiable; a headline that is only a condition (for example the wage) fails, and so does a page where the work content only appears near the bottom.",
-    "2. appeal-works: the copy only restates facts (\"X is Y\") without connecting them to the reader. Judge the appeal sentences as a whole: if they read as a list of conditions rather than speaking to the reader, fail, naming the sentences.",
+    "2. appeal-works: the copy only restates facts (\"X is Y\") without connecting them to the reader. Judge the appeal sentences as a whole: if they read as a list of conditions rather than speaking to the reader, fail, naming the sentences. Judge against the researched market patterns (loop-025): short assertions, each condition paired with its meaning for the reader; boilerplate request closings (ご確認ください / ご検討ください) on appeal sentences fail here too.",
     "3. posting-completeness: a job posting's essentials — the work, the place, the employment type and period, the pay, the hours and break, the holidays, the transport, who can apply — must be present and easy to find. Anything missing, or buried so a reader would miss it, fails.",
     "4. no-mute-blocks: an image shown with no accompanying text, or a block that carries nothing, fails (name the block).",
     "5. client-test: as the client, if this page reads as facts and pictures rather than a designed posting that makes the reader want to apply, fail.",

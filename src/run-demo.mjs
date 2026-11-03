@@ -33,7 +33,7 @@ import { renderHtmlToImage } from "./render-page-image.mjs";
 import { pinPostingText, buildFactsFile, buildManifest } from "./pin-posting.mjs";
 import { decideImagePlanFromSpecs } from "./generate-images.mjs";
 import { assembleFromLayout, matchAppealSentences } from "./assemble-layout.mjs";
-import { reviewFeedbackText, sampleOutlineFromLayout } from "./review.mjs";
+import { reviewFeedbackText, sampleOutlineFromLayout, boilerplateHits } from "./review.mjs";
 
 const execFileAsync = promisify(execFile);
 
@@ -827,6 +827,16 @@ export async function runDemo(options, deps = {}) {
           // feedback, inside the same attempt bound.
           if (!reviewPage) break;
           try { lastCopyReview = await reviewPage({ mode: "copy", planningFile: options.planningFile ?? null }); } catch (e) { lastCopyReview = { status: "error", reason: String(e?.message ?? e) }; }
+          // Researched-pattern scan (loop-025): a judge passed
+          // run26's boilerplate copy, so this rule does not rely on
+          // the judge. Boilerplate request closings on appeal
+          // sentences convert a pass into a fail with findings.
+          if (lastCopyReview && lastCopyReview.status === "reviewed" && lastCopyReview.verdict === "pass") {
+            const hits = boilerplateHits(lastRun.generation.sentences ?? []);
+            if (hits.length > 0) {
+              lastCopyReview = { ...lastCopyReview, verdict: "fail", boilerplateHits: hits, findings: [...(lastCopyReview.findings ?? []), ...hits.map((h) => ({ criterion: "appeal-patterns", target: `sentence ${h.index + 1}`, problem: "市場の型に反する定型の締めが訴求文に使われている", instruction: "定型の締めを外し、条件と読み手にとっての意味を短く断定する" }))] };
+            }
+          }
           if (lastCopyReview && lastCopyReview.status === "reviewed" && lastCopyReview.verdict === "pass") break;
           if (lastCopyReview && lastCopyReview.status === "reviewed" && lastCopyReview.verdict === "fail" && attempts < maxAttempts) {
             const prior = attemptFeedback ? (() => { try { return readFileSync(resolveRoot(root, attemptFeedback), "utf8"); } catch { return ""; } })() : "";

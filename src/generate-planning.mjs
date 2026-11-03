@@ -15,7 +15,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { MODEL, BASE_URL, MAX_TOKENS, RATES_KNOWN, checkGenerationInput, checkGrounding } from "./generate.mjs";
 import { intentFromPlanning, sha256Text } from "./planning.mjs";
 
-export const PLANNING_PROMPT_VERSION = "lp-generate-v6-planning";
+export const PLANNING_PROMPT_VERSION = "lp-generate-v7-planning";
 
 // Planning-path messages. The materials are the approved FACTs AND
 // the original posting's lines: items the FACT schema does not carry
@@ -53,6 +53,19 @@ export function buildPlanningGenerationMessages(facts, original, planning, inten
     // (the user's learning-flow doctrine, 2026-11-03/04).
     "- A sentence that only restates a fact does not carry an appeal. For every appeal, state the fact AND what it means for the reader described in the audience, in the recruiter's voice. The meaning must come only from the fact itself and the appeal's framing: never add a new fact, condition, benefit, or promise that the materials do not state.",
     "- The work-content sentence is the page's headline. State plainly what the job is, so a reader knows what job this posting is for from that sentence alone.",
+    // The researched market patterns (loop-025, appeal-patterns-v1):
+    // the yardstick is no longer the coordinator's wording advice.
+    // Generation writes FROM the patterns; the review fails AGAINST
+    // them. Japanese market only — the patterns were researched in
+    // the market's own language, per the user's rule.
+    ...(planning?.language === "en" ? [] : [
+      "Market patterns (researched from public job ads in this market; binding for how appeals are written):",
+      "- Short assertions: one point per sentence, stated plainly. No long explanatory prose.",
+      "- Every condition is stated together with what it means in the reader's life (from the audience), in the same sentence. Never end at a restatement of the condition.",
+      "- A low-barrier appeal (no experience needed) is paired with the concrete ground the materials give — the work's concrete tasks. Never invent support systems or training.",
+      "- Never close an appeal sentence with a boilerplate request (ご確認ください / ご検討ください / お問い合わせください). End assertions plainly. An inquiry invitation may appear only on a sentence that states an item is not stated (未記載), at most once.",
+      "- No application or inquiry calls inside appeal sentences.",
+    ]),
     ...(intent?.voice?.rules ?? []).map((r) => `- ${r}`),
     `- Audience: ${planning?.audience ?? ""}`,
     "Appeals to carry (id / text / factKeys / sourceLines):",
