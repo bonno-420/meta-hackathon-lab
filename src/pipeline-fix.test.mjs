@@ -407,7 +407,7 @@ let generateCallsVF = 0;
 const runRVF = await runDemo(
   { root: scratchRV, ...REAL, checkpoints: "light", resumeState: stateRV, kvConfirmation: confRV },
   { extract: async () => faithfulExtract(), generate: async (a) => { generateCallsVF++; return faithfulGenerate()(a); }, ...stubKeyVisualDeps(), images: stubImages(),
-    review: async () => { reviewCallsVF++; return { status: "reviewed", verdict: "fail", findings: [{ criterion: "appeal-works", target: "all sentences", problem: "事実の言い換えだけで訴求になっていない", instruction: "事実と読み手をつないで書き直す" }], model: "stub", promptVersion: "lp-review-v1" }; } },
+    review: async ({ mode }) => { if (mode !== "page") return { status: "reviewed", verdict: "pass", findings: [], model: "stub", promptVersion: "lp-review-v2" }; reviewCallsVF++; return { status: "reviewed", verdict: "fail", findings: [{ criterion: "appeal-works", target: "all sentences", problem: "事実の言い換えだけで訴求になっていない", instruction: "事実と読み手をつないで書き直す" }], model: "stub", promptVersion: "lp-review-v2" }; } },
 );
 expect("review-fail-stops-run", runRVF.stoppedAt, "review");
 expectTrue("review-fail-attempts-two", runRVF.stages.review.attempts === 2 && reviewCallsVF === 2);
@@ -417,10 +417,39 @@ let reviewCallsVP = 0;
 const runRVP = await runDemo(
   { root: scratchRV, ...REAL, checkpoints: "light", resumeState: stateRV, kvConfirmation: confRV },
   { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages(),
-    review: async () => { reviewCallsVP++; return reviewCallsVP === 1 ? { status: "reviewed", verdict: "fail", findings: [{ criterion: "job-first", target: "title", problem: "見出しが条件だけ", instruction: "仕事そのものを見出しにする" }], model: "stub", promptVersion: "lp-review-v1" } : { status: "reviewed", verdict: "pass", findings: [], model: "stub", promptVersion: "lp-review-v1" }; } },
+    review: async ({ mode }) => { if (mode !== "page") return { status: "reviewed", verdict: "pass", findings: [], model: "stub", promptVersion: "lp-review-v2" }; reviewCallsVP++; return reviewCallsVP === 1 ? { status: "reviewed", verdict: "fail", findings: [{ criterion: "job-first", target: "title", problem: "見出しが条件だけ", instruction: "仕事そのものを見出しにする" }], model: "stub", promptVersion: "lp-review-v2" } : { status: "reviewed", verdict: "pass", findings: [], model: "stub", promptVersion: "lp-review-v2" }; } },
 );
 expect("review-pass-after-sendback-status", runRVP.status, "pending-human-confirmation");
 expectTrue("review-pass-after-sendback-recorded", runRVP.stages.review.verdict === "pass" && runRVP.stages.review.attempts === 2 && runRVP.stages.review.sendBacks.length === 1);
+// ---------- planning review gate: a failing plan stops before the key visual ----------
+{
+  const scratchPV = makeScratch();
+  const runPV = await runDemo(
+    { root: scratchPV, ...REAL, checkpoints: "light" },
+    { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages(),
+      review: async ({ mode }) => mode === "planning" ? { status: "reviewed", verdict: "fail", findings: [{ criterion: "decision-order", target: "firstCheckKeys", problem: "読み手が最初に確認する条件と合っていない", instruction: "最初に確認する条件を見直す" }], model: "stub", promptVersion: "lp-review-v2" } : { status: "reviewed", verdict: "pass", findings: [], model: "stub", promptVersion: "lp-review-v2" } },
+  );
+  expect("planning-review-fail-stops", runPV.stoppedAt, "planning-review");
+  expectTrue("planning-review-recorded", runPV.stages.planning.review.verdict === "fail");
+}
+// ---------- copy review gate: failing copy retries within the bound, then stops ----------
+{
+  const scratchCV = makeScratch();
+  const runCV0 = await runDemo(
+    { root: scratchCV, ...REAL, checkpoints: "light" },
+    { extract: async () => faithfulExtract(), generate: faithfulGenerate(), ...stubKeyVisualDeps(), images: stubImages() },
+  );
+  const stateCV = JSON.parse(readFileSync(path.join(scratchCV, "out/run-state.json"), "utf8"));
+  const confCV = { file: stateCV.keyVisual.image.file, sha256: stateCV.keyVisual.image.sha256, confirmer: "本人", confirmedAt: "2026-11-03" };
+  let copyCalls = 0;
+  const runCV = await runDemo(
+    { root: scratchCV, ...REAL, checkpoints: "light", resumeState: stateCV, kvConfirmation: confCV },
+    { extract: async () => faithfulExtract(), generate: async (a) => { copyCalls++; return faithfulGenerate()(a); }, ...stubKeyVisualDeps(), images: stubImages(),
+      review: async ({ mode }) => mode === "copy" ? { status: "reviewed", verdict: "fail", findings: [{ criterion: "appeal-works", target: "sentences", problem: "言い換えだけ", instruction: "読み手につなぐ" }], model: "stub", promptVersion: "lp-review-v2" } : { status: "reviewed", verdict: "pass", findings: [], model: "stub", promptVersion: "lp-review-v2" } },
+  );
+  expect("copy-review-fail-stops-at-generation", runCV.stoppedAt, "generation");
+  expectTrue("copy-review-retried-to-bound", copyCalls === 3 && runCV.stages.generation.review.verdict === "fail");
+}
 // ---------- review module: outline / parse / feedback ----------
 {
   const { pageOutlineFromHtml, parseReview, reviewFeedbackText } = await import("./review.mjs");

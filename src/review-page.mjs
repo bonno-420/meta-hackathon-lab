@@ -10,7 +10,7 @@ import { performance } from "node:perf_hooks";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { MODEL, BASE_URL, MAX_TOKENS } from "./generate.mjs";
-import { REVIEW_PROMPT_VERSION, buildReviewMessages, pageOutlineFromHtml, parseReview } from "./review.mjs";
+import { REVIEW_PROMPT_VERSION, buildReviewMessages, buildPlanningReviewMessages, buildCopyReviewMessages, buildSampleReviewMessages, pageOutlineFromHtml, parseReview } from "./review.mjs";
 
 function argValue(argv, flag) {
   const i = argv.indexOf(flag);
@@ -40,13 +40,16 @@ async function main() {
   const here = path.dirname(fileURLToPath(import.meta.url));
   const root = path.resolve(here, "..");
   const argv = process.argv.slice(2);
+  const mode = argValue(argv, "--mode") ?? "page";
   const planningFile = argValue(argv, "--planning");
   const lpFile = argValue(argv, "--lp");
+  const generationFile = argValue(argv, "--generation");
+  const outlineFile = argValue(argv, "--outline");
   const imagePlanFile = argValue(argv, "--image-plan");
   const out = argValue(argv, "--out");
   const runOut = argValue(argv, "--run-out");
-  if (!planningFile || !lpFile) {
-    console.error("usage: review-page.mjs --planning <f> --lp <lp.html> [--image-plan <f>] [--out <review.json>] [--run-out <run.json>]");
+  if (!planningFile || (mode === "page" && !lpFile) || (mode === "copy" && !generationFile) || (mode === "sample" && !outlineFile)) {
+    console.error("usage: review-page.mjs --mode planning|copy|sample|page --planning <f> [--lp <lp.html>] [--generation <f>] [--outline <f>] [--image-plan <f>] [--out <review.json>] [--run-out <run.json>]");
     process.exitCode = 2;
     return;
   }
@@ -60,18 +63,32 @@ async function main() {
     return;
   }
   const planning = JSON.parse(readFileSync(path.join(root, planningFile), "utf8"));
-  const html = readFileSync(path.join(root, lpFile), "utf8");
-  const descriptions = {};
-  if (imagePlanFile && existsSync(path.join(root, imagePlanFile))) {
-    try {
-      const plan = JSON.parse(readFileSync(path.join(root, imagePlanFile), "utf8"));
-      for (const img of plan.images ?? []) {
-        if (img?.file && img?.prompt) descriptions[path.basename(img.file)] = img.prompt;
-      }
-    } catch { /* descriptions stay empty; the outline still carries the page text */ }
+  let outline = [];
+  let messages;
+  if (mode === "planning") {
+    messages = buildPlanningReviewMessages({ planning });
+  } else if (mode === "copy") {
+    const generation = JSON.parse(readFileSync(path.join(root, generationFile), "utf8"));
+    outline = (generation.sentences ?? []).map((s, i) => ({ kind: "sentence", text: s.text ?? "", chips: [], images: [] }));
+    messages = buildCopyReviewMessages({ planning, generation });
+  } else if (mode === "sample") {
+    const raw = JSON.parse(readFileSync(path.join(root, outlineFile), "utf8"));
+    outline = Array.isArray(raw) ? raw : (raw.blocks ?? []);
+    messages = buildSampleReviewMessages({ planning, outline });
+  } else {
+    const html = readFileSync(path.join(root, lpFile), "utf8");
+    const descriptions = {};
+    if (imagePlanFile && existsSync(path.join(root, imagePlanFile))) {
+      try {
+        const plan = JSON.parse(readFileSync(path.join(root, imagePlanFile), "utf8"));
+        for (const img of plan.images ?? []) {
+          if (img?.file && img?.prompt) descriptions[path.basename(img.file)] = img.prompt;
+        }
+      } catch { /* descriptions stay empty; the outline still carries the page text */ }
+    }
+    outline = pageOutlineFromHtml(html, descriptions);
+    messages = buildReviewMessages({ planning, outline });
   }
-  const outline = pageOutlineFromHtml(html, descriptions);
-  const messages = buildReviewMessages({ planning, outline });
   const res = await callModelLive(messages);
   const review = parseReview(res.content);
   const durationMs = Math.round(performance.now() - t0);
@@ -84,6 +101,7 @@ async function main() {
   }
   const record = {
     status: "reviewed",
+    mode,
     verdict: review.verdict,
     findings: review.findings,
     apiCalled: true,

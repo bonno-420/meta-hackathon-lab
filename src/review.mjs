@@ -11,7 +11,122 @@
 // back to generation once, and a second fail stops the run with the
 // findings on record.
 
-export const REVIEW_PROMPT_VERSION = "lp-review-v1";
+export const REVIEW_PROMPT_VERSION = "lp-review-v2";
+
+const VERDICT_SCHEMA = 'Schema: {"verdict":"pass"|"fail","findings":[{"criterion":"...","target":"the block, sentence, or planning item","problem":"what is wrong","instruction":"what to change"}]}';
+const REVIEW_RULES = "Rules: judge only what you are shown. Do not demand facts the posting does not have. A finding's instruction must say concretely what to change, without inventing new facts. If both reviewers can accept it, verdict is \"pass\" with an empty findings list. Output JSON only, no markdown fences.";
+
+// Planning review: the plan is judged before anything is generated —
+// as the reader (does this plan speak to me, in my decision order?)
+// and as the client (is this a plan for a posting I would approve?).
+export function buildPlanningReviewMessages({ planning }) {
+  const appeals = Array.isArray(planning?.appeals) ? planning.appeals : [];
+  const specs = Array.isArray(planning?.imageSpecs) ? planning.imageSpecs : [];
+  const system = [
+    "You are two reviewers of a job-posting LP PLAN, before anything is generated.",
+    "Reviewer 1 — the reader: the person described in the audience. Reviewer 2 — the client company whose job this is.",
+    "Fail the plan (verdict \"fail\") when any of these hold:",
+    "1. audience-fit: the audience is vague, or the appeals do not match what this reader would actually check and care about.",
+    "2. appeal-grounding: an appeal is not grounded in a fact key or an original line, or promises something the posting does not state.",
+    "3. decision-order: the first-check items are not what this reader would check first, or the appeals' order fights the reader's decision order.",
+    "4. image-design: the image specs do not cover the appeals they should carry, or an image spec asks for a workplace/building exterior, a vehicle or cash as the subject, or text/numbers inside the image.",
+    "5. client-test: as the client, this plan would not lead to a posting you could approve (for example it leads with a condition instead of the job itself).",
+    REVIEW_RULES,
+    VERDICT_SCHEMA,
+  ].join("\n");
+  const user = [
+    `Audience: ${planning?.audience ?? ""}`,
+    `First checks (what the reader checks first): ${(planning?.firstCheckKeys ?? []).join(", ")}`,
+    "Appeals:",
+    ...appeals.map((a) => `- ${a.id}: ${a.text} (factKeys: ${(a.factKeys ?? []).join(", ") || "none"}; sourceLines: ${(a.sourceLines ?? []).join(", ") || "none"})`),
+    "Image specs:",
+    ...specs.map((s) => `- ${s.id} (role ${s.role ?? ""}): ${s.description ?? ""}`),
+    `Must not say / imply: ${(planning?.notSay ?? []).map((n) => n.text ?? n.key ?? "").filter(Boolean).join("; ") || "none listed"}`,
+  ].join("\n");
+  return [{ role: "system", content: system }, { role: "user", content: user }];
+}
+
+// Copy review: at the text checkpoint, before images and assembly —
+// the persona reads the sentences as the page's copy.
+export function buildCopyReviewMessages({ planning, generation }) {
+  const appeals = Array.isArray(planning?.appeals) ? planning.appeals : [];
+  const sentences = Array.isArray(generation?.sentences) ? generation.sentences : [];
+  const system = [
+    "You are two reviewers of the COPY for a job-posting landing page (the sentences, in order, before layout).",
+    "Reviewer 1 — the reader: the person described in the audience. Reviewer 2 — the client company whose job this is.",
+    "Fail the copy (verdict \"fail\") when any of these hold:",
+    "1. job-first: the reader cannot tell what job this is from the first sentence(s); the work itself must be stated up front, not buried after conditions.",
+    "2. appeal-works: sentences that only restate facts (\"X is Y\") without connecting them to the reader. Judge as a whole; if the copy reads as a list of conditions, fail, naming the sentences.",
+    "3. reader-fit: the copy does not speak to this audience (their hours, their area, their situation), or its tone/register is wrong for a job posting from the employer.",
+    "4. client-test: as the client, this copy could not go out as your posting (awkward, templated to the point of insincerity, or missing the essentials a posting needs).",
+    REVIEW_RULES,
+    VERDICT_SCHEMA,
+  ].join("\n");
+  const user = [
+    `Audience (the reader persona): ${planning?.audience ?? ""}`,
+    "Appeals the copy must carry:",
+    ...appeals.map((a) => `- ${a.id}: ${a.text}`),
+    "",
+    "The copy, sentences in order:",
+    ...sentences.map((s, i) => `${i + 1}. ${s.text}`),
+  ].join("\n");
+  return [{ role: "system", content: system }, { role: "user", content: user }];
+}
+
+// Sample (key visual / finished image) review: the sample is judged
+// from its composition record — the blocks in order, what each image
+// shows, and the purposes they serve — against the persona's
+// decision order and the appeals.
+export function sampleOutlineFromLayout(layoutRecord, imageDesign) {
+  const designById = new Map((imageDesign ?? []).map((d) => [d.id, d]));
+  const blocks = [];
+  for (const m of layoutRecord?.messageMap ?? []) {
+    const carries = m?.carries ?? {};
+    if (m.block === "hero-photo") {
+      const d = designById.get(carries.specId);
+      blocks.push({ kind: "hero-photo", text: "", chips: [], images: [{ file: carries.specId ?? "hero", shows: d ? `${d.subject} (${d.purpose ?? ""})` : null }] });
+    } else if (m.block === "title") {
+      blocks.push({ kind: "title", text: "(the work-content sentence is placed here)", chips: [], images: [] });
+    } else if (m.block === "condition-card") {
+      blocks.push({ kind: "condition-card", text: `(fact card: ${carries.factKey ?? ""})`, chips: [], images: [] });
+    } else if (m.block === "photo-band") {
+      const d = designById.get(carries.specId);
+      blocks.push({ kind: "photo-band", text: d?.purpose ? `(carries: ${d.purpose})` : "", chips: [], images: [{ file: carries.specId ?? "", shows: d ? d.subject : null }] });
+    } else if (m.block === "details") {
+      blocks.push({ kind: "details", text: "(remaining facts)", chips: [], images: [] });
+    } else if (m.block === "cta") {
+      blocks.push({ kind: "cta", text: "(apply)", chips: [], images: [] });
+    }
+  }
+  return blocks;
+}
+
+export function buildSampleReviewMessages({ planning, outline }) {
+  const appeals = Array.isArray(planning?.appeals) ? planning.appeals : [];
+  const system = [
+    "You are two reviewers of a job-posting page's SAMPLE (the finished-image mock): its composition — blocks in order, what each image shows, what each block carries. The text is not final at this stage; judge the composition and the images.",
+    "Reviewer 1 — the reader: the person described in the audience. Reviewer 2 — the client company whose job this is.",
+    "Fail the sample (verdict \"fail\") when any of these hold:",
+    "1. job-first: the composition does not let the reader tell what job this is at the top (hero image and headline); a hero that shows a building exterior, or a scene unrelated to the work, fails.",
+    "2. image-fit: an image's subject does not match the appeal or fact it carries, or implies something the posting does not state (a dormitory/bedroom, cash, a specific clock time, a commute vehicle as the subject).",
+    "3. decision-order: the block order fights the reader's decision order (what they check first comes late; the work itself is buried).",
+    "4. client-test: as the client, this composition would not become a posting you could approve.",
+    REVIEW_RULES,
+    VERDICT_SCHEMA,
+  ].join("\n");
+  const user = [
+    `Audience (the reader persona): ${planning?.audience ?? ""}`,
+    "Appeals the page must carry:",
+    ...appeals.map((a) => `- ${a.id}: ${a.text}`),
+    "",
+    "The sample, blocks in order:",
+    ...outline.map((b, i) => {
+      const imgs = b.images.length > 0 ? ` [images: ${b.images.map((im) => im.shows ? `${im.file} = ${im.shows}` : im.file).join("; ")}]` : "";
+      return `${i + 1}. (${b.kind})${imgs} ${b.text}`;
+    }),
+  ].join("\n");
+  return [{ role: "system", content: system }, { role: "user", content: user }];
+}
 
 // The page as the reviewer sees it: blocks in page order, each with
 // its kind, its visible text, and what each picture shows (the

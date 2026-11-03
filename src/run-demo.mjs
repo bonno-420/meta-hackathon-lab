@@ -33,7 +33,7 @@ import { renderHtmlToImage } from "./render-page-image.mjs";
 import { pinPostingText, buildFactsFile, buildManifest } from "./pin-posting.mjs";
 import { decideImagePlanFromSpecs } from "./generate-images.mjs";
 import { assembleFromLayout, matchAppealSentences } from "./assemble-layout.mjs";
-import { reviewFeedbackText } from "./review.mjs";
+import { reviewFeedbackText, sampleOutlineFromLayout } from "./review.mjs";
 
 const execFileAsync = promisify(execFile);
 
@@ -551,6 +551,28 @@ export async function runDemo(options, deps = {}) {
     } else {
       stages.planning = stageNotExecuted("前段で停止したため、企画入力の確認を実行しない");
     }
+    // Planning review (2026-11-04): the plan itself is judged by the
+    // reader persona and the client before anything is generated —
+    // a preview that cannot fail anything is not a review (the
+    // user's standing criticism). Runs on the first invocation only;
+    // a resume re-uses the reviewed plan. A fail stops the run with
+    // the findings, for the human's judgement.
+    if (!stoppedAt && !resumeState) {
+      if (reviewPage) {
+        let planningReview = null;
+        try { planningReview = await reviewPage({ mode: "planning", planningFile: options.planningFile ?? null }); } catch (e) { planningReview = { status: "error", reason: String(e?.message ?? e) }; }
+        stages.planning.review = planningReview && planningReview.status === "reviewed"
+          ? { verdict: planningReview.verdict, findings: planningReview.findings ?? [], model: planningReview.model ?? null, promptVersion: planningReview.promptVersion ?? null }
+          : { verdict: null, status: planningReview?.status ?? null, reason: planningReview?.reason ?? null };
+        if (planningReview && planningReview.status === "reviewed" && planningReview.verdict === "fail") {
+          stop("planning-review", `企画レビューが不合格のため、後段を実行しない（${(planningReview.findings ?? []).map((f) => `${f.criterion}: ${f.problem}`).join(" / ")}）`);
+        } else if (!planningReview || planningReview.status !== "reviewed") {
+          stop("planning-review", `企画レビューが実行できなかったため、後段を実行しない（${planningReview?.reason ?? "実行器の応答なし"}）`);
+        }
+      } else {
+        stages.planning.review = { executed: false, reason: "レビュー実行器が接続されていない" };
+      }
+    }
     if (!stoppedAt) {
       const factsForPlanning = fixedFacts ?? loadJson(path.join(root, factsFile));
       try {
@@ -665,6 +687,24 @@ export async function runDemo(options, deps = {}) {
             } else {
             const sha = sha256File(resolveRoot(root, rendered.file));
             kvImage = { file: rendered.file, sha256: sha };
+            // Sample review (2026-11-04): the finished image is
+            // judged as a composition by the reader persona and the
+            // client before it is presented. A fail is not presented
+            // as a checkpoint — the run stops with the findings, the
+            // same treatment as a gate failure.
+            let sampleReview = null;
+            if (reviewPage) {
+              const outlinePath = path.join(path.dirname(generationFile), "sample-outline.json");
+              try {
+                writeFileSync(resolveRoot(root, outlinePath), JSON.stringify(sampleOutlineFromLayout(layout.record, imageDesign), null, 2), "utf8");
+                sampleReview = await reviewPage({ mode: "sample", planningFile: options.planningFile ?? null, outlineFile: outlinePath });
+              } catch (e) { sampleReview = { status: "error", reason: String(e?.message ?? e) }; }
+            }
+            const sampleReviewRecord = !reviewPage
+              ? { executed: false, reason: "レビュー実行器が接続されていない" }
+              : sampleReview && sampleReview.status === "reviewed"
+                ? { verdict: sampleReview.verdict, findings: sampleReview.findings ?? [], model: sampleReview.model ?? null, promptVersion: sampleReview.promptVersion ?? null }
+                : { verdict: null, status: sampleReview?.status ?? null, reason: sampleReview?.reason ?? null };
             stages.keyVisual = {
               executed: true, pass: true, correspondence, imageDesign, designCheck, sendBacks, photoPlan, compliance, attempts,
               gateResults: [...designCheck.gateResults.map((g) => ({ ...g, kind: "design" })), ...promptGateResults(photoPlan), { id: "G8", pass: true }],
@@ -675,17 +715,36 @@ export async function runDemo(options, deps = {}) {
               model: photosRun.model ?? null,
               costUsd: photosRun.costUsd ?? null,
               checklist: buildKeyVisualChecklist(correspondence, imageDesign),
+              review: sampleReviewRecord,
             };
+            if (reviewPage && (!sampleReview || sampleReview.status !== "reviewed")) {
+              persistState(["extraction", "factsComparison", "approval", "planning"], { e02raw });
+              stop("key-visual", `見本のレビューが実行できなかったため、提示しない（${sampleReview?.reason ?? "実行器の応答なし"}）`);
+            } else if (reviewPage && sampleReview.verdict === "fail") {
+              writePresentationRecord("key-visual", {
+                checkpoint: "key-visual",
+                presented: [{ kind: "image", file: kvImage.file, sha256: sha }],
+                layout: layout.record,
+                checklist: buildKeyVisualChecklist(correspondence, imageDesign),
+                review: sampleReviewRecord,
+                holds: [...holds],
+                judgement: { result: null, confirmer: null, confirmedAt: null, corrections: [] },
+              });
+              persistState(["extraction", "factsComparison", "approval", "planning"], { e02raw });
+              stop("key-visual", `見本のレビューが不合格のため、提示しない（${(sampleReview.findings ?? []).map((f) => `${f.criterion}: ${f.problem}`).join(" / ")}）`);
+            } else {
             writePresentationRecord("key-visual", {
               checkpoint: "key-visual",
               presented: [{ kind: "image", file: kvImage.file, sha256: sha }],
               layout: layout.record,
               checklist: buildKeyVisualChecklist(correspondence, imageDesign),
+              review: sampleReviewRecord,
               holds: [...holds],
               judgement: { result: null, confirmer: null, confirmedAt: null, corrections: [] },
             });
             persistState(["extraction", "factsComparison", "approval", "planning", "keyVisual"], { keyVisual: { image: kvImage, layout: layout.record, photos: photosRun.images, imageDesign, designCheck, gate: stages.keyVisual.gate ?? null, gateResults: stages.keyVisual.gateResults ?? [], photoPlan, sendBacks, compliance }, e02raw });
             stop("key-visual", "1枚画（LPの完成イメージ）のプレビュー確認のため止める（チェックポイント）", "checkpoint");
+            }
             }
           }
         }
@@ -752,6 +811,7 @@ export async function runDemo(options, deps = {}) {
     const maxAttempts = pipelineMode ? 3 : 1;
     let attempts = 0;
     let lastRun = null;
+    let lastCopyReview = null;
     let attemptFeedback = options.feedbackFile ?? undefined;
     while (attempts < maxAttempts) {
       attempts++;
@@ -759,7 +819,25 @@ export async function runDemo(options, deps = {}) {
       if (!lastRun || lastRun.status === "refused") break;
       if (lastRun.status === "generated" && lastRun.generation && lastRun.grounding && lastRun.grounding.pass === true) {
         generationCoverage = coverageOf(lastRun.generation);
-        if (!generationCoverage || generationCoverage.pass) break;
+        if (!generationCoverage || generationCoverage.pass) {
+          // Copy review (2026-11-04): the sentences are judged by
+          // the reader persona and the client before the run goes
+          // on — coverage alone only proves the appeals exist, not
+          // that they work. A fail retries with the findings as
+          // feedback, inside the same attempt bound.
+          if (!reviewPage) break;
+          try { lastCopyReview = await reviewPage({ mode: "copy", planningFile: options.planningFile ?? null }); } catch (e) { lastCopyReview = { status: "error", reason: String(e?.message ?? e) }; }
+          if (lastCopyReview && lastCopyReview.status === "reviewed" && lastCopyReview.verdict === "pass") break;
+          if (lastCopyReview && lastCopyReview.status === "reviewed" && lastCopyReview.verdict === "fail" && attempts < maxAttempts) {
+            const prior = attemptFeedback ? (() => { try { return readFileSync(resolveRoot(root, attemptFeedback), "utf8"); } catch { return ""; } })() : "";
+            const fbPath = path.join(path.dirname(generationFile), "copy-review-feedback.txt");
+            mkdirSync(resolveRoot(root, path.dirname(fbPath)), { recursive: true });
+            writeFileSync(resolveRoot(root, fbPath), reviewFeedbackText(lastCopyReview, prior), "utf8");
+            attemptFeedback = fbPath;
+            continue;
+          }
+          break;
+        }
         if (attempts < maxAttempts) {
           // Send the missing coverage back as feedback and retry:
           // the next attempt is told exactly which appeals and which
@@ -791,6 +869,11 @@ export async function runDemo(options, deps = {}) {
       costNote: generationRun ? (generationRun.costNote ?? null) : null,
       grounding: generationRun ? (generationRun.grounding ?? null) : null,
       coverage: generationCoverage,
+      review: lastCopyReview
+        ? (lastCopyReview.status === "reviewed"
+          ? { verdict: lastCopyReview.verdict, findings: lastCopyReview.findings ?? [], model: lastCopyReview.model ?? null, promptVersion: lastCopyReview.promptVersion ?? null }
+          : { verdict: null, status: lastCopyReview.status ?? null, reason: lastCopyReview.reason ?? null })
+        : (reviewPage ? null : { executed: false, reason: "レビュー実行器が接続されていない" }),
       reasonCode: generationRun ? (generationRun.reasonCode ?? null) : null,
       reason: generationRun ? (generationRun.reason ?? null) : null,
     };
@@ -805,6 +888,11 @@ export async function runDemo(options, deps = {}) {
     } else if (generationCoverage && !generationCoverage.pass) {
       if (pipelineMode) holds.push({ stage: "generation", condition: "訴求と仕事内容の充足", detail: `未充足の訴求: ${generationCoverage.uncoveredAppeals.join(", ") || "なし"}${generationCoverage.workUncovered ? `、仕事内容の行 ${generationCoverage.workLineId} が未引用` : ""}`, attempts });
       stop("generation", "訴求と仕事内容が文章に入っていないため、後段を実行しない");
+    } else if (lastCopyReview && lastCopyReview.status === "reviewed" && lastCopyReview.verdict === "fail") {
+      if (pipelineMode) holds.push({ stage: "generation", condition: "文章レビューの合格", detail: `所見: ${(lastCopyReview.findings ?? []).map((f) => f.problem).join(" / ")}`, attempts });
+      stop("generation", `文章レビューが不合格のため、後段を実行しない（${(lastCopyReview.findings ?? []).map((f) => `${f.criterion}: ${f.problem}`).join(" / ")}）`);
+    } else if (lastCopyReview && lastCopyReview.status !== "reviewed") {
+      stop("generation", `文章レビューが実行できなかったため、後段を実行しない（${lastCopyReview.reason ?? "実行器の応答なし"}）`);
     } else if (pipelineMode && options.checkpoints === "full") {
       writePresentationRecord("text", {
         checkpoint: "text",
@@ -1053,7 +1141,7 @@ export async function runDemo(options, deps = {}) {
           while (reviewAttempts < 2) {
             reviewAttempts++;
             try {
-              reviewResult = await reviewPage({ root, planningFile: options.planningFile ?? null, lpFile });
+              reviewResult = await reviewPage({ mode: "page", root, planningFile: options.planningFile ?? null, lpFile });
             } catch (e) {
               reviewResult = { status: "error", reason: String(e?.message ?? e) };
             }
@@ -1349,15 +1437,20 @@ export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesR
       }
       return { ...record, generation: null };
     },
-    review: async ({ planningFile: callPlanningFile, lpFile: callLpFile } = {}) => {
-      const runOutRel = path.join(outDir, "review-run.json");
+    review: async ({ mode = "page", planningFile: callPlanningFile, lpFile: callLpFile, generationFile: callGenerationFile, outlineFile: callOutlineFile } = {}) => {
+      const runOutRel = path.join(outDir, `review-${mode}-run.json`);
       const runOutAbs = path.join(root, runOutRel);
       removeIfExists(runOutAbs);
       const effPlanningFile = callPlanningFile ?? planningFile;
       if (!effPlanningFile) return { status: "error", reason: "レビューには企画入力が必要だが、 planningFile が指定されていない" };
-      const ran = await textRunner([
-        path.join(here, "review-page.mjs"), "--planning", effPlanningFile, "--lp", callLpFile ?? path.join(path.dirname(generationFile), "lp.html"), "--image-plan", path.join(path.dirname(generationFile), "image-plan.json"), "--out", path.join(outDir, "review.json"), "--run-out", runOutRel,
-      ]);
+      const args = [
+        path.join(here, "review-page.mjs"), "--mode", mode, "--planning", effPlanningFile,
+        "--out", path.join(outDir, `review-${mode}.json`), "--run-out", runOutRel,
+      ];
+      if (mode === "page") args.push("--lp", callLpFile ?? path.join(path.dirname(generationFile), "lp.html"), "--image-plan", path.join(path.dirname(generationFile), "image-plan.json"));
+      if (mode === "copy") args.push("--generation", callGenerationFile ?? generationFile);
+      if (mode === "sample") args.push("--outline", callOutlineFile ?? path.join(outDir, "sample-outline.json"));
+      const ran = await textRunner(args);
       if (!existsSync(runOutAbs)) {
         return { ...childErrorResult("review", ran.exitCode), verdict: null, findings: [] };
       }
