@@ -1,8 +1,14 @@
 # Gap-fill brief (2026-11-03, coordinator — user's instruction)
 
-Goal: close the realistic part of the gap between the product definition — hand over a job posting, and a checked, complete LP comes out — and the current implementation. Hard deadline: 2026-11-05 11:00 JST. Keep this minimal-token: short documents, no sprawl.
+Goal: close the realistic part of the gap between what the user wants to build and the current implementation. Hard deadline: 2026-11-05 11:00 JST. Minimal-token throughout: short documents, no sprawl.
 
-Design line: investigate first, then design, in one short document (docs/design/gap-fill-design-v1.md).
+## Step 0 — verbalize the intent (before anything else)
+
+Design line drafts `docs/design/intent-statement.md`: what the user wants to build, in the user's own terms, drawn from the project instruction, decision D1, and the user's statements of 2026-11-03 — a tool: hand over a job posting, it is scrutinized, and a complete LP (text + images + assembly) comes out; the same result whoever runs it; a tool, not a session's performance. Half a page at most. The user confirms or corrects it. Nothing below proceeds until the statement is confirmed; the confirmed statement is the baseline for the gap.
+
+## Step 1 — investigate, then design
+
+Design line: investigate, then design, in one short document (docs/design/gap-fill-design-v1.md), measured against the confirmed intent statement.
 
 Investigation — for each candidate gap, judge implementation size and risk against the standard flow (design → audit → implementation → audit) fitting before the deadline. Cut what does not fit, one line per cut:
 (a) Input is pinned to FICT-J01's artifact set (original JSON, FACTs, approval record). A general entry that takes a posting as text.
