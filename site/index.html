@@ -3,23 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>架空の求人 LP プレビュー（デモ）</title>
+<title>Loopwright デモプレビュー（記録の再生）</title>
 <style>
 body { font-family: sans-serif; margin: 2rem; line-height: 1.7; color: #222; }
 .lp-sentence { margin: 0.4rem 0; }
 table { border-collapse: collapse; }
 td, th { border: 1px solid #999; padding: 0.3rem 0.6rem; vertical-align: top; }
 .notice { border: 1px solid #999; padding: 0.6rem 1rem; }
+.frame { border: 2px dashed #999; padding: 0.6rem 1rem; margin: 1rem 0; }
 </style>
 </head>
 <body>
 <header>
-<p class="notice">これは架空の求人だけを使うデモのプレビューです。実在の求人ではありません。再検証の合格はデモ内プレビューの許可までであり、公開の許可ではありません。</p>
-<h1>架空の求人 LP プレビュー</h1>
+<p class="notice">このページは記録された実行と監査の再生です。リアルタイムの実行ではありません。架空の求人だけを使ったデモであり、実在の求人ではありません。再検証の合格はデモ内プレビューの許可までであり、公開の許可ではありません。</p>
+<h1>Loopwright デモプレビュー</h1>
+<p>Loopwright は、AI の開発プロセスを記録・監査・人間の判断で回して改善する開発・実行基盤のデモである。架空求人の編集ワークフロー（原本の固定 → FACT 抽出・照合 → 人間の承認 → LP 生成 → 独立した再検証）を動かし、矛盾があれば生成せずに止まる。</p>
+<p>進め方は本人と統括（Muse）の会話で決め、設計・監理（監査）・制作・書き込みの各ラインが分担した。受け入れの判断は本人と統括が行い、独立監査は監理ラインが担った。承認・確認・受け入れは人間の行為であり、自動化の成果と並べて示す。</p>
 </header>
 <main>
+<section id="stop-example">
+<h2>止まる例: 原本 1,500円 に対して要約が 1,700円</h2>
+<p>E02 は照合で停止した（停止（矛盾あり））。承認・生成・再検証・プレビューは実行していない。停止理由: 給与（時給）: FACT 時給1,500円（L03「給与は時給1,500円。」）に対し、要約は 時給1,700円。これは生成物ではなく、停止の記録の表示である。</p>
+</section>
+<section id="audit-change">
+<h2>監査で出力が変わった例: 未記載項目の value を null に統一</h2>
+<p>ループ2の抽出では、未記載項目の value が実行ごとに「未記載」という文字列と空文字列で揺れた（監査の指摘）。改善実験（プロンプト v1.1）で「未記載項目の value は JSON の null とする」ことを指示文とスキーマ例の両方で明示し、未記載2件（renewal・housing）の value が null に統一された。以後の抽出の標準プロンプトとしている。詳細はリポジトリの <code>experiments/exp-002-fact-extract-prompt-v1.1.md</code> にある。</p>
+</section>
 <section id="lp">
-<h2>LP 本文</h2>
+<h2>LP 本文（承認済み FACT からの生成）</h2>
       <p class="lp-sentence" data-sentence="0">企業名は架空のソラノ輪具研究所で、求人番号はFICT-J01。</p>
       <p class="lp-sentence" data-sentence="1">勤務地は架空の青空実験区A棟。</p>
       <p class="lp-sentence" data-sentence="2">雇用形態は有期契約社員で、契約期間3か月。</p>
@@ -31,7 +42,7 @@ td, th { border: 1px solid #999; padding: 0.3rem 0.6rem; vertical-align: top; }
       <p class="lp-sentence" data-sentence="8">寮の有無と費用は未記載。</p>
 </section>
 <section id="verification">
-<h2>検証パネル</h2>
+<h2>検証パネル（再検証の記録）</h2>
 <p>承認: FICT-J01-approval-1（status: approved、承認日時: 2026-10-27T19:58:09+09:00、有効性の再計算: valid: true）。入力同一性: pass。根拠検査: pass（9文、issues 0件）。人間の確認（意味の対応）: completed（確認者: 統括（Muse）＋本人、確認日時: 2026-10-28T11:09:00+09:00、全9文）。最終判定: pass（デモ内プレビューの許可までであり、公開の許可ではない（G-INV-4））</p>
 <table>
 <thead><tr><th>#</th><th>文</th><th>factKeys</th><th>sourceLines</th></tr></thead>
@@ -49,13 +60,15 @@ td, th { border: 1px solid #999; padding: 0.3rem 0.6rem; vertical-align: top; }
 </table>
 <p>未記載項目の扱い: 更新の有無は未記載。寮は未記載。未記載は未記載として表示に残し、承認の対象に含めない。</p>
 </section>
-<section id="e02">
-<h2>E02 の停止表示</h2>
-<p>E02 は照合で停止した（停止（矛盾あり））。承認・生成・再検証・プレビューは実行していない。停止理由: 給与（時給）: FACT 時給1,500円（L03「給与は時給1,500円。」）に対し、要約は 時給1,700円。これは生成物ではなく、停止の記録の表示である。</p>
+<section id="unmerged">
+<h2>別枠: 未組み入れの拡張実験（loop-012 → 013）</h2>
+<div class="frame">
+<p>以下は本体の実績ではなく、組み入れ判断前の拡張の実験記録である。型目録（library）とペルソナ設定を生成の前段に置く試みで、loop-012 から loop-013 への変更（参照セットの差し替えと散文評価の変化）は記録に残っているが、本体の工程には組み入れていない。組み入れない判断の場合はこの枠ごと置かない。</p>
+</div>
 </section>
 <section id="about">
-<h2>プロジェクト説明</h2>
-<p>このデモは、架空の求人の原本から FACT を抽出・照合し、人間の承認を経て LP 文を生成し、生成とは独立に再検証する流れを示す。記録の正本は GitHub リポジトリにある: <a href="https://github.com/bonno-420/meta-hackathon-lab">https://github.com/bonno-420/meta-hackathon-lab</a></p>
+<h2>プロジェクト説明と記録への参照</h2>
+<p>このデモは、架空の求人の原本から FACT を抽出・照合し、人間の承認を経て LP 文を生成し、生成とは独立に再検証する流れを示す。人間が判断した箇所: 承認（Norikazu Harada、2026-10-27）、意味の対応の確認（統括＋本人、2026-10-28）、各工程の受け入れ（統括と本人）。記録の正本は GitHub リポジトリにある: <a href="https://github.com/bonno-420/meta-hackathon-lab">https://github.com/bonno-420/meta-hackathon-lab</a></p>
 </section>
 </main>
 </body>

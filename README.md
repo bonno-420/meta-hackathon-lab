@@ -1,4 +1,12 @@
-# meta-hackathon-lab
+# Loopwright
+
+## For reviewers — provenance, models, and how to verify
+
+**Pre-existing vs in-period.** The concept and the preparation documents predate the hackathon (prepared on 2026-10-25). Everything in this repository — the platform code, tests, loop records, and the demo — was created during the hackathon period (2026-10-26 – 2026-11-04).
+
+**Models this repository runs** (Meta Model API): muse-spark-1.3-contributor (extraction, generation, and automated checks), muse-wonder-1.0 (audit-model comparison and the vanilla contrast experiment), muse-spark-1.3 (vanilla contrast), and muse-image-1.0 (images for the landing-page trials). The verification-loop experiments in loops/loop-015/ and loops/loop-016/ additionally used Muse Spark Open via Baseten; those are experiment records, separate from the platform's operation, and are disclosed as such.
+
+**Verify without credentials.** The public preview (linked in section 2) replays recorded runs — no login or API key is needed. To run it yourself, clone this repository and set your own MODEL_API_KEY (see section 6, "Running it"). Every source posting is pinned by sha256 in the loop records, so the inputs can be confirmed unchanged.
 
 ## 1. Positioning
 
