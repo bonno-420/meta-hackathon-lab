@@ -1,0 +1,129 @@
+{
+  "checkpoint": "key-visual",
+  "presented": [
+    {
+      "kind": "image",
+      "file": "loops/loop-022/run4/images/key-visual.webp",
+      "sha256": "01d64a34eaedfe58378bfbd7fa935ad2bdbabba206b7d765b2bebbc397097081"
+    }
+  ],
+  "correspondence": {
+    "elements": [
+      {
+        "id": "key-visual",
+        "role": "key-visual",
+        "basis": {
+          "appealId": "A2"
+        },
+        "description": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning"
+      },
+      {
+        "id": "section-work",
+        "role": "section",
+        "basis": {
+          "factKey": "workLocation"
+        },
+        "description": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light"
+      }
+    ],
+    "prohibited": [
+      {
+        "source": "planning notSay: 契約更新の有無は言わない",
+        "terms": [
+          "更新あり",
+          "更新可",
+          "長期勤務"
+        ]
+      },
+      {
+        "source": "planning notSay: 寮・住宅の補助は言わない",
+        "terms": [
+          "寮",
+          "住宅補助",
+          "社宅"
+        ]
+      },
+      {
+        "source": "planning notSay: 月収の額や保証は言わない",
+        "terms": [
+          "月収",
+          "月給"
+        ]
+      },
+      {
+        "source": "standing ban: cash / income imagery",
+        "terms": [
+          "現金",
+          "札束",
+          "紙幣",
+          "硬貨",
+          "財布",
+          "お金",
+          "cash",
+          "banknote",
+          "banknotes",
+          "coin",
+          "coins",
+          "wallet",
+          "money",
+          "yen bills"
+        ]
+      },
+      {
+        "source": "standing ban: specific clock times",
+        "terms": [
+          "時計",
+          "clock",
+          "watch face",
+          "wall clock",
+          "wristwatch"
+        ]
+      },
+      {
+        "source": "standing ban: housing is unstated, so no residence imagery",
+        "terms": [
+          "住宅",
+          "一軒家",
+          "寮",
+          "社宅",
+          "マイホーム",
+          "戸建",
+          "residence",
+          "residential house",
+          "dormitory",
+          "house exterior",
+          "detached house",
+          "apartment building"
+        ]
+      }
+    ],
+    "firstCheckKeys": [
+      "salaryHourly",
+      "workHours",
+      "transportCap"
+    ],
+    "style": "Photorealistic, natural morning light, documentary style."
+  },
+  "checklist": [
+    {
+      "element": "key-visual",
+      "basis": {
+        "appealId": "A2"
+      },
+      "description": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning",
+      "checks": {
+        "subjectIdentity": null,
+        "unstatedImplication": null,
+        "inventedSpecifics": null,
+        "cashImagery": null
+      }
+    }
+  ],
+  "holds": [],
+  "judgement": {
+    "result": null,
+    "confirmer": null,
+    "confirmedAt": null,
+    "corrections": []
+  }
+}

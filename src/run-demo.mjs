@@ -378,7 +378,7 @@ export async function runDemo(options, deps = {}) {
   }
 
   // Stage 1: extraction and reconciliation (E01 and E02 in one run).
-  const extraction = resumedStages.has("extraction") ? null : await extract({ originalFile, inputId: options.posting ? options.posting.id : undefined, inputVersion: options.posting ? (options.posting.version ?? "v1") : undefined });
+  const extraction = resumedStages.has("extraction") ? null : await extract({ originalFile, inputId: options.inputId ?? (options.posting ? options.posting.id : undefined), inputVersion: options.inputVersion ?? (options.posting ? (options.posting.version ?? "v1") : undefined) });
   const e01 = resumedStages.has("extraction")
     ? ((resumeState.priorStages && resumeState.priorStages.extraction && resumeState.priorStages.extraction.e01) ?? null)
     : (extraction && extraction.e01 ? extraction.e01 : null);
@@ -486,6 +486,14 @@ export async function runDemo(options, deps = {}) {
     stages.approval = { executed: true, ...approvalStage };
     if (!approvalStage.pass) {
       stop("approval", approvalStage.reason ?? "承認の有効性が再確認できなかったため、後段を実行しない");
+      // An approval stop in pipeline mode must be continuable: the
+      // approval binds to this exact candidate file, so the run
+      // state is persisted here and a resume re-checks approval
+      // against the same candidate instead of re-extracting
+      // (found in loop-022: no state file existed after L1's stop).
+      if (pipelineMode) {
+        persistState(["extraction", "factsComparison"], { e02raw });
+      }
     }
   } else {
     stages.approval = stageNotExecuted("前段で停止したため、承認の有効性の再確認を実行しない");
@@ -503,6 +511,9 @@ export async function runDemo(options, deps = {}) {
       if (!planning) {
         stages.planning = { executed: true, pass: false, file: options.planningFile ?? null, sha256: planningSha256 };
         stop("planning", options.planningFile ? "企画入力ファイルが読み込めなかったため、後段を実行しない" : "企画入力がないため、企画待ちで止める（チェックポイント。ツールは企画を作らない）", options.planningFile ? undefined : "checkpoint");
+        if (pipelineMode) {
+          persistState(["extraction", "factsComparison", "approval"], { e02raw });
+        }
       } else {
         const validation = validatePlanning(planning);
         stages.planning = { executed: true, pass: validation.ok, file: options.planningFile ?? null, sha256: planningSha256, audience: planning.audience ?? null, validation };

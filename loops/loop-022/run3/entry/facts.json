@@ -1,0 +1,131 @@
+{
+  "factsId": "FICT-J02-facts",
+  "factsVersion": 1,
+  "originalId": "FICT-J02",
+  "originalVersion": "v1",
+  "promptVersion": "fact-extract-v1.1",
+  "model": "meta-models/muse-spark-open-1026",
+  "sourceRun": "text-entry",
+  "items": [
+    {
+      "key": "employer",
+      "status": "unstated",
+      "value": null,
+      "normalized": null,
+      "sourceLine": null,
+      "quote": null
+    },
+    {
+      "key": "jobId",
+      "status": "unstated",
+      "value": null,
+      "normalized": null,
+      "sourceLine": null,
+      "quote": null
+    },
+    {
+      "key": "workLocation",
+      "status": "stated",
+      "value": "愛知県豊橋市内の物流倉庫",
+      "normalized": null,
+      "sourceLine": "L03",
+      "quote": "愛知県豊橋市内の物流倉庫"
+    },
+    {
+      "key": "employmentType",
+      "status": "stated",
+      "value": "有期契約社員",
+      "normalized": null,
+      "sourceLine": "L02",
+      "quote": "有期契約社員（契約期間3か月）"
+    },
+    {
+      "key": "contractPeriod",
+      "status": "stated",
+      "value": "3か月",
+      "normalized": null,
+      "sourceLine": "L02",
+      "quote": "契約期間3か月"
+    },
+    {
+      "key": "renewal",
+      "status": "unstated",
+      "value": null,
+      "normalized": null,
+      "sourceLine": null,
+      "quote": null
+    },
+    {
+      "key": "salaryHourly",
+      "status": "stated",
+      "value": "1,350円",
+      "normalized": 1350,
+      "sourceLine": "L04",
+      "quote": "1,350円"
+    },
+    {
+      "key": "monthlyIncomeGuarantee",
+      "status": "unstated",
+      "value": null,
+      "normalized": null,
+      "sourceLine": null,
+      "quote": null
+    },
+    {
+      "key": "workHours",
+      "status": "stated",
+      "value": "07:00〜16:00",
+      "normalized": null,
+      "sourceLine": "L05",
+      "quote": "07:00〜16:00"
+    },
+    {
+      "key": "breakMinutes",
+      "status": "stated",
+      "value": "60分",
+      "normalized": 60,
+      "sourceLine": "L05",
+      "quote": "休憩60分"
+    },
+    {
+      "key": "actualHours",
+      "status": "unstated",
+      "value": null,
+      "normalized": null,
+      "sourceLine": null,
+      "quote": null
+    },
+    {
+      "key": "monthlyDaysAssumption",
+      "status": "unstated",
+      "value": null,
+      "normalized": null,
+      "sourceLine": null,
+      "quote": null
+    },
+    {
+      "key": "transport",
+      "status": "stated",
+      "value": "実費支給（月上限15,000円）",
+      "normalized": null,
+      "sourceLine": "L07",
+      "quote": "実費支給（月上限15,000円）"
+    },
+    {
+      "key": "transportCap",
+      "status": "stated",
+      "value": "15,000円",
+      "normalized": 15000,
+      "sourceLine": "L07",
+      "quote": "月上限15,000円"
+    },
+    {
+      "key": "housing",
+      "status": "unstated",
+      "value": null,
+      "normalized": null,
+      "sourceLine": null,
+      "quote": null
+    }
+  ]
+}

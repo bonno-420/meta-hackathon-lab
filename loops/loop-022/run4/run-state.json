@@ -1,0 +1,445 @@
+{
+  "version": 1,
+  "mode": {
+    "checkpoints": "full",
+    "entry": false
+  },
+  "files": {
+    "originalFile": "loops/loop-022/run2/entry/original.json",
+    "factsFile": "loops/loop-022/run2/entry/facts.json",
+    "approvalFile": "loops/loop-022/run2/entry/approval.json",
+    "generationFile": "loops/loop-022/run4/generated.json",
+    "planningFile": "loops/loop-022/planning-FICT-J02.json",
+    "feedbackFile": null,
+    "postingId": null
+  },
+  "completedStages": [
+    "extraction",
+    "factsComparison",
+    "approval",
+    "planning",
+    "keyVisual"
+  ],
+  "keyVisual": {
+    "image": {
+      "file": "loops/loop-022/run4/images/key-visual.webp",
+      "sha256": "01d64a34eaedfe58378bfbd7fa935ad2bdbabba206b7d765b2bebbc397097081",
+      "prompt": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning, Photorealistic, natural morning light, documentary style., no text, no numbers, no logos, no watermark"
+    },
+    "prompt": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning, Photorealistic, natural morning light, documentary style., no text, no numbers, no logos, no watermark",
+    "correspondence": {
+      "elements": [
+        {
+          "id": "key-visual",
+          "role": "key-visual",
+          "basis": {
+            "appealId": "A2"
+          },
+          "description": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning"
+        },
+        {
+          "id": "section-work",
+          "role": "section",
+          "basis": {
+            "factKey": "workLocation"
+          },
+          "description": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light"
+        }
+      ],
+      "prohibited": [
+        {
+          "source": "planning notSay: 契約更新の有無は言わない",
+          "terms": [
+            "更新あり",
+            "更新可",
+            "長期勤務"
+          ]
+        },
+        {
+          "source": "planning notSay: 寮・住宅の補助は言わない",
+          "terms": [
+            "寮",
+            "住宅補助",
+            "社宅"
+          ]
+        },
+        {
+          "source": "planning notSay: 月収の額や保証は言わない",
+          "terms": [
+            "月収",
+            "月給"
+          ]
+        },
+        {
+          "source": "standing ban: cash / income imagery",
+          "terms": [
+            "現金",
+            "札束",
+            "紙幣",
+            "硬貨",
+            "財布",
+            "お金",
+            "cash",
+            "banknote",
+            "banknotes",
+            "coin",
+            "coins",
+            "wallet",
+            "money",
+            "yen bills"
+          ]
+        },
+        {
+          "source": "standing ban: specific clock times",
+          "terms": [
+            "時計",
+            "clock",
+            "watch face",
+            "wall clock",
+            "wristwatch"
+          ]
+        },
+        {
+          "source": "standing ban: housing is unstated, so no residence imagery",
+          "terms": [
+            "住宅",
+            "一軒家",
+            "寮",
+            "社宅",
+            "マイホーム",
+            "戸建",
+            "residence",
+            "residential house",
+            "dormitory",
+            "house exterior",
+            "detached house",
+            "apartment building"
+          ]
+        }
+      ],
+      "firstCheckKeys": [
+        "salaryHourly",
+        "workHours",
+        "transportCap"
+      ],
+      "style": "Photorealistic, natural morning light, documentary style."
+    }
+  },
+  "priorStages": {
+    "extraction": {
+      "executed": true,
+      "status": "completed",
+      "model": "meta-models/muse-spark-open-1026",
+      "promptVersion": "fact-extract-v1.1",
+      "durationMs": 10451,
+      "usage": {
+        "prompt_tokens": 494,
+        "completion_tokens": 4055,
+        "total_tokens": 4549,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 384
+        },
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 3238,
+          "audio_tokens": 0,
+          "reasoning_tokens": 3557,
+          "rejected_prediction_tokens": 2481
+        }
+      },
+      "costUsd": null,
+      "costNote": "未記録（PIPELINE_MODEL でモデルが差し替えられており、D4単価が適用できないため算出しない。使用量は usage に記録）",
+      "schemaCheck": {
+        "pass": true,
+        "expectedCount": 15,
+        "actualCount": 15,
+        "missingKeys": [],
+        "extraKeys": [],
+        "duplicateKeys": [],
+        "fieldIssues": []
+      },
+      "e01": {
+        "caseId": "E01",
+        "stage": "照合",
+        "verdict": "一致（人間承認待ち）",
+        "stoppedAtReconciliation": false,
+        "generationStarted": false,
+        "generationNote": "生成工程は作らない。人間承認前には生成を開始しない。",
+        "matched": [
+          {
+            "field": "勤務時間",
+            "value": "07:00〜16:00",
+            "source": "L05"
+          },
+          {
+            "field": "交通費（月上限）",
+            "value": "15,000円",
+            "source": "L07"
+          }
+        ],
+        "contradictions": [],
+        "unstated": [
+          {
+            "key": "employer",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "jobId",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "renewal",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "monthlyIncomeGuarantee",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "actualHours",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "monthlyDaysAssumption",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "housing",
+            "source": null,
+            "quote": null
+          }
+        ],
+        "claims": {
+          "workHours": {
+            "value": "07:00〜16:00",
+            "snippet": "07:00〜16:00"
+          },
+          "transportCap": {
+            "value": 15000,
+            "snippet": "月上限15,000円"
+          }
+        }
+      },
+      "e02": null
+    },
+    "factsComparison": {
+      "executed": true,
+      "verbatim": {
+        "pass": true,
+        "checked": 15,
+        "issues": []
+      },
+      "agrees": true,
+      "diffs": [],
+      "textualDiffs": []
+    },
+    "approval": {
+      "executed": true,
+      "pass": true,
+      "reasonCode": null,
+      "reason": null,
+      "approvalId": "FICT-J02-approval-1",
+      "status": "approved",
+      "approver": "原田徳一（本人）",
+      "approvedAt": "2026-11-03",
+      "validity": {
+        "valid": true,
+        "approvalId": "FICT-J02-approval-1",
+        "status": "approved",
+        "checks": [
+          {
+            "target": "original",
+            "file": "loops/loop-022/run2/entry/original.json",
+            "expected": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+            "actual": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+            "match": true
+          },
+          {
+            "target": "facts",
+            "file": "loops/loop-022/run2/entry/facts.json",
+            "expected": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+            "actual": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+            "match": true
+          }
+        ],
+        "reason": null
+      },
+      "generationInput": {
+        "ok": true,
+        "reasonCode": null,
+        "reason": null,
+        "approvalId": "FICT-J02-approval-1",
+        "status": "approved",
+        "validity": {
+          "valid": true,
+          "approvalId": "FICT-J02-approval-1",
+          "status": "approved",
+          "checks": [
+            {
+              "target": "original",
+              "file": "loops/loop-022/run2/entry/original.json",
+              "expected": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+              "actual": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+              "match": true
+            },
+            {
+              "target": "facts",
+              "file": "loops/loop-022/run2/entry/facts.json",
+              "expected": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+              "actual": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06",
+              "match": true
+            }
+          ],
+          "reason": null
+        }
+      }
+    },
+    "planning": {
+      "executed": true,
+      "pass": true,
+      "file": "loops/loop-022/planning-FICT-J02.json",
+      "sha256": "019392a4909eeb9bc995f94c20325b7cfb5afcc875c4543c89c9ae9eb1625ecf",
+      "audience": "早朝から夕方までの勤務の形が合う人／土日祝日を休みたい人／豊橋市内へ通える範囲の人",
+      "validation": {
+        "ok": true,
+        "errors": []
+      }
+    },
+    "keyVisual": {
+      "executed": true,
+      "pass": true,
+      "correspondence": {
+        "elements": [
+          {
+            "id": "key-visual",
+            "role": "key-visual",
+            "basis": {
+              "appealId": "A2"
+            },
+            "description": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning"
+          },
+          {
+            "id": "section-work",
+            "role": "section",
+            "basis": {
+              "factKey": "workLocation"
+            },
+            "description": "Photorealistic photo of the exterior of a large logistics warehouse in Toyohashi in morning light"
+          }
+        ],
+        "prohibited": [
+          {
+            "source": "planning notSay: 契約更新の有無は言わない",
+            "terms": [
+              "更新あり",
+              "更新可",
+              "長期勤務"
+            ]
+          },
+          {
+            "source": "planning notSay: 寮・住宅の補助は言わない",
+            "terms": [
+              "寮",
+              "住宅補助",
+              "社宅"
+            ]
+          },
+          {
+            "source": "planning notSay: 月収の額や保証は言わない",
+            "terms": [
+              "月収",
+              "月給"
+            ]
+          },
+          {
+            "source": "standing ban: cash / income imagery",
+            "terms": [
+              "現金",
+              "札束",
+              "紙幣",
+              "硬貨",
+              "財布",
+              "お金",
+              "cash",
+              "banknote",
+              "banknotes",
+              "coin",
+              "coins",
+              "wallet",
+              "money",
+              "yen bills"
+            ]
+          },
+          {
+            "source": "standing ban: specific clock times",
+            "terms": [
+              "時計",
+              "clock",
+              "watch face",
+              "wall clock",
+              "wristwatch"
+            ]
+          },
+          {
+            "source": "standing ban: housing is unstated, so no residence imagery",
+            "terms": [
+              "住宅",
+              "一軒家",
+              "寮",
+              "社宅",
+              "マイホーム",
+              "戸建",
+              "residence",
+              "residential house",
+              "dormitory",
+              "house exterior",
+              "detached house",
+              "apartment building"
+            ]
+          }
+        ],
+        "firstCheckKeys": [
+          "salaryHourly",
+          "workHours",
+          "transportCap"
+        ],
+        "style": "Photorealistic, natural morning light, documentary style."
+      },
+      "prompt": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning, Photorealistic, natural morning light, documentary style., no text, no numbers, no logos, no watermark",
+      "compliance": {
+        "pass": true,
+        "hits": []
+      },
+      "attempts": 1,
+      "image": {
+        "file": "loops/loop-022/run4/images/key-visual.webp",
+        "sha256": "01d64a34eaedfe58378bfbd7fa935ad2bdbabba206b7d765b2bebbc397097081",
+        "prompt": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning, Photorealistic, natural morning light, documentary style., no text, no numbers, no logos, no watermark"
+      },
+      "model": "muse-image-1.0",
+      "costUsd": 0.01,
+      "checklist": [
+        {
+          "element": "key-visual",
+          "basis": {
+            "appealId": "A2"
+          },
+          "description": "Photorealistic photo of a worker sorting parcels on a conveyor belt inside a bright modern logistics warehouse in the early morning",
+          "checks": {
+            "subjectIdentity": null,
+            "unstatedImplication": null,
+            "inventedSpecifics": null,
+            "cashImagery": null
+          }
+        }
+      ]
+    }
+  },
+  "e02raw": null
+}

@@ -1,0 +1,45 @@
+{
+  "approvalId": "FICT-J02-approval-1",
+  "status": "approved",
+  "approver": "原田徳一（本人）",
+  "approvedAt": "2026-11-03",
+  "target": {
+    "original": {
+      "id": "FICT-J02",
+      "version": "v1",
+      "file": "loops/loop-022/run2/entry/original.json",
+      "sha256": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6"
+    },
+    "facts": {
+      "factsId": "FICT-J02-facts",
+      "factsVersion": 1,
+      "file": "loops/loop-022/run2/entry/facts.json",
+      "sha256": "f78bffe73f1c7c919b13473ebf71e263a68f058cc186b3b67bed6fcb439e7c06"
+    }
+  },
+  "basis": {
+    "reconciliation": "loops/loop-022/run2/extraction/live-run.json の e01（一致（人間承認待ち））",
+    "schemaCheck": "pass（loops/loop-022/run2/extraction/live-run.json）",
+    "verbatimCheck": "未確認"
+  },
+  "scope": {
+    "covers": "stated 項目のみ",
+    "unstatedItems": [
+      "employer",
+      "jobId",
+      "renewal",
+      "monthlyIncomeGuarantee",
+      "actualHours",
+      "monthlyDaysAssumption",
+      "housing"
+    ],
+    "unstatedNote": "未記載は未記載として表示に残し、承認の対象に含めない",
+    "effect": "工程3（生成）の入力として使用できること。再検証の合格は公開許可ではない（G-INV-4）"
+  },
+  "validity": {
+    "rule": "原本または FACT の sha256 が本記録と異なれば無効とし、照合からやり直す",
+    "invalidated": false,
+    "invalidatedReason": null
+  },
+  "note": "本人がチャットで FACT 候補（run2 の候補、交通費と上限を分けた形）と企画入力の両方を承認（2026-11-03 23:32、形式の確認 23:35）。統括が承認記録として作成。"
+}

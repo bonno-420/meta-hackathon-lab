@@ -373,6 +373,25 @@ const runE = await runDemo(
   { extract: async () => entryExtract, generate: async () => { entryGenerateCalls++; return faithfulGenerate()({}); }, keyVisual: stubKeyVisual(), images: stubImages() },
 );
 expect("entry-stops-at-approval", runE.stoppedAt, "approval");
+// The approval stop persists state, and a resume continues from the
+// same candidate after a human approval is recorded (loop-022).
+expectTrue("entry-approval-stop-saves-state", existsSync(path.join(scratchE, "entry/run-state.json")));
+{
+  const stateE = JSON.parse(readFileSync(path.join(scratchE, "entry/run-state.json"), "utf8"));
+  writeFileSync(path.join(scratchE, "entry/recon.json"), JSON.stringify({ e01: entryExtract.e01 }, null, 2) + "\n", "utf8");
+  const draftE = buildApprovalDraft({ root: scratchE, originalFile: "entry/original.json", factsFile: "entry/facts.json", manifestFile: "entry/manifest.json", reconciliationFile: "entry/recon.json", caseId: "e01" });
+  draftE.status = "approved";
+  draftE.approver = "本人";
+  draftE.approvedAt = "2026-11-03";
+  writeFileSync(path.join(scratchE, "entry/approval.json"), JSON.stringify(draftE, null, 2) + "\n", "utf8");
+  writeFileSync(path.join(scratchE, "entry/planning.json"), JSON.stringify(planning, null, 2) + "\n", "utf8");
+  const runE2 = await runDemo(
+    { root: scratchE, resumeState: stateE, checkpoints: "light", planningFile: "entry/planning.json" },
+    { extract: async () => entryExtract, generate: faithfulGenerate(), keyVisual: stubKeyVisual(), images: stubImages() },
+  );
+  expect("entry-resume-reaches-key-visual", runE2.stoppedAt, "key-visual");
+  expect("entry-resume-approval-passed", runE2.stages.approval.pass, true);
+}
 expect("entry-no-generation", entryGenerateCalls, 0);
 const pinnedOriginal = JSON.parse(readFileSync(path.join(scratchE, "entry/original.json"), "utf8"));
 expect("entry-pinned-lines", pinnedOriginal.lines.length, 6);

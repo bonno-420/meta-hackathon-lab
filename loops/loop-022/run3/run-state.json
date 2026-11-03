@@ -1,0 +1,157 @@
+{
+  "version": 1,
+  "mode": {
+    "checkpoints": "full",
+    "entry": true
+  },
+  "files": {
+    "originalFile": "loops/loop-022/run3/entry/original.json",
+    "factsFile": "loops/loop-022/run3/entry/facts.json",
+    "approvalFile": "loops/loop-022/run3/entry/approval.json",
+    "generationFile": "loops/loop-022/run3/generated-lp-v1.json",
+    "planningFile": "loops/loop-022/planning-FICT-J02.json",
+    "feedbackFile": null,
+    "postingId": "FICT-J02"
+  },
+  "completedStages": [
+    "extraction",
+    "factsComparison"
+  ],
+  "keyVisual": null,
+  "priorStages": {
+    "extraction": {
+      "executed": true,
+      "status": "completed",
+      "model": "meta-models/muse-spark-open-1026",
+      "promptVersion": "fact-extract-v1.1",
+      "durationMs": 10615,
+      "usage": {
+        "prompt_tokens": 494,
+        "completion_tokens": 4365,
+        "total_tokens": 4859,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 384
+        },
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 3483,
+          "audio_tokens": 0,
+          "reasoning_tokens": 3844,
+          "rejected_prediction_tokens": 2691
+        }
+      },
+      "costUsd": null,
+      "costNote": "未記録（PIPELINE_MODEL でモデルが差し替えられており、D4単価が適用できないため算出しない。使用量は usage に記録）",
+      "schemaCheck": {
+        "pass": true,
+        "expectedCount": 15,
+        "actualCount": 15,
+        "missingKeys": [],
+        "extraKeys": [],
+        "duplicateKeys": [],
+        "fieldIssues": []
+      },
+      "e01": {
+        "caseId": "E01",
+        "stage": "照合",
+        "verdict": "一致（人間承認待ち）",
+        "stoppedAtReconciliation": false,
+        "generationStarted": false,
+        "generationNote": "生成工程は作らない。人間承認前には生成を開始しない。",
+        "matched": [
+          {
+            "field": "勤務時間",
+            "value": "07:00〜16:00",
+            "source": "L05"
+          },
+          {
+            "field": "交通費（月上限）",
+            "value": "15,000円",
+            "source": "L07"
+          }
+        ],
+        "contradictions": [],
+        "unstated": [
+          {
+            "key": "employer",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "jobId",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "renewal",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "monthlyIncomeGuarantee",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "actualHours",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "monthlyDaysAssumption",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "housing",
+            "source": null,
+            "quote": null
+          }
+        ],
+        "claims": {
+          "workHours": {
+            "value": "07:00〜16:00",
+            "snippet": "07:00〜16:00"
+          },
+          "transportCap": {
+            "value": 15000,
+            "snippet": "月上限15,000円"
+          }
+        }
+      },
+      "e02": null
+    },
+    "entry": {
+      "executed": true,
+      "originalFile": "loops/loop-022/run3/entry/original.json",
+      "factsFile": "loops/loop-022/run3/entry/facts.json",
+      "manifestFile": "loops/loop-022/run3/entry/manifest.json",
+      "originalSha256": "ba40f7294084bd03271706ddc95f7b50555188b545b94e083540b5152088cfc6",
+      "factsSha256": "e310dd1d2178b6581eeac7c8c58392d005c6234073ab8b5bf6f27a335ad0bb50"
+    },
+    "factsComparison": {
+      "executed": true,
+      "mode": "entry",
+      "verbatim": {
+        "pass": true,
+        "checked": 15,
+        "issues": []
+      },
+      "candidate": {
+        "factsFile": "loops/loop-022/run3/entry/facts.json",
+        "sha256": "e310dd1d2178b6581eeac7c8c58392d005c6234073ab8b5bf6f27a335ad0bb50"
+      }
+    },
+    "approval": {
+      "executed": true,
+      "pass": false,
+      "reasonCode": "approval-missing",
+      "reason": "承認記録が存在しないため、後段を実行しない",
+      "approvalId": null,
+      "status": null,
+      "validity": null,
+      "generationInput": null
+    }
+  },
+  "e02raw": null
+}
