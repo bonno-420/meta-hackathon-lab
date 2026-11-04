@@ -65,6 +65,10 @@ const probePrompt = (v) => {
 };
 const promptV13 = probePrompt("v1.3");
 const promptV12 = probePrompt("v1.2");
+const promptV14 = probePrompt("v1.4");
+expect("prompt-v14-states-nonguarantee-rule", promptV14.includes("an explicit non-guarantee is a stated fact"), true);
+expect("prompt-v14-value-in-original-language", promptV14.includes("never translated into another language"), true);
+expect("prompt-v13-lacks-value-language-rule", promptV13.includes("never translated into another language"), false);
 expect("prompt-v13-states-nonguarantee-rule", promptV13.includes("an explicit non-guarantee is a stated fact"), true);
 expect("prompt-v13-keeps-pay-keys", promptV13.includes("monthlySalary") && promptV13.includes("salaryAnnual"), true);
 expect("prompt-v12-lacks-nonguarantee-rule", promptV12.includes("an explicit non-guarantee is a stated fact"), false);
