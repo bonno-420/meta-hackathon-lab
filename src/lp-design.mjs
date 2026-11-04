@@ -80,6 +80,41 @@ export function hueDistance(hexA, hexB) {
   return d > 180 ? 360 - d : d;
 }
 
+// Condition tags of a planning (the user's refinement of the
+// color rule, 2026-11-04): colors that end up similar BECAUSE the
+// targeting conditions are similar (gender, age band, job family,
+// employment form) are fine — what must not happen is the pipeline
+// producing the same or a similar color UNCONDITIONALLY, whatever
+// posting it is fed (pattern-ization). The tags make "because the
+// conditions are similar" a recorded, checkable statement instead
+// of an impression.
+const CONDITION_TAG_RULES = [
+  ["women", /女性|women|female/i],
+  ["men", /男性|\bmen\b|male/i],
+  ["students", /学生|student/i],
+  ["new-grad", /新卒|new graduate/i],
+  ["seniors", /シニア|高齢|60代|senior citizens?|older workers/i],
+  ["manufacturing", /製造|工場|組立|manufacturing|factory|assembly/i],
+  ["logistics", /物流|倉庫|仕分け|warehouse|logistics|sorting|packing|梱包/i],
+  ["food", /食品|調理|food|cooking|kitchen|cafe|飲食/i],
+  ["beauty", /化粧品|美容|cosmetics|beauty|salon|soap|石鹸/i],
+  ["care", /介護|医療|看護|care|nursing|medical/i],
+  ["office", /事務|office|clerical/i],
+  ["retail", /販売|接客|店舗|retail|sales|customer service/i],
+  ["cleaning", /清掃|cleaning/i],
+  ["part-time", /パート|アルバイト|part-time/i],
+  ["full-time", /正社員|full-time|permanent/i],
+  ["contract", /契約社員|contract employee/i],
+];
+
+export function conditionTagsOf(planning) {
+  const text = [planning?.audience ?? "", ...(planning?.appeals ?? []).map((a) => a?.text ?? "")].join(" ");
+  const tags = [];
+  for (const [tag, re] of CONDITION_TAG_RULES) if (re.test(text)) tags.push(tag);
+  for (const m of text.matchAll(/(\d)0(?:s|代)/gi)) tags.push(`age-${m[1]}0s`);
+  return [...new Set(tags)];
+}
+
 export function checkPaletteVariation(previousTitleBg, candidateTitleBg) {
   const dist = hueDistance(previousTitleBg, candidateTitleBg);
   return {
@@ -147,11 +182,20 @@ export function deriveLpDesign(planning, { previous } = {}) {
   // variant passes, take the farthest one and record the failure —
   // visible, not silent.
   let colorCheck = null;
+  const conditionTags = conditionTagsOf(planning);
   // The previous production is usually known by palette ID (the
   // design history); resolve its dominant color from the variants.
   const previousTitleBg = previous?.palette?.titleBg
     ?? (previous?.paletteId ? Object.values(LP_PATTERNS).flatMap((pp) => pp.palettes).find((v) => v.id === previous.paletteId)?.titleBg ?? null : null);
-  if (previousTitleBg) {
+  // Similarity that follows from similar conditions is allowed
+  // (the user's refinement): the check below only guards against
+  // unconditional sameness — different conditions, same color.
+  const previousTags = Array.isArray(previous?.conditionTags) ? previous.conditionTags : null;
+  const sharedTags = previousTags ? conditionTags.filter((t) => previousTags.includes(t)) : [];
+  const similarityAllowed = Boolean(previousTags && sharedTags.length >= 2);
+  if (previousTitleBg && similarityAllowed) {
+    colorCheck = { ...checkPaletteVariation(previousTitleBg, variants[paletteIdx].titleBg), previousPaletteId: previous.paletteId ?? null, attempts: 0, similarityAllowed: true, sharedTags, pass: true, rule: "対象条件（性別・年齢・職種など）が似ているため、色味が似るのは条件由来として許容する。避けるのは条件が違うのに同じ・似た色になる無条件のパターン化" };
+  } else if (previousTitleBg) {
     let bestIdx = paletteIdx;
     let bestDist = -1;
     let attempts = 0;
@@ -160,9 +204,9 @@ export function deriveLpDesign(planning, { previous } = {}) {
       const c = checkPaletteVariation(previousTitleBg, variants[idx].titleBg);
       attempts++;
       if ((c.hueDistance ?? -1) > bestDist) { bestDist = c.hueDistance ?? -1; bestIdx = idx; }
-      if (c.pass) { bestIdx = idx; colorCheck = { ...c, previousPaletteId: previous.paletteId ?? null, attempts }; break; }
+      if (c.pass) { bestIdx = idx; colorCheck = { ...c, previousPaletteId: previous.paletteId ?? null, attempts, similarityAllowed: false, sharedTags }; break; }
       if (step === variants.length - 1) {
-        colorCheck = { ...checkPaletteVariation(previousTitleBg, variants[bestIdx].titleBg), previousPaletteId: previous.paletteId ?? null, attempts, pass: false };
+        colorCheck = { ...checkPaletteVariation(previousTitleBg, variants[bestIdx].titleBg), previousPaletteId: previous.paletteId ?? null, attempts, pass: false, similarityAllowed: false, sharedTags };
       }
     }
     if (bestIdx !== paletteIdx) {
@@ -182,6 +226,7 @@ export function deriveLpDesign(planning, { previous } = {}) {
     paletteId: chosen.id,
     variedFromPrevious,
     colorCheck,
+    conditionTags,
     paletteBasis: "パターンの配色バリエーションから選択（候補。市場のリサーチ裏付けはなく、候補のまま記録する）",
     basis: p.basis,
   };

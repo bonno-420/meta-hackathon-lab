@@ -302,6 +302,26 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
   expectTrue("gate-gc-missing-coverage-checks-fail", !covCheck.pass && covCheck.failures.some((f) => f.includes("coverageChecks")));
 }
 
+// ---------- language mixing: machine detects, judgement decides intent (user refinement, 2026-11-04) ----------
+{
+  const { japaneseMixingHits, buildCopyReviewMessages } = await import("./review.mjs");
+  const sentences = [{ text: "The studio is in Shimokitazawa." }, { text: "Monthly income example (試算): 96,000 yen." }];
+  const hits = japaneseMixingHits(sentences);
+  expect("mixing-hits-count", hits.length, 1);
+  expect("mixing-hits-index", hits[0].index, 1);
+  const msgs = buildCopyReviewMessages({ planning: { language: "en", audience: "Women", appeals: [] }, generation: { sentences } });
+  expectTrue("mixing-hits-reach-the-judge", msgs[1].content.includes("language-purity") && msgs[1].content.includes("試算"));
+  const msgsJa = buildCopyReviewMessages({ planning: { language: "ja", audience: "女性", appeals: [] }, generation: { sentences } });
+  expectTrue("mixing-scan-en-only", !msgsJa[1].content.includes("Deterministic scan"));
+  // Grounding no longer hard-fails on mixing: intent is not a
+  // deterministic question (the scan + the judge carry it instead).
+  const { checkGrounding } = await import("./generate.mjs");
+  const factsL = { items: [{ key: "salaryHourly", status: "stated", value: "1,200 yen", normalized: 1200, sourceLine: "L04" }] };
+  const originalL = { lines: [{ id: "L04", text: "Hourly wage: 1,200 yen" }] };
+  const mixed = { sentences: [{ text: "Monthly income example (試算): 1,200 yen per hour.", factKeys: ["salaryHourly"], sourceLines: ["L04"] }] };
+  expectTrue("grounding-does-not-hard-fail-mixing", checkGrounding(mixed, factsL, originalL, { language: "en" }).pass);
+}
+
 // ---------- palette variation is perceptual, not by ID (user instruction, 2026-11-04) ----------
 {
   const { deriveLpDesign, checkPaletteVariation } = await import("./lp-design.mjs");
@@ -313,6 +333,18 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
   expectTrue("derive-avoids-same-color", d.paletteId !== "cond-1" && d.colorCheck && d.colorCheck.pass);
   const dNone = deriveLpDesign(planningC, {});
   expect("derive-no-previous", dNone.colorCheck, null);
+}
+
+// ---------- color rule refinement: similar conditions may be similar; unconditional sameness may not (user, 2026-11-04) ----------
+{
+  const { deriveLpDesign } = await import("./lp-design.mjs");
+  const womenBeauty = { audience: "Women in their 30s to 50s near Shimokitazawa, part-time", appeals: [{ id: "A1", text: "Packing handmade soaps and cosmetics", factKeys: ["salaryHourly"], sourceLines: [] }], firstCheckKeys: ["salaryHourly", "workHours"], imageSpecs: [] };
+  const prevSameCond = { patternId: "P-COND", paletteId: "cond-1", conditionTags: ["women", "beauty", "part-time", "age-30s"] };
+  const dAllow = deriveLpDesign(womenBeauty, { previous: prevSameCond });
+  expectTrue("color-similar-conditions-allowed", dAllow.colorCheck && dAllow.colorCheck.similarityAllowed === true && dAllow.colorCheck.pass);
+  const prevDiffCond = { patternId: "P-COND", paletteId: "cond-1", conditionTags: ["manufacturing", "full-time"] };
+  const dBlock = deriveLpDesign(womenBeauty, { previous: prevDiffCond });
+  expectTrue("color-unconditional-sameness-blocked", dBlock.colorCheck && dBlock.colorCheck.similarityAllowed === false && dBlock.paletteId !== "cond-1");
 }
 
 // ---------- pagecheck: fact values repeated by the apparatus are not duplication (loop-027, I-11) ----------

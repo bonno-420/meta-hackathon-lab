@@ -45,21 +45,59 @@
       "inputId": "FICT-J03",
       "patternId": "P-WORK",
       "paletteId": "work-2",
-      "at": "2026-11-04T03:42:43.391Z"
+      "at": "2026-11-04T03:42:43.391Z",
+      "conditionTags": [
+        "manufacturing",
+        "logistics",
+        "full-time"
+      ],
+      "conditionTagsNote": "backfilled 2026-11-04: derived from the run's recorded planning by conditionTagsOf"
     },
     {
       "runDir": "loops/loop-027/run1",
       "inputId": "FICT-E03",
       "patternId": "P-COND",
       "paletteId": "cond-1",
-      "at": "2026-11-04T04:25:03.309Z"
+      "at": "2026-11-04T04:25:03.309Z",
+      "conditionTags": [
+        "women",
+        "logistics",
+        "beauty",
+        "part-time",
+        "age-30s",
+        "age-50s"
+      ],
+      "conditionTagsNote": "backfilled 2026-11-04: derived from the run's recorded planning by conditionTagsOf"
     },
     {
       "runDir": "loops/loop-027/run2",
       "inputId": "FICT-E03",
       "patternId": "P-WORK",
       "paletteId": "work-1",
-      "at": "2026-11-04T04:47:11.471Z"
+      "at": "2026-11-04T04:47:11.471Z",
+      "conditionTags": [
+        "women",
+        "logistics",
+        "beauty",
+        "part-time",
+        "age-30s",
+        "age-50s"
+      ],
+      "conditionTagsNote": "backfilled 2026-11-04: derived from the run's recorded planning by conditionTagsOf"
+    },
+    {
+      "runDir": "loops/loop-027/run3",
+      "inputId": "FICT-E03",
+      "patternId": "P-COND",
+      "paletteId": "cond-1",
+      "conditionTags": [
+        "women",
+        "beauty",
+        "part-time",
+        "age-30s",
+        "age-50s"
+      ],
+      "at": "2026-11-04T05:04:18.474Z"
     }
   ]
 }

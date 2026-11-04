@@ -145,7 +145,7 @@ const UNSTATED_ASSERTION_PATTERNS = [
 // - unstated items are never asserted (only "未記載" may be stated);
 // - monthlyDaysAssumption stays an assumption and monthlyIncomeGuarantee
 //   stays a non-guarantee.
-export function checkGrounding(generation, facts, original) {
+export function checkGrounding(generation, facts, original, { language } = {}) {
   const issues = [];
   const itemsByKey = new Map(facts.items.map((i) => [i.key, i]));
   const numericReps = new Map();

@@ -209,7 +209,7 @@ export function loadDesignHistory(root) {
 export function loadPreviousDesign(root, excludeRunDir) {
   const entries = loadDesignHistory(root).filter((e) => e && e.runDir !== excludeRunDir);
   const last = entries[entries.length - 1];
-  return last ? { patternId: last.patternId ?? null, paletteId: last.paletteId ?? null } : null;
+  return last ? { patternId: last.patternId ?? null, paletteId: last.paletteId ?? null, conditionTags: last.conditionTags ?? null } : null;
 }
 export function recordDesignHistory(root, entry) {
   const entries = loadDesignHistory(root);
@@ -742,7 +742,7 @@ export async function runDemo(options, deps = {}) {
       const previousDesign = loadPreviousDesign(root, kvPageDirEarly);
       const lpDesignEarly = deriveLpDesign(planning, { previous: previousDesign });
       writeFileSync(resolveRoot(root, path.join(kvPageDirEarly, "lp-design.json")), JSON.stringify(lpDesignEarly, null, 2) + "\n", "utf8");
-      recordDesignHistory(root, { runDir: kvPageDirEarly, inputId: options.inputId ?? options.posting?.id ?? null, patternId: lpDesignEarly.patternId, paletteId: lpDesignEarly.paletteId });
+      recordDesignHistory(root, { runDir: kvPageDirEarly, inputId: options.inputId ?? options.posting?.id ?? null, patternId: lpDesignEarly.patternId, paletteId: lpDesignEarly.paletteId, conditionTags: lpDesignEarly.conditionTags ?? null });
       if (!designCheck.pass) {
         stages.keyVisual = { executed: true, pass: false, correspondence, imageDesign, designCheck };
         persistState(["extraction", "factsComparison", "approval", "planning"], { e02raw });
@@ -933,7 +933,7 @@ export async function runDemo(options, deps = {}) {
     const generation = loadJson(path.join(root, generationFile));
     const factsForGrounding = fixedFacts ?? loadJson(path.join(root, factsFile));
     const originalForGrounding = JSON.parse(readFileSync(resolveRoot(root, originalFile), "utf8"));
-    const grounding = checkGrounding(generation, factsForGrounding, originalForGrounding);
+    const grounding = checkGrounding(generation, factsForGrounding, originalForGrounding, { language: planning?.language });
     generationRun = {
       status: "generated", generation, grounding, apiCalled: false,
       model: generation.model ?? null, promptVersion: generation.promptVersion ?? null,

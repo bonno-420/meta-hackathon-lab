@@ -11,7 +11,7 @@
 // back to generation once, and a second fail stops the run with the
 // findings on record.
 
-export const REVIEW_PROMPT_VERSION = "lp-review-v5";
+export const REVIEW_PROMPT_VERSION = "lp-review-v6";
 
 const VERDICT_SCHEMA = 'Schema: {"verdict":"pass"|"fail","findings":[{"criterion":"...","target":"the block, sentence, or planning item","problem":"what is wrong","instruction":"what to change"}]}';
 // The researched market patterns (loop-025) include one rule that
@@ -21,6 +21,22 @@ const VERDICT_SCHEMA = 'Schema: {"verdict":"pass"|"fail","findings":[{"criterion
 // treats its hits as a fail regardless of the judge's verdict. A
 // sentence stating an item is not stated (未記載) is exempt: the
 // inquiry invitation there is the user's decided pattern.
+// Deterministic detection of Japanese text inside English copy.
+// Detection only: whether a hit is a defect is the judgement
+// layer's call — Japanese used INTENTIONALLY (a proper noun or a
+// term the sentence itself explains) is not residue, and removing
+// intentional use would be wrong (the user's refinement,
+// 2026-11-04). The scan's job is to make sure the judge SEES every
+// hit; leftover fixed notes and marker words are never intentional.
+export function japaneseMixingHits(sentences) {
+  const hits = [];
+  (sentences ?? []).forEach((s, i) => {
+    const text = typeof s === "string" ? s : (s?.text ?? "");
+    if (/[぀-ヿ一-鿿]/.test(text)) hits.push({ index: i, text });
+  });
+  return hits;
+}
+
 export function boilerplateHits(sentences) {
   const hits = [];
   (sentences ?? []).forEach((s, i) => {
@@ -80,9 +96,12 @@ export function buildCopyReviewMessages({ planning, generation }) {
     "5. appeal-patterns: judged against the researched patterns of this market (public job ads, abstracted in loop-025): appeals are short assertions, one point per sentence; each condition is paired with what it means in the reader's life; a low-barrier appeal is paired with its concrete ground. Boilerplate request closings (ご確認ください / ご検討ください / お問い合わせください) on appeal sentences fail this criterion — an inquiry invitation is allowed only on a sentence that states an item is not stated (未記載).",
     "6. reader-conversion: appeals that the condition cards do not carry are the posting's charm beyond the bare conditions. Their sentences must be converted into reader-addressed copy — who this suits, what worry it answers — not left as bare fact statements. Fail when such an appeal's sentence only restates its fact. (The headline sentence is also judged here: it must be short — the job and the place only. A headline that packs in employment type, period, or appeal phrasing fails.)",
     "7. ending-variation: the conversion must not collapse into one repeated sentence ending. When most sentences close with the same formula tail (for example 〜に向いています / 〜に合っています / 〜やすいです in Japanese, or the same closing clause in English), the copy reads as machine-templated: fail, naming the repeated tail, and instruct varied, plain assertion endings instead.",
+    "8. appeal-not-explanation: the copy must APPEAL, not explain. A sentence that neutrally explains or describes a condition (how shifts are planned, how the workplace is arranged) without giving the reader a reason to want the job fails this criterion, even when it is factual and reader-addressed in form. Each appeal sentence should land as a short assertion of a concrete good for the reader (the user's review of FICT-E03, 2026-11-04: the copy still read as explanation).",
+    "9. language-purity: on an English page, Japanese text inside a sentence fails when it is residue — a leftover fixed note, a Japanese marker word, a template fragment. Japanese used INTENTIONALLY does not fail: a Japanese proper noun, or a term the sentence itself explains for the reader. The deterministic scan's hits are listed below the copy; judge each hit on that distinction (the user's refinement, 2026-11-04: intentional use must not be removed).",
     REVIEW_RULES,
     VERDICT_SCHEMA,
   ].join("\n");
+  const mixing = planning?.language === "en" ? japaneseMixingHits(sentences) : [];
   const user = [
     `Audience (the reader persona): ${planning?.audience ?? ""}`,
     "Appeals the copy must carry:",
@@ -90,6 +109,11 @@ export function buildCopyReviewMessages({ planning, generation }) {
     "",
     "The copy, sentences in order:",
     ...sentences.map((s, i) => `${i + 1}. ${s.text}`),
+    ...(mixing.length > 0 ? [
+      "",
+      "Deterministic scan — sentences containing Japanese text (judge each under criterion 9, language-purity):",
+      ...mixing.map((h) => `- sentence ${h.index + 1}: ${h.text}`),
+    ] : []),
   ].join("\n");
   return [{ role: "system", content: system }, { role: "user", content: user }];
 }
@@ -198,10 +222,11 @@ export function buildReviewMessages({ planning, outline }) {
     "3. posting-completeness: a job posting's essentials — the work, the place, the employment type and period, the pay, the hours and break, the holidays, the transport, who can apply — must be present and easy to find. Anything missing, or buried so a reader would miss it, fails.",
     "4. no-mute-blocks: an image shown with no accompanying text, or a block that carries nothing, fails (name the block).",
     "5. client-test: as the client, if this page reads as facts and pictures rather than a designed posting that makes the reader want to apply, fail.",
+    "6. first-view-priority: the first view (headline, hero chips, the first cards) must foreground this posting's strongest deciding facts — for hourly-paid work the wage, a stated barrier-remover such as no-experience-needed, a distinctive benefit. If a strong deciding fact sits mid-page or lower while weaker facts (generic hours, the bare location) dominate the top, fail, naming what should lead (the user's review of FICT-E03 run2, 2026-11-04).",
     "",
     "Rules: judge only what the outline shows. Do not demand facts the posting does not have. A finding's instruction must say concretely what to change in the copy or the arrangement, without inventing new facts. If the page is a posting both reviewers can accept, verdict is \"pass\" with an empty findings list.",
     "Output JSON only, no markdown fences.",
-    'Schema: {"verdict":"pass"|"fail","findings":[{"criterion":"job-first"|"appeal-works"|"posting-completeness"|"no-mute-blocks"|"client-test","target":"the block or sentence","problem":"what is wrong","instruction":"what to change"}]}',
+    'Schema: {"verdict":"pass"|"fail","findings":[{"criterion":"job-first"|"appeal-works"|"posting-completeness"|"no-mute-blocks"|"client-test"|"first-view-priority","target":"the block or sentence","problem":"what is wrong","instruction":"what to change"}]}',
   ].join("\n");
   const user = [
     `Audience (the reader persona): ${planning?.audience ?? ""}`,
