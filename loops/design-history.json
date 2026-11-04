@@ -53,6 +53,13 @@
       "patternId": "P-COND",
       "paletteId": "cond-1",
       "at": "2026-11-04T04:25:03.309Z"
+    },
+    {
+      "runDir": "loops/loop-027/run2",
+      "inputId": "FICT-E03",
+      "patternId": "P-WORK",
+      "paletteId": "work-1",
+      "at": "2026-11-04T04:47:11.471Z"
     }
   ]
 }

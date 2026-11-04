@@ -302,6 +302,19 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
   expectTrue("gate-gc-missing-coverage-checks-fail", !covCheck.pass && covCheck.failures.some((f) => f.includes("coverageChecks")));
 }
 
+// ---------- palette variation is perceptual, not by ID (user instruction, 2026-11-04) ----------
+{
+  const { deriveLpDesign, checkPaletteVariation } = await import("./lp-design.mjs");
+  // The measured case: slate blue (work-2) and navy (cond-1) are
+  // different IDs in different patterns and the same color to the eye.
+  expectTrue("hue-navy-slate-same", !checkPaletteVariation("#22384f", "#173550").pass);
+  const planningC = { appeals: [{ id: "A1", text: "Packing soaps", factKeys: ["workHours"], sourceLines: [] }], firstCheckKeys: ["workHours", "workLocation"], imageSpecs: [] };
+  const d = deriveLpDesign(planningC, { previous: { patternId: "P-WORK", paletteId: "work-2" } });
+  expectTrue("derive-avoids-same-color", d.paletteId !== "cond-1" && d.colorCheck && d.colorCheck.pass);
+  const dNone = deriveLpDesign(planningC, {});
+  expect("derive-no-previous", dNone.colorCheck, null);
+}
+
 // ---------- pagecheck: fact values repeated by the apparatus are not duplication (loop-027, I-11) ----------
 {
   const { checkPage } = await import("./pagecheck.mjs");

@@ -47,6 +47,51 @@ export const LP_PATTERNS = {
   },
 };
 
+// Perceptual color variation check (the user's instruction,
+// 2026-11-04, after the FICT-E03 run): the D15 rule changed the
+// palette ID, but the previous production's slate blue (#22384f)
+// and this run's navy (#173550) are the same color to the eye — a
+// different ID is not a different color. The check compares the
+// dominant color (the title band) by hue distance: below the
+// threshold, the palettes read as the same color family and the
+// derivation must move on to a variant that actually differs.
+export const HUE_DISTANCE_MIN = 40;
+
+export function hexToHue(hex) {
+  const m = /^#([0-9a-f]{6})$/i.exec(String(hex ?? ""));
+  if (!m) return null;
+  const n = parseInt(m[1], 16);
+  const r = ((n >> 16) & 255) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  if (max === min) return 0;
+  const d = max - min;
+  let h;
+  if (max === r) h = ((g - b) / d) % 6;
+  else if (max === g) h = (b - r) / d + 2;
+  else h = (r - g) / d + 4;
+  h *= 60;
+  return h < 0 ? h + 360 : h;
+}
+
+export function hueDistance(hexA, hexB) {
+  const a = hexToHue(hexA), b = hexToHue(hexB);
+  if (a === null || b === null) return null;
+  const d = Math.abs(a - b) % 360;
+  return d > 180 ? 360 - d : d;
+}
+
+export function checkPaletteVariation(previousTitleBg, candidateTitleBg) {
+  const dist = hueDistance(previousTitleBg, candidateTitleBg);
+  return {
+    previousTitleBg: previousTitleBg ?? null,
+    titleBg: candidateTitleBg ?? null,
+    hueDistance: dist === null ? null : Math.round(dist),
+    threshold: HUE_DISTANCE_MIN,
+    pass: dist !== null && dist >= HUE_DISTANCE_MIN,
+    rule: "前回の制作と色相が近い（同じ色に見える）配色は選ばない。前回と異なる型・異なるIDでも、色そのものが近ければ変える",
+  };
+}
+
 const WORK_RE = /仕事|作業|内容|ものづくり|作る|検品|仕分け|調理|接客|work|task|craft|cooking|making/i;
 const LIFE_RE = /土日|休日|休み|家族|通勤|週末|weekend|holiday|family|commut|school|classes/i;
 
@@ -95,6 +140,36 @@ export function deriveLpDesign(planning, { previous } = {}) {
   } else if (previous) {
     variedFromPrevious = { patternId: previous.patternId ?? null, paletteId: previous.paletteId ?? null, changed: previous.patternId !== patternId, rule: "前回と型が異なるため配色も異なる" };
   }
+  // Perceptual check on top of the ID rule: whatever variant the
+  // D15 step picked, if its dominant color is within the hue
+  // threshold of the previous production's, advance through this
+  // pattern's variants until one actually looks different. When no
+  // variant passes, take the farthest one and record the failure —
+  // visible, not silent.
+  let colorCheck = null;
+  // The previous production is usually known by palette ID (the
+  // design history); resolve its dominant color from the variants.
+  const previousTitleBg = previous?.palette?.titleBg
+    ?? (previous?.paletteId ? Object.values(LP_PATTERNS).flatMap((pp) => pp.palettes).find((v) => v.id === previous.paletteId)?.titleBg ?? null : null);
+  if (previousTitleBg) {
+    let bestIdx = paletteIdx;
+    let bestDist = -1;
+    let attempts = 0;
+    for (let step = 0; step < variants.length; step++) {
+      const idx = (paletteIdx + step) % variants.length;
+      const c = checkPaletteVariation(previousTitleBg, variants[idx].titleBg);
+      attempts++;
+      if ((c.hueDistance ?? -1) > bestDist) { bestDist = c.hueDistance ?? -1; bestIdx = idx; }
+      if (c.pass) { bestIdx = idx; colorCheck = { ...c, previousPaletteId: previous.paletteId ?? null, attempts }; break; }
+      if (step === variants.length - 1) {
+        colorCheck = { ...checkPaletteVariation(previousTitleBg, variants[bestIdx].titleBg), previousPaletteId: previous.paletteId ?? null, attempts, pass: false };
+      }
+    }
+    if (bestIdx !== paletteIdx) {
+      variedFromPrevious = { ...(variedFromPrevious ?? {}), patternId: previous.patternId ?? null, paletteId: previous.paletteId ?? null, changed: true, rule: "前回と色相が近い配色を避け、実際に異なる色のバリエーションを選んだ" };
+    }
+    paletteIdx = bestIdx;
+  }
   const chosen = variants[paletteIdx];
   return {
     version: "lp-design-v1",
@@ -106,6 +181,7 @@ export function deriveLpDesign(planning, { previous } = {}) {
     palette: { titleBg: chosen.titleBg, accent: chosen.accent, chipBg: chosen.chipBg },
     paletteId: chosen.id,
     variedFromPrevious,
+    colorCheck,
     paletteBasis: "パターンの配色バリエーションから選択（候補。市場のリサーチ裏付けはなく、候補のまま記録する）",
     basis: p.basis,
   };
