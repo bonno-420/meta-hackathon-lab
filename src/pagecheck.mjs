@@ -16,7 +16,7 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-export const PAGECHECK_VERSION = "src-pagecheck-v4";
+export const PAGECHECK_VERSION = "src-pagecheck-v5";
 export const DICTS_VERSION = "loop16-dicts-2026-11-02";
 
 const DEFAULT_VERIFICATION_DICT = [
@@ -269,7 +269,46 @@ function detectHeadingMismatch(sections, scopeRules) {
 // Run all deterministic checks on an assembled page.
 // pass means: no duplicated sentences, no verification phrases, no
 // record labels, no heading-scope mismatches.
-export function checkPage(html, { dicts, factValues } = {}) {
+// Gate CANDIDATE G-E (not enforced): a stated fact's value stated
+// in two or more BODY sentences. The details table carries every
+// value and the cards/chips are the allowed summary of deciding
+// conditions, so only body sentences (rows, bands, the headline)
+// are counted; the marked income example counts as one occurrence
+// of its components, like any other sentence. Origin: FICT-E03
+// run9 (2026-11-04) — "16 working days" appeared in the income
+// example AND in a second prose sentence, and the judgement-layer
+// criterion (natural-and-sufficient) did not catch it. Recorded
+// and reported, but NOT part of pass/fail until the user promotes
+// it (the learning flow: candidate → verification → approval).
+function valueTokens(value) {
+  const toks = new Set();
+  const v = String(value ?? "");
+  // A number plus the words up to its unit (within three words):
+  // "1,200 yen", "16 working days", "5 hours", "12,000 yen".
+  for (const m of v.matchAll(/\d[\d,]*(?:\s+\S+?){0,3}?\s*(?:yen|hours?|minutes?|days?|%)/gi)) toks.add(m[0].replace(/\s+/g, " ").trim());
+  for (const m of v.matchAll(/\b\d{1,2}:\d{2}\b/g)) toks.add(m[0]);
+  return [...toks];
+}
+
+export function collectValueRepetition(html, factItems) {
+  const bodySentences = [];
+  for (const m of String(html).matchAll(/<section class="([^"]*)">([\s\S]*?)<\/section>/g)) {
+    if (/cards|details|lp-cta/.test(m[1])) continue;
+    for (const p of m[2].matchAll(/<p class="lp-sentence"[^>]*>([\s\S]*?)<\/p>/g)) {
+      bodySentences.push(p[1].replace(/<[^>]+>/g, "").trim());
+    }
+  }
+  const hits = [];
+  for (const item of factItems ?? []) {
+    const tokens = valueTokens(item?.value);
+    if (tokens.length === 0) continue;
+    const found = bodySentences.filter((s) => tokens.some((t) => s.includes(t)));
+    if (found.length >= 2) hits.push({ key: item.key ?? null, value: item.value, count: found.length, sentences: found.map((s) => s.slice(0, 90)) });
+  }
+  return hits;
+}
+
+export function checkPage(html, { dicts, factValues, factItems } = {}) {
   const d = dicts ?? loadDicts();
   const sections = extractSections(html);
   // The text checks always run over the whole page. Text outside any
@@ -280,6 +319,7 @@ export function checkPage(html, { dicts, factValues } = {}) {
   // 2026-11-04, reproduced before this fix).
   const pageScope = [{ id: "page", heading: "(page)", rawHtml: String(html), inner: String(html), index: 0 }];
   const duplication = collectDuplication(pageScope, factValues ?? []);
+  const valueRepetition = collectValueRepetition(html, factItems ?? []);
   const verificationPhrases = detectVerification(pageScope, d.verification);
   const recordExposure = detectRecordExposure(pageScope, d.recordLabels);
   const heading = detectHeadingMismatch(sections, d.headingScope);
@@ -320,6 +360,7 @@ export function checkPage(html, { dicts, factValues } = {}) {
     headingMismatches: heading.mismatches.length,
     attributeExposureHits: attributeExposure.length,
     headlineHits: headlineHits.length,
+    valueRepetitionHits: valueRepetition.length,
   };
   const pass = summary.duplicateGroups === 0 && summary.verificationHits === 0 && summary.recordExposureHits === 0 && summary.headingMismatches === 0 && summary.attributeExposureHits === 0 && summary.headlineHits === 0;
   return {
@@ -333,6 +374,7 @@ export function checkPage(html, { dicts, factValues } = {}) {
     recordExposure,
     attributeExposure,
     headline: { text: headlineText, hits: headlineHits },
+    valueRepetition,
     headingMismatch: heading.mismatches,
     allSections: heading.allSections,
   };

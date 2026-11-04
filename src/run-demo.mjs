@@ -289,8 +289,8 @@ export function checkCompletion({ root, generation, imageFiles, lpFile, groundin
       id: "C5",
       pass: c5Pass,
       detail: c5Pass
-        ? `ページ品質の決定的チェックが pass（重複 ${s.duplicateGroups ?? 0}、検証側定型文 ${s.verificationHits ?? 0}、記録ラベル ${s.recordExposureHits ?? 0}、見出しずれ ${s.headingMismatches ?? 0}、見出しスキャン ${s.headlineHits ?? 0}）`
-        : `ページ品質の決定的チェックが fail（重複 ${s.duplicateGroups ?? 0} 件、検証側定型文 ${s.verificationHits ?? 0} 件、記録ラベル露出 ${s.recordExposureHits ?? 0} 件、見出しずれ ${s.headingMismatches ?? 0} 件、見出しスキャン ${s.headlineHits ?? 0} 件）`,
+        ? `ページ品質の決定的チェックが pass（重複 ${s.duplicateGroups ?? 0}、検証側定型文 ${s.verificationHits ?? 0}、記録ラベル ${s.recordExposureHits ?? 0}、見出しずれ ${s.headingMismatches ?? 0}、見出しスキャン ${s.headlineHits ?? 0}、値の重複・候補G-E ${s.valueRepetitionHits ?? 0}）`
+        : `ページ品質の決定的チェックが fail（重複 ${s.duplicateGroups ?? 0} 件、検証側定型文 ${s.verificationHits ?? 0} 件、記録ラベル露出 ${s.recordExposureHits ?? 0} 件、見出しずれ ${s.headingMismatches ?? 0} 件、見出しスキャン ${s.headlineHits ?? 0} 件、値の重複・候補G-E ${s.valueRepetitionHits ?? 0} 件）`,
       pagecheck: { version: pagecheck.version ?? null, dictsVersion: pagecheck.dictsVersion ?? null, summary: s },
     });
   }
@@ -1257,11 +1257,13 @@ export async function runDemo(options, deps = {}) {
       try {
         const lpHtml = readFileSync(resolveRoot(root, lpFile), "utf8");
         let factValues = [];
+        let factItems = [];
         try {
           const f = loadJson(resolveRoot(root, factsFile));
           factValues = (f?.items ?? []).filter((i) => i.status === "stated" && typeof i.value === "string").map((i) => i.value);
-        } catch { factValues = []; }
-        pagecheck = checkPage(lpHtml, { factValues });
+          factItems = (f?.items ?? []).filter((i) => i.status === "stated" && typeof i.value === "string").map((i) => ({ key: i.key, value: i.value }));
+        } catch { factValues = []; factItems = []; }
+        pagecheck = checkPage(lpHtml, { factValues, factItems });
       } catch { pagecheck = null; }
       const appealCoverage = pipelineMode && planning && Array.isArray(planning.appeals)
         ? planning.appeals.map((a) => ({ appealId: a.id, sentenceIdxs: matchAppealSentences(generationRun.generation, planning.appeals).byAppeal.get(a.id) ?? [] }))
@@ -1353,11 +1355,13 @@ export async function runDemo(options, deps = {}) {
             let pagecheck2 = null;
             try {
               let factValues2 = [];
+              let factItems2 = [];
               try {
                 const f2 = loadJson(resolveRoot(root, factsFile));
                 factValues2 = (f2?.items ?? []).filter((i) => i.status === "stated" && typeof i.value === "string").map((i) => i.value);
-              } catch { factValues2 = []; }
-              pagecheck2 = checkPage(readFileSync(resolveRoot(root, lpFile), "utf8"), { factValues: factValues2 });
+                factItems2 = (f2?.items ?? []).filter((i) => i.status === "stated" && typeof i.value === "string").map((i) => ({ key: i.key, value: i.value }));
+              } catch { factValues2 = []; factItems2 = []; }
+              pagecheck2 = checkPage(readFileSync(resolveRoot(root, lpFile), "utf8"), { factValues: factValues2, factItems: factItems2 });
             } catch { pagecheck2 = null; }
             const coverage2 = planning && Array.isArray(planning.appeals) ? planning.appeals.map((a) => ({ appealId: a.id, sentenceIdxs: matchAppealSentences(generationRun.generation, planning.appeals).byAppeal.get(a.id) ?? [] })) : undefined;
             let factsForCompletion2 = null;

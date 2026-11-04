@@ -362,6 +362,23 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
   expectTrue("v8-language-quality-present", msgs[0].content.includes("language-quality") && msgs[0].content.includes("TARGET REGION") && msgs[0].content.includes("WITHIN practical level are not findings"));
 }
 
+// ---------- gate candidate G-E: stated value repeated across body sentences (not enforced) ----------
+{
+  const { checkPage, collectValueRepetition } = await import("./pagecheck.mjs");
+  const items = [{ key: "monthlyDaysAssumption", value: "16 working days per month" }, { key: "salaryHourly", value: "1,200 yen" }];
+  const body = (inner) => `<section class="appeal-row">${inner}</section>`;
+  const sent = (t) => `<p class="lp-sentence">${t}</p>`;
+  const dup = body(sent("As an estimate, 1,200 yen x 5 hours x 16 working days is about 96,000 yen.") + sent("Shifts are planned on an assumption of 16 working days per month."));
+  const hits = collectValueRepetition(dup, items);
+  expect("ge-hits-count", hits.length, 1);
+  expect("ge-hits-key", hits[0].key, "monthlyDaysAssumption");
+  const furnitureOnly = `<section class="cards">${sent("You earn 1,200 yen per hour.")}</section><section class="details">${sent("Assumed days: 16 working days per month.")}</section>` + body(sent("As an estimate, 1,200 yen x 16 working days is about 96,000 yen."));
+  expect("ge-furniture-exempt", collectValueRepetition(furnitureOnly, items).length, 0);
+  const pc = checkPage(dup, { factItems: items });
+  expect("ge-summary-count", pc.summary.valueRepetitionHits, 1);
+  expectTrue("ge-not-enforced", pc.pass === true || pc.summary.duplicateGroups > 0);
+}
+
 // ---------- plating: the title block carries the headline only (user, 2026-11-04) ----------
 {
   const { assembleFromLayout } = await import("./assemble-layout.mjs");
