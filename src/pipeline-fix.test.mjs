@@ -850,6 +850,14 @@ expectTrue("gate-blocks-no-design", !evaluateFinishedImageGate({ audience: "x", 
   expectTrue("design-orders-differ", dWork.blockOrder.join(",") !== dCond.blockOrder.join(","));
   const lifePlanning = { ...planning, firstCheckKeys: [], appeals: [{ id: "A1", text: "土日祝休みで週末は家族と過ごせます", factKeys: [], sourceLines: ["L06"] }, { id: "A2", text: "通勤は電車が便利です", factKeys: [], sourceLines: ["L07"] }] };
   expect("design-life-pattern", deriveLpDesign(lifePlanning).patternId, "P-LIFE");
+  // The color rule (D15): when the previous production used the same
+  // pattern, the palette changes to the next variant.
+  expect("color-default-first-variant", dWork.paletteId, "work-1");
+  const dVaried = deriveLpDesign(workPlanning, { previous: { patternId: "P-WORK", paletteId: "work-1" } });
+  expect("color-varied-next-variant", dVaried.paletteId, "work-2");
+  expectTrue("color-varied-differs", dVaried.palette.titleBg !== dWork.palette.titleBg);
+  expect("color-cycle-wraps", deriveLpDesign(workPlanning, { previous: { patternId: "P-WORK", paletteId: "work-3" } }).paletteId, "work-1");
+  expect("color-other-pattern-default", deriveLpDesign(workPlanning, { previous: { patternId: "P-COND", paletteId: "cond-1" } }).paletteId, "work-1");
 }
 expectTrue("gate-fails-no-audience", !evaluateFinishedImageGate({ audience: null, messageGaps: [], photos: [], imageDesign: [] }).pass);
 expectTrue("gate-fails-gap", !evaluateFinishedImageGate({ audience: "x", messageGaps: [{ appealId: "A9" }], photos: [], imageDesign: [] }).pass);

@@ -88,7 +88,7 @@ function bars(widths, cls = "bar") {
   return widths.map((w) => `<span class="${cls}" style="width:${w}%"></span>`).join("");
 }
 
-export function buildFinishedImageHtml({ root, planning, photos, pageDir, design }) {
+export function buildFinishedImageHtml({ root, planning, photos, pageDir, design, previousDesign }) {
   const pageDirAbs = resolveRoot(root, pageDir);
   const srcFor = (img) => path.relative(pageDirAbs, resolveRoot(root, img.file)).split(path.sep).join("/").replaceAll("&", "&amp;").replaceAll('"', "&quot;");
   const usable = (photos ?? []).filter((p) => p && p.file && existsSync(resolveRoot(root, p.file)));
@@ -170,7 +170,7 @@ export function buildFinishedImageHtml({ root, planning, photos, pageDir, design
   // The composition is derived from the planning (lp-design): the
   // sections are built as parts and joined in the design's block
   // order, so the sample's structure itself follows the derivation.
-  const lpDesign = deriveLpDesign(planning);
+  const lpDesign = deriveLpDesign(planning, { previous: previousDesign ?? null });
   const parts = { hero: "", title: "", cards: "", rows: "", details: "", cta: "" };
   if (hero) parts.hero = `<section class="hero"><div class="photo-hero" style="background-image:url('${srcFor(hero)}');height:${heroDesign.heightPx}px"></div></section>\n`;
   parts.title = `<section class="title-block">${bars([78, 58, 42], "bar bar-light")}</section>\n`;

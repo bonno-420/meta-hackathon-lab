@@ -193,6 +193,33 @@ ${body}</main>
 // exists and contains both text and image, grounding re-run passes.
 // Image meaning is out of scope and is never judged here (N3: the note
 // below states this for the record reader).
+// The production design history (the color rule, D15): the tool
+// records each production's pattern and palette in
+// loops/design-history.json, so the next production can keep the
+// promise that consecutive postings do not repeat the same colors
+// for the same pattern. Reading excludes the current run's own
+// entries (a resumed run must derive the design it already chose).
+const DESIGN_HISTORY_FILE = "loops/design-history.json";
+export function loadDesignHistory(root) {
+  try {
+    const parsed = JSON.parse(readFileSync(resolveRoot(root, DESIGN_HISTORY_FILE), "utf8"));
+    return Array.isArray(parsed?.entries) ? parsed.entries : [];
+  } catch { return []; }
+}
+export function loadPreviousDesign(root, excludeRunDir) {
+  const entries = loadDesignHistory(root).filter((e) => e && e.runDir !== excludeRunDir);
+  const last = entries[entries.length - 1];
+  return last ? { patternId: last.patternId ?? null, paletteId: last.paletteId ?? null } : null;
+}
+export function recordDesignHistory(root, entry) {
+  const entries = loadDesignHistory(root);
+  if (entries.length > 0 && entries[entries.length - 1].runDir === entry.runDir) return;
+  entries.push({ ...entry, at: new Date().toISOString() });
+  try {
+    writeFileSync(resolveRoot(root, DESIGN_HISTORY_FILE), JSON.stringify({ entries }, null, 2) + "\n", "utf8");
+  } catch { /* the history is a record, not a gate: a failed write must not stop a production */ }
+}
+
 export function checkCompletion({ root, generation, imageFiles, lpFile, grounding, pagecheck, appealCoverage, omittedImageFiles, facts, original }) {
   const checks = [];
   let lpHtml = null;
@@ -661,7 +688,14 @@ export async function runDemo(options, deps = {}) {
       const kvPageDirEarly = normalizePath(path.dirname(generationFile));
       mkdirSync(resolveRoot(root, kvPageDirEarly), { recursive: true });
       writeFileSync(resolveRoot(root, path.join(kvPageDirEarly, "image-design.json")), JSON.stringify(imageDesign, null, 2) + "\n", "utf8");
-      writeFileSync(resolveRoot(root, path.join(kvPageDirEarly, "lp-design.json")), JSON.stringify(deriveLpDesign(planning), null, 2) + "\n", "utf8");
+      // The color rule (D15): when the previous production used the
+      // same pattern, the palette changes. The production history is
+      // the tool's own record (loops/design-history.json); this run's
+      // own entries are excluded so resumes derive the same design.
+      const previousDesign = loadPreviousDesign(root, kvPageDirEarly);
+      const lpDesignEarly = deriveLpDesign(planning, { previous: previousDesign });
+      writeFileSync(resolveRoot(root, path.join(kvPageDirEarly, "lp-design.json")), JSON.stringify(lpDesignEarly, null, 2) + "\n", "utf8");
+      recordDesignHistory(root, { runDir: kvPageDirEarly, inputId: options.inputId ?? options.posting?.id ?? null, patternId: lpDesignEarly.patternId, paletteId: lpDesignEarly.paletteId });
       if (!designCheck.pass) {
         stages.keyVisual = { executed: true, pass: false, correspondence, imageDesign, designCheck };
         persistState(["extraction", "factsComparison", "approval", "planning"], { e02raw });
@@ -711,7 +745,7 @@ export async function runDemo(options, deps = {}) {
           persistState(["extraction", "factsComparison", "approval", "planning"], { e02raw });
           stop("key-visual", "1枚画の写真が生成できなかったため止める（保留として記録した）");
         } else {
-          const layout = buildFinishedImageHtml({ root, planning, photos: photosRun.images, pageDir: kvPageDir, design: imageDesign });
+          const layout = buildFinishedImageHtml({ root, planning, photos: photosRun.images, pageDir: kvPageDir, design: imageDesign, previousDesign });
           let rendered = null;
           try {
             rendered = await renderFinishedImage({ root, html: layout.html, outDir: kvPageDir, baseName: "lp-finished-image" });
