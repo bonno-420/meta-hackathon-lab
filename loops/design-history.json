@@ -156,6 +156,21 @@
         "age-50s"
       ],
       "at": "2026-11-04T07:07:13.498Z"
+    },
+    {
+      "runDir": "loops/loop-027/run10",
+      "inputId": "FICT-E03",
+      "patternId": "P-WORK",
+      "paletteId": "work-2",
+      "conditionTags": [
+        "women",
+        "logistics",
+        "beauty",
+        "part-time",
+        "age-30s",
+        "age-50s"
+      ],
+      "at": "2026-11-04T07:29:18.554Z"
     }
   ]
 }
