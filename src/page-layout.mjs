@@ -114,6 +114,16 @@ export function buildFinishedImageHtml({ root, planning, photos, pageDir, design
       if (aid && !bandByAppeal.has(aid)) bandByAppeal.set(aid, d);
     }
     const usedBands = new Set();
+    // Spec bands not tied to an appeal (the work/place image) lead
+    // the rows: they show the job itself and its place, which the
+    // reader filters on first — leaving them after the secondary
+    // appeal rows buried the location at the bottom of the sample
+    // (FICT-E01 runE1h sample review, 2026-11-04).
+    for (const d of bandDesigns.filter(Boolean)) {
+      const spec = specById.get(d.id) ?? {};
+      const aid = spec.basis?.appealId ?? d.appealId ?? null;
+      if (!aid) { rowsOrder.push({ kind: "band", design: d }); usedBands.add(d.id); }
+    }
     for (const a of appealsForRows) {
       if (bandByAppeal.has(a.id)) { rowsOrder.push({ kind: "band", design: bandByAppeal.get(a.id) }); usedBands.add(bandByAppeal.get(a.id).id); }
       else if (noImageIdsRows.has(a.id) && !cardAppealIdsRows.has(a.id)) rowsOrder.push({ kind: "appeal-row", appealId: a.id });

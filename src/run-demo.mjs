@@ -182,7 +182,7 @@ ${body}</main>
 // exists and contains both text and image, grounding re-run passes.
 // Image meaning is out of scope and is never judged here (N3: the note
 // below states this for the record reader).
-export function checkCompletion({ root, generation, imageFiles, lpFile, grounding, pagecheck, appealCoverage }) {
+export function checkCompletion({ root, generation, imageFiles, lpFile, grounding, pagecheck, appealCoverage, omittedImageFiles }) {
   const checks = [];
   let lpHtml = null;
   try { lpHtml = readFileSync(resolveRoot(root, lpFile), "utf8"); }
@@ -208,13 +208,21 @@ export function checkCompletion({ root, generation, imageFiles, lpFile, groundin
     const src = path.relative(lpDirAbs, resolveRoot(root, f)).split(path.sep).join("/");
     if (lpHtml === null || !lpHtml.includes(src)) unreferenced.push(f);
   }
-  const c2Pass = files.length > 0 && missingFiles.length === 0 && unreferenced.length === 0;
+  // An image the assembly deliberately omitted (a band left with
+  // no text: images are not decoration, 2026-11-04) is recorded in
+  // the assembly's omittedImageFiles and is not a silent loss; C2
+  // still fails on missing files and on unrecorded unreferenced
+  // ones.
+  const omittedSet = new Set(omittedImageFiles ?? []);
+  const silentUnreferenced = unreferenced.filter((f) => !omittedSet.has(f));
+  const recordedOmissions = unreferenced.filter((f) => omittedSet.has(f));
+  const c2Pass = files.length > 0 && missingFiles.length === 0 && silentUnreferenced.length === 0;
   checks.push({
     id: "C2",
     pass: c2Pass,
     detail: c2Pass
-      ? `画像 ${files.length} 件がすべて実在し、ページから参照されている`
-      : `画像の欠け: 存在しない ${missingFiles.length} 件、参照されていない ${unreferenced.length} 件（記録 ${files.length} 件中）`,
+      ? `画像 ${files.length} 件がすべて実在し、ページから参照されている${recordedOmissions.length > 0 ? `（うち ${recordedOmissions.length} 件は記録された省略）` : ""}`
+      : `画像の欠け: 存在しない ${missingFiles.length} 件、参照されていない ${silentUnreferenced.length} 件（記録 ${files.length} 件中）`,
   });
   const hasSentence = lpHtml !== null && sentences.some((s) => typeof s?.text === "string" && s.text.length > 0 && lpHtml.includes(s.text));
   const hasImage = lpHtml !== null && files.some((f) => {
@@ -1068,6 +1076,7 @@ export async function runDemo(options, deps = {}) {
         skipped: assembly.skipped ?? [],
         layoutUsed: assembly.layoutUsed ?? false,
         appealCoverage: assembly.assignments?.appealCoverage ?? null,
+        omittedImageFiles: assembly.assignments?.omittedImageFiles ?? [],
       };
     } else {
       const detail = `組み立てが${assemblyAttempts}回とも失敗した: ${String(assemblyError?.message ?? assemblyError)}`;
@@ -1121,6 +1130,7 @@ export async function runDemo(options, deps = {}) {
         grounding: verification.grounding,
         pagecheck,
         appealCoverage,
+        omittedImageFiles: assembly?.assignments?.omittedImageFiles ?? stages.lpAssembly?.omittedImageFiles ?? [],
       });
       stages.verification.completion = completion;
       if (pipelineMode) {
@@ -1189,11 +1199,11 @@ export async function runDemo(options, deps = {}) {
                 .filter((v) => typeof v === "string" && v.length > 0)
               : undefined;
             const rebuilt = await assemble({ root, generation: generationRun.generation, images: imageRun.images ?? [], imagesDir, lpFile, heroChips: heroChips2, layout: (resumeState && resumeState.keyVisual && resumeState.keyVisual.layout) ?? (stages.keyVisual && stages.keyVisual.layout) ?? null, planning: planning ?? null, facts: fixedFacts ?? null });
-            stages.lpAssembly = { ...stages.lpAssembly, attempts: (stages.lpAssembly?.attempts ?? 1) + 1, file: rebuilt.file ?? lpFile, referenced: rebuilt.referenced ?? [], layoutUsed: rebuilt.layoutUsed ?? false, appealCoverage: rebuilt.assignments?.appealCoverage ?? null, afterReviewSendBack: true };
+            stages.lpAssembly = { ...stages.lpAssembly, attempts: (stages.lpAssembly?.attempts ?? 1) + 1, file: rebuilt.file ?? lpFile, referenced: rebuilt.referenced ?? [], layoutUsed: rebuilt.layoutUsed ?? false, appealCoverage: rebuilt.assignments?.appealCoverage ?? null, omittedImageFiles: rebuilt.assignments?.omittedImageFiles ?? [], afterReviewSendBack: true };
             let pagecheck2 = null;
             try { pagecheck2 = checkPage(readFileSync(resolveRoot(root, lpFile), "utf8")); } catch { pagecheck2 = null; }
             const coverage2 = planning && Array.isArray(planning.appeals) ? planning.appeals.map((a) => ({ appealId: a.id, sentenceIdxs: matchAppealSentences(generationRun.generation, planning.appeals).byAppeal.get(a.id) ?? [] })) : undefined;
-            const completion2 = checkCompletion({ root, generation: generationRun.generation, imageFiles: expectedImageFiles ?? (imageRun.images ?? []).map((i) => i.file), lpFile, grounding: regen.grounding, pagecheck: pagecheck2, appealCoverage: coverage2 });
+            const completion2 = checkCompletion({ root, generation: generationRun.generation, imageFiles: expectedImageFiles ?? (imageRun.images ?? []).map((i) => i.file), lpFile, grounding: regen.grounding, pagecheck: pagecheck2, appealCoverage: coverage2, omittedImageFiles: rebuilt.assignments?.omittedImageFiles ?? [] });
             stages.verification.completion = completion2;
             if (!completion2.pass) {
               stop("verification", completion2.reason);

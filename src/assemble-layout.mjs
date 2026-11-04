@@ -47,13 +47,38 @@ export function matchAppealSentences(generation, appeals) {
 export function assembleFromLayout({ root, generation, images, lpDir, heroChips, layout, planning, facts }) {
   const sentences = generation && Array.isArray(generation.sentences) ? generation.sentences : [];
   const appeals = planning?.appeals ?? [];
-  const { byAppeal } = matchAppealSentences(generation, appeals);
+  const { byAppeal, bySentence } = matchAppealSentences(generation, appeals);
   const appealCoverage = appeals.map((a) => ({ appealId: a.id, sentenceIdxs: byAppeal.get(a.id) ?? [] }));
   // The work-content sentence: it cites an original line, carries no
   // FACT key, and its line is claimed by no appeal. It is the page's
   // headline (the job itself), placed by the title block.
   const appealLines = new Set(appeals.flatMap((a) => a?.sourceLines ?? []));
-  const workIdx = sentences.findIndex((s) => (s?.factKeys ?? []).length === 0 && (s?.sourceLines ?? []).length > 0 && (s?.sourceLines ?? []).some((l) => !appealLines.has(l)));
+  let workIdx = sentences.findIndex((s) => (s?.factKeys ?? []).length === 0 && (s?.sourceLines ?? []).length > 0 && (s?.sourceLines ?? []).some((l) => !appealLines.has(l)));
+  if (workIdx < 0) {
+    // Fallback: some generation paths tag the work sentence with
+    // employment/location keys (the English path does), so the
+    // no-keys rule misses it and a condition became the headline
+    // (FICT-E01, runE1c page review, 2026-11-04). The work sentence
+    // is then the first sentence matched to no appeal that cites a
+    // line no appeal claims.
+    workIdx = sentences.findIndex((s, idx) => !bySentence.has(idx) && (s?.sourceLines ?? []).some((l) => !appealLines.has(l)));
+  }
+  if (workIdx < 0) {
+    // Second fallback: a planning may make the work itself the
+    // lead appeal (FICT-E02: appeal A1 IS the work, and the
+    // key-visual spec fronts it). Its sentences are matched to
+    // that appeal and its lines are claimed by it, so both rules
+    // above miss them and a condition became the headline
+    // (runE2d page review, 2026-11-04). When the key-visual spec
+    // fronts a fact-less appeal, that appeal's first sentence is
+    // the work sentence.
+    const kvAppealId = (planning?.imageSpecs ?? []).find((s) => s?.role === "key-visual")?.basis?.appealId;
+    const kvAppeal = appeals.find((a) => a.id === kvAppealId);
+    if (kvAppeal && (kvAppeal.factKeys ?? []).length === 0) {
+      const idxs = byAppeal.get(kvAppeal.id) ?? [];
+      if (idxs.length > 0) workIdx = idxs[0];
+    }
+  }
   // Appeals that have a photo band: their sentences belong to the
   // band, not to a condition card (whichever comes first in the
   // block order, a card must not take the band's text and leave the
@@ -72,6 +97,9 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
   const srcFor = (img) => path.relative(lpDirAbs, resolveRoot(root, img.file)).split(path.sep).join("/");
   const placed = new Set();
   const placedFiles = [];
+  const omittedImages = new Set();
+  const omittedBands = [];
+  const omittedImageFiles = [];
   const sentenceHtml = (idx) => {
     if (placed.has(idx)) return "";
     placed.add(idx);
@@ -88,7 +116,16 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
     body += `<section class="cards">${cardBuffer.join("")}</section>\n`;
     cardBuffer = [];
   };
-  for (const block of blocks) {
+  const titleInner = (carries) => {
+    let inner = "";
+    if (carries.workContent && workIdx >= 0) inner = sentenceHtml(workIdx);
+    if (!inner && carries.appealId) inner = appealSentences(carries.appealId);
+    return inner;
+  };
+  const consumed = new Set();
+  for (let bi = 0; bi < blocks.length; bi++) {
+    if (consumed.has(bi)) continue;
+    const block = blocks[bi];
     const carries = block?.carries ?? {};
     if (block.block === "condition-card") {
       const item = factByKey.get(carries.factKey);
@@ -104,13 +141,38 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
         const chips = Array.isArray(heroChips) && heroChips.length > 0
           ? `<div class="hero-chips">${heroChips.map((c) => `<span class="hero-chip">${esc(c)}</span>`).join("")}</div>`
           : "";
-        body += `<section class="lp-hero"><img src="${esc(srcFor(hero))}" alt="">${chips}</section>\n`;
+        // The header is one unit — photo, chips, and the headline
+        // band directly beneath it (the header is the face of the
+        // appeal, user principle 2026-11-04). When the title block
+        // follows the hero directly, it renders inside the hero
+        // section instead of as a separate block.
+        let titleBand = "";
+        const next = blocks[bi + 1];
+        if (next?.block === "title") {
+          const inner = titleInner(next.carries ?? {});
+          if (inner) { titleBand = `<div class="title-block">${inner}</div>`; consumed.add(bi + 1); }
+        }
+        body += `<section class="lp-hero"><img src="${esc(srcFor(hero))}" alt="">${chips}${titleBand}</section>\n`;
         placedFiles.push(hero.file);
       }
     } else if (block.block === "title") {
-      let inner = "";
-      if (carries.workContent && workIdx >= 0) inner = sentenceHtml(workIdx);
-      if (!inner && carries.appealId) inner = appealSentences(carries.appealId);
+      const inner = titleInner(carries);
+      // Title directly before the hero (work-first patterns) is
+      // also one header unit: title band, then photo and chips,
+      // inside a single hero section.
+      const next = blocks[bi + 1];
+      if (inner && next?.block === "hero-photo") {
+        const hero = imgById.get("hero");
+        if (hero && existing.has(hero.id)) {
+          const chips = Array.isArray(heroChips) && heroChips.length > 0
+            ? `<div class="hero-chips">${heroChips.map((c) => `<span class="hero-chip">${esc(c)}</span>`).join("")}</div>`
+            : "";
+          body += `<section class="lp-hero"><div class="title-block">${inner}</div><img src="${esc(srcFor(hero))}" alt="">${chips}</section>\n`;
+          placedFiles.push(hero.file);
+          consumed.add(bi + 1);
+          continue;
+        }
+      }
       if (inner) body += `<section class="title-block">${inner}</section>\n`;
     } else if (block.block === "photo-band") {
       const img = carries.specId ? imgById.get(carries.specId) : null;
@@ -121,12 +183,20 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
         });
       }
       const fig = img && existing.has(img.id) ? `<img class="inline-photo" src="${esc(srcFor(img))}" alt="">` : "";
-      if (img && existing.has(img.id)) placedFiles.push(img.file);
-      // A band whose sentences were claimed by a condition card
-      // renders its image without an (empty) text box: an empty
-      // explain-text div reads as an unfinished page (independent
-      // review of run20, 2026-11-04).
-      if (fig || text) body += `<section class="explain-row">${fig}${text ? `<div class="explain-text">${text}</div>` : ""}<div class="clear"></div></section>\n`;
+      if (text) {
+        if (img && existing.has(img.id)) placedFiles.push(img.file);
+        body += `<section class="explain-row">${fig}<div class="explain-text">${text}</div><div class="clear"></div></section>\n`;
+      } else if (fig) {
+        // A band whose sentences were all claimed earlier (for
+        // example the work sentence became the headline) would ship
+        // as an image with nothing to say. Appeal images exist to
+        // reduce cognitive load, not to decorate (user principle,
+        // 2026-11-04), so the band is omitted and the omission is
+        // recorded; the tail must not re-append it as a bare figure.
+        omittedImages.add(img.file);
+        omittedBands.push(carries.specId ?? img.id);
+        omittedImageFiles.push(img.file);
+      }
     } else if (block.block === "appeal-row") {
       const text = carries.appealId ? appealSentences(carries.appealId) : "";
       if (text) body += `<section class="appeal-row"><div class="appeal-text">${text}</div></section>\n`;
@@ -160,7 +230,7 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
   if (!blocks.some((b) => b.block === "cta")) body += `<footer class="cta"><button class="cta-button" type="button">${layout?.language === "en" ? "Apply" : "応募する"}</button></footer>\n`;
   // Images no block claimed are appended (existence/reference is C2).
   for (const img of images ?? []) {
-    if (existing.has(img.id) && !placedFiles.includes(img.file)) {
+    if (existing.has(img.id) && !placedFiles.includes(img.file) && !omittedImages.has(img.file)) {
       body += `<figure class="lp-image"><img src="${esc(srcFor(img))}" alt=""></figure>\n`;
       placedFiles.push(img.file);
     }
@@ -206,5 +276,5 @@ ${body}</main>
 </body>
 </html>
 `;
-  return { html, referenced: placedFiles, skipped, assignments: { appealCoverage } };
+  return { html, referenced: placedFiles, skipped, assignments: { appealCoverage, omittedBands, omittedImageFiles } };
 }

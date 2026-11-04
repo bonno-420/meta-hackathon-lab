@@ -11,6 +11,17 @@
       ]
     },
     {
+      "id": "A4",
+      "text": "Weekdays only, 08:30 to 17:30 with a 60-minute break",
+      "factKeys": [
+        "workHours",
+        "breakMinutes"
+      ],
+      "sourceLines": [
+        "L05"
+      ]
+    },
+    {
       "id": "A2",
       "text": "Training is provided, so you can start even without woodworking experience",
       "factKeys": [],
@@ -29,17 +40,6 @@
       ]
     },
     {
-      "id": "A4",
-      "text": "Weekdays only, 08:30 to 17:30 with a 60-minute break",
-      "factKeys": [
-        "workHours",
-        "breakMinutes"
-      ],
-      "sourceLines": [
-        "L05"
-      ]
-    },
-    {
       "id": "A5",
       "text": "Commuting costs are covered, up to 15,000 yen per month",
       "factKeys": [
@@ -51,7 +51,10 @@
       ]
     }
   ],
-  "firstCheckKeys": [],
+  "firstCheckKeys": [
+    "workHours",
+    "salaryHourly"
+  ],
   "imageSpecs": [
     {
       "id": "key-visual",

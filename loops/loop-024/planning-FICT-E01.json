@@ -3,13 +3,11 @@
   "audience": "Students and others looking for weekend-only part-time work near Kichijoji",
   "appeals": [
     {
-      "id": "A1",
-      "text": "The hourly wage is stated clearly at 1,150 yen",
-      "factKeys": [
-        "salaryHourly"
-      ],
+      "id": "A3",
+      "text": "Weekends and public holidays only, so it fits around classes and family time",
+      "factKeys": [],
       "sourceLines": [
-        "L04"
+        "L06"
       ]
     },
     {
@@ -24,11 +22,13 @@
       ]
     },
     {
-      "id": "A3",
-      "text": "Weekends and public holidays only, so it fits around classes and family time",
-      "factKeys": [],
+      "id": "A1",
+      "text": "The hourly wage is stated clearly at 1,150 yen",
+      "factKeys": [
+        "salaryHourly"
+      ],
       "sourceLines": [
-        "L06"
+        "L04"
       ]
     },
     {
@@ -52,6 +52,7 @@
     }
   ],
   "firstCheckKeys": [
+    "workHours",
     "salaryHourly"
   ],
   "imageSpecs": [

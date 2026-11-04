@@ -81,6 +81,43 @@ function factLabel(facts, key) {
 // explicit no-image decision with its reason — so the number of
 // images follows the copy and the appeals, and the decision is on
 // record for every appeal.
+// Whether an appeal earns an in-content image (user principle,
+// 2026-11-04): appeal images are not decoration; they are made to
+// reduce the reader's cognitive load where the header cannot carry
+// the explanation. Two questions decide: is there a strong benefit
+// (full commuting coverage, performance pay, a named allowance, a
+// qualification path), and does an area/facility explanation itself
+// work as an appeal (easy commute, location)? A capped actual-cost
+// reimbursement is the ordinary case the market carries by text
+// (loop-025 CP2), so it does not qualify on its own. A warranted
+// image is anchored on the work at the workplace — never on a
+// commute method or on money itself (the standing gates).
+const STRONG_BENEFIT_RE = /(全額|成果給|業績給|手当|賞与|ボーナス|昇給|日払い|週払い|即日払|資格取得|資格支援|fully covered|performance pay|allowance|bonus|qualification)/i;
+const AREA_APPEAL_RE = /(駅|通いやす|立地|アクセス|徒歩|near|station|easy commute|well located|location)/i;
+export function appealImageDecision(appeal, facts) {
+  const factText = (appeal?.factKeys ?? []).map((k) => (facts?.items ?? []).find((i) => i.key === k)?.value ?? "").join(" ");
+  const text = `${appeal?.text ?? ""} ${factText}`;
+  if (STRONG_BENEFIT_RE.test(text)) return { image: true, kind: "strong-benefit", reason: "強いメリットの訴求。文章だけでは負荷が高いので、職場の仕事の場面を視覚の足場にして認知負荷を下げる" };
+  if ((appeal?.factKeys ?? []).includes("workLocation") && AREA_APPEAL_RE.test(appeal?.text ?? "")) return { image: true, kind: "area", reason: "エリア・立地の訴求。場所の手がかりを職場の場面で示し、文章の負荷を下げる" };
+  return { image: false, kind: "text", reason: "条件の訴求は文章・カード・チップで担う（市場の構成の型、loop-025）。飾りの画像は作らない" };
+}
+
+// What the header fronts (user principle, 2026-11-04): the header
+// is the face of the appeal, and its focus follows what is being
+// pushed — the wage number, monthly income, the job itself, the
+// area, or another merit such as a qualification.
+export function headerFocusOf(planning) {
+  const lead = (planning?.appeals ?? [])[0] ?? null;
+  if (!lead) return { appealId: null, focus: "job" };
+  const keys = lead.factKeys ?? [];
+  let focus = "merit";
+  if (keys.includes("salaryHourly")) focus = "wage";
+  else if (keys.includes("monthlyIncomeGuarantee") || /月収/.test(lead.text ?? "")) focus = "income";
+  else if (keys.includes("workLocation")) focus = "area";
+  else if (keys.length === 0) focus = "job";
+  return { appealId: lead.id, focus };
+}
+
 export function buildImageDesign(planning, facts) {
   const appeals = new Map((planning?.appeals ?? []).map((a) => [a.id, a]));
   const images = [];
@@ -143,6 +180,14 @@ export function buildImageDesign(planning, facts) {
       heroEntry.prompt = `${heroEntry.subject}. ${heroEntry.composition}. ${heroEntry.styleText}, no text, no numbers, no logos, no watermark`;
     }
   }
+  {
+    const heroFinal = images.find((e) => e.kind === "hero");
+    if (heroFinal) {
+      const hf = headerFocusOf(planning);
+      heroFinal.frontsAppealId = hf.appealId;
+      heroFinal.headerFocus = hf.focus;
+    }
+  }
   const firstCheck = new Set(planning?.firstCheckKeys ?? []);
   const noImage = [];
   for (const a of planning?.appeals ?? []) {
@@ -158,16 +203,36 @@ export function buildImageDesign(planning, facts) {
       noImage.push({ appealId: a.id, reason: "この訴求は条件カード（第一確認の事実）が担うため、画像は作らない" });
       continue;
     }
-    // Researched market composition (loop-025, content patterns
-    // CP2/CP3): condition appeals are carried by text — condition
-    // cards, chips, and text rows. Photographs show the work itself
-    // and come from the planning's specs. The earlier design
-    // invented a lifestyle scene per appeal (a family sofa for the
+    // In-content appeal images follow the cognitive-load judgement
+    // (appealImageDecision): a strong benefit or an area appeal
+    // earns a work-anchored image; everything else is carried by
+    // text and the layout places it as a text row. The earlier
+    // lifestyle-scene-per-appeal design (a family sofa for the
     // holidays appeal, a walking commuter for the transport
-    // allowance), which implied facts the posting does not state
-    // and failed the sample review (run28, 2026-11-04). So no image
-    // is designed here; the layout places the appeal as a text row.
-    noImage.push({ appealId: a.id, reason: "条件の訴求は文章・カード・チップで担う。写真は仕事そのものに使う（市場の構成の型、loop-025）" });
+    // allowance) implied facts the posting does not state and
+    // failed the sample review (run28, 2026-11-04) — that class of
+    // subject stays prohibited by the gates.
+    const decision = appealImageDecision(a, facts);
+    if (decision.image) {
+      images.push({
+        id: `appeal-${a.id}`,
+        role: "section",
+        kind: "section",
+        source: "appeal",
+        appealId: a.id,
+        purpose: `${a.text} — ${decision.reason}`,
+        subject: WORK_SCENE,
+        composition: COMPOSITION.section,
+        depiction: "photorealistic",
+        styleText: IMAGE_STYLE,
+        placement: { area: "inline", size: "small", aspect: "4:3" },
+        mustNotImply: [...MUST_NOT_IMPLY, ...(planning?.notSay ?? []).map((n) => n.text ?? n.key).filter(Boolean)],
+        prompt: `${WORK_SCENE}. ${COMPOSITION.section}. ${IMAGE_STYLE}, no text, no numbers, no logos, no watermark`,
+      });
+      servedAppeals.add(a.id);
+    } else {
+      noImage.push({ appealId: a.id, reason: decision.reason });
+    }
   }
   return { version: "image-design-v2", count: images.length, images, noImage, designNotes };
 }

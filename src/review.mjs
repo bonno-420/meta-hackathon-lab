@@ -48,6 +48,7 @@ export function buildPlanningReviewMessages({ planning }) {
     "3. decision-order: the first-check items are not what this reader would check first, or the appeals' order fights the reader's decision order.",
     "4. image-design: the image specs do not cover the appeals they should carry, or text/numbers inside the image. Standing design rules apply after planning: a spec whose subject is a workplace/building exterior is replaced at design time with an interior work scene, and vehicle/cash/clock subjects are sent back — so do not fail a spec for wording the design step replaces; DO fail when an appeal or the plan's structure depends on a prohibited subject (for example an appeal that sells the building's appearance).",
     "5. client-test: as the client, this plan would not lead to a posting you could approve (for example it leads with a condition instead of the job itself).",
+    "6. advantage-conversion: the plan must convert the posting's comparative advantages into appeal points. The strongest stated condition (an unusually high wage, full coverage, a qualification path, a rare schedule fit) must be fronted as an appeal, not buried; and no appeal may claim a strength the original does not support. When the posting's stated conditions are ordinary, framing what is stated plainly is not a failure.",
     REVIEW_RULES,
     VERDICT_SCHEMA,
   ].join("\n");

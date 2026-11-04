@@ -186,9 +186,11 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
     { block: "cta", carries: { action: true } },
   ] };
   const builtB = assembleFromLayout({ root: rootB, generation: genB, images: [{ id: "appeal-A9", file: "images/appeal-A9.webp" }], lpDir: "out", heroChips: [], layout: layoutB, planning, facts });
-  expectTrue("assembly-band-image-renders", builtB.html.includes("inline-photo"));
+  // A band with no text is omitted entirely (no mute image block,
+  // no bare figure appended): images are not decoration
+  // (user principle, 2026-11-04; FICT-E01 runE1d page review).
+  expectTrue("assembly-band-without-text-is-omitted", !builtB.html.includes(`<img class="inline-photo"`) && !builtB.html.includes("appeal-A9.webp") && (builtB.assignments.omittedBands ?? []).includes("appeal-A9"));
   expectTrue("assembly-band-no-empty-text-box", !builtB.html.includes(`<div class="explain-text"></div>`));
-  expectTrue("assembly-images-have-no-internal-alt", !/alt="(appeal|section)-/.test(builtB.html) && builtB.html.includes(`alt=""`));
 }
 
 // ---------- assembly: the title is the job itself; every image band carries text (run25 verdict) ----------
@@ -388,7 +390,9 @@ expectTrue("lp-assembled-from-confirmed-layout", runD.stages.lpAssembly.layoutUs
 expectTrue("lp-appeal-coverage-recorded", Array.isArray(runD.stages.lpAssembly.appealCoverage) && runD.stages.lpAssembly.appealCoverage.every((c) => c.sentenceIdxs.length > 0));
 expectTrue("lp-presentation-saved", existsSync(path.join(scratchA, "out/presentation-lp.json")));
 {
-  const order = ['<section class="lp-hero">', '<section class="title-block">', '<section class="cards">', '<footer class="cta">'].map((m) => lpHtml.indexOf(m));
+  // The header is one unit: the title band renders inside the hero
+  // section (header = the face of the appeal, 2026-11-04).
+  const order = ['<section class="lp-hero">', '<div class="title-block">', '<section class="cards">', '<footer class="cta">'].map((m) => lpHtml.indexOf(m));
   expectTrue("lp-block-order-matches-sample", order.every((v) => v >= 0) && order[0] < order[1] && order[1] < order[2] && order[2] < order[3]);
   expectTrue("lp-skin-matches-sample", lpHtml.includes(".page{max-width:480px;margin:0 auto;background:#fff}") && !lpHtml.includes("border-radius:26px"));
   expectTrue("lp-design-tokens", lpHtml.includes("grid-template-columns:1fr 1fr") && lpHtml.includes(".card:last-child:nth-child(odd){grid-column:1/-1}") && lpHtml.includes("font-size:26px") && lpHtml.includes("aspect-ratio:16/10") && lpHtml.includes("aspect-ratio:4/3"));
@@ -777,6 +781,60 @@ expectTrue("prompt-gate-allows-building-subject", checkPromptGates("A warehouse 
   // image at all — no scene can imply a commute method the posting
   // does not state (the run28 sample review failed exactly that).
   expectTrue("design-transport-appeal-has-no-image", !designT.images.some((e) => e.appealId === "AT") && designT.noImage.some((n) => n.appealId === "AT") && checkImageDesign(designT, transportPlanning).pass);
+}
+{
+  // Cognitive-load judgement (user principle, 2026-11-04): a strong
+  // benefit earns a work-anchored image; the header records which
+  // appeal it fronts and its focus.
+  const { appealImageDecision, headerFocusOf } = await import("./image-design.mjs");
+  const strong = appealImageDecision({ id: "AS", factKeys: ["transport"], sourceLines: ["L07"], text: "交通費全額支給です" }, facts);
+  expectTrue("design-strong-benefit-earns-image", strong.image === true && strong.kind === "strong-benefit");
+  const capped = appealImageDecision({ id: "AC", factKeys: ["transport"], sourceLines: ["L07"], text: "交通費は実費支給（月上限あり）です" }, facts);
+  expectTrue("design-capped-cost-stays-text", capped.image === false);
+  const strongPlanning = { ...planning, firstCheckKeys: ["salaryHourly"], appeals: [...planning.appeals, { id: "AS", factKeys: ["transport"], sourceLines: ["L07"], text: "交通費全額支給です" }] };
+  const designS = buildImageDesign(strongPlanning, facts);
+  const sImg = designS.images.find((e) => e.appealId === "AS");
+  expectTrue("design-strong-benefit-image-is-work-anchored", !!sImg && !/train|bus|walk|commut/i.test(sImg.subject) && checkImageDesign(designS, strongPlanning).pass);
+  const heroJ = designJ01.images.find((e) => e.kind === "hero");
+  expectTrue("design-hero-fronts-lead-appeal", heroJ.frontsAppealId === planning.appeals[0].id && typeof heroJ.headerFocus === "string" && headerFocusOf(planning).appealId === planning.appeals[0].id);
+}
+{
+  // Headline fallback: the work sentence tagged with fact keys
+  // (English generation) still becomes the title.
+  const { assembleFromLayout } = await import("./assemble-layout.mjs");
+  const genW = { sentences: [
+    { text: "Part-time café work: preparing drinks and serving customers.", factKeys: ["employmentType", "workLocation"], sourceLines: ["L01", "L02"] },
+    { text: "Hourly wage: 1,150 yen.", factKeys: ["salaryHourly"], sourceLines: ["L04"] },
+  ] };
+  const planningW = { appeals: [{ id: "A1", factKeys: ["salaryHourly"], sourceLines: ["L04"], text: "wage" }], firstCheckKeys: ["salaryHourly"] };
+  const layoutW = { messageMap: [
+    { block: "title", carries: { workContent: true } },
+    { block: "condition-card", carries: { factKey: "salaryHourly", appealId: "A1" } },
+    { block: "details", carries: { factKeys: [], appealIds: [] } },
+    { block: "cta", carries: { action: true } },
+  ] };
+  const builtW = assembleFromLayout({ root: makeScratch(), generation: genW, images: [], lpDir: "out", heroChips: [], layout: layoutW, planning: planningW, facts });
+  expectTrue("assembly-title-fallback-finds-tagged-work-sentence", builtW.html.includes("title-block") && builtW.html.includes("Part-time café work") && builtW.html.indexOf("Part-time café work") < builtW.html.indexOf("Hourly wage"));
+}
+{
+  // Headline, second fallback: the work itself is the lead appeal
+  // and the key-visual spec fronts it (FICT-E02 shape).
+  const { assembleFromLayout } = await import("./assemble-layout.mjs");
+  const genX = { sentences: [
+    { text: "Assembling wooden frames and sanding parts by hand.", factKeys: [], sourceLines: ["L01"] },
+    { text: "Employment type is contract, 6 months.", factKeys: ["employmentType", "contractPeriod"], sourceLines: ["L03"] },
+  ] };
+  const planningX = { appeals: [
+    { id: "A1", factKeys: [], sourceLines: ["L01"], text: "The work itself" },
+    { id: "A2", factKeys: ["employmentType"], sourceLines: ["L03"], text: "contract" },
+  ], firstCheckKeys: [], imageSpecs: [{ id: "key-visual", role: "key-visual", basis: { appealId: "A1" } }] };
+  const layoutX = { messageMap: [
+    { block: "title", carries: { workContent: true } },
+    { block: "details", carries: { factKeys: ["employmentType", "contractPeriod"], appealIds: [] } },
+    { block: "cta", carries: { action: true } },
+  ] };
+  const builtX = assembleFromLayout({ root: makeScratch(), generation: genX, images: [], lpDir: "out", heroChips: [], layout: layoutX, planning: planningX, facts });
+  expectTrue("assembly-title-fallback-finds-appealed-work-sentence", builtX.html.includes("title-block") && builtX.html.indexOf("Assembling wooden frames") < builtX.html.indexOf("Employment type"));
   const frag = { id: "appeal-AT", kind: "section", subject: "An illustration of a person commuting on a local train in the morning, calm and unhurried", composition: "x", styleText: "y" };
   const rebuiltFrag = rebuildPromptWithoutHits(frag, ["train"]);
   expectTrue("sendback-fragment-falls-back-to-scene", rebuiltFrag.entry.subject !== "calm and unhurried" && /work/i.test(rebuiltFrag.entry.subject) && checkPromptGates(rebuiltFrag.entry.prompt).pass);
