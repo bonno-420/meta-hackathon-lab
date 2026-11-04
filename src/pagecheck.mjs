@@ -269,17 +269,17 @@ function detectHeadingMismatch(sections, scopeRules) {
 // Run all deterministic checks on an assembled page.
 // pass means: no duplicated sentences, no verification phrases, no
 // record labels, no heading-scope mismatches.
-// Gate CANDIDATE G-E (not enforced): a stated fact's value stated
-// in two or more BODY sentences. The details table carries every
-// value and the cards/chips are the allowed summary of deciding
-// conditions, so only body sentences (rows, bands, the headline)
-// are counted; the marked income example counts as one occurrence
-// of its components, like any other sentence. Origin: FICT-E03
-// run9 (2026-11-04) — "16 working days" appeared in the income
-// example AND in a second prose sentence, and the judgement-layer
-// criterion (natural-and-sufficient) did not catch it. Recorded
-// and reported, but NOT part of pass/fail until the user promotes
-// it (the learning flow: candidate → verification → approval).
+// Gate G-E (promoted by the user, 2026-11-04, D17): a stated
+// fact's value stated in two or more BODY sentences fails the
+// page check. The details table carries every value and the
+// cards/chips are the allowed summary of deciding conditions, so
+// only body sentences (rows, bands, the headline) are counted;
+// the marked income example counts as one occurrence of its
+// components, like any other sentence. Origin: FICT-E03 run9 —
+// "16 working days" appeared in the income example AND in a
+// second prose sentence, and the judgement-layer criterion
+// (natural-and-sufficient) did not catch it. Verified before
+// promotion: catches run9's page, clean on run10's.
 function valueTokens(value) {
   const toks = new Set();
   const v = String(value ?? "");
@@ -362,7 +362,7 @@ export function checkPage(html, { dicts, factValues, factItems } = {}) {
     headlineHits: headlineHits.length,
     valueRepetitionHits: valueRepetition.length,
   };
-  const pass = summary.duplicateGroups === 0 && summary.verificationHits === 0 && summary.recordExposureHits === 0 && summary.headingMismatches === 0 && summary.attributeExposureHits === 0 && summary.headlineHits === 0;
+  const pass = summary.duplicateGroups === 0 && summary.verificationHits === 0 && summary.recordExposureHits === 0 && summary.headingMismatches === 0 && summary.attributeExposureHits === 0 && summary.headlineHits === 0 && summary.valueRepetitionHits === 0;
   return {
     pass,
     version: PAGECHECK_VERSION,

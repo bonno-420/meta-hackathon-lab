@@ -289,8 +289,8 @@ export function checkCompletion({ root, generation, imageFiles, lpFile, groundin
       id: "C5",
       pass: c5Pass,
       detail: c5Pass
-        ? `ページ品質の決定的チェックが pass（重複 ${s.duplicateGroups ?? 0}、検証側定型文 ${s.verificationHits ?? 0}、記録ラベル ${s.recordExposureHits ?? 0}、見出しずれ ${s.headingMismatches ?? 0}、見出しスキャン ${s.headlineHits ?? 0}、値の重複・候補G-E ${s.valueRepetitionHits ?? 0}）`
-        : `ページ品質の決定的チェックが fail（重複 ${s.duplicateGroups ?? 0} 件、検証側定型文 ${s.verificationHits ?? 0} 件、記録ラベル露出 ${s.recordExposureHits ?? 0} 件、見出しずれ ${s.headingMismatches ?? 0} 件、見出しスキャン ${s.headlineHits ?? 0} 件、値の重複・候補G-E ${s.valueRepetitionHits ?? 0} 件）`,
+        ? `ページ品質の決定的チェックが pass（重複 ${s.duplicateGroups ?? 0}、検証側定型文 ${s.verificationHits ?? 0}、記録ラベル ${s.recordExposureHits ?? 0}、見出しずれ ${s.headingMismatches ?? 0}、見出しスキャン ${s.headlineHits ?? 0}、値の重複 ${s.valueRepetitionHits ?? 0}）`
+        : `ページ品質の決定的チェックが fail（重複 ${s.duplicateGroups ?? 0} 件、検証側定型文 ${s.verificationHits ?? 0} 件、記録ラベル露出 ${s.recordExposureHits ?? 0} 件、見出しずれ ${s.headingMismatches ?? 0} 件、見出しスキャン ${s.headlineHits ?? 0} 件、値の重複 ${s.valueRepetitionHits ?? 0} 件）`,
       pagecheck: { version: pagecheck.version ?? null, dictsVersion: pagecheck.dictsVersion ?? null, summary: s },
     });
   }

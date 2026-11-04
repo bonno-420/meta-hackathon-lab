@@ -362,7 +362,7 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
   expectTrue("v8-language-quality-present", msgs[0].content.includes("language-quality") && msgs[0].content.includes("TARGET REGION") && msgs[0].content.includes("WITHIN practical level are not findings"));
 }
 
-// ---------- gate candidate G-E: stated value repeated across body sentences (not enforced) ----------
+// ---------- gate G-E (promoted, D17): stated value repeated across body sentences fails pagecheck ----------
 {
   const { checkPage, collectValueRepetition } = await import("./pagecheck.mjs");
   const items = [{ key: "monthlyDaysAssumption", value: "16 working days per month" }, { key: "salaryHourly", value: "1,200 yen" }];
@@ -376,7 +376,7 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
   expect("ge-furniture-exempt", collectValueRepetition(furnitureOnly, items).length, 0);
   const pc = checkPage(dup, { factItems: items });
   expect("ge-summary-count", pc.summary.valueRepetitionHits, 1);
-  expectTrue("ge-not-enforced", pc.pass === true || pc.summary.duplicateGroups > 0);
+  expectTrue("ge-enforced-in-pass", pc.pass === false);
 }
 
 // ---------- plating: the title block carries the headline only (user, 2026-11-04) ----------
