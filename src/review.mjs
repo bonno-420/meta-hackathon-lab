@@ -11,7 +11,7 @@
 // back to generation once, and a second fail stops the run with the
 // findings on record.
 
-export const REVIEW_PROMPT_VERSION = "lp-review-v9";
+export const REVIEW_PROMPT_VERSION = "lp-review-v10";
 
 const VERDICT_SCHEMA = 'Schema: {"verdict":"pass"|"fail","findings":[{"criterion":"...","target":"the block, sentence, or planning item","problem":"what is wrong","instruction":"what to change"}]}';
 // The researched market patterns (loop-025) include one rule that
@@ -100,7 +100,7 @@ export function buildCopyReviewMessages({ planning, generation }) {
     "9. language-purity: on an English page, Japanese text inside a sentence fails when it is residue — a leftover fixed note, a Japanese marker word, a template fragment. Japanese used INTENTIONALLY does not fail: a Japanese proper noun, or a term the sentence itself explains for the reader. The deterministic scan's hits are listed below the copy; judge each hit on that distinction (the user's refinement, 2026-11-04: intentional use must not be removed).",
     "10. semantic-accuracy (mandatory pass/fail): a sentence that changes the MEANING of a stated fact fails regardless of fluency — amounts, times, and caps altered or softened ('up to' dropped, 'weekdays only' loosened), negations lost, conditions merged into claims the original does not make, or a benefit attributed to the wrong condition. Paraphrase that preserves meaning exactly is not a finding.",
     "11. language-quality: judge naturalness and appeal by the standards of the copy's OUTPUT LANGUAGE and the TARGET REGION named in the audience (its job-ad conventions, register, and ordinary phrasing). Fail ONLY when the copy is below practical level for that language and region — a native reader there would stumble, the phrasing reads as machine translation, or the register is wrong for the region's job postings. Regional variants, register choices, and phrasing preferences WITHIN practical level are not findings and must not send the copy back for re-revision (the user's instruction, 2026-11-04: lightweight evaluation; no preference-driven rework).",
-    "12. section-role-no-repetition: each section has ONE role (the user's copy rules, 2026-11-04). Fail when: a sentence imports another appeal's facts (transport inside the wage sentence, schedule inside the location sentence); a fact's value is stated in more than one body sentence (the details table carries the values — the body states each fact once, inside its own appeal, with its meaning); or a sentence is longer than its meaning needs (clauses that add neither a fact nor a meaning). A fact carried once with its reader-meaning is the standard, not a finding.",
+    "12. natural-and-sufficient: is the copy natural in its target language, and does it convey the necessary and sufficient information as concisely as possible? Fail on a section mixing roles (another appeal's facts imported), a fact repeated in the body that the details table already carries, or wording longer than its meaning needs — never on shortening that would drop a fact, a condition, or a qualifier. (The user's formulation, 2026-11-04.)",
     REVIEW_RULES,
     VERDICT_SCHEMA,
   ].join("\n");

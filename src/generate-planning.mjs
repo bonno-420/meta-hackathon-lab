@@ -15,7 +15,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { MODEL, BASE_URL, MAX_TOKENS, RATES_KNOWN, checkGenerationInput, checkGrounding, callModelLive } from "./generate.mjs";
 import { intentFromPlanning, sha256Text } from "./planning.mjs";
 
-export const PLANNING_PROMPT_VERSION = "lp-generate-v10-planning";
+export const PLANNING_PROMPT_VERSION = "lp-generate-v11-planning";
 
 // Planning-path messages. The materials are the approved FACTs AND
 // the original posting's lines: items the FACT schema does not carry
@@ -61,13 +61,10 @@ export function buildPlanningGenerationMessages(facts, original, planning, inten
     // (the user's learning-flow doctrine, 2026-11-03/04).
     "- A sentence that only restates a fact does not carry an appeal. For every appeal, state the fact AND what it means for the reader described in the audience, in the recruiter's voice. The meaning must come only from the fact itself and the appeal's framing: never add a new fact, condition, benefit, or promise that the materials do not state.",
     "- The work-content sentence is the page's headline. Keep it SHORT — the job itself and the place only, one compact line — so a reader knows what job this posting is for from that sentence alone. Hard guide, measured by a deterministic check that stops the run when it is exceeded: at most 50 characters for Japanese, at most 120 characters for English. Do NOT pack the employment type, the contract period, or appeal phrasing into the headline sentence, and do not open it with a preamble ('For you who ...'); write those as their own sentences. (FICT-E03 run4, 2026-11-04: a 161-character headline with a preamble was stopped by this check.)",
-    // Section roles and non-repetition (the user's copy rules,
-    // 2026-11-04): each section of the page has ONE role; the body
-    // does not repeat what the details table carries; sentences
-    // are as short as their meaning allows.
-    "- One role per section, one appeal per sentence: a sentence serves ONLY its own appeal and states only that appeal's facts. Never import another appeal's facts into a sentence (no transport coverage inside the wage sentence, no schedule inside the location sentence, no days-off inside the team sentence). A card or band that mixes roles is a defect.",
-    "- Do not repeat the details table in the body: the table at the end lists every fact's value, so the body states each fact at most ONCE — inside its own appeal's sentence, paired with what it means for the reader — and never as a bare value restatement, and never again inside another appeal's sentence. If a value is already carried by one body sentence, later sentences refer to the point, not the value.",
-    "- As short as the meaning allows: one point per sentence; cut any clause that adds neither a fact nor a meaning for the reader; prefer the plain assertion over the explained one. Shortening must never drop a fact, a condition, or a qualifier (up to, about, estimated).",
+    // The user's copy standard (2026-11-04), in his formulation:
+    // natural in the target language, necessary and sufficient,
+    // as concise as possible.
+    "- Be natural in the target language and convey the necessary and sufficient information as concisely as possible: one role per section, do not repeat in the body what the details table carries, and cut any clause that adds neither a fact nor a meaning — without dropping a fact, a condition, or a qualifier.",
     // Non-card appeals are the posting's charm beyond the bare
     // conditions (the user's spec, 2026-11-04): their sentences are
     // addressed to the reader — who this suits, what worry it
