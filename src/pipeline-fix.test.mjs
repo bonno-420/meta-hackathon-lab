@@ -356,10 +356,36 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
 // ---------- copy review v8: semantic accuracy (mandatory) + language quality (regional, practical level) ----------
 {
   const { buildCopyReviewMessages, REVIEW_PROMPT_VERSION } = await import("./review.mjs");
-  expect("review-version-current", REVIEW_PROMPT_VERSION, "lp-review-v10");
+  expect("review-version-current", REVIEW_PROMPT_VERSION, "lp-review-v11");
   const msgs = buildCopyReviewMessages({ planning: { language: "en", audience: "Women in Tokyo", appeals: [] }, generation: { sentences: [{ text: "Pack soaps." }] } });
   expectTrue("v8-semantic-accuracy-present", msgs[0].content.includes("semantic-accuracy") && msgs[0].content.includes("mandatory pass/fail"));
   expectTrue("v8-language-quality-present", msgs[0].content.includes("language-quality") && msgs[0].content.includes("TARGET REGION") && msgs[0].content.includes("WITHIN practical level are not findings"));
+}
+
+// ---------- plating: the title block carries the headline only (user, 2026-11-04) ----------
+{
+  const { assembleFromLayout } = await import("./assemble-layout.mjs");
+  const genT = { sentences: [
+    { text: "Pack soaps at a studio.", factKeys: [], sourceLines: ["L01"] },
+    { text: "For hands-on people, pack soaps into boxes.", factKeys: [], sourceLines: ["L01"] },
+    { text: "The studio is 3 minutes from the station.", factKeys: ["workLocation"], sourceLines: ["L02"] },
+  ] };
+  const planningT = { language: "en", appeals: [
+    { id: "A1", text: "the work", factKeys: [], sourceLines: ["L01"] },
+    { id: "A2", text: "location", factKeys: ["workLocation"], sourceLines: ["L02"] },
+  ], firstCheckKeys: ["workLocation"] };
+  const factsT = { items: [{ key: "workLocation", status: "stated", value: "Studio", sourceLine: "L02" }] };
+  const layoutT = { language: "en", messageMap: [
+    { block: "title", carries: { workContent: true, appealId: "A1" } },
+    { block: "appeal-row", carries: { appealId: "A1" } },
+    { block: "appeal-row", carries: { appealId: "A2" } },
+    { block: "cta", carries: { action: true } },
+  ] };
+  const builtT = assembleFromLayout({ root: makeScratch(), generation: genT, images: [], lpDir: "out", heroChips: [], layout: layoutT, planning: planningT, facts: factsT });
+  const titleBlock = (builtT.html.match(/<(?:div|section) class="title-block">([\s\S]*?)<\/(?:div|section)>/) || [])[1] || "";
+  expect("title-block-sentence-count", (titleBlock.match(/lp-sentence/g) || []).length, 1);
+  expectTrue("title-block-is-headline", titleBlock.includes("Pack soaps at a studio."));
+  expectTrue("plating-rest-still-placed", builtT.html.includes("For hands-on people") && builtT.html.includes("3 minutes from the station"));
 }
 
 // ---------- copy rules: one role per section, no table repetition, brevity (user, 2026-11-04) ----------
@@ -368,7 +394,7 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
   const msgs = buildCopyReviewMessages({ planning: { language: "en", audience: "Women in Tokyo", appeals: [] }, generation: { sentences: [{ text: "Pack soaps." }] } });
   expectTrue("v10-natural-sufficient-present", msgs[0].content.includes("natural-and-sufficient") && msgs[0].content.includes("necessary and sufficient information as concisely as possible"));
   const gp = await import("./generate-planning.mjs");
-  expect("generation-prompt-v11", gp.PLANNING_PROMPT_VERSION, "lp-generate-v11-planning");
+  expect("generation-prompt-v12", gp.PLANNING_PROMPT_VERSION, "lp-generate-v12-planning");
   const gm = gp.buildPlanningGenerationMessages({ items: [{ key: "salaryHourly", status: "stated", value: "1,200 yen", sourceLine: "L04" }] }, { lines: [{ id: "L04", text: "Hourly wage: 1,200 yen" }] }, { language: "en", audience: "x", appeals: [{ id: "A1", text: "wage", factKeys: ["salaryHourly"], sourceLines: ["L04"] }], firstCheckKeys: ["salaryHourly"], imageSpecs: [] });
   const sys = gm.map((m) => m.content).join("\n");
   expectTrue("gen-concise-standard", sys.includes("necessary and sufficient information as concisely as possible"));

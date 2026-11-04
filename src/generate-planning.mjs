@@ -15,7 +15,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { MODEL, BASE_URL, MAX_TOKENS, RATES_KNOWN, checkGenerationInput, checkGrounding, callModelLive } from "./generate.mjs";
 import { intentFromPlanning, sha256Text } from "./planning.mjs";
 
-export const PLANNING_PROMPT_VERSION = "lp-generate-v11-planning";
+export const PLANNING_PROMPT_VERSION = "lp-generate-v12-planning";
 
 // Planning-path messages. The materials are the approved FACTs AND
 // the original posting's lines: items the FACT schema does not carry
@@ -65,6 +65,7 @@ export function buildPlanningGenerationMessages(facts, original, planning, inten
     // natural in the target language, necessary and sufficient,
     // as concise as possible.
     "- Be natural in the target language and convey the necessary and sufficient information as concisely as possible: one role per section, do not repeat in the body what the details table carries, and cut any clause that adds neither a fact nor a meaning — without dropping a fact, a condition, or a qualifier.",
+    "- One sentence per appeal is the default; a second only for a derived value (the income example) or a barrier-remover's concrete ground. Do not write a sentence for a fact the planning left to the details table.",
     // Non-card appeals are the posting's charm beyond the bare
     // conditions (the user's spec, 2026-11-04): their sentences are
     // addressed to the reader — who this suits, what worry it

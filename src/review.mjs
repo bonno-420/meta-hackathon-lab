@@ -11,7 +11,7 @@
 // back to generation once, and a second fail stops the run with the
 // findings on record.
 
-export const REVIEW_PROMPT_VERSION = "lp-review-v10";
+export const REVIEW_PROMPT_VERSION = "lp-review-v11";
 
 const VERDICT_SCHEMA = 'Schema: {"verdict":"pass"|"fail","findings":[{"criterion":"...","target":"the block, sentence, or planning item","problem":"what is wrong","instruction":"what to change"}]}';
 // The researched market patterns (loop-025) include one rule that
@@ -226,10 +226,11 @@ export function buildReviewMessages({ planning, outline }) {
     "4. no-mute-blocks: an image shown with no accompanying text, or a block that carries nothing, fails (name the block).",
     "5. client-test: as the client, if this page reads as facts and pictures rather than a designed posting that makes the reader want to apply, fail.",
     "6. first-view-priority: the first view (headline, hero chips, the first cards) must foreground this posting's strongest deciding facts — for hourly-paid work the wage, a stated barrier-remover such as no-experience-needed, a distinctive benefit. If a strong deciding fact sits mid-page or lower while weaker facts (generic hours, the bare location) dominate the top, fail, naming what should lead (the user's review of FICT-E03 run2, 2026-11-04).",
+    "7. page-density: judge the WHOLE page's information design, not single sentences (the user's instruction, 2026-11-04): the same information or appeal must not be repeated across several sections; each section carries one role; the first view states the work and the main conditions concisely; a merit merely inferred from a condition must not be explained at length; and what the details table already shows must not be explained item by item in the body. ALLOWED and not findings: a concise summary of decision-critical conditions, and their re-listing in the details table. Fail when the page's density, duplication, or readability falls below what a posting needs — and stop there: when the page is sufficient, pass it; do not send back preferences.",
     "",
     "Rules: judge only what the outline shows. Do not demand facts the posting does not have. A finding's instruction must say concretely what to change in the copy or the arrangement, without inventing new facts. If the page is a posting both reviewers can accept, verdict is \"pass\" with an empty findings list.",
     "Output JSON only, no markdown fences.",
-    'Schema: {"verdict":"pass"|"fail","findings":[{"criterion":"job-first"|"appeal-works"|"posting-completeness"|"no-mute-blocks"|"client-test"|"first-view-priority","target":"the block or sentence","problem":"what is wrong","instruction":"what to change"}]}',
+    'Schema: {"verdict":"pass"|"fail","findings":[{"criterion":"job-first"|"appeal-works"|"posting-completeness"|"no-mute-blocks"|"client-test"|"first-view-priority"|"page-density","target":"the block or sentence","problem":"what is wrong","instruction":"what to change"}]}',
   ].join("\n");
   const user = [
     `Audience (the reader persona): ${planning?.audience ?? ""}`,

@@ -127,9 +127,20 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
     cardBuffer = [];
   };
   const titleInner = (carries) => {
+    // The title block carries the headline ONLY — one sentence,
+    // the work itself. (FICT-E03 run9, 2026-11-04: when the work
+    // sentence was already placed, this fallback dumped the lead
+    // appeal's whole sentence set — three sentences, one of them
+    // another appeal's — into the title block in headline styling,
+    // and the first view became a wall of bold text. The user's
+    // verdict: the content was fine; the plating was the problem.
+    // The appeal's remaining sentences render in their own blocks.)
     let inner = "";
     if (carries.workContent && workIdx >= 0) inner = sentenceHtml(workIdx);
-    if (!inner && carries.appealId) inner = appealSentences(carries.appealId);
+    if (!inner && carries.appealId) {
+      const idxs = byAppeal.get(carries.appealId) ?? [];
+      if (idxs.length > 0) inner = sentenceHtml(idxs[0]);
+    }
     return inner;
   };
   const consumed = new Set();

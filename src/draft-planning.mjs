@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 import { MODEL, callModelLive } from "./generate.mjs";
 import { validatePlanning } from "./planning.mjs";
 
-export const DRAFT_PROMPT_VERSION = "planning-draft-v1";
+export const DRAFT_PROMPT_VERSION = "planning-draft-v2";
 
 function loadJson(p) { return JSON.parse(readFileSync(p, "utf8")); }
 
@@ -34,6 +34,7 @@ export function buildDraftMessages(original, facts, hints = {}) {
     "- Appeals: one entry per point worth appealing. Each appeal MUST cite the FACT keys (factKeys) and/or original line IDs (sourceLines) it rests on — keys only from the stated FACT items, lines only from the original. Content the FACT schema does not carry (the work itself, holidays, qualifications) rests on lines.",
     "- Order the appeals by the reader's decision order, fronting the posting's strongest stated advantage (a benefit competitors would not all have: company-paid qualifications, housing support, a high rate for the work, a rare schedule fit). An ordinary condition does not outrank a distinctive advantage.",
     "- firstCheckKeys: exactly two stated FACT keys, chosen by DECISION IMPACT for this reader and this posting — they lead the page (hero chips and first cards), so they must be what actually decides the application. For hourly-paid part-time work the wage is normally a first check; a stated barrier-remover or a distinctive benefit can outrank the hours or the location. Do not default to hours/location when a stronger deciding fact is stated (the user's review of FICT-E03 run2, 2026-11-04: the wage and the no-experience point were buried while hours and location led).",
+    "- The appeals ARE the page's sections — plan the page, not a fact list: an appeal earns a body section only when it carries decision weight or a distinctive advantage for this reader. Routine stated facts (a break length, an assumed-days figure on its own, the employment type on its own) belong in the details table only — do not promote them into appeals, and never let two appeals share the same fact.",
     "- ORDER of the appeals is a narrative, SEPARATE from firstCheckKeys (the user's confirmed separation, 2026-11-04): the appeals open with the WORK ITSELF, then the posting's distinctive advantage for this reader (what beats a comparable posting — a rare schedule fit outranks an ordinary wage), then the remaining appeals. firstCheckKeys govern only the hero chips and the first cards; do NOT mirror them into the appeal order, and do not open the appeals with a conditions appeal (pay, hours) ahead of the work.",
     "- notSay: the unstated items a reader might assume, each as {key, text} — they must never be asserted in copy or images.",
     "- imageSpecs: a key-visual (basis: the work appeal) and a section-work image (basis: factKey workLocation), each with a concrete description of the WORK being done (the actual tasks and objects from the work line). Never describe a building or workplace exterior.",
