@@ -356,10 +356,24 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
 // ---------- copy review v8: semantic accuracy (mandatory) + language quality (regional, practical level) ----------
 {
   const { buildCopyReviewMessages, REVIEW_PROMPT_VERSION } = await import("./review.mjs");
-  expect("review-version-v8", REVIEW_PROMPT_VERSION, "lp-review-v8");
+  expect("review-version-current", REVIEW_PROMPT_VERSION, "lp-review-v9");
   const msgs = buildCopyReviewMessages({ planning: { language: "en", audience: "Women in Tokyo", appeals: [] }, generation: { sentences: [{ text: "Pack soaps." }] } });
   expectTrue("v8-semantic-accuracy-present", msgs[0].content.includes("semantic-accuracy") && msgs[0].content.includes("mandatory pass/fail"));
   expectTrue("v8-language-quality-present", msgs[0].content.includes("language-quality") && msgs[0].content.includes("TARGET REGION") && msgs[0].content.includes("WITHIN practical level are not findings"));
+}
+
+// ---------- copy rules: one role per section, no table repetition, brevity (user, 2026-11-04) ----------
+{
+  const { buildCopyReviewMessages, REVIEW_PROMPT_VERSION } = await import("./review.mjs");
+  const msgs = buildCopyReviewMessages({ planning: { language: "en", audience: "Women in Tokyo", appeals: [] }, generation: { sentences: [{ text: "Pack soaps." }] } });
+  expectTrue("v9-section-role-present", msgs[0].content.includes("section-role-no-repetition"));
+  const gp = await import("./generate-planning.mjs");
+  expect("generation-prompt-v10", gp.PLANNING_PROMPT_VERSION, "lp-generate-v10-planning");
+  const gm = gp.buildPlanningGenerationMessages({ items: [{ key: "salaryHourly", status: "stated", value: "1,200 yen", sourceLine: "L04" }] }, { lines: [{ id: "L04", text: "Hourly wage: 1,200 yen" }] }, { language: "en", audience: "x", appeals: [{ id: "A1", text: "wage", factKeys: ["salaryHourly"], sourceLines: ["L04"] }], firstCheckKeys: ["salaryHourly"], imageSpecs: [] });
+  const sys = gm.map((m) => m.content).join("\n");
+  expectTrue("gen-one-appeal-per-sentence", sys.includes("one appeal per sentence"));
+  expectTrue("gen-no-table-repetition", sys.includes("Do not repeat the details table"));
+  expectTrue("gen-brevity-rule", sys.includes("As short as the meaning allows"));
 }
 
 // ---------- color rule refinement: similar conditions may be similar; unconditional sameness may not (user, 2026-11-04) ----------
