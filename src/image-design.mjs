@@ -23,33 +23,17 @@ export const IMAGE_GATES = JSON.parse(readFileSync(path.join(here, "dicts/image-
 
 export const IMAGE_STYLE = "photorealistic photograph, natural light, calm neutral palette, no icons, no symbols, no pictograms";
 
-// A scene for an appeal-derived image, chosen by what the appeal
-// itself says: scenes of people and moments, never icon collages
-// and never a workplace exterior (user, 2026-11-04).
-const APPEAL_SCENES = [
-  { re: /土日|休日|週末|休み|weekend|day off|holiday/, scene: "A person enjoying a day off at home with family, relaxed weekend mood" },
-  // The transport scene must not put a commute vehicle in the
-  // picture (gate G4: a train/bus as the visual subject implies the
-  // commute method). An earlier scene ("commuting on a local
-  // train") hit G4 at the prompt stage, and the send-back rebuild
-  // stripped its main clause, leaving a fragment prompt ("calm and
-  // unhurried") that generated an unrelated desk scene (run21).
-  { re: /交通費|通勤|電車|transport|commut|train/, scene: "A person walking to work along a quiet street in the morning, calm and unhurried" },
-  { re: /未経験|研修|初めて|no experience|training|first job/, scene: "A new worker being shown the task by a senior worker, both at a work table" },
-  { re: /朝|夕方|時間|時給|勤務時間|morning|hours|shift/, scene: "A worker starting the day at a work table in bright morning light" },
-];
+// Appeal-derived lifestyle scenes were removed (loop-025): the
+// researched market composition gives condition appeals no image at
+// all (see the no-image decision in buildImageDesign below).
 // The neutral work scene used when a spec asks for an exterior
-// (replaced under G9) and as the appeal-scene fallback. It must stay
-// job-neutral: an earlier parcel-sorting wording was FICT-J02's
-// content leaking into the system default, and FICT-E02 (woodwork)
-// appeal images came out as parcel scenes (2026-11-04). The job's
-// own scenes come from the planning's spec descriptions and appeal
-// texts, not from this default.
+// (replaced under G9). It must stay job-neutral: an earlier
+// parcel-sorting wording was FICT-J02's content leaking into the
+// system default, and FICT-E02 (woodwork) appeal images came out as
+// parcel scenes (2026-11-04). The job's own scenes come from the
+// planning's spec descriptions and appeal texts, not from this
+// default.
 const WORK_SCENE = "The work itself: people doing the hands-on tasks of the job at a work table";
-function appealScene(appealText) {
-  for (const sc of APPEAL_SCENES) if (sc.re.test(appealText ?? "")) return sc.scene;
-  return WORK_SCENE;
-}
 const EXTERIOR_RE = /exterior|facade|外観|建物の外|entrance of/i;
 
 const MUST_NOT_IMPLY = [
@@ -174,23 +158,16 @@ export function buildImageDesign(planning, facts) {
       noImage.push({ appealId: a.id, reason: "この訴求は条件カード（第一確認の事実）が担うため、画像は作らない" });
       continue;
     }
-    const subject = appealScene(a.text);
-    images.push({
-      id: `appeal-${a.id}`,
-      role: "section",
-      kind: "section",
-      source: "appeal",
-      appealId: a.id,
-      purpose: a.text,
-      subject,
-      composition: COMPOSITION.section,
-      depiction: "photorealistic",
-      styleText: IMAGE_STYLE,
-      placement: { area: "inline", size: "small", aspect: "4:3" },
-      mustNotImply: [...MUST_NOT_IMPLY, ...(planning?.notSay ?? []).map((n) => n.text ?? n.key).filter(Boolean)],
-      prompt: `${subject}. ${COMPOSITION.section}. ${IMAGE_STYLE}, no text, no numbers, no logos, no watermark`,
-    });
-    servedAppeals.add(a.id);
+    // Researched market composition (loop-025, content patterns
+    // CP2/CP3): condition appeals are carried by text — condition
+    // cards, chips, and text rows. Photographs show the work itself
+    // and come from the planning's specs. The earlier design
+    // invented a lifestyle scene per appeal (a family sofa for the
+    // holidays appeal, a walking commuter for the transport
+    // allowance), which implied facts the posting does not state
+    // and failed the sample review (run28, 2026-11-04). So no image
+    // is designed here; the layout places the appeal as a text row.
+    noImage.push({ appealId: a.id, reason: "条件の訴求は文章・カード・チップで担う。写真は仕事そのものに使う（市場の構成の型、loop-025）" });
   }
   return { version: "image-design-v2", count: images.length, images, noImage, designNotes };
 }

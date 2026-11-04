@@ -111,6 +111,8 @@ export function sampleOutlineFromLayout(layoutRecord, imageDesign) {
     } else if (m.block === "photo-band") {
       const d = designById.get(carries.specId);
       blocks.push({ kind: "photo-band", text: d?.purpose ? `(carries: ${d.purpose})` : "", chips: [], images: [{ file: carries.specId ?? "", shows: d ? d.subject : null }] });
+    } else if (m.block === "appeal-row") {
+      blocks.push({ kind: "appeal-row", text: "(a condition appeal carried by text, no image)", chips: [], images: [] });
     } else if (m.block === "details") {
       blocks.push({ kind: "details", text: "(remaining facts)", chips: [], images: [] });
     } else if (m.block === "cta") {

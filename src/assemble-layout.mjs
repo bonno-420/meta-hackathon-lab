@@ -85,7 +85,7 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
   let cardBuffer = [];
   const flushCards = () => {
     if (cardBuffer.length === 0) return;
-    body += `<section class="cards">${cardBuffer.join("")}<div class="clear"></div></section>\n`;
+    body += `<section class="cards">${cardBuffer.join("")}</section>\n`;
     cardBuffer = [];
   };
   for (const block of blocks) {
@@ -127,6 +127,9 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
       // explain-text div reads as an unfinished page (independent
       // review of run20, 2026-11-04).
       if (fig || text) body += `<section class="explain-row">${fig}${text ? `<div class="explain-text">${text}</div>` : ""}<div class="clear"></div></section>\n`;
+    } else if (block.block === "appeal-row") {
+      const text = carries.appealId ? appealSentences(carries.appealId) : "";
+      if (text) body += `<section class="appeal-row"><div class="appeal-text">${text}</div></section>\n`;
     } else if (block.block === "details") {
       let inner = "";
       for (const id of carries.appealIds ?? []) inner += appealSentences(id);
@@ -170,26 +173,30 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>完成LP（デモ）</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#fff;font-family:sans-serif;color:#222}
+*{box-sizing:border-box}body{margin:0;background:#fff;font-family:sans-serif;color:#222;font-size:15px}
 .page{max-width:480px;margin:0 auto;background:#fff}
-.lp-hero img{width:100%;display:block}
-.hero-chips{padding:12px 18px 0}.hero-chip{display:inline-block;background:#eef3f8;border-radius:999px;padding:4px 12px;margin:0 8px 8px 0;font-size:13px}
-.title-block{background:${pal.titleBg};padding:34px 30px 38px}
-.title-block .lp-sentence{color:#fff;margin:0;line-height:1.7}
-.cards{padding:20px 18px 6px}
-.card{float:left;width:48%;border-radius:18px;box-shadow:0 4px 16px rgba(23,42,66,.10);padding:16px 14px;margin:0 0 14px}
-.card:nth-child(odd){margin-right:4%}
-.card-label{font-size:12px;color:#5a6b7d}.card-value{font-size:19px;font-weight:700;margin:2px 0 6px}
-.card .lp-sentence{font-size:13px;margin:0;line-height:1.6}
-.explain-row{padding:14px 18px 0}
-.inline-photo{float:left;width:38%;border-radius:16px}
-.explain-text{float:right;width:58%}
-.explain-text .lp-sentence{margin:0 0 8px;line-height:1.7}
-.details{padding:16px 26px 6px}
-.details .lp-sentence{margin:0 0 10px;line-height:1.7}
+.lp-hero img{width:100%;display:block;aspect-ratio:16/10;object-fit:cover}
+.hero-chips{padding:14px 20px 0}.hero-chip{display:inline-block;background:#eef3f8;border-radius:999px;padding:5px 12px;margin:0 8px 8px 0;font-size:13px}
+.title-block{background:${pal.titleBg};padding:40px 24px 44px}
+.title-block .lp-sentence{color:#fff;margin:0;font-size:26px;font-weight:700;line-height:1.5}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:28px 20px 0}
+.card{border-radius:16px;box-shadow:0 4px 16px rgba(23,42,66,.10);padding:18px 16px}
+.card:last-child:nth-child(odd){grid-column:1/-1}
+.card-label{font-size:12px;color:#5a6b7d}.card-value{font-size:20px;font-weight:700;margin:3px 0 7px}
+.card .lp-sentence{font-size:13px;margin:0;line-height:1.7}
+.explain-row{display:flex;gap:16px;padding:28px 20px 0}
+.inline-photo{flex:0 0 38%;width:38%;border-radius:14px;aspect-ratio:4/3;object-fit:cover}
+.explain-text{flex:1}
+.explain-text .lp-sentence{margin:0 0 8px;line-height:1.8;font-size:15px}
+.appeal-row{padding:28px 20px 0}
+.appeal-text{border:1px solid #e3e7eb;border-radius:14px;padding:16px 18px}
+.appeal-text .lp-sentence{margin:0 0 8px;line-height:1.8}
+.appeal-text .lp-sentence:last-child{margin-bottom:0}
+.details{padding:28px 24px 8px}
+.details .lp-sentence{margin:0 0 12px;line-height:1.8}
 .clear{clear:both}
-.cta{background:${pal.titleBg};padding:24px 30px 30px;text-align:center;margin-top:18px}
-.cta-button{background:${pal.accent};color:#fff;border:none;border-radius:999px;padding:14px 44px;font-size:16px;width:56%}
+.cta{background:${pal.titleBg};padding:28px 24px 36px;text-align:center;margin-top:32px}
+.cta-button{background:${pal.accent};color:#fff;border:none;border-radius:999px;padding:15px 44px;font-size:16px;min-width:56%}
 .lp-image img{max-width:100%}
 </style>
 </head>

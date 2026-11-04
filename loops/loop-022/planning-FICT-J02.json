@@ -22,14 +22,6 @@
       "text": "07:00〜16:00の勤務時間（休憩60分）"
     },
     {
-      "factKeys": [],
-      "id": "A3",
-      "sourceLines": [
-        "L06"
-      ],
-      "text": "土日祝日休み"
-    },
-    {
       "factKeys": [
         "transport",
         "transportCap"
@@ -39,6 +31,14 @@
         "L07"
       ],
       "text": "交通費は実費支給、月上限15,000円"
+    },
+    {
+      "factKeys": [],
+      "id": "A3",
+      "sourceLines": [
+        "L06"
+      ],
+      "text": "土日祝日休み"
     },
     {
       "factKeys": [],

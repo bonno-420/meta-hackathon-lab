@@ -95,6 +95,31 @@ export function buildFinishedImageHtml({ root, planning, photos, pageDir, design
   const heroDesign = hero ? designFor(hero, "hero") : null;
   const bandDesigns = bands.map((b) => designFor(b, "band"));
   const designById = new Map([heroDesign, ...bandDesigns].filter(Boolean).map((d) => [d.id, d]));
+  // Rows in appeal order (researched composition, loop-025): a
+  // photo band where the planning designed a work image, and a text
+  // row for a condition appeal the image design decided carries no
+  // image (it is carried by text, cards and chips). Appeals served
+  // by a condition card stay in the card.
+  const appealsForRows = Array.isArray(planning?.appeals) ? planning.appeals : [];
+  const appealByKeyRows = new Map();
+  for (const a of appealsForRows) for (const k of Array.isArray(a?.factKeys) ? a.factKeys : []) if (!appealByKeyRows.has(k)) appealByKeyRows.set(k, a.id);
+  const cardAppealIdsRows = new Set((Array.isArray(planning?.firstCheckKeys) ? planning.firstCheckKeys : []).map((k) => appealByKeyRows.get(k)).filter(Boolean));
+  const noImageIdsRows = new Set((Array.isArray(design?.noImage) ? design.noImage : []).map((n) => n.appealId));
+  const rowsOrder = [];
+  {
+    const bandByAppeal = new Map();
+    for (const d of bandDesigns.filter(Boolean)) {
+      const spec = specById.get(d.id) ?? {};
+      const aid = spec.basis?.appealId ?? d.appealId ?? null;
+      if (aid && !bandByAppeal.has(aid)) bandByAppeal.set(aid, d);
+    }
+    const usedBands = new Set();
+    for (const a of appealsForRows) {
+      if (bandByAppeal.has(a.id)) { rowsOrder.push({ kind: "band", design: bandByAppeal.get(a.id) }); usedBands.add(bandByAppeal.get(a.id).id); }
+      else if (noImageIdsRows.has(a.id) && !cardAppealIdsRows.has(a.id)) rowsOrder.push({ kind: "appeal-row", appealId: a.id });
+    }
+    for (const d of bandDesigns.filter(Boolean)) if (!usedBands.has(d.id)) rowsOrder.push({ kind: "band", design: d });
+  }
 
   // The composition is derived from the planning (lp-design): the
   // sections are built as parts and joined in the design's block
@@ -108,17 +133,23 @@ export function buildFinishedImageHtml({ root, planning, photos, pageDir, design
     const firstKeys = Array.isArray(planning?.firstCheckKeys) ? planning.firstCheckKeys : [];
     for (let i = 0; i < cardCount; i++) {
       const icon = ICONS[ICON_FOR_KEY[firstKeys[i]] ?? 3] ?? ICONS[3];
-      cards.push(`<div class="card${i % 2 === 1 ? " card-r" : ""}"><div class="card-icon">${icon}</div>${bars([70, 92, 55], "bar bar-sm")}</div>`);
+      cards.push(`<div class="card"><div class="card-icon">${icon}</div>${bars([70, 92, 55], "bar bar-sm")}</div>`);
     }
-    parts.cards = `<section class="cards">${cards.join("")}<div class="clear"></div></section>\n`;
+    parts.cards = `<section class="cards">${cards.join("")}</section>\n`;
   }
   const explainRows = `<div class="check-row"><span class="box"></span><span class="bar bar-sm" style="width:68%"></span></div>`.repeat(3);
-  for (const img of bands) {
-    const d = designById.get(img.id);
-    parts.rows += `<section class="explain-row"><div class="photo-inline" style="background-image:url('${srcFor(img)}');height:${d.heightPx}px"></div><div class="explain-card">${explainRows}</div><div class="clear"></div></section>\n`;
+  for (const r of rowsOrder) {
+    if (r.kind === "band") {
+      const img = bands.find((b) => b.id === r.design.id);
+      if (!img) continue;
+      const d = designById.get(img.id);
+      parts.rows += `<section class="explain-row"><div class="photo-inline" style="background-image:url('${srcFor(img)}');height:${d.heightPx}px"></div><div class="explain-card">${explainRows}</div></section>\n`;
+    } else {
+      parts.rows += `<section class="appeal-row"><div class="appeal-card">${bars([88, 64], "bar bar-sm")}</div></section>\n`;
+    }
   }
   const rows = `<div class="check-row"><span class="box"></span><span class="bar bar-sm" style="width:68%"></span></div>`.repeat(4);
-  parts.details = `<section class="details"><div class="detail-card">${rows}</div><div class="detail-card detail-r">${rows}</div><div class="clear"></div></section>\n`;
+  parts.details = `<section class="details"><div class="detail-card">${rows}</div><div class="detail-card">${rows}</div></section>\n`;
   parts.cta = `<footer class="cta"><span class="cta-button"><span class="bar bar-cta" style="width:46%"></span></span></footer>\n`;
   const body = lpDesign.blockOrder.map((g) => parts[g] ?? "").join("");
 
@@ -132,27 +163,28 @@ export function buildFinishedImageHtml({ root, planning, photos, pageDir, design
 *{box-sizing:border-box}body{margin:0;background:#fff;font-family:sans-serif}
 .page{max-width:480px;margin:0 auto;background:#fff}
 .photo-hero{background-size:cover;background-position:center}
-.explain-row{padding:16px 18px 0}
-.photo-inline{float:left;width:38%;border-radius:16px;background-size:cover;background-position:center}
-.explain-card{float:right;width:58%;border:1px solid #e3e7eb;border-radius:14px;padding:14px 12px;box-shadow:0 4px 16px rgba(23,42,66,.08)}
-.title-block{background:${lpDesign.palette.titleBg};padding:34px 30px 38px}
-.bar{display:block;height:15px;border-radius:8px;background:#c9d4de;margin:0 0 14px}
+.explain-row{display:flex;gap:16px;padding:28px 20px 0}
+.photo-inline{flex:0 0 38%;border-radius:14px;background-size:cover;background-position:center}
+.explain-card{flex:1;border:1px solid #e3e7eb;border-radius:14px;padding:16px 14px;box-shadow:0 4px 16px rgba(23,42,66,.08)}
+.appeal-row{padding:28px 20px 0}
+.appeal-card{border:1px solid #e3e7eb;border-radius:14px;padding:16px 14px;box-shadow:0 4px 16px rgba(23,42,66,.08)}
+.title-block{background:${lpDesign.palette.titleBg};padding:40px 24px 44px}
+.bar{display:block;height:17px;border-radius:8px;background:#c9d4de;margin:0 0 14px}
 .bar:last-child{margin-bottom:0}
 .bar-light{background:#e8eef4}
 .bar-sm{height:9px;margin:0 0 8px}
-.cards{padding:20px 18px 6px}
-.card{float:left;width:48%;border-radius:18px;padding:16px 14px;margin:0 0 14px;box-shadow:0 4px 16px rgba(23,42,66,.10);text-align:center}
-.card-r{float:right}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:28px 20px 0}
+.card{border-radius:16px;padding:18px 14px;box-shadow:0 4px 16px rgba(23,42,66,.10);text-align:center}
+.card:last-child:nth-child(odd){grid-column:1/-1}
 .card-icon{margin-bottom:8px}
-.details{padding:6px 18px 26px}
-.detail-card{float:left;width:48%;border:1px solid #e3e7eb;border-radius:12px;padding:14px 12px}
-.detail-r{float:right}
+.details{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:28px 20px 32px}
+.detail-card{border:1px solid #e3e7eb;border-radius:12px;padding:16px 14px}
 .check-row{margin:0 0 11px}
 .check-row:last-child{margin-bottom:0}
 .check-row .box{display:inline-block;vertical-align:middle;width:15px;height:15px;border:1.6px solid #9aa7b1;border-radius:4px;margin-right:9px}
 .check-row .bar{display:inline-block;vertical-align:middle}
 .clear{clear:both}
-.cta{background:${lpDesign.palette.titleBg};padding:26px 30px 34px;text-align:center}
+.cta{background:${lpDesign.palette.titleBg};padding:28px 24px 36px;text-align:center;margin-top:32px}
 .cta-button{display:inline-block;background:${lpDesign.palette.accent};border-radius:999px;padding:14px 44px;width:56%}
 .bar-cta{background:#ffd9c2;height:13px;margin:0 auto}
 </style>
@@ -195,16 +227,22 @@ ${body}</main>
   for (const key of firstCheckKeys) {
     mapGroups.cards.push({ block: "condition-card", carries: { factKey: key, appealId: appealByKey.get(key) ?? null } });
   }
-  for (const d of bandDesigns.filter(Boolean)) {
-    const spec = specById.get(d.id) ?? {};
-    mapGroups.rows.push({ block: "photo-band", carries: { specId: d.id, basis: spec.basis ?? (d.appealId ? { appealId: d.appealId } : null) }, purpose: d.purpose });
+  for (const r of rowsOrder) {
+    if (r.kind === "band") {
+      const d = r.design;
+      const spec = specById.get(d.id) ?? {};
+      mapGroups.rows.push({ block: "photo-band", carries: { specId: d.id, basis: spec.basis ?? (d.appealId ? { appealId: d.appealId } : null) }, purpose: d.purpose });
+    } else {
+      mapGroups.rows.push({ block: "appeal-row", carries: { appealId: r.appealId }, purpose: "condition appeal carried by text (researched composition, loop-025)" });
+    }
   }
   const allAppealKeys = [...new Set(appeals.flatMap((a) => (Array.isArray(a?.factKeys) ? a.factKeys : [])))];
   const detailKeys = allAppealKeys.filter((k) => !firstCheckKeys.includes(k));
   // Appeals grounded in original lines but with no FACT key (the fact
   // schema has no key for them) are carried by the detail blocks.
+  const appealRowIds = new Set(rowsOrder.filter((r) => r.kind === "appeal-row").map((r) => r.appealId));
   const lineGroundedAppeals = appeals
-    .filter((a) => (Array.isArray(a?.factKeys) ? a.factKeys.length : 0) === 0 && (Array.isArray(a?.sourceLines) ? a.sourceLines.length : 0) > 0)
+    .filter((a) => (Array.isArray(a?.factKeys) ? a.factKeys.length : 0) === 0 && (Array.isArray(a?.sourceLines) ? a.sourceLines.length : 0) > 0 && !appealRowIds.has(a.id))
     .map((a) => a.id);
   mapGroups.details.push({ block: "details", carries: { factKeys: detailKeys, appealIds: lineGroundedAppeals }, note: "appeal facts not shown as first-check cards, and line-grounded appeals with no fact key; carried by the detail blocks and the copy" });
   mapGroups.cta.push({ block: "cta", carries: { action: true } });
@@ -238,7 +276,7 @@ ${body}</main>
       },
     },
     design: lpDesign,
-    anatomy: lpDesign.blockOrder.map((g) => ({ hero: "hero photograph", title: "title block (placeholder text)", cards: `condition cards x${cardCount} (planning firstCheckKeys)`, rows: `explanatory image rows x${bands.length} (small insets)`, details: "detail blocks (placeholder text)", cta: "call to action" }[g])),
+    anatomy: lpDesign.blockOrder.map((g) => ({ hero: "hero photograph", title: "title block (placeholder text)", cards: `condition cards x${cardCount} (planning firstCheckKeys)`, rows: `rows x${rowsOrder.length} (photo bands x${bands.length}, appeal text rows x${rowsOrder.filter((r) => r.kind === "appeal-row").length})`, details: "detail blocks (placeholder text)", cta: "call to action" }[g])),
     messageMap,
     messageGaps,
     photos: usable.map((p) => ({ id: p.id, role: p.role ?? null, file: p.file })),

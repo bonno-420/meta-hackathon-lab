@@ -391,6 +391,7 @@ expectTrue("lp-presentation-saved", existsSync(path.join(scratchA, "out/presenta
   const order = ['<section class="lp-hero">', '<section class="title-block">', '<section class="cards">', '<footer class="cta">'].map((m) => lpHtml.indexOf(m));
   expectTrue("lp-block-order-matches-sample", order.every((v) => v >= 0) && order[0] < order[1] && order[1] < order[2] && order[2] < order[3]);
   expectTrue("lp-skin-matches-sample", lpHtml.includes(".page{max-width:480px;margin:0 auto;background:#fff}") && !lpHtml.includes("border-radius:26px"));
+  expectTrue("lp-design-tokens", lpHtml.includes("grid-template-columns:1fr 1fr") && lpHtml.includes(".card:last-child:nth-child(odd){grid-column:1/-1}") && lpHtml.includes("font-size:26px") && lpHtml.includes("aspect-ratio:16/10") && lpHtml.includes("aspect-ratio:4/3"));
 }
 expect("resume-status", runD.status, "pending-human-confirmation");
 
@@ -727,7 +728,9 @@ expectTrue("design-hero-prompt-has-no-exterior-instruction", !/building|exterior
 }
 {
   const designW = buildImageDesign({ ...planning, imageSpecs: [], appeals: [{ id: "AW", factKeys: [], sourceLines: ["L06"], text: "土日祝休みで、週末は家族と過ごせます。" }] }, facts);
-  expectTrue("design-appeal-scene-weekend", designW.images.some((i) => /day off/.test(i.subject)));
+  // Researched composition (loop-025): a condition appeal gets no
+  // lifestyle scene image; the no-image decision is on record.
+  expectTrue("design-appeal-no-lifestyle-image", !designW.images.some((i) => i.appealId === "AW") && designW.noImage.some((n) => n.appealId === "AW"));
   const designExt = JSON.parse(JSON.stringify(designJ01));
   designExt.images[0].subject = "A warehouse exterior at dawn";
   expectTrue("design-check-blocks-exterior-subject", !checkImageDesign(designExt).pass);
@@ -770,8 +773,10 @@ expectTrue("prompt-gate-allows-building-subject", checkPromptGates("A warehouse 
   expectTrue("design-check-blocks-gated-prompt", !checkImageDesign(designTrain).pass);
   const transportPlanning = { ...planning, firstCheckKeys: ["transportCap"], appeals: [...planning.appeals, { id: "AT", factKeys: ["transport"], sourceLines: ["L07"], text: "交通費は実費支給です" }] };
   const designT = buildImageDesign(transportPlanning, facts);
-  const tImg = designT.images.find((e) => e.appealId === "AT");
-  expectTrue("design-transport-scene-has-no-vehicle", !!tImg && !/train|bus/i.test(tImg.subject) && checkPromptGates(tImg.prompt).pass && checkImageDesign(designT, transportPlanning).pass);
+  // Researched composition (loop-025): the transport appeal gets no
+  // image at all — no scene can imply a commute method the posting
+  // does not state (the run28 sample review failed exactly that).
+  expectTrue("design-transport-appeal-has-no-image", !designT.images.some((e) => e.appealId === "AT") && designT.noImage.some((n) => n.appealId === "AT") && checkImageDesign(designT, transportPlanning).pass);
   const frag = { id: "appeal-AT", kind: "section", subject: "An illustration of a person commuting on a local train in the morning, calm and unhurried", composition: "x", styleText: "y" };
   const rebuiltFrag = rebuildPromptWithoutHits(frag, ["train"]);
   expectTrue("sendback-fragment-falls-back-to-scene", rebuiltFrag.entry.subject !== "calm and unhurried" && /work/i.test(rebuiltFrag.entry.subject) && checkPromptGates(rebuiltFrag.entry.prompt).pass);
