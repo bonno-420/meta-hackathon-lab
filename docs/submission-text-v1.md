@@ -22,8 +22,8 @@ Quality through controls: every stage's pass or fail is decided by that stage's 
 
 - Repository: https://github.com/bonno-420/meta-hackathon-lab
 - Live preview: https://meta-hackathon-lab-demo.pages.dev/
-- Demo video: [To be added after the demo video is produced on 2026-11-01]
+- Demo video: [link added at submission]
 
 ## Models
 
-Product execution and automated checks run on Muse Spark 1.3 Contributor. The verification-loop experiments in loops/loop-015/ and loops/loop-016/ additionally used Muse Spark Open via Baseten; those are experiment records kept separate from the platform's own operation.
+Product execution and automated checks run on Muse Spark 1.3 Contributor. The pipeline also runs against Muse Spark Open via Baseten when the endpoint is overridden; the verification runs in loops/loop-024 – loop-027 and the experiments in loops/loop-015/ and loops/loop-016/ used that route, and each run record states the model and endpoint it actually used.
