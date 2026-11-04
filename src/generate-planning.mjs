@@ -60,7 +60,7 @@ export function buildPlanningGenerationMessages(facts, original, planning, inten
     // it reaches the production path — this rule is that wiring
     // (the user's learning-flow doctrine, 2026-11-03/04).
     "- A sentence that only restates a fact does not carry an appeal. For every appeal, state the fact AND what it means for the reader described in the audience, in the recruiter's voice. The meaning must come only from the fact itself and the appeal's framing: never add a new fact, condition, benefit, or promise that the materials do not state.",
-    "- The work-content sentence is the page's headline. Keep it SHORT — the job itself and the place only, one compact line — so a reader knows what job this posting is for from that sentence alone. Do NOT pack the employment type, the contract period, or appeal phrasing into the headline sentence; write those as their own sentences.",
+    "- The work-content sentence is the page's headline. Keep it SHORT — the job itself and the place only, one compact line — so a reader knows what job this posting is for from that sentence alone. Hard guide, measured by a deterministic check that stops the run when it is exceeded: at most 50 characters for Japanese, at most 120 characters for English. Do NOT pack the employment type, the contract period, or appeal phrasing into the headline sentence, and do not open it with a preamble ('For you who ...'); write those as their own sentences. (FICT-E03 run4, 2026-11-04: a 161-character headline with a preamble was stopped by this check.)",
     // Non-card appeals are the posting's charm beyond the bare
     // conditions (the user's spec, 2026-11-04): their sentences are
     // addressed to the reader — who this suits, what worry it

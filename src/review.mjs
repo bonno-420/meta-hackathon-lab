@@ -11,7 +11,7 @@
 // back to generation once, and a second fail stops the run with the
 // findings on record.
 
-export const REVIEW_PROMPT_VERSION = "lp-review-v6";
+export const REVIEW_PROMPT_VERSION = "lp-review-v7";
 
 const VERDICT_SCHEMA = 'Schema: {"verdict":"pass"|"fail","findings":[{"criterion":"...","target":"the block, sentence, or planning item","problem":"what is wrong","instruction":"what to change"}]}';
 // The researched market patterns (loop-025) include one rule that
@@ -61,10 +61,10 @@ export function buildPlanningReviewMessages({ planning }) {
     "Fail the plan (verdict \"fail\") when any of these hold:",
     "1. audience-fit: the audience is vague, or the appeals do not match what this reader would actually check and care about.",
     "2. appeal-grounding: an appeal is not grounded in a fact key or an original line, or promises something the posting does not state.",
-    "3. decision-order: the first-check items are not what this reader would check first, or the appeals' order fights the reader's decision order.",
+    "3. decision-order — two DIFFERENT orders, judged separately (the user's confirmed separation, 2026-11-04): (a) firstCheckKeys govern the page furniture — hero chips and the first cards — and must be the facts this reader would check first when deciding. (b) The appeals' SEQUENCE is a narrative: it opens with the work itself, then the posting's distinctive advantage, then the rest. A first-check fact appearing later in the appeal sequence is NOT a defect; a conditions appeal opening the sequence ahead of the work itself IS a defect (see also client-test). Fail only the order that is actually wrong, and say which one.",
     "4. image-design: the image specs do not cover the appeals they should carry, or text/numbers inside the image. Standing design rules apply after planning: a spec whose subject is a workplace/building exterior is replaced at design time with an interior work scene, and vehicle/cash/clock subjects are sent back — so do not fail a spec for wording the design step replaces; DO fail when an appeal or the plan's structure depends on a prohibited subject (for example an appeal that sells the building's appearance).",
     "5. client-test: as the client, this plan would not lead to a posting you could approve (for example it leads with a condition instead of the job itself).",
-    "6. advantage-conversion: the plan must convert the posting's comparative advantages into appeal points. The strongest stated condition (an unusually high wage, full coverage, a qualification path, a rare schedule fit) must be fronted as an appeal, not buried; and no appeal may claim a strength the original does not support. When the posting's stated conditions are ordinary, framing what is stated plainly is not a failure.",
+    "6. advantage-conversion: the plan must convert the posting's comparative advantages into appeal points. The strongest stated advantage (an unusually high wage, full coverage, a qualification path, a rare schedule fit) must come early in the appeal sequence — right after the work itself — not buried; an ordinary condition (a market-rate wage) does not outrank a distinctive advantage merely by being a first check for the chips. No appeal may claim a strength the original does not support. When the posting's stated conditions are ordinary, framing what is stated plainly is not a failure.",
     REVIEW_RULES,
     VERDICT_SCHEMA,
   ].join("\n");

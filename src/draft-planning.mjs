@@ -34,6 +34,7 @@ export function buildDraftMessages(original, facts, hints = {}) {
     "- Appeals: one entry per point worth appealing. Each appeal MUST cite the FACT keys (factKeys) and/or original line IDs (sourceLines) it rests on — keys only from the stated FACT items, lines only from the original. Content the FACT schema does not carry (the work itself, holidays, qualifications) rests on lines.",
     "- Order the appeals by the reader's decision order, fronting the posting's strongest stated advantage (a benefit competitors would not all have: company-paid qualifications, housing support, a high rate for the work, a rare schedule fit). An ordinary condition does not outrank a distinctive advantage.",
     "- firstCheckKeys: exactly two stated FACT keys, chosen by DECISION IMPACT for this reader and this posting — they lead the page (hero chips and first cards), so they must be what actually decides the application. For hourly-paid part-time work the wage is normally a first check; a stated barrier-remover or a distinctive benefit can outrank the hours or the location. Do not default to hours/location when a stronger deciding fact is stated (the user's review of FICT-E03 run2, 2026-11-04: the wage and the no-experience point were buried while hours and location led).",
+    "- ORDER of the appeals is a narrative, SEPARATE from firstCheckKeys (the user's confirmed separation, 2026-11-04): the appeals open with the WORK ITSELF, then the posting's distinctive advantage for this reader (what beats a comparable posting — a rare schedule fit outranks an ordinary wage), then the remaining appeals. firstCheckKeys govern only the hero chips and the first cards; do NOT mirror them into the appeal order, and do not open the appeals with a conditions appeal (pay, hours) ahead of the work.",
     "- notSay: the unstated items a reader might assume, each as {key, text} — they must never be asserted in copy or images.",
     "- imageSpecs: a key-visual (basis: the work appeal) and a section-work image (basis: factKey workLocation), each with a concrete description of the WORK being done (the actual tasks and objects from the work line). Never describe a building or workplace exterior.",
     "- The work appeal comes first: the reader must know what job this is before any condition.",
@@ -75,6 +76,33 @@ export function validateDraft(planning, facts, original) {
   return { ok: errors.length === 0, errors };
 }
 
+// Deterministic part of the confirmed appeal order (the user's
+// separation, 2026-11-04): the appeals open with the work itself.
+// The work appeal is the one the key-visual spec is based on (or,
+// failing that, the appeal carrying the workContent fact). Only
+// that move is mechanical; the rest of the sequence (advantage
+// next, then the rest) is the drafter's and the review's judgement.
+// firstCheckKeys are NOT touched: they govern chips and cards.
+export function orderAppealsWorkFirst(planning) {
+  const appeals = Array.isArray(planning?.appeals) ? planning.appeals : [];
+  if (appeals.length === 0) return { planning, reordered: false };
+  const kv = (Array.isArray(planning.imageSpecs) ? planning.imageSpecs : []).find((sp) => sp?.role === "key-visual");
+  let idx = kv?.basis?.appealId ? appeals.findIndex((a) => a.id === kv.basis.appealId) : -1;
+  if (idx === -1) idx = appeals.findIndex((a) => (a?.factKeys ?? []).includes("workContent"));
+  if (idx <= 0) return { planning, reordered: false };
+  const sorted = [appeals[idx], ...appeals.filter((_, i) => i !== idx)];
+  const idMap = new Map();
+  const renumbered = sorted.map((a, i) => {
+    const newId = `A${i + 1}`;
+    if (a?.id) idMap.set(a.id, newId);
+    return { ...a, id: newId };
+  });
+  const imageSpecs = (Array.isArray(planning.imageSpecs) ? planning.imageSpecs : []).map((sp) => (
+    sp?.basis?.appealId && idMap.has(sp.basis.appealId) ? { ...sp, basis: { ...sp.basis, appealId: idMap.get(sp.basis.appealId) } } : sp
+  ));
+  return { planning: { ...planning, appeals: renumbered, imageSpecs }, reordered: true };
+}
+
 export async function runDraftPlanning({ root, originalFile, factsFile, hints, callModel, feedbackText }) {
   const original = loadJson(path.join(root, originalFile));
   const facts = loadJson(path.join(root, factsFile));
@@ -86,9 +114,11 @@ export async function runDraftPlanning({ root, originalFile, factsFile, hints, c
   let parseError = null;
   try { planning = JSON.parse(res.content); } catch (e) { parseError = String(e?.message ?? e); }
   const validation = planning ? validateDraft(planning, facts, original) : { ok: false, errors: [`draft was not JSON: ${parseError}`] };
+  const ordered = validation.ok ? orderAppealsWorkFirst(planning) : { planning: null, reordered: false };
   return {
     status: validation.ok ? "drafted" : "invalid",
-    planning: validation.ok ? planning : null,
+    planning: validation.ok ? ordered.planning : null,
+    appealsReordered: ordered.reordered,
     rawPlanning: planning,
     validation,
     model: res.model ?? MODEL,

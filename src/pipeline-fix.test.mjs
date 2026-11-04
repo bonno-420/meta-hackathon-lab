@@ -335,6 +335,24 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
   expect("derive-no-previous", dNone.colorCheck, null);
 }
 
+// ---------- drafted planning: appeals open with the work; first checks stay furniture (user's separation, 2026-11-04) ----------
+{
+  const { orderAppealsWorkFirst } = await import("./draft-planning.mjs");
+  const draft = { firstCheckKeys: ["salaryHourly", "workHours"], appeals: [
+    { id: "A1", text: "wage", factKeys: ["salaryHourly"] },
+    { id: "A2", text: "hours", factKeys: ["workHours"] },
+    { id: "A3", text: "the work", factKeys: ["workContent"] },
+  ], imageSpecs: [{ id: "key-visual", role: "key-visual", basis: { appealId: "A3" } }] };
+  const { planning: ordered, reordered } = orderAppealsWorkFirst(draft);
+  expectTrue("workfirst-reordered", reordered);
+  expect("workfirst-first-is-work", ordered.appeals[0].text, "the work");
+  expect("workfirst-renumbered", ordered.appeals[0].id, "A1");
+  expect("workfirst-kv-remapped", ordered.imageSpecs[0].basis.appealId, "A1");
+  expect("workfirst-firstchecks-untouched", JSON.stringify(ordered.firstCheckKeys), JSON.stringify(["salaryHourly", "workHours"]));
+  const already = { appeals: [{ id: "A1", text: "the work", factKeys: ["workContent"] }, { id: "A2", text: "wage", factKeys: ["salaryHourly"] }], imageSpecs: [] };
+  expectTrue("workfirst-stable-when-first", orderAppealsWorkFirst(already).reordered === false);
+}
+
 // ---------- color rule refinement: similar conditions may be similar; unconditional sameness may not (user, 2026-11-04) ----------
 {
   const { deriveLpDesign } = await import("./lp-design.mjs");
