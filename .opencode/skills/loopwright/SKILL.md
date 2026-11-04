@@ -16,6 +16,7 @@ which drives `src/run-demo.mjs`. Follow its stops:
 - The pipeline stops at human checkpoints (approval, key visual, text, assembled LP) and at deterministic gates. A stop is a RESULT: report where and why it stopped, and what the next human step is (make-lp prints it).
 - NEVER assemble a page by hand, hand-write the copy, adapt the checks, or generate images outside the pipeline to "complete" an LP. A hand-made page under the Loopwright name is a defect, not a deliverable.
 - NEVER fabricate an approval or a confirmation. Those are human acts; if one is missing, stop and report that it is missing.
+- When a human runs make-lp in a terminal, make-lp itself opens a preview of the artifact at each checkpoint and asks a selectable question; the human answers there, make-lp writes the record of that answer and continues. Do not ask the human to create record files or run side commands.
 - If the posting file or a required key is missing, stop and report exactly what is missing.
 
 Report at the end: the run directory, the pipeline's own status/stop reason, and the checks the pipeline itself recorded — not a substitute summary.

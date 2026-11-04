@@ -24,3 +24,4 @@
 | 20 | gap-fill (a)(c) と F1 の実装・テスト、実走 1a/1b（1枚画 checkpoint 停止）、1枚画の企画適合検証 | `loops/loop-020/run-record.md`（2026-11-04。本人の不適合判定と設計差し戻しを記録。走行 2 は停止中） |
 | 21 | パイプライン修正 F1–F10 の実施と監査（C1–C11 合格） | `loops/loop-021/run-record.md`、`loops/loop-021/audit-record.md`（2026-11-03） |
 | 22 | 実走確認 L1–L3（Baseten）と本人側監査の修正対応 F-a–F-d | `loops/loop-022/run-record.md`（2026-11-03、進行中） |
+| 29 | チェックポイントの対話化（プレビュー＋選択式の質問、記録は道具が回答から作成） | `loops/loop-029/record.md`（2026-11-04。Sorano の承認手順への本人の訂正3段を受けて make-lp を改修、実走で検証） |
