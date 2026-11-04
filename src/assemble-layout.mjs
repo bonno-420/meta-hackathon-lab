@@ -16,7 +16,7 @@
 
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { FACT_LABEL, FACT_LABEL_EN } from "./page-layout.mjs";
+import { FACT_LABEL, FACT_LABEL_EN, monthlyIncomeExample } from "./page-layout.mjs";
 
 function resolveRoot(root, rel) {
   return path.isAbsolute(rel) ? rel : path.join(root, rel);
@@ -267,7 +267,15 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
   }
   if (statedFacts.length > 0 || lineRows.length > 0) {
     const labels = layout?.language === "en" ? FACT_LABEL_EN : FACT_LABEL;
+    // The monthly income example (the user's pay-display decision,
+    // 2026-11-04): for hourly/daily/annual pay, the table also
+    // shows the approximate monthly total computed from the stated
+    // materials, with the note that overtime, night work and
+    // allowances are not included.
+    const ex = monthlyIncomeExample(facts);
+    const exRow = ex ? `<tr><th>${layout?.language === "en" ? "Monthly income example" : "月収例"}</th><td>約${ex.amount.toLocaleString("en-US")}円<br><span class="fact-note">${layout?.language === "en" ? "Estimated from the stated pay, hours and assumed working days. Overtime, night work and allowances are not included." : "※記載の給与・時間・想定日数からの試算です。残業・夜勤・各種手当は含みません"}</span></td></tr>` : "";
     const rows = statedFacts.map((i) => `<tr><th>${esc(labels[i.key] ?? i.key)}</th><td>${esc(typeof i.value === "object" ? JSON.stringify(i.value) : i.value)}</td></tr>`).join("")
+      + exRow
       + lineRows.map((r) => `<tr><th>${esc(r.label)}</th><td>${esc(r.value)}</td></tr>`).join("");
     const table = `<section class="details"><h2 class="details-title">${layout?.language === "en" ? "Job details" : "募集要項"}</h2><table class="fact-table">${rows}</table></section>\n`;
     const ci = body.lastIndexOf(`<footer class="cta">`);
@@ -315,6 +323,7 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
 .fact-table{width:100%;border-collapse:collapse;font-size:14px}
 .fact-table th,.fact-table td{border:1px solid #d8dee6;padding:8px 10px;text-align:left;vertical-align:top;line-height:1.6}
 .fact-table th{width:34%;background:#f4f6f9;font-weight:600}
+.fact-note{font-size:12px;color:#5a6572}
 .clear{clear:both}
 .cta{background:${pal.titleBg};padding:28px 24px 36px;text-align:center;margin-top:32px}
 .cta-button{background:${pal.accent};color:#fff;border:none;border-radius:999px;padding:15px 44px;font-size:16px;min-width:56%}

@@ -277,6 +277,79 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
   expectTrue("assembly-work-band-not-omitted", !(builtJ.assignments.omittedBands ?? []).includes("section-work"));
 }
 
+// ---------- promoted gates G-A / G-B / G-C (user approval, 2026-11-04) ----------
+{
+  const { checkCompletion } = await import("./run-demo.mjs");
+  const { checkPage } = await import("./pagecheck.mjs");
+  const { checkImageDesign } = await import("./image-design.mjs");
+  const rootG = makeScratch();
+  mkdirSync(path.join(rootG, "out"), { recursive: true });
+  const factsG = { items: [{ key: "salaryHourly", status: "stated", value: "1,400円", normalized: 1400, sourceLine: "L04" }] };
+  const originalG = { lines: [{ id: "L06", text: "Days: Monday to Friday" }] };
+  const genG = { sentences: [{ text: "仕事の文です。", factKeys: [], sourceLines: ["L01"] }] };
+  writeFileSync(path.join(rootG, "out/lp.html"), `<html><body><p>仕事の文です。</p></body></html>`);
+  const noTable = checkCompletion({ root: rootG, generation: genG, imageFiles: [], lpFile: "out/lp.html", grounding: { pass: true }, pagecheck: null, facts: factsG, original: originalG });
+  expectTrue("gate-ga-c7-fails-without-table", noTable.checks.some((c) => c.id === "C7" && !c.pass));
+  writeFileSync(path.join(rootG, "out/lp.html"), `<html><body><p>仕事の文です。</p><table class="fact-table"><tr><th>時給</th><td>1,400円</td></tr><tr><th>Days</th><td>Monday to Friday</td></tr></table></body></html>`);
+  const withTable = checkCompletion({ root: rootG, generation: genG, imageFiles: [], lpFile: "out/lp.html", grounding: { pass: true }, pagecheck: null, facts: factsG, original: originalG });
+  expectTrue("gate-ga-c7-passes-with-complete-table", withTable.checks.some((c) => c.id === "C7" && c.pass));
+  const badHeadline = checkPage(`<html><body><section><div class="title-block"><p class="lp-sentence">Employment type is Contract, 6 months.</p></div></section></body></html>`);
+  expectTrue("gate-gb-headline-condition-fails", !badHeadline.pass && badHeadline.summary.headlineHits >= 1);
+  const goodHeadline = checkPage(`<html><body><section><div class="title-block"><p class="lp-sentence">Assembling small wooden frames in a small workshop in Taito City, Tokyo.</p></div></section></body></html>`);
+  expectTrue("gate-gb-headline-work-passes", goodHeadline.summary.headlineHits === 0);
+  const designNoCov = { images: [{ id: "hero", kind: "hero", purpose: "p", subject: "s", composition: "c", depiction: "photo", placement: { area: "hero", size: "large" }, prompt: "x" }], noImage: [] };
+  const covCheck = checkImageDesign(designNoCov, { appeals: [] });
+  expectTrue("gate-gc-missing-coverage-checks-fail", !covCheck.pass && covCheck.failures.some((f) => f.includes("coverageChecks")));
+}
+
+// ---------- pay display: the monthly income example (user decision, 2026-11-04) ----------
+{
+  const { monthlyIncomeExample } = await import("./page-layout.mjs");
+  const mkFacts = (items) => ({ items: items.map(([key, value, normalized]) => ({ key, status: "stated", value, normalized, sourceLine: "L01" })) });
+  const hourly = monthlyIncomeExample(mkFacts([["salaryHourly", "時給1,350円", 1350], ["actualHours", "8時間", 8], ["monthlyDaysAssumption", "月20日勤務", null]]));
+  expect("pay-example-hourly", hourly?.amount, 216000);
+  const annual = monthlyIncomeExample(mkFacts([["salaryAnnual", "年俸246万円", 2460000]]));
+  expect("pay-example-annual", annual?.amount, 205000);
+  const noDays = monthlyIncomeExample({ items: [
+    { key: "salaryHourly", status: "stated", value: "時給1,350円", normalized: 1350, sourceLine: "L01" },
+    { key: "actualHours", status: "stated", value: "8時間", normalized: 8, sourceLine: "L01" },
+    { key: "monthlyDaysAssumption", status: "unstated", value: null, normalized: null, sourceLine: null },
+  ] });
+  expect("pay-example-no-assumption-no-example", noDays, null);
+  const factsPay = { items: [
+    { key: "salaryHourly", status: "stated", value: "時給1,350円", normalized: 1350, sourceLine: "L04" },
+    { key: "actualHours", status: "stated", value: "実働8時間", normalized: 8, sourceLine: "L04" },
+    { key: "monthlyDaysAssumption", status: "stated", value: "月20日勤務", normalized: null, sourceLine: "L04" },
+  ] };
+  const originalPay = { lines: [{ id: "L04", text: "給与は時給1,350円、実働8時間、月20日勤務。" }] };
+  const genExample = { sentences: [{ text: "時給1,350円、実働8時間、月20日勤務の試算で、月収例は約216,000円です。※残業・夜勤・各種手当は含みません", factKeys: ["salaryHourly", "actualHours", "monthlyDaysAssumption"], sourceLines: ["L04"] }] };
+  expectTrue("pay-example-grounded", checkGrounding(genExample, factsPay, originalPay).pass);
+  const genWrong = { sentences: [{ text: "時給1,350円、実働8時間、月20日勤務の試算で、月収例は約250,000円です", factKeys: ["salaryHourly", "actualHours", "monthlyDaysAssumption"], sourceLines: ["L04"] }] };
+  expectTrue("pay-example-wrong-amount-fails", !checkGrounding(genWrong, factsPay, originalPay).pass);
+}
+
+// ---------- grounding: yen amounts in cited materials are grounded (FICT-J03) ----------
+{
+  const { checkGrounding } = await import("./generate.mjs");
+  const factsJ = { items: [
+    { key: "housing", status: "stated", value: "独身寮があります（月額15,000円）", normalized: null, sourceLine: "L09" },
+    { key: "salaryHourly", status: "unstated", value: null, normalized: null, sourceLine: null },
+  ] };
+  const originalJ = { lines: [
+    { id: "L04", text: "給与: 月給205,000円から。残業代は別途支給します。" },
+    { id: "L09", text: "住宅: 独身寮があります（月額15,000円）" },
+  ] };
+  const okGen = { sentences: [
+    { text: "月給は205,000円からです。", factKeys: [], sourceLines: ["L04"] },
+    { text: "独身寮は月額15,000円です。", factKeys: ["housing"], sourceLines: ["L09"] },
+  ] };
+  expectTrue("grounding-yen-in-cited-materials-passes", checkGrounding(okGen, factsJ, originalJ).pass);
+  const badGen = { sentences: [
+    { text: "月給は300,000円です。", factKeys: [], sourceLines: ["L04"] },
+  ] };
+  expectTrue("grounding-yen-from-nowhere-fails", !checkGrounding(badGen, factsJ, originalJ).pass);
+}
+
 // ---------- assembly: the title is the job itself; every image band carries text (run25 verdict) ----------
 {
   const { assembleFromLayout } = await import("./assemble-layout.mjs");
@@ -717,12 +790,18 @@ const runB1 = await runDemo(
 const stateB = JSON.parse(readFileSync(path.join(scratchB, "out/run-state.json"), "utf8"));
 const confB = { file: stateB.keyVisual.image.file, sha256: stateB.keyVisual.image.sha256, confirmer: "本人", confirmedAt: "2026-11-03" };
 let assembleAttempts = 0;
+const { assembleFromLayout: assembleFromLayoutForStub } = await import("./assemble-layout.mjs");
 const flakyAssemble = async (args) => {
   assembleAttempts += 1;
   if (assembleAttempts < 3) throw new Error("stub write failure");
-  const built = assembleLP({ root: args.root, generation: args.generation, images: args.images, lpDir: path.dirname(args.lpFile), heroChips: args.heroChips });
+  // Mirror the runner's default assembly: with a confirmed layout
+  // the page is built from it (the job-details table included, C7);
+  // the legacy builder is only the no-layout fallback.
+  const built = args.layout
+    ? assembleFromLayoutForStub({ root: args.root, generation: args.generation, images: args.images, lpDir: path.dirname(args.lpFile), heroChips: args.heroChips, layout: args.layout, planning: args.planning, facts: args.facts })
+    : assembleLP({ root: args.root, generation: args.generation, images: args.images, lpDir: path.dirname(args.lpFile), heroChips: args.heroChips });
   writeFileSync(path.join(args.root, args.lpFile), built.html, "utf8");
-  return { file: args.lpFile, referenced: built.referenced, skipped: built.skipped };
+  return { file: args.lpFile, referenced: built.referenced, skipped: built.skipped, assignments: built.assignments ?? null };
 };
 const runB2 = await runDemo(
   { root: scratchB, ...REAL, checkpoints: "light", resumeState: stateB, kvConfirmation: confB },

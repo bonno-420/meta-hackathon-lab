@@ -15,7 +15,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { MODEL, BASE_URL, MAX_TOKENS, RATES_KNOWN, checkGenerationInput, checkGrounding } from "./generate.mjs";
 import { intentFromPlanning, sha256Text } from "./planning.mjs";
 
-export const PLANNING_PROMPT_VERSION = "lp-generate-v8-planning";
+export const PLANNING_PROMPT_VERSION = "lp-generate-v9-planning";
 
 // Planning-path messages. The materials are the approved FACTs AND
 // the original posting's lines: items the FACT schema does not carry
@@ -38,6 +38,7 @@ export function buildPlanningGenerationMessages(facts, original, planning, inten
     "Factual rules:",
     "- Use only what the FACT items and the original's lines state. Never add information that is in neither.",
     "- Keep numbers, times, periods and conditions exactly as written (for example 時給1,350円, 月上限15,000円, 07:00〜16:00, 休憩60分, 契約期間3か月). Do not convert, round, or rephrase quantities and conditions.",
+    "- Pay display (binding; the user's decision, 2026-11-04): state the pay in the form the posting states it — an hourly wage as an hourly wage, a monthly salary as a monthly salary. For hourly, daily or annual pay, ALSO write one sentence giving the monthly income example so the reader can grasp the approximate monthly total: hourly rate × actual hours × the stated monthly days assumption (daily: rate × days; annual: salary ÷ 12), citing the pay key, actualHours and monthlyDaysAssumption, marking it as an estimate (試算), and noting in that sentence that overtime, night work and allowances are not included (※残業・夜勤・各種手当は含みません). Write the example only when every input is stated; never assume working days the materials do not state.",
     "- Content the FACT schema does not carry (the work content, holidays, qualifications) is stated in the original's lines: state it as the original states it, citing the line in sourceLines.",
     "- Items listed as unstated have no value. Either omit them, or write a sentence that states only that the item is not stated (未記載), which may close with an inquiry invitation (お気軽にお問い合わせください). Never assert a value for them.",
     "- Never invent a contact detail or application method (no phone, email, URL, form, or steps).",

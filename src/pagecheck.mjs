@@ -16,7 +16,7 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-export const PAGECHECK_VERSION = "src-pagecheck-v2";
+export const PAGECHECK_VERSION = "src-pagecheck-v3";
 export const DICTS_VERSION = "loop16-dicts-2026-11-02";
 
 const DEFAULT_VERIFICATION_DICT = [
@@ -285,6 +285,25 @@ export function checkPage(html, { dicts } = {}) {
     const v = m[1];
     if (/(appeal|section|key-visual)-[A-Za-z0-9]/i.test(v) || v === "section-work") attributeExposure.push({ attribute: "alt", value: v });
   }
+  // Headline scan (gate promotion G-B, approved by the user,
+  // 2026-11-04): the headline (the title block's sentence) must be
+  // the work itself in a short form — not a conditions-only sentence
+  // (employment type / contract period) and not over the length
+  // guide (50 chars for Japanese, 120 for English). The judgement
+  // review also checks this; this is the deterministic floor.
+  const headlineHits = [];
+  const titleMatch = String(html).match(/<div class="title-block">[\s\S]*?<p class="lp-sentence"[^>]*>([\s\S]*?)<\/p>/);
+  const headlineText = titleMatch ? titleMatch[1].replace(/<[^>]+>/g, "").trim() : null;
+  if (headlineText !== null) {
+    if (/(雇用形態は|契約期間は|雇用形態・|Employment type is|The employment type|Contract period is)/.test(headlineText)) {
+      headlineHits.push({ issue: "headline is a conditions-only sentence", headline: headlineText });
+    }
+    const isJa = /[぀-ヿ一-鿿]/.test(headlineText);
+    const limit = isJa ? 50 : 120;
+    if (headlineText.length > limit) {
+      headlineHits.push({ issue: `headline is over the length guide (${headlineText.length} > ${limit})`, headline: headlineText });
+    }
+  }
   const summary = {
     duplicateGroups: duplication.length,
     verificationGroups: verificationPhrases.length,
@@ -293,8 +312,9 @@ export function checkPage(html, { dicts } = {}) {
     recordExposureHits: recordExposure.reduce((s, h) => s + h.count, 0),
     headingMismatches: heading.mismatches.length,
     attributeExposureHits: attributeExposure.length,
+    headlineHits: headlineHits.length,
   };
-  const pass = summary.duplicateGroups === 0 && summary.verificationHits === 0 && summary.recordExposureHits === 0 && summary.headingMismatches === 0 && summary.attributeExposureHits === 0;
+  const pass = summary.duplicateGroups === 0 && summary.verificationHits === 0 && summary.recordExposureHits === 0 && summary.headingMismatches === 0 && summary.attributeExposureHits === 0 && summary.headlineHits === 0;
   return {
     pass,
     version: PAGECHECK_VERSION,
@@ -305,6 +325,7 @@ export function checkPage(html, { dicts } = {}) {
     verificationPhrases,
     recordExposure,
     attributeExposure,
+    headline: { text: headlineText, hits: headlineHits },
     headingMismatch: heading.mismatches,
     allSections: heading.allSections,
   };

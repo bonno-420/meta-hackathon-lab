@@ -35,7 +35,7 @@ function argValue(flag) {
   const i = argv.indexOf(flag);
   return i >= 0 && i + 1 < argv.length ? argv[i + 1] : null;
 }
-const PROMPT_VERSION = argValue("--prompt") === "v1.1" ? "fact-extract-v1.1" : "fact-extract-v1";
+const PROMPT_VERSION = argValue("--prompt") === "v1.2" ? "fact-extract-v1.2" : argValue("--prompt") === "v1.1" ? "fact-extract-v1.1" : "fact-extract-v1";
 // Input selection (fix F1): defaults preserve the FICT-J01 behaviour
 // exactly. --original <file>, --input-id <id> and --input-version <v>
 // let the same extraction run against a pinned posting text artifact
@@ -56,7 +56,8 @@ const outDir = outDirArg
 // schema-completeness check (gate candidate, steps v1 step 1 item 3).
 const EXPECTED_KEYS = [
   "employer", "jobId", "workLocation", "employmentType", "contractPeriod",
-  "renewal", "salaryHourly", "monthlyIncomeGuarantee", "workHours",
+  "renewal", "salaryHourly", "monthlyIncomeGuarantee", "monthlySalary",
+  "salaryDaily", "salaryAnnual", "workHours",
   "breakMinutes", "actualHours", "monthlyDaysAssumption", "transport",
   "transportCap", "housing",
 ];
@@ -144,7 +145,8 @@ const E02_SUMMARY =
   "ソラノ輪具研究所（FICT-J01）の概要: 時給1,700円。勤務時間は09:00〜18:00、休憩60分、実働8時間。交通費は実費支給、月上限10,000円。勤務地は架空の青空実験区A棟。雇用形態は有期契約社員、契約期間は3か月。";
 
 export function buildMessages(original) {
-  const isV11 = PROMPT_VERSION === "fact-extract-v1.1";
+  const isV11 = PROMPT_VERSION === "fact-extract-v1.1" || PROMPT_VERSION === "fact-extract-v1.2";
+  const isV12 = PROMPT_VERSION === "fact-extract-v1.2";
   const system = [
     "You extract FACTs from a fictional job-posting original.",
     "Rules: use only what the original states. Never invent or complete unstated items.",
@@ -157,8 +159,20 @@ export function buildMessages(original) {
     isV11
       ? 'Schema: {"items":[{"key":"...","status":"stated|unstated","value":"string or null","normalized":null,"sourceLine":"L01","quote":"..."}]}'
       : 'Schema: {"items":[{"key":"...","status":"stated|unstated","value":"...","normalized":null,"sourceLine":"L01","quote":"..."}]}',
-    "Keys: employer, jobId, workLocation, employmentType, contractPeriod, renewal, salaryHourly, monthlyIncomeGuarantee, workHours, breakMinutes, actualHours, monthlyDaysAssumption, transport, transportCap, housing.",
-    "normalized: for salaryHourly and transportCap use the integer yen amount; for breakMinutes and actualHours use numbers; otherwise null.",
+    isV12
+      ? "Keys: employer, jobId, workLocation, employmentType, contractPeriod, renewal, salaryHourly, monthlyIncomeGuarantee, monthlySalary, salaryDaily, salaryAnnual, workHours, breakMinutes, actualHours, monthlyDaysAssumption, transport, transportCap, housing."
+      : "Keys: employer, jobId, workLocation, employmentType, contractPeriod, renewal, salaryHourly, monthlyIncomeGuarantee, workHours, breakMinutes, actualHours, monthlyDaysAssumption, transport, transportCap, housing.",
+    // fact-extract-v1.2 (the user's pay-display decision, 2026-11-04):
+    // pay is recorded in the form the posting states it. Before this,
+    // a monthly salary had no key and the extraction flipped between
+    // runs on monthlyIncomeGuarantee (FICT-J03, measured three times).
+    ...(isV12 ? [
+      "Pay keys: record the pay in the form the posting states it — salaryHourly for an hourly wage (時給), salaryDaily for a daily wage (日給), monthlySalary for a monthly salary (月給), salaryAnnual for an annual salary (年俸). Only the stated form is stated; the other pay keys are unstated.",
+      "monthlyIncomeGuarantee is ONLY an explicitly guaranteed minimum monthly income. A starting monthly salary is not a guarantee: record it as monthlySalary, never as monthlyIncomeGuarantee.",
+    ] : []),
+    isV12
+      ? "normalized: for salaryHourly, monthlySalary, salaryDaily, salaryAnnual and transportCap use the integer yen amount; for breakMinutes and actualHours use numbers; otherwise null."
+      : "normalized: for salaryHourly and transportCap use the integer yen amount; for breakMinutes and actualHours use numbers; otherwise null.",
   ].join("\n");
   const user = `Original ${INPUT_ID} ${INPUT_VERSION}:\n${originalText(original)}\n\nExtract FACTs as JSON per schema.`;
   return [
@@ -187,6 +201,9 @@ export function fixtureFacts() {
       { key: "renewal", status: "unstated", value: null, normalized: null, sourceLine: "L02", quote: "更新の有無は未記載。" },
       { key: "salaryHourly", status: "stated", value: "時給1,500円", normalized: 1500, sourceLine: "L03", quote: "給与は時給1,500円。" },
       { key: "monthlyIncomeGuarantee", status: "stated", value: "保証しない", normalized: null, sourceLine: "L03", quote: "月収は保証しない。" },
+      { key: "monthlySalary", status: "unstated", value: null, normalized: null, sourceLine: null, quote: null },
+      { key: "salaryDaily", status: "unstated", value: null, normalized: null, sourceLine: null, quote: null },
+      { key: "salaryAnnual", status: "unstated", value: null, normalized: null, sourceLine: null, quote: null },
       { key: "workHours", status: "stated", value: "09:00〜18:00", normalized: null, sourceLine: "L04", quote: "勤務時間は09:00〜18:00" },
       { key: "breakMinutes", status: "stated", value: "60分", normalized: 60, sourceLine: "L04", quote: "休憩60分" },
       { key: "actualHours", status: "stated", value: "8時間", normalized: 8, sourceLine: "L04", quote: "実働8時間" },

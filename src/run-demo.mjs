@@ -68,6 +68,14 @@ export function compareFactSets(candidate, fixed) {
     const f = fix.get(key);
     const c = cand.get(key);
     if (!f || !c) {
+      // A key absent on one side and present-but-unstated on the
+      // other carries the same information (none). Fact sets written
+      // before a key existed (the pay keys added 2026-11-04) must
+      // keep comparing equal to new extractions that list the key
+      // as unstated; a stated value appearing or disappearing is
+      // still a substantive diff.
+      const present = f ?? c;
+      if (present && present.status === "unstated") continue;
       diffs.push({ key, issue: !f ? "candidate has an extra key" : "candidate is missing the key" });
       continue;
     }
@@ -185,7 +193,7 @@ ${body}</main>
 // exists and contains both text and image, grounding re-run passes.
 // Image meaning is out of scope and is never judged here (N3: the note
 // below states this for the record reader).
-export function checkCompletion({ root, generation, imageFiles, lpFile, grounding, pagecheck, appealCoverage, omittedImageFiles }) {
+export function checkCompletion({ root, generation, imageFiles, lpFile, grounding, pagecheck, appealCoverage, omittedImageFiles, facts, original }) {
   const checks = [];
   let lpHtml = null;
   try { lpHtml = readFileSync(resolveRoot(root, lpFile), "utf8"); }
@@ -254,8 +262,8 @@ export function checkCompletion({ root, generation, imageFiles, lpFile, groundin
       id: "C5",
       pass: c5Pass,
       detail: c5Pass
-        ? `ページ品質の決定的チェックが pass（重複 ${s.duplicateGroups ?? 0}、検証側定型文 ${s.verificationHits ?? 0}、記録ラベル ${s.recordExposureHits ?? 0}、見出しずれ ${s.headingMismatches ?? 0}）`
-        : `ページ品質の決定的チェックが fail（重複 ${s.duplicateGroups ?? 0} 件、検証側定型文 ${s.verificationHits ?? 0} 件、記録ラベル露出 ${s.recordExposureHits ?? 0} 件、見出しずれ ${s.headingMismatches ?? 0} 件）`,
+        ? `ページ品質の決定的チェックが pass（重複 ${s.duplicateGroups ?? 0}、検証側定型文 ${s.verificationHits ?? 0}、記録ラベル ${s.recordExposureHits ?? 0}、見出しずれ ${s.headingMismatches ?? 0}、見出しスキャン ${s.headlineHits ?? 0}）`
+        : `ページ品質の決定的チェックが fail（重複 ${s.duplicateGroups ?? 0} 件、検証側定型文 ${s.verificationHits ?? 0} 件、記録ラベル露出 ${s.recordExposureHits ?? 0} 件、見出しずれ ${s.headingMismatches ?? 0} 件、見出しスキャン ${s.headlineHits ?? 0} 件）`,
       pagecheck: { version: pagecheck.version ?? null, dictsVersion: pagecheck.dictsVersion ?? null, summary: s },
     });
   }
@@ -271,6 +279,35 @@ export function checkCompletion({ root, generation, imageFiles, lpFile, groundin
       detail: c6Pass
         ? `企画の訴求 ${appealCoverage.length} 件すべてに対応する文がある`
         : `対応する文がない訴求がある（${uncovered.map((c) => c.appealId).join("、")}）: 原本にある大事なことがページに落ちている`,
+    });
+  }
+  // C7 (gate promotion G-A, approved by the user, 2026-11-04): the
+  // job-details table must let a reader grasp the whole posting on
+  // its own — every stated fact's value and the line-only essentials
+  // (the work itself, days off, requirements) must be in the table.
+  if (facts && Array.isArray(facts.items)) {
+    const escH = (s) => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+    const tableMatch = lpHtml ? lpHtml.match(/<table class="fact-table">([\s\S]*?)<\/table>/) : null;
+    const table = tableMatch ? tableMatch[1] : "";
+    const missing = [];
+    for (const i of facts.items) {
+      if (i && i.status === "stated" && i.value !== null && i.value !== undefined && i.value !== "") {
+        const v = typeof i.value === "object" ? JSON.stringify(i.value) : String(i.value);
+        if (!table.includes(escH(v))) missing.push(i.key);
+      }
+    }
+    const LINE_ROW_RE_C7 = /^(仕事内容|仕事|休日|応募資格|資格|Work|Duties|Job description|Days off|Days|Requirements|Qualifications)\s*[:：]\s*(.+)$/i;
+    for (const l of original?.lines ?? []) {
+      const m = LINE_ROW_RE_C7.exec(l?.text ?? "");
+      if (m && !table.includes(escH(m[2]))) missing.push(`line:${l.id}`);
+    }
+    const c7Pass = tableMatch !== null && missing.length === 0;
+    checks.push({
+      id: "C7",
+      pass: c7Pass,
+      detail: c7Pass
+        ? "募集要項の表に全 stated 事実と行の必須項目が入っている"
+        : `募集要項の表に欠けている項目がある（${missing.join("、")}）`,
     });
   }
   const failures = checks.filter((c) => !c.pass).map((c) => ({ check: c.id, detail: c.detail }));
@@ -1127,6 +1164,10 @@ export async function runDemo(options, deps = {}) {
       const appealCoverage = pipelineMode && planning && Array.isArray(planning.appeals)
         ? planning.appeals.map((a) => ({ appealId: a.id, sentenceIdxs: matchAppealSentences(generationRun.generation, planning.appeals).byAppeal.get(a.id) ?? [] }))
         : undefined;
+      let factsForCompletion = null;
+      let originalForCompletion = null;
+      try { factsForCompletion = loadJson(resolveRoot(root, factsFile)); } catch { factsForCompletion = null; }
+      try { originalForCompletion = loadJson(resolveRoot(root, originalFile)); } catch { originalForCompletion = null; }
       const completion = checkCompletion({
         root,
         generation: generationRun.generation,
@@ -1136,6 +1177,8 @@ export async function runDemo(options, deps = {}) {
         pagecheck,
         appealCoverage,
         omittedImageFiles: assembly?.assignments?.omittedImageFiles ?? stages.lpAssembly?.omittedImageFiles ?? [],
+        facts: pipelineMode ? factsForCompletion : null,
+        original: pipelineMode ? originalForCompletion : null,
       });
       stages.verification.completion = completion;
       if (pipelineMode) {
@@ -1208,7 +1251,11 @@ export async function runDemo(options, deps = {}) {
             let pagecheck2 = null;
             try { pagecheck2 = checkPage(readFileSync(resolveRoot(root, lpFile), "utf8")); } catch { pagecheck2 = null; }
             const coverage2 = planning && Array.isArray(planning.appeals) ? planning.appeals.map((a) => ({ appealId: a.id, sentenceIdxs: matchAppealSentences(generationRun.generation, planning.appeals).byAppeal.get(a.id) ?? [] })) : undefined;
-            const completion2 = checkCompletion({ root, generation: generationRun.generation, imageFiles: expectedImageFiles ?? (imageRun.images ?? []).map((i) => i.file), lpFile, grounding: regen.grounding, pagecheck: pagecheck2, appealCoverage: coverage2, omittedImageFiles: rebuilt.assignments?.omittedImageFiles ?? [] });
+            let factsForCompletion2 = null;
+            let originalForCompletion2 = null;
+            try { factsForCompletion2 = loadJson(resolveRoot(root, factsFile)); } catch { factsForCompletion2 = null; }
+            try { originalForCompletion2 = loadJson(resolveRoot(root, originalFile)); } catch { originalForCompletion2 = null; }
+            const completion2 = checkCompletion({ root, generation: generationRun.generation, imageFiles: expectedImageFiles ?? (imageRun.images ?? []).map((i) => i.file), lpFile, grounding: regen.grounding, pagecheck: pagecheck2, appealCoverage: coverage2, omittedImageFiles: rebuilt.assignments?.omittedImageFiles ?? [], facts: factsForCompletion2, original: originalForCompletion2 });
             stages.verification.completion = completion2;
             if (!completion2.pass) {
               stop("verification", completion2.reason);
@@ -1402,7 +1449,7 @@ export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesR
       const liveFile = path.join(root, extractionOutDir, "live-run.json");
       removeIfExists(liveFile);
       const ran = await textRunner([
-        path.join(here, "extract-and-check.mjs"), "--prompt", "v1.1", "--out-dir", extractionOutDir,
+        path.join(here, "extract-and-check.mjs"), "--prompt", "v1.2", "--out-dir", extractionOutDir,
         ...(origFile ? ["--original", origFile] : []),
         ...(inputId ? ["--input-id", inputId] : []),
         ...(inputVersion ? ["--input-version", inputVersion] : []),

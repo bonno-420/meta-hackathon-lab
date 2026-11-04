@@ -101,7 +101,7 @@ export function buildGenerationMessages(facts) {
     "- Write plain descriptive sentences only. No greetings, appeals, evaluations, or embellishment.",
     "- For every sentence, list the FACT keys it is based on (factKeys) and the original line IDs (sourceLines). A sentence must cite at least one key and at least one line, and must cite every key and line it uses.",
     "- Keep numbers, times, periods and conditions exactly as written in the FACT values (for example 時給1,500円, 月上限10,000円, 09:00〜18:00, 休憩60分, 実働8時間, 契約期間3か月). Do not convert, round, or rephrase quantities and conditions.",
-    "- monthlyDaysAssumption is a trial-calculation assumption (試算用の仮定): if you mention it, the sentence must say it is an assumption, and you must never present a monthly income figure. monthlyIncomeGuarantee says the monthly income is not guaranteed (保証しない): keep it a non-guarantee.",
+    "- monthlyDaysAssumption is a trial-calculation assumption (試算用の仮定): if you mention it, the sentence must say it is an assumption. A monthly income figure may be presented only as that marked estimate — rate × actual hours × the assumed days, with the note that overtime, night work and allowances are not included (※残業・夜勤・各種手当は含みません) — and never as a guaranteed amount (the user's pay-display decision, 2026-11-04). monthlyIncomeGuarantee says the monthly income is not guaranteed (保証しない): keep it a non-guarantee.",
     "- Items listed as unstated have no value. Either omit them, or write a sentence that states only that the item is not stated (未記載), citing its key and line. Never assert a value for them (no 更新あり/なし, no 寮あり/なし).",
     "- Output JSON only, no markdown fences.",
     'Schema: {"sentences":[{"text":"...","factKeys":["..."],"sourceLines":["L01"]}]}',
@@ -161,6 +161,20 @@ export function checkGrounding(generation, facts, original) {
       yenAmounts.add(i.normalized);
     }
   }
+  // Amounts that appear verbatim in a stated fact's value or in an
+  // original line are material amounts, not inventions: the housing
+  // fact's value carries 15,000円 and 10,000円, and a monthly salary
+  // lives only in the original's line when the FACT schema has no
+  // key for it (FICT-J03, 2026-11-04). The yen check below allows,
+  // per sentence, the amounts in the values of the keys it cites
+  // and in the text of the lines it cites — the same sources its
+  // citations claim. Amounts from nowhere remain failures.
+  const amountsIn = (text) => {
+    const out = new Set();
+    if (typeof text === "string") for (const m of text.matchAll(/([\d,]+)\s*円/g)) out.add(Number(m[1].replace(/,/g, "")));
+    return out;
+  };
+  const lineTextById = new Map(original.lines.map((l) => [l.id, l.text]));
   const factTimes = new Set();
   for (const i of facts.items) {
     if (i.status === "stated" && typeof i.value === "string") {
@@ -210,9 +224,33 @@ export function checkGrounding(generation, facts, original) {
     for (const p of UNSTATED_ASSERTION_PATTERNS) {
       if (s.text.includes(p)) issues.push({ ...at, issue: `unstated value asserted: ${p}` });
     }
+    const allowedYen = new Set(yenAmounts);
+    for (const k of keys) {
+      const item = itemsByKey.get(k);
+      if (item && item.status === "stated") for (const a of amountsIn(item.value)) allowedYen.add(a);
+    }
+    for (const l of lines) for (const a of amountsIn(lineTextById.get(l))) allowedYen.add(a);
+    // The monthly income example (the user's pay-display decision,
+    // 2026-11-04) is a computed amount, not a stated one: rate ×
+    // actual hours × the stated monthly days assumption (or a daily
+    // rate × days, or an annual salary ÷ 12). When the sentence
+    // cites the keys the computation needs, the computed amount is
+    // grounded in those cited facts.
+    {
+      const numOf = (k) => { const it = itemsByKey.get(k); return it && it.status === "stated" && typeof it.normalized === "number" ? it.normalized : null; };
+      const daysItemG = itemsByKey.get("monthlyDaysAssumption");
+      let daysG = null;
+      if (daysItemG && daysItemG.status === "stated") {
+        if (typeof daysItemG.normalized === "number") daysG = daysItemG.normalized;
+        else if (typeof daysItemG.value === "string") { const dm = daysItemG.value.match(/(\d+)\s*日/); if (dm) daysG = Number(dm[1]); }
+      }
+      if (keys.includes("salaryHourly") && numOf("salaryHourly") !== null && numOf("actualHours") !== null && daysG !== null) allowedYen.add(numOf("salaryHourly") * numOf("actualHours") * daysG);
+      if (keys.includes("salaryDaily") && numOf("salaryDaily") !== null && daysG !== null) allowedYen.add(numOf("salaryDaily") * daysG);
+      if (keys.includes("salaryAnnual") && numOf("salaryAnnual") !== null) allowedYen.add(Math.round(numOf("salaryAnnual") / 12));
+    }
     for (const m of s.text.matchAll(/([\d,]+)\s*円/g)) {
       const amount = Number(m[1].replace(/,/g, ""));
-      if (!yenAmounts.has(amount)) {
+      if (!allowedYen.has(amount)) {
         issues.push({ ...at, issue: `yen amount not in FACTs: ${m[1]}円` });
       }
     }

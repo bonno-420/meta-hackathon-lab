@@ -111,8 +111,8 @@ export function headerFocusOf(planning) {
   if (!lead) return { appealId: null, focus: "job" };
   const keys = lead.factKeys ?? [];
   let focus = "merit";
-  if (keys.includes("salaryHourly")) focus = "wage";
-  else if (keys.includes("monthlyIncomeGuarantee") || /月収/.test(lead.text ?? "")) focus = "income";
+  if (keys.includes("salaryHourly") || keys.includes("salaryDaily")) focus = "wage";
+  else if (keys.includes("monthlyIncomeGuarantee") || keys.includes("monthlySalary") || keys.includes("salaryAnnual") || /月収/.test(lead.text ?? "")) focus = "income";
   else if (keys.includes("workLocation")) focus = "area";
   else if (keys.length === 0) focus = "job";
   return { appealId: lead.id, focus };
@@ -265,6 +265,14 @@ export function checkImageDesign(design, planning) {
     }
   }
   const images = design?.images ?? [];
+  // Gate promotion G-C (approved by the user, 2026-11-04): a design
+  // without the pre-generation confirmation record (coverageChecks:
+  // what the hero does not explain, and the benefits that must have
+  // an image) has not done the confirmation the design step exists
+  // for, and fails here.
+  if (!design?.coverageChecks || !Array.isArray(design.coverageChecks.beyondHero) || !Array.isArray(design.coverageChecks.mustImageBenefits)) {
+    failures.push("生成前確認（coverageChecks）の記録がない（G7）");
+  }
   if (images.filter((e) => e.kind === "hero").length !== 1) failures.push("ヒーローはちょうど1枚でなければならない（G7）");
   if (images.filter((e) => e.kind === "place").length > 1) failures.push("場所の画像は最大1枚（G7）");
   for (const e of images) {

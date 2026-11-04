@@ -29,6 +29,7 @@ export const FACT_LABEL_EN = {
   employer: "Employer", jobId: "Job ID", renewal: "Renewal",
   monthlyIncomeGuarantee: "Monthly income guarantee", actualHours: "Actual hours",
   monthlyDaysAssumption: "Assumed days per month", housing: "Housing",
+  monthlySalary: "Monthly salary", salaryDaily: "Daily wage", salaryAnnual: "Annual salary",
 };
 
 export const FACT_LABEL = {
@@ -38,7 +39,36 @@ export const FACT_LABEL = {
   employer: "雇用主", jobId: "求人番号", renewal: "契約更新",
   monthlyIncomeGuarantee: "月収保証", actualHours: "実働",
   monthlyDaysAssumption: "月所定日数", housing: "住宅・寮",
+  monthlySalary: "月給", salaryDaily: "日給", salaryAnnual: "年俸",
 };
+
+// The monthly income example (the user's pay-display decision,
+// 2026-11-04): pay is stated in the form the posting states it; for
+// hourly, daily or annual pay, a realistic monthly example is also
+// shown so the reader can grasp the approximate monthly total. The
+// example is computed ONLY from stated materials (the rate, the
+// actual hours, the monthly days assumption) and always carries
+// the note that overtime, night work and allowances are not
+// included. When the days assumption is not stated, no example is
+// produced — the days are never invented.
+export function monthlyIncomeExample(facts) {
+  const byKey = new Map((facts?.items ?? []).map((i) => [i.key, i]));
+  const statedNum = (k) => { const i = byKey.get(k); return i && i.status === "stated" && typeof i.normalized === "number" ? i.normalized : null; };
+  const daysItem = byKey.get("monthlyDaysAssumption");
+  let days = null;
+  if (daysItem && daysItem.status === "stated") {
+    if (typeof daysItem.normalized === "number") days = daysItem.normalized;
+    else if (typeof daysItem.value === "string") { const m = daysItem.value.match(/(\d+)\s*日/); if (m) days = Number(m[1]); }
+  }
+  const hourly = statedNum("salaryHourly");
+  const daily = statedNum("salaryDaily");
+  const annual = statedNum("salaryAnnual");
+  const hours = statedNum("actualHours");
+  if (hourly !== null && hours !== null && days !== null) return { amount: hourly * hours * days, basis: { kind: "hourly", rate: hourly, hours, days } };
+  if (daily !== null && days !== null) return { amount: daily * days, basis: { kind: "daily", rate: daily, days } };
+  if (annual !== null) return { amount: Math.round(annual / 12), basis: { kind: "annual", rate: annual } };
+  return null;
+}
 
 const ICONS = [
   // tag
