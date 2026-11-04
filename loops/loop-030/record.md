@@ -32,3 +32,9 @@
 1. リポジトリを pull する。
 2. 本人がコマンドを実行する: `node make-lp.mjs tmp/sorano-20261105-en.txt --posting-id sorano-20261105-en-rerun --language English`
 3. チェックポイント（承認・1枚画・文章・LP）は本人がプレビューで答える。統括・ラインは走行中に手を入れない。止まったら、止まった場所と理由をそのまま記録する。
+
+## 実走での検証（2026-11-05 08:26–08:29、本人の PC の走行）
+
+- 制作ラインが手順どおり新規走行を実行（`runs/sorano-20261105-en-rerun`、抽出はライブ、プロンプト v1.3、E01 一致、コスト算出値 $0.0010294）。ラインは回答・手入れなしで停止位置（approval）を報告。
+- その走行の `entry/facts.json` で確認: monthlyIncomeGuarantee は **stated／値「保証しない」／sourceLine L01／quote "Monthly income is not guaranteed"** — 参照 FACT（FICT-J01）と同じ形で抽出された。v1.3 の意味修正は実走で確認できた。
+- 走行は承認待ちで停止中。残りは本人のチェックポイント回答のみ。
