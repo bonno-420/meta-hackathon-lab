@@ -8,7 +8,7 @@ Loopwright
 
 ## One-line description
 
-An AI development and execution platform that improves the development process through records, audits, and human judgement, demonstrated by a job-posting fact-checking workflow that stops on contradictions.
+A development platform that turns failures in AI-assisted production into quality controls for the next run — every failure is recorded, aggregated, and, only with human approval, promoted into a gate or review criterion later productions must pass. Demonstrated on a job-posting production workflow; the postings are the test workload, not the product.
 
 ## What it does / how to use it
 
@@ -16,7 +16,7 @@ The platform runs a job-posting fact-checking workflow for editorial staff: the 
 
 ## What it demonstrates
 
-Quality through controls: every stage's pass or fail is decided by that stage's own tool output, and a later stage runs only when the earlier one passed. Design that stops: contradictions and expired approvals halt the run instead of producing text, while unstated items are shown only as not stated and never as claims, and a passing re-verification permits only an in-demo preview, never publication. Improvement through records: each pass leaves inputs, models, artifacts, audit results, costs, and durations in the loop records, and confirmed findings feed back into the next round of development.
+Quality through controls: every stage's pass or fail is decided by that stage's own tool output, and a later stage runs only when the earlier one passed. Design that stops: contradictions and expired approvals halt the run instead of producing text, while unstated items are shown only as not stated and never as claims, and a passing re-verification permits only an in-demo preview, never publication. Failures become quality controls: each pass leaves inputs, models, artifacts, audit results, costs, and durations in the loop records; confirmed findings are aggregated, and the generalizable ones are wired into the production path or — with human approval — promoted into deterministic gates (for example, a duplicated figure a review model missed became a gate that now fails any page repeating a stated value).
 
 ## Links
 

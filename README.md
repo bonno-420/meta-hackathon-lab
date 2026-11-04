@@ -10,9 +10,9 @@
 
 ## 1. Positioning
 
-An AI development and execution platform that improves the AI development process through records, audits, and human judgement, and feeds what it learns back into the next round of development.
+Loopwright is a development platform that turns failures in AI-assisted production into quality controls for the next run. Every failure is recorded, aggregated, and — only with human approval — promoted into a deterministic gate or a review criterion that every later production must pass. Nothing is promoted automatically, and no learning takes effect without a human decision. One worked example: a duplicated figure that a review model failed to catch in one production became, after verification on real pages and a human approval, a deterministic gate that now fails any later page repeating a stated value (D17).
 
-It does not claim to improve itself autonomously. At the same time, it is not merely an AI development management tool. It shows, with concrete examples, that the scope of improvement extends beyond code to requirements definition, work breakdown, quality control, planning, and how the work is presented.
+The job postings in the demo are the test workload, not the product: the same loop applies to any AI-assisted production whose output can be checked. It is also not merely an AI development management tool — the scope of improvement extends beyond code to requirements definition, work breakdown, quality control, planning, and how the work is presented.
 
 Solo entry on the Indie track ([D2](docs/decisions/D2-track.md)). The submission is an integrated demo: the platform (L1) running an editorial workflow (L2) ([D1](docs/decisions/D1-submission-positioning.md)).
 
