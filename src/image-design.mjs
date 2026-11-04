@@ -56,6 +56,15 @@ const COMPOSITION = {
   section: "The work activity itself, as an explanatory image beside the text it explains",
   place: "The surrounding area of the workplace, as a small explanatory image",
 };
+// Benefit-image compositions (I-4): appeal-derived images share the
+// work anchor as their subject, so the composition is what varies
+// between them — otherwise several benefit images come out as the
+// same scene repeated.
+const BENEFIT_COMPOSITIONS = [
+  "Close view of hands performing the task at the work station, the job's materials in frame, as a small explanatory image beside the text it explains",
+  "A worker performing the task at the work station, seen from the side, the job's materials around them, as a small explanatory image beside the text it explains",
+  "The job's tools and materials arranged at the work station while a worker's hands are at work on them, as a small explanatory image beside the text it explains",
+];
 const DEFAULT_SUBJECT = {
   hero: "People doing the work at a fictional workplace",
   section: "People doing the work at a fictional workplace",
@@ -126,10 +135,20 @@ export function buildImageDesign(planning, facts) {
   for (const spec of planning?.imageSpecs ?? []) {
     const kind = roleKind(spec.role);
     const basis = spec.basis ?? {};
+    // The purpose states what the image COMMUNICATES. A work-scene
+    // image grounded on a fact (the work happens at the stated
+    // location) does not present that fact — it shows the work — so
+    // its purpose is the spec's description of what it shows; the
+    // grounding itself stays on the spec's basis. Only a place
+    // image presents its fact. (Measured in loop-027 run1: a work
+    // photo whose purpose was the bare label "workLocation" was
+    // failed by the sample review as not matching what it carries.)
     const purpose = typeof basis.appealId === "string"
       ? (appeals.get(basis.appealId)?.text ?? null)
       : typeof basis.factKey === "string"
-        ? factLabel(facts, basis.factKey)
+        ? (kind === "place" || typeof spec.description !== "string" || spec.description.length === 0
+          ? factLabel(facts, basis.factKey)
+          : spec.description)
         : (typeof spec.purpose === "string" ? spec.purpose : null);
     // Depiction is photorealistic for every role (the user's
     // decision, 2026-11-04, D13). What G9 bans is the exterior as a
@@ -214,6 +233,19 @@ export function buildImageDesign(planning, facts) {
     // subject stays prohibited by the gates.
     const decision = appealImageDecision(a, facts);
     if (decision.image) {
+      // Benefit images are anchored to the posting's concrete work
+      // (intervention I-4, measured in loop-026 runs 1/3/5): with
+      // the neutral work scene as their subject, the image model
+      // rendered generic craft-classroom scenes for housing and
+      // qualification benefits, and multiple benefit images came
+      // out near-identical. The anchor is the work spec's subject —
+      // the same source the hero adoption uses — and the
+      // composition varies per benefit image so they do not repeat.
+      const anchorEntry = (planning?.imageSpecs ?? []).map((sp) => images.find((e) => e.id === sp.id)).find((e) => e && e.source === "spec" && /work/i.test(`${e.id} ${e.role ?? ""}`) && e.subject !== WORK_SCENE);
+      const benefitIdx = images.filter((e) => e.source === "appeal").length;
+      const subject = anchorEntry ? anchorEntry.subject : WORK_SCENE;
+      const composition = BENEFIT_COMPOSITIONS[benefitIdx % BENEFIT_COMPOSITIONS.length];
+      if (anchorEntry) designNotes.push({ imageId: `appeal-${a.id}`, rule: "I-4", action: "benefit-image-anchored-to-work", from: WORK_SCENE, to: subject });
       images.push({
         id: `appeal-${a.id}`,
         role: "section",
@@ -221,13 +253,13 @@ export function buildImageDesign(planning, facts) {
         source: "appeal",
         appealId: a.id,
         purpose: `${a.text} — ${decision.reason}`,
-        subject: WORK_SCENE,
-        composition: COMPOSITION.section,
+        subject,
+        composition,
         depiction: "photorealistic",
         styleText: IMAGE_STYLE,
         placement: { area: "inline", size: "small", aspect: "4:3" },
         mustNotImply: [...MUST_NOT_IMPLY, ...(planning?.notSay ?? []).map((n) => n.text ?? n.key).filter(Boolean)],
-        prompt: `${WORK_SCENE}. ${COMPOSITION.section}. ${IMAGE_STYLE}, no text, no numbers, no logos, no watermark`,
+        prompt: `${subject}. ${composition}. ${IMAGE_STYLE}, no text, no numbers, no logos, no watermark`,
       });
       servedAppeals.add(a.id);
     } else {

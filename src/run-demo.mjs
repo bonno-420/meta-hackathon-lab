@@ -401,6 +401,7 @@ export async function runDemo(options, deps = {}) {
   const keyVisualPhotos = deps.keyVisualPhotos ?? (async () => { throw new Error("no key-visual photo executor wired"); });
   const renderFinishedImage = deps.renderFinishedImage ?? (async () => { throw new Error("no finished-image renderer wired"); });
   const reviewPage = deps.review ?? null;
+  const draftPlanningDep = deps.draftPlanning ?? null;
   const verify = deps.verify ?? ((args) => runVerification(args));
   const preview = deps.preview ?? (({ generation, verification, facts, e02, repoUrl }) => buildPreview({ generation, verification, facts, e02, repoUrl }));
 
@@ -435,7 +436,7 @@ export async function runDemo(options, deps = {}) {
       mode: { checkpoints: options.checkpoints ?? null, entry: Boolean(options.posting) },
       files: {
         originalFile, factsFile, approvalFile, generationFile,
-        planningFile: options.planningFile ?? null,
+        planningFile: effPlanningFile(),
         feedbackFile: options.feedbackFile ?? null,
         postingId: options.posting ? options.posting.id : null,
       },
@@ -460,6 +461,11 @@ export async function runDemo(options, deps = {}) {
   if (options.feedbackFile && existsSync(resolveRoot(root, options.feedbackFile))) {
     try { feedbackText = readFileSync(resolveRoot(root, options.feedbackFile), "utf8"); } catch { feedbackText = null; }
   }
+  // Where a drafted planning lives for this run (loop-027), and the
+  // effective planning file every later stage uses: the given input
+  // when there is one, otherwise the draft.
+  const draftPlanningFile = normalizePath(path.join(path.dirname(generationFile), "planning-draft.json"));
+  const effPlanningFile = () => options.planningFile ?? (planning ? draftPlanningFile : null);
   // Planning checkpoint presentation (full set): the planning input is
   // presented before production starts; the record is written at run
   // start, its judgement fields stay for the human to fill.
@@ -612,6 +618,38 @@ export async function runDemo(options, deps = {}) {
   let kvImage = null;
   if (pipelineMode) {
     if (!stoppedAt) {
+      // Planning draft (loop-027, intervention I-2): with drafting
+      // enabled and no planning input, the pipeline drafts the
+      // planning from the approved materials instead of stopping.
+      // The draft is recorded as a draft (source: "draft"); the
+      // planning review below judges it like any planning, and a
+      // human's planning decision remains the intent layer in real
+      // use. A drafted planning file persists in the run directory,
+      // so a resume re-uses the same draft.
+      if (!planning && options.draftPlanning && draftPlanningDep) {
+        if (existsSync(resolveRoot(root, draftPlanningFile))) {
+          try {
+            const raw = readFileSync(resolveRoot(root, draftPlanningFile), "utf8");
+            planningSha256 = sha256Text(raw);
+            planning = JSON.parse(raw);
+            stages.planningDraft = { executed: false, reused: true, file: draftPlanningFile };
+          } catch { planning = null; }
+        }
+        if (!planning) {
+          const drafted = await draftPlanningDep({ root, originalFile, factsFile, outFile: draftPlanningFile, hints: options.draftHints ?? {} });
+          stages.planningDraft = { executed: true, ...(drafted ?? { status: "error" }), file: draftPlanningFile };
+          if (drafted && drafted.status === "drafted" && existsSync(resolveRoot(root, draftPlanningFile))) {
+            try {
+              const raw = readFileSync(resolveRoot(root, draftPlanningFile), "utf8");
+              planningSha256 = sha256Text(raw);
+              planning = JSON.parse(raw);
+            } catch { planning = null; }
+          }
+          if (!planning) {
+            stop("planning", `企画ドラフトが成立しなかったため、後段を実行しない（${drafted?.validation?.errors?.join(" / ") ?? drafted?.reason ?? "起案できなかった"}）`);
+          }
+        }
+      }
       if (!planning) {
         stages.planning = { executed: true, pass: false, file: options.planningFile ?? null, sha256: planningSha256 };
         stop("planning", options.planningFile ? "企画入力ファイルが読み込めなかったため、後段を実行しない" : "企画入力がないため、企画待ちで止める（チェックポイント。ツールは企画を作らない）", options.planningFile ? undefined : "checkpoint");
@@ -620,7 +658,7 @@ export async function runDemo(options, deps = {}) {
         }
       } else {
         const validation = validatePlanning(planning);
-        stages.planning = { executed: true, pass: validation.ok, file: options.planningFile ?? null, sha256: planningSha256, audience: planning.audience ?? null, validation };
+        stages.planning = { executed: true, pass: validation.ok, file: effPlanningFile(), source: stages.planningDraft ? "draft" : "input", sha256: planningSha256, audience: planning.audience ?? null, validation };
         if (!validation.ok) {
           stop("planning", `企画入力が成立していないため、後段を実行しない（${validation.errors.join(" / ")}）`);
         }
@@ -631,13 +669,22 @@ export async function runDemo(options, deps = {}) {
     // Planning review (2026-11-04): the plan itself is judged by the
     // reader persona and the client before anything is generated —
     // a preview that cannot fail anything is not a review (the
-    // user's standing criticism). Runs on the first invocation only;
-    // a resume re-uses the reviewed plan. A fail stops the run with
-    // the findings, for the human's judgement.
-    if (!stoppedAt && !resumeState) {
+    // user's standing criticism). A fail stops the run with the
+    // findings, for the human's judgement.
+    // The review runs whenever this run has no verdict for the
+    // planning yet (intervention I-8, loop-026): it used to run only
+    // on the first invocation, so a planning introduced on a resume
+    // was never reviewed at all (run1), while the same planning in a
+    // direct run was failed by it (run4). A verdict already recorded
+    // in the run's state is re-used, not re-rolled.
+    const priorPlanningReview = resumeState?.priorStages?.planning?.review ?? null;
+    if (!stoppedAt && priorPlanningReview?.verdict) {
+      stages.planning.review = priorPlanningReview;
+    }
+    if (!stoppedAt && !priorPlanningReview?.verdict) {
       if (reviewPage) {
         let planningReview = null;
-        try { planningReview = await reviewPage({ mode: "planning", planningFile: options.planningFile ?? null }); } catch (e) { planningReview = { status: "error", reason: String(e?.message ?? e) }; }
+        try { planningReview = await reviewPage({ mode: "planning", planningFile: effPlanningFile() }); } catch (e) { planningReview = { status: "error", reason: String(e?.message ?? e) }; }
         stages.planning.review = planningReview && planningReview.status === "reviewed"
           ? { verdict: planningReview.verdict, findings: planningReview.findings ?? [], model: planningReview.model ?? null, promptVersion: planningReview.promptVersion ?? null }
           : { verdict: null, status: planningReview?.status ?? null, reason: planningReview?.reason ?? null };
@@ -730,7 +777,22 @@ export async function runDemo(options, deps = {}) {
         mkdirSync(resolveRoot(root, kvPageDir), { recursive: true });
         let attempts = 0;
         let photosRun = null;
-        while (attempts < 3) {
+        // Reuse this run's already-generated photos (intervention
+        // I-7, loop-026 run3): when a run stopped after the photos
+        // were made (a checkpoint or a later-stage stop), a resume
+        // re-generated them and the presented image changed under
+        // the confirmation. The photos are this run's own output;
+        // when the photo plan is unchanged and the files are still
+        // there, they are reused and the reuse is recorded.
+        try {
+          const priorPhotos = JSON.parse(readFileSync(resolveRoot(root, path.join(kvPageDir, "key-visual-photos-run.json")), "utf8"));
+          const planById = new Map(photoPlan.map((p) => [p.id, p.prompt]));
+          if (priorPhotos.status === "generated" && Array.isArray(priorPhotos.images) && priorPhotos.images.length > 0
+            && priorPhotos.images.every((im) => im && planById.get(im.id) === im.prompt && im.file && existsSync(resolveRoot(root, im.file)))) {
+            photosRun = { ...priorPhotos, reused: true };
+          }
+        } catch { /* no prior photos record: generate as usual */ }
+        while (!photosRun && attempts < 3) {
           attempts++;
           try {
             photosRun = await keyVisualPhotos({ root, photoPlan, imagesDir: kvPhotosDir });
@@ -738,6 +800,7 @@ export async function runDemo(options, deps = {}) {
             photosRun = { status: "failed", reason: String(e && e.message ? e.message : e), images: [] };
           }
           if (photosRun && photosRun.status === "generated" && Array.isArray(photosRun.images) && photosRun.images.length > 0) break;
+          photosRun = null;
         }
         if (!photosRun || photosRun.status !== "generated" || !photosRun.images || photosRun.images.length === 0) {
           holds.push({ stage: "key-visual", condition: "1枚画の写真の生成", detail: "上限まで再試行したが写真が生成できなかった", attempts });
@@ -781,7 +844,7 @@ export async function runDemo(options, deps = {}) {
               const outlinePath = path.join(path.dirname(generationFile), "sample-outline.json");
               try {
                 writeFileSync(resolveRoot(root, outlinePath), JSON.stringify(sampleOutlineFromLayout(layout.record, imageDesign), null, 2), "utf8");
-                sampleReview = await reviewPage({ mode: "sample", planningFile: options.planningFile ?? null, outlineFile: outlinePath });
+                sampleReview = await reviewPage({ mode: "sample", planningFile: effPlanningFile(), outlineFile: outlinePath });
               } catch (e) { sampleReview = { status: "error", reason: String(e?.message ?? e) }; }
             }
             const sampleReviewRecord = !reviewPage
@@ -899,7 +962,7 @@ export async function runDemo(options, deps = {}) {
     let attemptFeedback = options.feedbackFile ?? undefined;
     while (attempts < maxAttempts) {
       attempts++;
-      lastRun = await generate({ root, originalFile, factsFile, approvalFile, planningFile: options.planningFile ?? undefined, feedbackFile: attemptFeedback });
+      lastRun = await generate({ root, originalFile, factsFile, approvalFile, planningFile: effPlanningFile() ?? undefined, feedbackFile: attemptFeedback });
       if (!lastRun || lastRun.status === "refused") break;
       if (lastRun.status === "generated" && lastRun.generation && lastRun.grounding && lastRun.grounding.pass === true) {
         generationCoverage = coverageOf(lastRun.generation);
@@ -910,7 +973,7 @@ export async function runDemo(options, deps = {}) {
           // that they work. A fail retries with the findings as
           // feedback, inside the same attempt bound.
           if (!reviewPage) break;
-          try { lastCopyReview = await reviewPage({ mode: "copy", planningFile: options.planningFile ?? null }); } catch (e) { lastCopyReview = { status: "error", reason: String(e?.message ?? e) }; }
+          try { lastCopyReview = await reviewPage({ mode: "copy", planningFile: effPlanningFile() }); } catch (e) { lastCopyReview = { status: "error", reason: String(e?.message ?? e) }; }
           // Researched-pattern scan (loop-025): a judge passed
           // run26's boilerplate copy, so this rule does not rely on
           // the judge. Boilerplate request closings on appeal
@@ -1193,7 +1256,12 @@ export async function runDemo(options, deps = {}) {
       let pagecheck = null;
       try {
         const lpHtml = readFileSync(resolveRoot(root, lpFile), "utf8");
-        pagecheck = checkPage(lpHtml);
+        let factValues = [];
+        try {
+          const f = loadJson(resolveRoot(root, factsFile));
+          factValues = (f?.items ?? []).filter((i) => i.status === "stated" && typeof i.value === "string").map((i) => i.value);
+        } catch { factValues = []; }
+        pagecheck = checkPage(lpHtml, { factValues });
       } catch { pagecheck = null; }
       const appealCoverage = pipelineMode && planning && Array.isArray(planning.appeals)
         ? planning.appeals.map((a) => ({ appealId: a.id, sentenceIdxs: matchAppealSentences(generationRun.generation, planning.appeals).byAppeal.get(a.id) ?? [] }))
@@ -1243,7 +1311,7 @@ export async function runDemo(options, deps = {}) {
           while (reviewAttempts < 2) {
             reviewAttempts++;
             try {
-              reviewResult = await reviewPage({ mode: "page", root, planningFile: options.planningFile ?? null, lpFile });
+              reviewResult = await reviewPage({ mode: "page", root, planningFile: effPlanningFile(), lpFile });
             } catch (e) {
               reviewResult = { status: "error", reason: String(e?.message ?? e) };
             }
@@ -1261,7 +1329,7 @@ export async function runDemo(options, deps = {}) {
             writeFileSync(resolveRoot(root, fbPath), reviewFeedbackText(reviewResult, prior), "utf8");
             reviewSendBacks.push({ attempt: reviewAttempts, findings: reviewResult.findings ?? [] });
             stages.review.sendBacks = reviewSendBacks;
-            const regen = await generate({ root, originalFile, factsFile, approvalFile, planningFile: options.planningFile ?? undefined, feedbackFile: fbPath });
+            const regen = await generate({ root, originalFile, factsFile, approvalFile, planningFile: effPlanningFile() ?? undefined, feedbackFile: fbPath });
             if (!regen || regen.status !== "generated" || !regen.generation || !regen.grounding || regen.grounding.pass !== true) {
               stop("review", "レビューの差し戻し後の再生成が完了しなかったため、後段を実行しない");
               break;
@@ -1283,7 +1351,14 @@ export async function runDemo(options, deps = {}) {
             const rebuilt = await assemble({ root, generation: generationRun.generation, images: imageRun.images ?? [], imagesDir, lpFile, heroChips: heroChips2, layout: (resumeState && resumeState.keyVisual && resumeState.keyVisual.layout) ?? (stages.keyVisual && stages.keyVisual.layout) ?? null, planning: planning ?? null, facts: fixedFacts ?? null });
             stages.lpAssembly = { ...stages.lpAssembly, attempts: (stages.lpAssembly?.attempts ?? 1) + 1, file: rebuilt.file ?? lpFile, referenced: rebuilt.referenced ?? [], layoutUsed: rebuilt.layoutUsed ?? false, appealCoverage: rebuilt.assignments?.appealCoverage ?? null, omittedImageFiles: rebuilt.assignments?.omittedImageFiles ?? [], afterReviewSendBack: true };
             let pagecheck2 = null;
-            try { pagecheck2 = checkPage(readFileSync(resolveRoot(root, lpFile), "utf8")); } catch { pagecheck2 = null; }
+            try {
+              let factValues2 = [];
+              try {
+                const f2 = loadJson(resolveRoot(root, factsFile));
+                factValues2 = (f2?.items ?? []).filter((i) => i.status === "stated" && typeof i.value === "string").map((i) => i.value);
+              } catch { factValues2 = []; }
+              pagecheck2 = checkPage(readFileSync(resolveRoot(root, lpFile), "utf8"), { factValues: factValues2 });
+            } catch { pagecheck2 = null; }
             const coverage2 = planning && Array.isArray(planning.appeals) ? planning.appeals.map((a) => ({ appealId: a.id, sentenceIdxs: matchAppealSentences(generationRun.generation, planning.appeals).byAppeal.get(a.id) ?? [] })) : undefined;
             let factsForCompletion2 = null;
             let originalForCompletion2 = null;
@@ -1373,7 +1448,7 @@ export async function runDemo(options, deps = {}) {
       stopKind,
       holds,
       presentationRecords,
-      planning: planning ? { file: options.planningFile ?? null, sha256: planningSha256 } : null,
+      planning: planning ? { file: effPlanningFile(), sha256: planningSha256 } : null,
       stateFile,
       entry: entryArtifacts,
     } : {}),
@@ -1562,6 +1637,22 @@ export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesR
       }
       return loadJson(runOutAbs);
     },
+    draftPlanning: async ({ originalFile: origFile, factsFile: factsF, outFile, hints }) => {
+      const runOutRel = path.join(outDir, "draft-planning-run.json");
+      const runOutAbs = path.join(root, runOutRel);
+      removeIfExists(runOutAbs);
+      removeIfExists(path.join(root, outFile));
+      const ran = await textRunner([
+        path.join(here, "draft-planning.mjs"), "--original", origFile, "--facts", factsF, "--out", outFile, "--run-out", runOutRel,
+        ...(hints?.language ? ["--language", hints.language] : []),
+        ...(hints?.audience ? ["--audience-hint", hints.audience] : []),
+        ...(hints?.note ? ["--note", hints.note] : []),
+      ]);
+      if (!existsSync(runOutAbs)) {
+        return { ...childErrorResult("planning-draft", ran.exitCode), status: "child-error", validation: { ok: false, errors: ["企画ドラフトの実行記録が書かれなかった"] } };
+      }
+      return loadJson(runOutAbs);
+    },
     images: async ({ generationFile: genFile, factsFile: factsF, specPlan }) => {
       const runOutAbs = resolveRoot(root, imgRunRel);
       removeIfExists(runOutAbs);
@@ -1674,6 +1765,12 @@ async function main() {
   // run, with --kv-confirmation <file> carrying the human's key-visual
   // confirmation ({ file, sha256, confirmer, confirmedAt }).
   const planningFile = argValue(argv, "--planning") ?? undefined;
+  const draftPlanning = argv.includes("--draft-planning");
+  const draftHints = {
+    ...(argValue(argv, "--draft-language") ? { language: argValue(argv, "--draft-language") } : {}),
+    ...(argValue(argv, "--draft-audience") ? { audience: argValue(argv, "--draft-audience") } : {}),
+    ...(argValue(argv, "--draft-note") ? { note: argValue(argv, "--draft-note") } : {}),
+  };
   const inputId = argValue(argv, "--input-id") ?? undefined;
   const inputVersion = argValue(argv, "--input-version") ?? undefined;
   const feedbackFile = argValue(argv, "--feedback") ?? undefined;
@@ -1713,6 +1810,7 @@ async function main() {
       root, originalFile: effOriginalFile, factsFile: effFactsFile, approvalFile: effApprovalFile, generationFile, verificationFile, imagesDir, lpFile, imagesRunFile, allowPreview: false,
       ...(posting ? { posting } : {}),
       ...(planningFile ? { planningFile } : {}),
+      ...(draftPlanning ? { draftPlanning: true, draftHints } : {}),
       ...(feedbackFile ? { feedbackFile } : {}),
       ...(checkpoints ? { checkpoints } : {}),
       ...(inputId ? { inputId } : {}),

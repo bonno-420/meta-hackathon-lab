@@ -16,7 +16,7 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-export const PAGECHECK_VERSION = "src-pagecheck-v3";
+export const PAGECHECK_VERSION = "src-pagecheck-v4";
 export const DICTS_VERSION = "loop16-dicts-2026-11-02";
 
 const DEFAULT_VERIFICATION_DICT = [
@@ -156,13 +156,20 @@ function splitSentences(text) {
   return out;
 }
 
-function collectDuplication(sections) {
+function collectDuplication(sections, factValues = []) {
+  // A stated FACT value repeated by the page's own apparatus (hero
+  // chips, condition cards, the job-details table) is the formal
+  // summary doing its job — the user decided the details table may
+  // duplicate (2026-11-04) — not a duplicated sentence. Exempt exact
+  // matches of a stated value; generated sentences still count.
+  const factNorms = new Set((factValues ?? []).map((v) => normalizeSentence(String(v))).filter((v) => v.length >= 10));
   const map = new Map();
   for (const sec of sections) {
     const text = stripTagsToText(sec.rawHtml);
     for (const raw of splitSentences(text)) {
       const norm = normalizeSentence(raw);
       if (norm.length < 10) continue;
+      if (factNorms.has(norm)) continue;
       // Duplication is about sentences in the body text. A short
       // fragment without terminal punctuation is a label or a value
       // (a fact value shown both as a hero chip and in its condition
@@ -262,7 +269,7 @@ function detectHeadingMismatch(sections, scopeRules) {
 // Run all deterministic checks on an assembled page.
 // pass means: no duplicated sentences, no verification phrases, no
 // record labels, no heading-scope mismatches.
-export function checkPage(html, { dicts } = {}) {
+export function checkPage(html, { dicts, factValues } = {}) {
   const d = dicts ?? loadDicts();
   const sections = extractSections(html);
   // The text checks always run over the whole page. Text outside any
@@ -272,7 +279,7 @@ export function checkPage(html, { dicts } = {}) {
   // an internal label in the body passed with zero hits (found
   // 2026-11-04, reproduced before this fix).
   const pageScope = [{ id: "page", heading: "(page)", rawHtml: String(html), inner: String(html), index: 0 }];
-  const duplication = collectDuplication(pageScope);
+  const duplication = collectDuplication(pageScope, factValues ?? []);
   const verificationPhrases = detectVerification(pageScope, d.verification);
   const recordExposure = detectRecordExposure(pageScope, d.recordLabels);
   const heading = detectHeadingMismatch(sections, d.headingScope);

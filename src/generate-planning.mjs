@@ -12,7 +12,7 @@ import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { performance } from "node:perf_hooks";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { MODEL, BASE_URL, MAX_TOKENS, RATES_KNOWN, checkGenerationInput, checkGrounding } from "./generate.mjs";
+import { MODEL, BASE_URL, MAX_TOKENS, RATES_KNOWN, checkGenerationInput, checkGrounding, callModelLive } from "./generate.mjs";
 import { intentFromPlanning, sha256Text } from "./planning.mjs";
 
 export const PLANNING_PROMPT_VERSION = "lp-generate-v9-planning";
@@ -209,31 +209,6 @@ export async function runPlanningGeneration({ root, originalFile, factsFile, app
   };
 }
 
-async function callModelLive(messages) {
-  const apiKey = process.env.MODEL_API_KEY;
-  const res = await fetch(`${BASE_URL}/chat/completions`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({ model: MODEL, messages, temperature: 0, ...(MAX_TOKENS ? { max_tokens: MAX_TOKENS } : {}) }),
-  });
-  const text = await res.text();
-  let body = null;
-  try { body = JSON.parse(text); } catch { body = null; }
-  if (!res.ok || !body) {
-    const err = new Error(`Meta Model API error: HTTP ${res.status}`);
-    err.httpStatus = res.status;
-    err.errorBody = body ? JSON.stringify(body).slice(0, 2000) : text.slice(0, 2000);
-    throw err;
-  }
-  return {
-    content: body.choices?.[0]?.message?.content ?? "",
-    usage: body.usage ?? null,
-    model: body.model ?? MODEL,
-  };
-}
 
 function argValue(argv, flag) {
   const i = argv.indexOf(flag);

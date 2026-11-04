@@ -302,6 +302,47 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
   expectTrue("gate-gc-missing-coverage-checks-fail", !covCheck.pass && covCheck.failures.some((f) => f.includes("coverageChecks")));
 }
 
+// ---------- pagecheck: fact values repeated by the apparatus are not duplication (loop-027, I-11) ----------
+{
+  const { checkPage } = await import("./pagecheck.mjs");
+  const loc = "A cosmetics studio in Shimokitazawa, Tokyo, 3 minutes from the station";
+  const pageOk = `<html><body><div class="card">${loc}</div><table><tr><td>${loc}</td></tr></table><p class="lp-sentence">Packing handmade soaps for shipping.</p></body></html>`;
+  const r1 = checkPage(pageOk, { factValues: [loc] });
+  expect("pagecheck-factvalue-exempt", r1.summary.duplicateGroups, 0);
+  const dupSentence = "Packing handmade soaps for shipping at the studio.";
+  const pageBad = `<html><body><p>${dupSentence}</p><p>${dupSentence}</p><div>${loc}</div></body></html>`;
+  const r2 = checkPage(pageBad, { factValues: [loc] });
+  expect("pagecheck-sentence-dup-still-fails", r2.summary.duplicateGroups, 1);
+}
+
+// ---------- planning draft validation (loop-027, I-2) ----------
+{
+  const { validateDraft } = await import("./draft-planning.mjs");
+  const factsD = { items: [
+    { key: "salaryHourly", status: "stated", value: "時給1,200円", normalized: 1200, sourceLine: "L03" },
+    { key: "workHours", status: "stated", value: "09:30-15:30", normalized: null, sourceLine: "L04" },
+    { key: "housing", status: "unstated", value: null, normalized: null, sourceLine: null },
+  ] };
+  const originalD = { lines: [{ id: "L01", text: "Work: packing cosmetics" }, { id: "L03", text: "Pay: hourly 1,200 yen" }, { id: "L04", text: "Hours: 09:30-15:30" }] };
+  const goodDraft = {
+    audience: "Near the station, school-hours shifts",
+    appeals: [{ id: "A1", text: "Packing handmade cosmetics", factKeys: [], sourceLines: ["L01"] }, { id: "A2", text: "Hourly wage 1,200 yen", factKeys: ["salaryHourly"], sourceLines: ["L03"] }],
+    firstCheckKeys: ["salaryHourly", "workHours"],
+    notSay: [{ key: "housing", text: "Housing is not stated" }],
+    imageSpecs: [
+      { id: "key-visual", role: "key-visual", description: "Packing cosmetics at a work table", basis: { appealId: "A1" } },
+      { id: "section-work", role: "work", description: "Hands packing soap boxes", basis: { factKey: "salaryHourly" } },
+    ],
+  };
+  expectTrue("draft-grounded-passes", validateDraft(goodDraft, factsD, originalD).ok);
+  const badDraft = JSON.parse(JSON.stringify(goodDraft));
+  badDraft.appeals[1].factKeys = ["housing"];
+  expectTrue("draft-unstated-key-fails", !validateDraft(badDraft, factsD, originalD).ok);
+  const badChecks = JSON.parse(JSON.stringify(goodDraft));
+  badChecks.firstCheckKeys = ["housing", "workHours"];
+  expectTrue("draft-firstcheck-unstated-fails", !validateDraft(badChecks, factsD, originalD).ok);
+}
+
 // ---------- pay display: the monthly income example (user decision, 2026-11-04) ----------
 {
   const { monthlyIncomeExample } = await import("./page-layout.mjs");

@@ -242,7 +242,7 @@ export function checkGrounding(generation, facts, original) {
       let daysG = null;
       if (daysItemG && daysItemG.status === "stated") {
         if (typeof daysItemG.normalized === "number") daysG = daysItemG.normalized;
-        else if (typeof daysItemG.value === "string") { const dm = daysItemG.value.match(/(\d+)\s*日/); if (dm) daysG = Number(dm[1]); }
+        else if (typeof daysItemG.value === "string") { const dm = daysItemG.value.match(/(\d+)\s*(?:日|days?\b)/i); if (dm) daysG = Number(dm[1]); }
       }
       if (keys.includes("salaryHourly") && numOf("salaryHourly") !== null && numOf("actualHours") !== null && daysG !== null) allowedYen.add(numOf("salaryHourly") * numOf("actualHours") * daysG);
       if (keys.includes("salaryDaily") && numOf("salaryDaily") !== null && daysG !== null) allowedYen.add(numOf("salaryDaily") * daysG);
@@ -263,7 +263,7 @@ export function checkGrounding(generation, facts, original) {
         issues.push({ ...at, issue: `cited numeric value not kept verbatim: ${k}` });
       }
     }
-    if (keys.includes("monthlyDaysAssumption") && !s.text.includes("仮定") && !s.text.includes("試算")) {
+    if (keys.includes("monthlyDaysAssumption") && !s.text.includes("仮定") && !s.text.includes("試算") && !/assum|estimat/i.test(s.text)) {
       issues.push({ ...at, issue: "monthlyDaysAssumption is stated without marking it an assumption" });
     }
     if (keys.includes("monthlyIncomeGuarantee") && !s.text.includes("保証しない") && !s.text.includes("保証され")) {
@@ -370,31 +370,50 @@ export async function runGeneration({ root, originalFile, factsFile, approvalFil
   };
 }
 
-// Live API caller: single request, no retry (the existing tools' style).
-async function callModelLive(messages) {
+// Live API caller. One bounded exception to the no-retry style
+// (intervention I-5, measured on FICT-J03 in loop-026): a reasoning
+// model can spend the whole completion budget on reasoning and
+// return empty content. When the response is empty AND the usage
+// shows the budget was exhausted, the call is retried with the cap
+// raised (doubled, at most twice, ceiling 64000) instead of failing
+// the run for a budget setting. The raises are recorded on the
+// result so the run record shows what happened.
+export async function callModelLive(messages) {
   const apiKey = process.env.MODEL_API_KEY;
-  const res = await fetch(`${BASE_URL}/chat/completions`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({ model: MODEL, messages, temperature: 0, ...(MAX_TOKENS ? { max_tokens: MAX_TOKENS } : {}) }),
-  });
-  const text = await res.text();
-  let body = null;
-  try { body = JSON.parse(text); } catch { body = null; }
-  if (!res.ok || !body) {
-    const err = new Error(`Meta Model API error: HTTP ${res.status}`);
-    err.httpStatus = res.status;
-    err.errorBody = body ? JSON.stringify(body).slice(0, 2000) : text.slice(0, 2000);
-    throw err;
+  let cap = MAX_TOKENS;
+  let raises = 0;
+  for (;;) {
+    const res = await fetch(`${BASE_URL}/chat/completions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({ model: MODEL, messages, temperature: 0, ...(cap ? { max_tokens: cap } : {}) }),
+    });
+    const text = await res.text();
+    let body = null;
+    try { body = JSON.parse(text); } catch { body = null; }
+    if (!res.ok || !body) {
+      const err = new Error(`Meta Model API error: HTTP ${res.status}`);
+      err.httpStatus = res.status;
+      err.errorBody = body ? JSON.stringify(body).slice(0, 2000) : text.slice(0, 2000);
+      throw err;
+    }
+    const content = body.choices?.[0]?.message?.content ?? "";
+    const usage = body.usage ?? null;
+    const exhausted = cap !== null && typeof usage?.completion_tokens === "number" && usage.completion_tokens >= cap;
+    if ((content.trim().length > 0 || !exhausted || raises >= 2)) {
+      return {
+        content,
+        usage,
+        model: body.model ?? MODEL,
+        ...(raises > 0 ? { tokenBudget: { initial: MAX_TOKENS, final: cap, raises } } : {}),
+      };
+    }
+    raises++;
+    cap = Math.min(cap * 2, 64000);
   }
-  return {
-    content: body.choices?.[0]?.message?.content ?? "",
-    usage: body.usage ?? null,
-    model: body.model ?? MODEL,
-  };
 }
 
 function argValue(argv, flag) {

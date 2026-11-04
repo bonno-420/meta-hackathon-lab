@@ -58,7 +58,7 @@ export function monthlyIncomeExample(facts) {
   let days = null;
   if (daysItem && daysItem.status === "stated") {
     if (typeof daysItem.normalized === "number") days = daysItem.normalized;
-    else if (typeof daysItem.value === "string") { const m = daysItem.value.match(/(\d+)\s*日/); if (m) days = Number(m[1]); }
+    else if (typeof daysItem.value === "string") { const m = daysItem.value.match(/(\d+)\s*(?:日|days?\b)/i); if (m) days = Number(m[1]); }
   }
   const hourly = statedNum("salaryHourly");
   const daily = statedNum("salaryDaily");
@@ -277,7 +277,14 @@ ${body}</main>
     if (r.kind === "band") {
       const d = r.design;
       const spec = specById.get(d.id) ?? {};
-      mapGroups.rows.push({ block: "photo-band", carries: { specId: d.id, basis: spec.basis ?? (d.appealId ? { appealId: d.appealId } : null) }, purpose: d.purpose });
+      // A work-scene band shows the work: it carries the work appeal
+      // (the one the hero serves), grounded on the spec's basis —
+      // the basis fact is where the work happens, not what the
+      // photo presents (loop-027 run1's sample-review finding).
+      const carriesWork = !d.appealId && d.kind !== "place" && heroDesign?.appealId
+        ? { specId: d.id, appealId: heroDesign.appealId, basis: spec.basis ?? null }
+        : { specId: d.id, basis: spec.basis ?? (d.appealId ? { appealId: d.appealId } : null) };
+      mapGroups.rows.push({ block: "photo-band", carries: carriesWork, purpose: d.purpose });
     } else {
       mapGroups.rows.push({ block: "appeal-row", carries: { appealId: r.appealId }, purpose: "condition appeal carried by text (researched composition, loop-025)" });
     }

@@ -9,7 +9,7 @@ import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { performance } from "node:perf_hooks";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { MODEL, BASE_URL, MAX_TOKENS } from "./generate.mjs";
+import { MODEL, BASE_URL, MAX_TOKENS, callModelLive } from "./generate.mjs";
 import { REVIEW_PROMPT_VERSION, buildReviewMessages, buildPlanningReviewMessages, buildCopyReviewMessages, buildSampleReviewMessages, pageOutlineFromHtml, parseReview } from "./review.mjs";
 
 function argValue(argv, flag) {
@@ -17,24 +17,6 @@ function argValue(argv, flag) {
   return i >= 0 && i + 1 < argv.length ? argv[i + 1] : null;
 }
 
-async function callModelLive(messages) {
-  const apiKey = process.env.MODEL_API_KEY;
-  const res = await fetch(`${BASE_URL}/chat/completions`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify({ model: MODEL, messages, temperature: 0, ...(MAX_TOKENS ? { max_tokens: MAX_TOKENS } : {}) }),
-  });
-  const text = await res.text();
-  let body = null;
-  try { body = JSON.parse(text); } catch { body = null; }
-  if (!res.ok || !body) {
-    const err = new Error(`Model API error: HTTP ${res.status}`);
-    err.httpStatus = res.status;
-    err.errorBody = body ? JSON.stringify(body).slice(0, 2000) : text.slice(0, 2000);
-    throw err;
-  }
-  return { content: body.choices?.[0]?.message?.content ?? "", usage: body.usage ?? null, model: body.model ?? MODEL };
-}
 
 async function main() {
   const here = path.dirname(fileURLToPath(import.meta.url));
