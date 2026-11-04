@@ -11,7 +11,7 @@
 // back to generation once, and a second fail stops the run with the
 // findings on record.
 
-export const REVIEW_PROMPT_VERSION = "lp-review-v3";
+export const REVIEW_PROMPT_VERSION = "lp-review-v4";
 
 const VERDICT_SCHEMA = 'Schema: {"verdict":"pass"|"fail","findings":[{"criterion":"...","target":"the block, sentence, or planning item","problem":"what is wrong","instruction":"what to change"}]}';
 // The researched market patterns (loop-025) include one rule that
@@ -78,6 +78,7 @@ export function buildCopyReviewMessages({ planning, generation }) {
     "3. reader-fit: the copy does not speak to this audience (their hours, their area, their situation), or its tone/register is wrong for a job posting from the employer.",
     "4. client-test: as the client, this copy could not go out as your posting (awkward, templated to the point of insincerity, or missing the essentials a posting needs).",
     "5. appeal-patterns: judged against the researched patterns of this market (public job ads, abstracted in loop-025): appeals are short assertions, one point per sentence; each condition is paired with what it means in the reader's life; a low-barrier appeal is paired with its concrete ground. Boilerplate request closings (ご確認ください / ご検討ください / お問い合わせください) on appeal sentences fail this criterion — an inquiry invitation is allowed only on a sentence that states an item is not stated (未記載).",
+    "6. reader-conversion: appeals that the condition cards do not carry are the posting's charm beyond the bare conditions. Their sentences must be converted into reader-addressed copy — who this suits, what worry it answers — not left as bare fact statements. Fail when such an appeal's sentence only restates its fact. (The headline sentence is also judged here: it must be short — the job and the place only. A headline that packs in employment type, period, or appeal phrasing fails.)",
     REVIEW_RULES,
     VERDICT_SCHEMA,
   ].join("\n");

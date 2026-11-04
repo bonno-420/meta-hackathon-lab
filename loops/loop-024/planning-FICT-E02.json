@@ -22,14 +22,6 @@
       ]
     },
     {
-      "id": "A2",
-      "text": "Training is provided, so you can start even without woodworking experience",
-      "factKeys": [],
-      "sourceLines": [
-        "L08"
-      ]
-    },
-    {
       "id": "A3",
       "text": "The hourly wage is stated clearly at 1,400 yen",
       "factKeys": [
@@ -37,6 +29,14 @@
       ],
       "sourceLines": [
         "L04"
+      ]
+    },
+    {
+      "id": "A2",
+      "text": "Training is provided, so you can start even without woodworking experience",
+      "factKeys": [],
+      "sourceLines": [
+        "L08"
       ]
     },
     {

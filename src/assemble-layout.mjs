@@ -44,7 +44,7 @@ export function matchAppealSentences(generation, appeals) {
   return { byAppeal, bySentence };
 }
 
-export function assembleFromLayout({ root, generation, images, lpDir, heroChips, layout, planning, facts }) {
+export function assembleFromLayout({ root, generation, images, lpDir, heroChips, layout, planning, facts, original }) {
   const sentences = generation && Array.isArray(generation.sentences) ? generation.sentences : [];
   const appeals = planning?.appeals ?? [];
   const { byAppeal, bySentence } = matchAppealSentences(generation, appeals);
@@ -55,29 +55,39 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
   const appealLines = new Set(appeals.flatMap((a) => a?.sourceLines ?? []));
   let workIdx = sentences.findIndex((s) => (s?.factKeys ?? []).length === 0 && (s?.sourceLines ?? []).length > 0 && (s?.sourceLines ?? []).some((l) => !appealLines.has(l)));
   if (workIdx < 0) {
-    // Fallback: some generation paths tag the work sentence with
-    // employment/location keys (the English path does), so the
+    // First fallback: a planning may make the work itself the lead
+    // appeal (FICT-E02: appeal A1 IS the work, and the key-visual
+    // spec fronts it). Its sentences are matched to that appeal and
+    // its lines are claimed by it, so the rule above misses them.
+    // This runs BEFORE the unmatched-sentence fallback: a condition
+    // no appeal carries (E02's employment sentence, citing a line
+    // no appeal claims) otherwise wins that fallback and becomes
+    // the headline (runE2h page review, 2026-11-04).
+    const kvAppealId = (planning?.imageSpecs ?? []).find((s) => s?.role === "key-visual")?.basis?.appealId;
+    const kvAppeal = appeals.find((a) => a.id === kvAppealId);
+    if (kvAppeal && (kvAppeal.factKeys ?? []).length === 0) {
+      const idxs = byAppeal.get(kvAppeal.id) ?? [];
+      if (idxs.length > 0) {
+        // Among the lead appeal's sentences, the headline is the one
+        // stating the work itself — not a condition sentence that
+        // also cites the work line (runE2g, 2026-11-04: the
+        // employment sentence cited L01 and came first, so it became
+        // the headline and the page review failed job-first). Prefer
+        // the sentence carrying no fact key of another appeal.
+        const otherKeys = new Set(appeals.filter((a) => a.id !== kvAppeal.id).flatMap((a) => a?.factKeys ?? []));
+        const pure = idxs.find((i) => !(sentences[i]?.factKeys ?? []).some((k) => otherKeys.has(k)));
+        workIdx = pure ?? idxs[0];
+      }
+    }
+  }
+  if (workIdx < 0) {
+    // Second fallback: some generation paths tag the work sentence
+    // with employment/location keys (the English path does), so the
     // no-keys rule misses it and a condition became the headline
     // (FICT-E01, runE1c page review, 2026-11-04). The work sentence
     // is then the first sentence matched to no appeal that cites a
     // line no appeal claims.
     workIdx = sentences.findIndex((s, idx) => !bySentence.has(idx) && (s?.sourceLines ?? []).some((l) => !appealLines.has(l)));
-  }
-  if (workIdx < 0) {
-    // Second fallback: a planning may make the work itself the
-    // lead appeal (FICT-E02: appeal A1 IS the work, and the
-    // key-visual spec fronts it). Its sentences are matched to
-    // that appeal and its lines are claimed by it, so both rules
-    // above miss them and a condition became the headline
-    // (runE2d page review, 2026-11-04). When the key-visual spec
-    // fronts a fact-less appeal, that appeal's first sentence is
-    // the work sentence.
-    const kvAppealId = (planning?.imageSpecs ?? []).find((s) => s?.role === "key-visual")?.basis?.appealId;
-    const kvAppeal = appeals.find((a) => a.id === kvAppealId);
-    if (kvAppeal && (kvAppeal.factKeys ?? []).length === 0) {
-      const idxs = byAppeal.get(kvAppeal.id) ?? [];
-      if (idxs.length > 0) workIdx = idxs[0];
-    }
   }
   // Appeals that have a photo band: their sentences belong to the
   // band, not to a condition card (whichever comes first in the
@@ -182,6 +192,16 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
           if ((s?.factKeys ?? []).includes(carries.basis.factKey)) text += sentenceHtml(idx);
         });
       }
+      if (!text && /work/i.test(carries.specId ?? "")) {
+        // A work band whose fact-key sentences were all claimed
+        // earlier (the work sentence became the headline) still has
+        // the work appeal's body sentence — the generation writes
+        // one separately from the headline (v8). The band carries
+        // it, so the designed second work photo does not drop out
+        // (runE2i, 2026-11-04).
+        const kvA = (planning?.imageSpecs ?? []).find((s) => s?.role === "key-visual")?.basis?.appealId;
+        if (kvA) text = appealSentences(kvA);
+      }
       const fig = img && existing.has(img.id) ? `<img class="inline-photo" src="${esc(srcFor(img))}" alt="">` : "";
       if (text) {
         if (img && existing.has(img.id)) placedFiles.push(img.file);
@@ -227,6 +247,33 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
       body += `<section class="details">${rest}</section>\n`;
     }
   }
+  // The 募集要項 table (the user's spec, 2026-11-04): every stated
+  // fact as a label/value row, so the details section alone lets a
+  // reader grasp the whole posting. The table is the formal summary
+  // of the posting — its contents may duplicate the appeal copy,
+  // the way a legacy formal document restates what the body already
+  // said; the generated sentences still appear exactly once each.
+  const statedFacts = (facts?.items ?? []).filter((i) => i && i.status === "stated" && i.value !== null && i.value !== undefined && i.value !== "");
+  // Essentials the FACT schema does not carry (the work itself,
+  // days off, requirements) live in the original's lines. The table
+  // includes them with the original's own label, verbatim, so the
+  // 募集要項 alone covers the whole posting (runE2h page review:
+  // days off were not findable in the details, 2026-11-04).
+  const LINE_ROW_RE = /^(仕事内容|仕事|休日|応募資格|資格|Work|Duties|Job description|Days off|Days|Requirements|Qualifications)\s*[:：]\s*(.+)$/i;
+  const lineRows = [];
+  for (const l of original?.lines ?? []) {
+    const m = LINE_ROW_RE.exec(l?.text ?? "");
+    if (m) lineRows.push({ label: m[1], value: m[2] });
+  }
+  if (statedFacts.length > 0 || lineRows.length > 0) {
+    const labels = layout?.language === "en" ? FACT_LABEL_EN : FACT_LABEL;
+    const rows = statedFacts.map((i) => `<tr><th>${esc(labels[i.key] ?? i.key)}</th><td>${esc(typeof i.value === "object" ? JSON.stringify(i.value) : i.value)}</td></tr>`).join("")
+      + lineRows.map((r) => `<tr><th>${esc(r.label)}</th><td>${esc(r.value)}</td></tr>`).join("");
+    const table = `<section class="details"><h2 class="details-title">${layout?.language === "en" ? "Job details" : "募集要項"}</h2><table class="fact-table">${rows}</table></section>\n`;
+    const ci = body.lastIndexOf(`<footer class="cta">`);
+    if (ci >= 0) body = body.slice(0, ci) + table + body.slice(ci);
+    else body += table;
+  }
   if (!blocks.some((b) => b.block === "cta")) body += `<footer class="cta"><button class="cta-button" type="button">${layout?.language === "en" ? "Apply" : "応募する"}</button></footer>\n`;
   // Images no block claimed are appended (existence/reference is C2).
   for (const img of images ?? []) {
@@ -264,6 +311,10 @@ export function assembleFromLayout({ root, generation, images, lpDir, heroChips,
 .appeal-text .lp-sentence:last-child{margin-bottom:0}
 .details{padding:28px 24px 8px}
 .details .lp-sentence{margin:0 0 12px;line-height:1.8}
+.details-title{font-size:18px;margin:0 0 12px}
+.fact-table{width:100%;border-collapse:collapse;font-size:14px}
+.fact-table th,.fact-table td{border:1px solid #d8dee6;padding:8px 10px;text-align:left;vertical-align:top;line-height:1.6}
+.fact-table th{width:34%;background:#f4f6f9;font-weight:600}
 .clear{clear:both}
 .cta{background:${pal.titleBg};padding:28px 24px 36px;text-align:center;margin-top:32px}
 .cta-button{background:${pal.accent};color:#fff;border:none;border-radius:999px;padding:15px 44px;font-size:16px;min-width:56%}

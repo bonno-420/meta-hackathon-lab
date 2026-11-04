@@ -73,7 +73,10 @@ export function compareFactSets(candidate, fixed) {
     }
     if (c.status !== f.status) diffs.push({ key, field: "status", fixed: f.status, candidate: c.status });
     if (c.normalized !== f.normalized) diffs.push({ key, field: "normalized", fixed: f.normalized, candidate: c.normalized });
-    if (c.sourceLine !== f.sourceLine) diffs.push({ key, field: "sourceLine", fixed: f.sourceLine, candidate: c.sourceLine });
+    // An empty string is the extraction model's spelling of "no
+    // source reference" — normalize before comparing (runE2g).
+    const normLine = (v) => (v === "" ? null : (v ?? null));
+    if (normLine(c.sourceLine) !== normLine(f.sourceLine)) diffs.push({ key, field: "sourceLine", fixed: f.sourceLine, candidate: c.sourceLine });
     if (c.value !== f.value) textualDiffs.push({ key, field: "value", fixed: f.value, candidate: c.value });
     if (c.quote !== f.quote) textualDiffs.push({ key, field: "quote", fixed: f.quote, candidate: c.quote });
   }
@@ -322,8 +325,10 @@ export async function runDemo(options, deps = {}) {
     // With a confirmed finished-image layout, the LP is assembled in
     // that composition (the confirmed placement and appeals as-is);
     // without one, the legacy assembly is used unchanged.
+    let originalForAssembly = null;
+    try { originalForAssembly = loadJson(resolveRoot(root, originalFile)); } catch { originalForAssembly = null; }
     const built = layout
-      ? assembleFromLayout({ root, generation, images, lpDir: path.dirname(lpFile), heroChips, layout, planning, facts })
+      ? assembleFromLayout({ root, generation, images, lpDir: path.dirname(lpFile), heroChips, layout, planning, facts, original: originalForAssembly })
       : assembleLP({ root, generation, images, lpDir: path.dirname(lpFile), heroChips });
     mkdirSync(path.dirname(resolveRoot(root, lpFile)), { recursive: true });
     writeFileSync(resolveRoot(root, lpFile), built.html, "utf8");

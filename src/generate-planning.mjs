@@ -15,7 +15,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { MODEL, BASE_URL, MAX_TOKENS, RATES_KNOWN, checkGenerationInput, checkGrounding } from "./generate.mjs";
 import { intentFromPlanning, sha256Text } from "./planning.mjs";
 
-export const PLANNING_PROMPT_VERSION = "lp-generate-v7-planning";
+export const PLANNING_PROMPT_VERSION = "lp-generate-v8-planning";
 
 // Planning-path messages. The materials are the approved FACTs AND
 // the original posting's lines: items the FACT schema does not carry
@@ -30,6 +30,8 @@ export function buildPlanningGenerationMessages(facts, original, planning, inten
   const unstated = (facts?.items ?? []).filter((i) => i.status === "unstated");
   const lines = Array.isArray(original?.lines) ? original.lines : [];
   const appeals = Array.isArray(planning?.appeals) ? planning.appeals : [];
+  const cardKeys = new Set(planning?.firstCheckKeys ?? []);
+  const nonCardAppealIds = appeals.filter((a) => !(a?.factKeys ?? []).some((k) => cardKeys.has(k))).map((a) => a.id);
   const workLine = lines.find((l) => /^(仕事内容|Work\s*:|Duties\s*:|Job description)/i.test(l?.text ?? ""));
   const system = [
     planning?.language === "en" ? "You write English LP (landing page) copy sentences for a fictional job posting, strictly from the materials: the approved FACT items and the original posting's lines." : "You write Japanese LP (landing page) copy sentences for a fictional job posting, strictly from the materials: the approved FACT items and the original posting's lines.",
@@ -42,7 +44,10 @@ export function buildPlanningGenerationMessages(facts, original, planning, inten
     "- For every sentence, list the FACT keys (factKeys) and/or the original line IDs (sourceLines) it is based on. A sentence must cite at least one of them, and must cite every key and line it uses.",
     "Coverage (binding):",
     "- Write at least one sentence for EVERY appeal listed below, carrying that appeal's point in the recruiter's voice, grounded in its factKeys and/or sourceLines.",
-    ...(workLine ? [`- Write a sentence stating the work content from the original line ${workLine.id} (what the work itself is), citing ${workLine.id}.`] : []),
+    ...(workLine ? [
+      `- Write a sentence stating the work content from the original line ${workLine.id} (what the work itself is), citing ${workLine.id}.`,
+      `- Also write a separate body sentence describing the concrete tasks in that line, citing ${workLine.id} — the headline names the job, the body sentence describes the work.`,
+    ] : []),
     "- Also cover the stated conditions. Order the sentences in the appeals' order, with the work content early.",
     "Voice:",
     // The review finding wired in (loop-016 persona reviews; spec
@@ -52,7 +57,12 @@ export function buildPlanningGenerationMessages(facts, original, planning, inten
     // it reaches the production path — this rule is that wiring
     // (the user's learning-flow doctrine, 2026-11-03/04).
     "- A sentence that only restates a fact does not carry an appeal. For every appeal, state the fact AND what it means for the reader described in the audience, in the recruiter's voice. The meaning must come only from the fact itself and the appeal's framing: never add a new fact, condition, benefit, or promise that the materials do not state.",
-    "- The work-content sentence is the page's headline. State plainly what the job is, so a reader knows what job this posting is for from that sentence alone.",
+    "- The work-content sentence is the page's headline. Keep it SHORT — the job itself and the place only, one compact line — so a reader knows what job this posting is for from that sentence alone. Do NOT pack the employment type, the contract period, or appeal phrasing into the headline sentence; write those as their own sentences.",
+    // Non-card appeals are the posting's charm beyond the bare
+    // conditions (the user's spec, 2026-11-04): their sentences are
+    // addressed to the reader — who this suits, what worry it
+    // answers — instead of ending as fact restatements.
+    `- Appeals that the condition cards do not carry (ids: ${nonCardAppealIds.join(", ") || "none"}) are the posting's charm beyond the bare conditions. Write their sentences addressed to the reader — who this suits, what worry it answers ("for people who ...", "if you worry about ...") — grounded only in that appeal's own facts and lines. Never invent a charm the materials do not support.`,
     // The researched market patterns (loop-025, appeal-patterns-v1):
     // the yardstick is no longer the coordinator's wording advice.
     // Generation writes FROM the patterns; the review fails AGAINST
@@ -64,6 +74,7 @@ export function buildPlanningGenerationMessages(facts, original, planning, inten
       "- Every condition is stated together with what it means in the reader's life (from the audience), in the same sentence. Never end at a restatement of the condition.",
       "- A low-barrier appeal (no experience needed) is paired with the concrete ground the materials give — the work's concrete tasks. Never invent support systems or training.",
       "- Never close an appeal sentence with a boilerplate request (ご確認ください / ご検討ください / お問い合わせください). End assertions plainly. An inquiry invitation may appear only on a sentence that states an item is not stated (未記載), at most once.",
+      "- 条件カードにならない訴求は求人票の外の魅力である。事実の言い換えで終わらせず、「こんな人に向いている」「こんな悩みに応える」の形で読み手に転換して書く。根拠はその訴求の事実と行だけに限り、材料にない魅力を作らない。",
       "- No application or inquiry calls inside appeal sentences.",
     ]),
     ...(intent?.voice?.rules ?? []).map((r) => `- ${r}`),

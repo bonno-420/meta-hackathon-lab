@@ -106,18 +106,23 @@ export function checkQuoteVerbatim(facts, original) {
     // line (the adopted FICT-J01 facts), or the original is simply
     // silent and the item carries no source reference at all (a raw
     // posting through the text entry, loop-022). Both pass; a
-    // half-filled reference does not.
-    if (item.status === "unstated" && (item.sourceLine ?? null) === null && (item.quote ?? null) === null) {
+    // half-filled reference does not. An empty string is how an
+    // extraction model writes "absent" — it is normalized to null
+    // here (runE2g, 2026-11-04: sourceLine "" on unstated items
+    // stopped a run at facts-comparison).
+    const sl = item.sourceLine === "" ? null : (item.sourceLine ?? null);
+    const q = item.quote === "" ? null : (item.quote ?? null);
+    if (item.status === "unstated" && sl === null && q === null) {
       continue;
     }
-    if ((item.sourceLine ?? null) === null || (item.quote ?? null) === null) {
+    if (sl === null || q === null) {
       issues.push({ key: item.key ?? null, issue: "source reference is incomplete (sourceLine and quote must both be present, or both absent on an unstated item)" });
       continue;
     }
-    const line = lines.get(item.sourceLine);
+    const line = lines.get(sl);
     if (line === undefined) {
-      issues.push({ key: item.key ?? null, issue: `sourceLine not found: ${String(item.sourceLine)}` });
-    } else if (typeof item.quote !== "string" || !line.includes(item.quote)) {
+      issues.push({ key: item.key ?? null, issue: `sourceLine not found: ${String(sl)}` });
+    } else if (typeof q !== "string" || !line.includes(q)) {
       issues.push({ key: item.key ?? null, issue: "quote is not a verbatim substring of the source line" });
     }
   }

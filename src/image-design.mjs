@@ -234,7 +234,20 @@ export function buildImageDesign(planning, facts) {
       noImage.push({ appealId: a.id, reason: decision.reason });
     }
   }
-  return { version: "image-design-v2", count: images.length, images, noImage, designNotes };
+  // The pre-generation confirmations (the user's spec, 2026-11-04):
+  // before any image is generated, the design records (1) whether
+  // important parts the hero does not explain are covered by another
+  // image, and (2) whether benefits/treatment that must have an
+  // image got one. Work-scene photos stay at hero + about one; any
+  // further images come from these checks, never from a cap and
+  // never from decoration.
+  const coverageChecks = {
+    workScenes: images.filter((e) => e.source === "spec" || e.kind === "hero").map((e) => e.id),
+    beyondHero: images.filter((e) => e.kind !== "hero").map((e) => ({ id: e.id, purpose: e.purpose })),
+    mustImageBenefits: (planning?.appeals ?? []).filter((a) => { const d = appealImageDecision(a, facts); return d.image && d.kind === "strong-benefit"; }).map((a) => a.id),
+    note: "生成前の確認: ヒーローで説明できていない大事な部分は beyondHero の画像が担う。福利厚生・待遇で必ず画像にするものは mustImageBenefits に対応する画像があること",
+  };
+  return { version: "image-design-v2", count: images.length, images, noImage, designNotes, coverageChecks };
 }
 
 // Design-stage checks, including the design-kind gates (G6, G7) and

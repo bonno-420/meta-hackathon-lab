@@ -193,6 +193,90 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
   expectTrue("assembly-band-no-empty-text-box", !builtB.html.includes(`<div class="explain-text"></div>`));
 }
 
+// ---------- assembly: headline prefers the work sentence over a condition sentence citing the same line (runE2g) ----------
+{
+  const { assembleFromLayout } = await import("./assemble-layout.mjs");
+  const planningH = {
+    appeals: [
+      { id: "A1", text: "手で物を作る仕事そのもの", factKeys: [], sourceLines: ["L01"] },
+      { id: "A2", text: "契約社員（6か月）", factKeys: ["employmentType", "contractPeriod"], sourceLines: ["L01", "L02"] },
+    ],
+    imageSpecs: [{ id: "key-visual", role: "key-visual", basis: { appealId: "A1" } }],
+    firstCheckKeys: ["workHours"],
+  };
+  const genH = { sentences: [
+    { text: "雇用形態は契約社員、期間は6か月です。", factKeys: ["employmentType", "contractPeriod"], sourceLines: ["L01", "L02"] },
+    { text: "小さな工房で木枠を組み立て、部品を手で磨く仕事です。", factKeys: [], sourceLines: ["L01"] },
+  ] };
+  const layoutH = { messageMap: [
+    { block: "title", carries: { workContent: true, appealId: "A1" } },
+    { block: "details", carries: { factKeys: [], appealIds: ["A2"] } },
+    { block: "cta", carries: { action: true } },
+  ] };
+  const builtH = assembleFromLayout({ root: makeScratch(), generation: genH, images: [], lpDir: "out", heroChips: [], layout: layoutH, planning: planningH, facts });
+  const titleSection = builtH.html.split(`<section class="title-block">`)[1]?.split("</section>")[0] ?? "";
+  expectTrue("assembly-headline-is-the-work-sentence", titleSection.includes("木枠を組み立て"));
+  expectTrue("assembly-headline-is-not-the-employment-sentence", !titleSection.includes("雇用形態は契約社員"));
+  expectTrue("assembly-fact-table-lists-stated-facts", builtH.html.includes("fact-table") && builtH.html.includes("募集要項"));
+}
+
+// ---------- assembly: the KV-appeal rule beats the unmatched-sentence fallback (runE2h) ----------
+{
+  const { assembleFromLayout } = await import("./assemble-layout.mjs");
+  const planningI = {
+    appeals: [
+      { id: "A1", text: "仕事そのもの", factKeys: [], sourceLines: ["L01"] },
+      { id: "A4", text: "平日の勤務時間", factKeys: ["workHours"], sourceLines: ["L05"] },
+    ],
+    imageSpecs: [{ id: "key-visual", role: "key-visual", basis: { appealId: "A1" } }],
+    firstCheckKeys: ["workHours"],
+  };
+  const genI = { sentences: [
+    { text: "雇用形態は契約社員です。", factKeys: ["employmentType"], sourceLines: ["L02"] },
+    { text: "小さな工房で木枠を組み立てる仕事です。", factKeys: [], sourceLines: ["L01"] },
+  ] };
+  const layoutI = { messageMap: [
+    { block: "title", carries: { workContent: true, appealId: "A1" } },
+    { block: "cta", carries: { action: true } },
+  ] };
+  const originalI = { lines: [
+    { id: "L01", text: "Work: Assembling small wooden frames" },
+    { id: "L06", text: "Days: Monday to Friday" },
+  ] };
+  const builtI = assembleFromLayout({ root: makeScratch(), generation: genI, images: [], lpDir: "out", heroChips: [], layout: layoutI, planning: planningI, facts, original: originalI });
+  const titleI = builtI.html.split(`<section class="title-block">`)[1]?.split("</section>")[0] ?? "";
+  expectTrue("assembly-headline-kv-appeal-beats-unmatched-condition", titleI.includes("木枠を組み立てる仕事です"));
+  expectTrue("assembly-fact-table-has-line-essentials", builtI.html.includes("Monday to Friday") && builtI.html.includes("<th>Days</th>"));
+}
+
+// ---------- assembly: the work band falls back to the work appeal's body sentence (runE2i) ----------
+{
+  const { assembleFromLayout } = await import("./assemble-layout.mjs");
+  const rootJ = makeScratch();
+  mkdirSync(path.join(rootJ, "images"), { recursive: true });
+  writeFileSync(path.join(rootJ, "images", "section-work.webp"), "x");
+  const planningJ = {
+    appeals: [{ id: "A1", text: "仕事そのもの", factKeys: [], sourceLines: ["L01"] }],
+    imageSpecs: [
+      { id: "key-visual", role: "key-visual", basis: { appealId: "A1" } },
+      { id: "section-work", role: "work", basis: { factKey: "workLocation" } },
+    ],
+    firstCheckKeys: [],
+  };
+  const genJ = { sentences: [
+    { text: "小さな工房で木枠を組み立てる仕事です。", factKeys: ["workLocation"], sourceLines: ["L01", "L03"] },
+    { text: "手で物を作りたい人に向いた仕事です。", factKeys: [], sourceLines: ["L01"] },
+  ] };
+  const layoutJ = { messageMap: [
+    { block: "title", carries: { workContent: true, appealId: "A1" } },
+    { block: "photo-band", carries: { specId: "section-work", basis: { factKey: "workLocation" } } },
+    { block: "cta", carries: { action: true } },
+  ] };
+  const builtJ = assembleFromLayout({ root: rootJ, generation: genJ, images: [{ id: "section-work", file: "images/section-work.webp" }], lpDir: "out", heroChips: [], layout: layoutJ, planning: planningJ, facts });
+  expectTrue("assembly-work-band-carries-body-sentence", builtJ.html.includes("手で物を作りたい人に向いた仕事です") && builtJ.html.includes("section-work.webp"));
+  expectTrue("assembly-work-band-not-omitted", !(builtJ.assignments.omittedBands ?? []).includes("section-work"));
+}
+
 // ---------- assembly: the title is the job itself; every image band carries text (run25 verdict) ----------
 {
   const { assembleFromLayout } = await import("./assemble-layout.mjs");

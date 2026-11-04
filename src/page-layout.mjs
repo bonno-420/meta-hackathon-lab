@@ -26,12 +26,18 @@ export const FACT_LABEL_EN = {
   salaryHourly: "Hourly wage", workHours: "Hours", transportCap: "Transport cap",
   transport: "Transport", breakMinutes: "Break", contractPeriod: "Contract period",
   workLocation: "Location", employmentType: "Employment type",
+  employer: "Employer", jobId: "Job ID", renewal: "Renewal",
+  monthlyIncomeGuarantee: "Monthly income guarantee", actualHours: "Actual hours",
+  monthlyDaysAssumption: "Assumed days per month", housing: "Housing",
 };
 
 export const FACT_LABEL = {
   salaryHourly: "時給", workHours: "勤務時間", transportCap: "交通費上限",
   transport: "交通費", breakMinutes: "休憩", contractPeriod: "契約期間",
   workLocation: "勤務地", employmentType: "雇用形態",
+  employer: "雇用主", jobId: "求人番号", renewal: "契約更新",
+  monthlyIncomeGuarantee: "月収保証", actualHours: "実働",
+  monthlyDaysAssumption: "月所定日数", housing: "住宅・寮",
 };
 
 const ICONS = [
