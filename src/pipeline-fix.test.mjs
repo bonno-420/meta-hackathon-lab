@@ -353,6 +353,15 @@ expectTrue("pagecheck-verifier-phrase-hit", phrasePage.summary.verificationHits 
   expectTrue("workfirst-stable-when-first", orderAppealsWorkFirst(already).reordered === false);
 }
 
+// ---------- copy review v8: semantic accuracy (mandatory) + language quality (regional, practical level) ----------
+{
+  const { buildCopyReviewMessages, REVIEW_PROMPT_VERSION } = await import("./review.mjs");
+  expect("review-version-v8", REVIEW_PROMPT_VERSION, "lp-review-v8");
+  const msgs = buildCopyReviewMessages({ planning: { language: "en", audience: "Women in Tokyo", appeals: [] }, generation: { sentences: [{ text: "Pack soaps." }] } });
+  expectTrue("v8-semantic-accuracy-present", msgs[0].content.includes("semantic-accuracy") && msgs[0].content.includes("mandatory pass/fail"));
+  expectTrue("v8-language-quality-present", msgs[0].content.includes("language-quality") && msgs[0].content.includes("TARGET REGION") && msgs[0].content.includes("WITHIN practical level are not findings"));
+}
+
 // ---------- color rule refinement: similar conditions may be similar; unconditional sameness may not (user, 2026-11-04) ----------
 {
   const { deriveLpDesign } = await import("./lp-design.mjs");

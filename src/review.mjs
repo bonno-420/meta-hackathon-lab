@@ -11,7 +11,7 @@
 // back to generation once, and a second fail stops the run with the
 // findings on record.
 
-export const REVIEW_PROMPT_VERSION = "lp-review-v7";
+export const REVIEW_PROMPT_VERSION = "lp-review-v8";
 
 const VERDICT_SCHEMA = 'Schema: {"verdict":"pass"|"fail","findings":[{"criterion":"...","target":"the block, sentence, or planning item","problem":"what is wrong","instruction":"what to change"}]}';
 // The researched market patterns (loop-025) include one rule that
@@ -98,6 +98,8 @@ export function buildCopyReviewMessages({ planning, generation }) {
     "7. ending-variation: the conversion must not collapse into one repeated sentence ending. When most sentences close with the same formula tail (for example 〜に向いています / 〜に合っています / 〜やすいです in Japanese, or the same closing clause in English), the copy reads as machine-templated: fail, naming the repeated tail, and instruct varied, plain assertion endings instead.",
     "8. appeal-not-explanation: the copy must APPEAL, not explain. A sentence that neutrally explains or describes a condition (how shifts are planned, how the workplace is arranged) without giving the reader a reason to want the job fails this criterion, even when it is factual and reader-addressed in form. Each appeal sentence should land as a short assertion of a concrete good for the reader (the user's review of FICT-E03, 2026-11-04: the copy still read as explanation).",
     "9. language-purity: on an English page, Japanese text inside a sentence fails when it is residue — a leftover fixed note, a Japanese marker word, a template fragment. Japanese used INTENTIONALLY does not fail: a Japanese proper noun, or a term the sentence itself explains for the reader. The deterministic scan's hits are listed below the copy; judge each hit on that distinction (the user's refinement, 2026-11-04: intentional use must not be removed).",
+    "10. semantic-accuracy (mandatory pass/fail): a sentence that changes the MEANING of a stated fact fails regardless of fluency — amounts, times, and caps altered or softened ('up to' dropped, 'weekdays only' loosened), negations lost, conditions merged into claims the original does not make, or a benefit attributed to the wrong condition. Paraphrase that preserves meaning exactly is not a finding.",
+    "11. language-quality: judge naturalness and appeal by the standards of the copy's OUTPUT LANGUAGE and the TARGET REGION named in the audience (its job-ad conventions, register, and ordinary phrasing). Fail ONLY when the copy is below practical level for that language and region — a native reader there would stumble, the phrasing reads as machine translation, or the register is wrong for the region's job postings. Regional variants, register choices, and phrasing preferences WITHIN practical level are not findings and must not send the copy back for re-revision (the user's instruction, 2026-11-04: lightweight evaluation; no preference-driven rework).",
     REVIEW_RULES,
     VERDICT_SCHEMA,
   ].join("\n");
