@@ -1,0 +1,536 @@
+{
+  "kind": "demo-run-result",
+  "version": 1,
+  "startedAt": "2026-11-03T13:32:02.727Z",
+  "finishedAt": "2026-11-03T13:32:41.497Z",
+  "durationMs": 38769,
+  "status": "stopped",
+  "stoppedAt": "facts-comparison",
+  "stopReason": "抽出候補の引用逐語性チェックが pass しなかったため、後段を実行しない",
+  "input": {
+    "original": {
+      "file": "src/fict-j01-v1.json"
+    },
+    "intake": null,
+    "facts": {
+      "file": "src/facts/FICT-J01-facts-v1.json"
+    },
+    "approval": {
+      "file": "src/facts/FICT-J01-facts-v1.approval.json"
+    }
+  },
+  "stages": {
+    "intake": {
+      "executed": false,
+      "reason": "固定FICT-J01ピンをそのまま使うため、入取段階は実行しない"
+    },
+    "extraction": {
+      "executed": true,
+      "status": "completed",
+      "model": "muse-spark-1.3-contributor",
+      "promptVersion": "fact-extract-v1.1",
+      "durationMs": 38692,
+      "usage": {
+        "completion_tokens": 6743,
+        "prompt_tokens": 388,
+        "total_tokens": 7131,
+        "completion_tokens_details": {
+          "reasoning_tokens": 6179
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "costUsd": 0.0013874,
+      "costNote": "D4単価（入力$0.1/1M, 出力$0.2/1M）による算出。確定実費は dev.meta.ai Billing 実績との突合が必要。",
+      "schemaCheck": {
+        "pass": true,
+        "expectedCount": 15,
+        "actualCount": 15,
+        "missingKeys": [],
+        "extraKeys": [],
+        "duplicateKeys": [],
+        "fieldIssues": []
+      },
+      "source": {
+        "file": null,
+        "id": "FICT-J01",
+        "version": "v1"
+      },
+      "facts": {
+        "items": [
+          {
+            "key": "employer",
+            "status": "stated",
+            "value": "架空のソラノ輪具研究所",
+            "normalized": null,
+            "sourceLine": "L01",
+            "quote": "架空のソラノ輪具研究所"
+          },
+          {
+            "key": "jobId",
+            "status": "stated",
+            "value": "FICT-J01",
+            "normalized": null,
+            "sourceLine": "L01",
+            "quote": "FICT-J01"
+          },
+          {
+            "key": "workLocation",
+            "status": "stated",
+            "value": "架空の青空実験区A棟",
+            "normalized": null,
+            "sourceLine": "L01",
+            "quote": "架空の青空実験区A棟"
+          },
+          {
+            "key": "employmentType",
+            "status": "stated",
+            "value": "有期契約社員",
+            "normalized": null,
+            "sourceLine": "L02",
+            "quote": "有期契約社員"
+          },
+          {
+            "key": "contractPeriod",
+            "status": "stated",
+            "value": "3か月",
+            "normalized": null,
+            "sourceLine": "L02",
+            "quote": "契約期間は3か月"
+          },
+          {
+            "key": "renewal",
+            "status": "unstated",
+            "value": null,
+            "normalized": null,
+            "sourceLine": null,
+            "quote": null
+          },
+          {
+            "key": "salaryHourly",
+            "status": "stated",
+            "value": "時給1,500円",
+            "normalized": 1500,
+            "sourceLine": "L03",
+            "quote": "時給1,500円"
+          },
+          {
+            "key": "monthlyIncomeGuarantee",
+            "status": "stated",
+            "value": "月収は保証しない",
+            "normalized": null,
+            "sourceLine": "L03",
+            "quote": "月収は保証しない"
+          },
+          {
+            "key": "workHours",
+            "status": "stated",
+            "value": "09:00〜18:00",
+            "normalized": null,
+            "sourceLine": "L04",
+            "quote": "09:00〜18:00"
+          },
+          {
+            "key": "breakMinutes",
+            "status": "stated",
+            "value": "60分",
+            "normalized": 60,
+            "sourceLine": "L04",
+            "quote": "休憩60分"
+          },
+          {
+            "key": "actualHours",
+            "status": "stated",
+            "value": "8時間",
+            "normalized": 8,
+            "sourceLine": "L04",
+            "quote": "実働8時間"
+          },
+          {
+            "key": "monthlyDaysAssumption",
+            "status": "stated",
+            "value": "月20日勤務は試算用の仮定",
+            "normalized": null,
+            "sourceLine": "L04",
+            "quote": "月20日勤務は試算用の仮定"
+          },
+          {
+            "key": "transport",
+            "status": "stated",
+            "value": "実費支給",
+            "normalized": null,
+            "sourceLine": "L05",
+            "quote": "交通費は実費支給"
+          },
+          {
+            "key": "transportCap",
+            "status": "stated",
+            "value": "10,000円",
+            "normalized": 10000,
+            "sourceLine": "L05",
+            "quote": "月上限10,000円"
+          },
+          {
+            "key": "housing",
+            "status": "unstated",
+            "value": null,
+            "normalized": null,
+            "sourceLine": null,
+            "quote": null
+          }
+        ]
+      },
+      "e01": {
+        "caseId": "E01",
+        "stage": "照合",
+        "verdict": "一致（人間承認待ち）",
+        "stoppedAtReconciliation": false,
+        "generationStarted": false,
+        "generationNote": "生成工程は作らない。人間承認前には生成を開始しない。",
+        "matched": [
+          {
+            "field": "給与（時給）",
+            "value": "時給1,500円",
+            "source": "L03"
+          },
+          {
+            "field": "勤務時間",
+            "value": "09:00〜18:00",
+            "source": "L04"
+          },
+          {
+            "field": "交通費（月上限）",
+            "value": "10,000円",
+            "source": "L05"
+          }
+        ],
+        "contradictions": [],
+        "unstated": [
+          {
+            "key": "renewal",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "housing",
+            "source": null,
+            "quote": null
+          }
+        ],
+        "claims": {
+          "salaryHourly": {
+            "value": 1500,
+            "snippet": "時給1,500円"
+          },
+          "workHours": {
+            "value": "09:00〜18:00",
+            "snippet": "09:00〜18:00"
+          },
+          "transportCap": {
+            "value": 10000,
+            "snippet": "月上限10,000円"
+          }
+        }
+      },
+      "e02": {
+        "caseId": "E02",
+        "stage": "照合",
+        "verdict": "停止（矛盾あり）",
+        "stoppedAtReconciliation": true,
+        "generationStarted": false,
+        "generationNote": "生成工程は作らない。人間承認前には生成を開始しない。",
+        "matched": [
+          {
+            "field": "勤務時間",
+            "value": "09:00〜18:00",
+            "source": "L04"
+          },
+          {
+            "field": "交通費（月上限）",
+            "value": "10,000円",
+            "source": "L05"
+          }
+        ],
+        "contradictions": [
+          {
+            "field": "給与（時給）",
+            "factValue": "時給1,500円",
+            "factSource": "L03「時給1,500円」",
+            "summaryValue": "時給1,700円",
+            "summarySnippet": "時給1,700円"
+          }
+        ],
+        "unstated": [
+          {
+            "key": "renewal",
+            "source": null,
+            "quote": null
+          },
+          {
+            "key": "housing",
+            "source": null,
+            "quote": null
+          }
+        ],
+        "claims": {
+          "salaryHourly": {
+            "value": 1700,
+            "snippet": "時給1,700円"
+          },
+          "workHours": {
+            "value": "09:00〜18:00",
+            "snippet": "09:00〜18:00"
+          },
+          "transportCap": {
+            "value": 10000,
+            "snippet": "月上限10,000円"
+          }
+        },
+        "skipped": false
+      }
+    },
+    "factsComparison": {
+      "executed": true,
+      "verbatim": {
+        "pass": false,
+        "checked": 15,
+        "issues": [
+          {
+            "key": "renewal",
+            "issue": "sourceLine not found: null"
+          },
+          {
+            "key": "housing",
+            "issue": "sourceLine not found: null"
+          }
+        ]
+      },
+      "agrees": false,
+      "diffs": [
+        {
+          "key": "renewal",
+          "field": "sourceLine",
+          "fixed": "L02",
+          "candidate": null
+        },
+        {
+          "key": "housing",
+          "field": "sourceLine",
+          "fixed": "L06",
+          "candidate": null
+        }
+      ],
+      "textualDiffs": [
+        {
+          "key": "employer",
+          "field": "quote",
+          "fixed": "企業名は架空のソラノ輪具研究所。",
+          "candidate": "架空のソラノ輪具研究所"
+        },
+        {
+          "key": "jobId",
+          "field": "quote",
+          "fixed": "求人番号は FICT-J01。",
+          "candidate": "FICT-J01"
+        },
+        {
+          "key": "workLocation",
+          "field": "quote",
+          "fixed": "勤務地は架空の青空実験区A棟。",
+          "candidate": "架空の青空実験区A棟"
+        },
+        {
+          "key": "employmentType",
+          "field": "quote",
+          "fixed": "雇用形態は有期契約社員。",
+          "candidate": "有期契約社員"
+        },
+        {
+          "key": "contractPeriod",
+          "field": "quote",
+          "fixed": "契約期間は3か月。",
+          "candidate": "契約期間は3か月"
+        },
+        {
+          "key": "renewal",
+          "field": "quote",
+          "fixed": "更新の有無は未記載。",
+          "candidate": null
+        },
+        {
+          "key": "salaryHourly",
+          "field": "quote",
+          "fixed": "給与は時給1,500円。",
+          "candidate": "時給1,500円"
+        },
+        {
+          "key": "monthlyIncomeGuarantee",
+          "field": "value",
+          "fixed": "保証しない",
+          "candidate": "月収は保証しない"
+        },
+        {
+          "key": "monthlyIncomeGuarantee",
+          "field": "quote",
+          "fixed": "月収は保証しない。",
+          "candidate": "月収は保証しない"
+        },
+        {
+          "key": "workHours",
+          "field": "quote",
+          "fixed": "勤務時間は09:00〜18:00、",
+          "candidate": "09:00〜18:00"
+        },
+        {
+          "key": "monthlyDaysAssumption",
+          "field": "quote",
+          "fixed": "月20日勤務は試算用の仮定。",
+          "candidate": "月20日勤務は試算用の仮定"
+        },
+        {
+          "key": "transportCap",
+          "field": "value",
+          "fixed": "月上限10,000円",
+          "candidate": "10,000円"
+        },
+        {
+          "key": "transportCap",
+          "field": "quote",
+          "fixed": "月上限10,000円。",
+          "candidate": "月上限10,000円"
+        },
+        {
+          "key": "housing",
+          "field": "quote",
+          "fixed": "寮の有無と費用は未記載。",
+          "candidate": null
+        }
+      ]
+    },
+    "approval": {
+      "executed": false,
+      "reason": "前段で停止したため、承認の有効性の再確認を実行しない"
+    },
+    "planning": {
+      "executed": false,
+      "reason": "前段で停止したため、企画入力の確認を実行しない"
+    },
+    "keyVisual": {
+      "executed": false,
+      "reason": "前段で停止したため、1枚画を実行しない"
+    },
+    "generation": {
+      "executed": false,
+      "reason": "前段で停止したため、生成を実行しない"
+    },
+    "images": {
+      "executed": false,
+      "reason": "前段で停止したため、画像生成を実行しない"
+    },
+    "lpAssembly": {
+      "executed": false,
+      "reason": "前段で停止したため、LP の組み立てを実行しない"
+    },
+    "verification": {
+      "executed": false,
+      "reason": "前段で停止したため、再検証を実行しない"
+    },
+    "preview": {
+      "executed": false,
+      "reason": "前段で停止したため、プレビューを生成しない"
+    }
+  },
+  "e02": {
+    "caseId": "E02",
+    "stage": "照合",
+    "verdict": "停止（矛盾あり）",
+    "stoppedAtReconciliation": true,
+    "contradictions": [
+      {
+        "field": "給与（時給）",
+        "factValue": "時給1,500円",
+        "factSource": "L03「時給1,500円」",
+        "summaryValue": "時給1,700円",
+        "summarySnippet": "時給1,700円"
+      }
+    ],
+    "approval": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため承認を実行しない（矛盾で停止した対象に承認記録を作らない、G-INV-3）"
+    },
+    "generation": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため生成を実行しない"
+    },
+    "images": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため画像生成を実行しない"
+    },
+    "lpAssembly": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため LP の組み立てを実行しない"
+    },
+    "verification": {
+      "executed": false,
+      "reason": "E02 は照合で停止したため再検証を実行しない"
+    },
+    "preview": {
+      "executed": false,
+      "reason": "E02 は照合で停止したためプレビューを実行しない"
+    }
+  },
+  "artifacts": {
+    "generationFile": null,
+    "verificationFile": "loops/loop-020/live-run1/verification-result.json",
+    "lpFile": null,
+    "imagesRunFile": null,
+    "preview": null
+  },
+  "costs": {
+    "category": "製品実行",
+    "currency": "USD",
+    "extractionCostUsd": 0.0013874,
+    "generationCostUsd": null,
+    "imageCostUsd": null,
+    "totalCostUsd": null,
+    "breakdown": [
+      {
+        "stage": "抽出（工程1、ライブ）",
+        "costUsd": 0.0013874,
+        "usage": {
+          "completion_tokens": 6743,
+          "prompt_tokens": 388,
+          "total_tokens": 7131,
+          "completion_tokens_details": {
+            "reasoning_tokens": 6179
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        }
+      },
+      {
+        "stage": "生成（工程3、ライブ）",
+        "costUsd": null,
+        "usage": null
+      },
+      {
+        "stage": "画像生成（muse-image-1.0、ライブ）",
+        "costUsd": null,
+        "usage": null,
+        "note": "未記録（画像生成が実行されなかったため推定しない）"
+      },
+      {
+        "stage": "再検証・プレビュー生成",
+        "costUsd": 0,
+        "usage": null,
+        "note": "API を呼ばないため費用は発生しない"
+      }
+    ],
+    "note": "抽出と生成と画像の算出値がそろわなかったため、合計は未記録（推定しない）。内訳の算出値は各道具の D4 単価による算出値で、確定実費は dev.meta.ai Billing 実績との突合が必要"
+  },
+  "generationFile": "loops/loop-020/live-run1/generated-lp-v1.json",
+  "verificationFile": "loops/loop-020/live-run1/verification-result.json",
+  "lpFile": "loops/loop-020/live-run1/lp.html"
+}
