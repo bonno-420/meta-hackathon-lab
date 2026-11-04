@@ -47,6 +47,29 @@ const badLine = clone(adopted);
 badLine.items[0].sourceLine = "L99";
 expect("verbatim-negative-unknown-line", checkQuoteVerbatim(badLine, original).pass, false);
 
+// Regression (loop-030, 2026-11-05): fact-extract-v1.3 corrects only the
+// monthlyIncomeGuarantee definition. The prompt version is chosen from
+// the child module's argv at import time, so probe each version in a
+// child process and compare the built system prompt.
+import { spawnSync } from "node:child_process";
+const probePrompt = (v) => {
+  // The module picks its prompt version from process.argv at import
+  // time (argv shaped as [node, script, --prompt, vX]), so set that
+  // shape first, then import dynamically.
+  const code = `process.argv = [process.argv[0], "probe", "--prompt", ${JSON.stringify(v)}];`
+    + `const { buildMessages } = await import(${JSON.stringify(new URL("./extract-and-check.mjs", import.meta.url).href)});`
+    + `const m = buildMessages({ id: "PROBE", version: "v1", lines: [{ id: "L01", text: "Monthly income is not guaranteed." }] });`
+    + `console.log(m[0].content);`;
+  const r = spawnSync("node", ["--input-type=module", "-e", code], { encoding: "utf8" });
+  return r.stdout ?? "";
+};
+const promptV13 = probePrompt("v1.3");
+const promptV12 = probePrompt("v1.2");
+expect("prompt-v13-states-nonguarantee-rule", promptV13.includes("an explicit non-guarantee is a stated fact"), true);
+expect("prompt-v13-keeps-pay-keys", promptV13.includes("monthlySalary") && promptV13.includes("salaryAnnual"), true);
+expect("prompt-v12-lacks-nonguarantee-rule", promptV12.includes("an explicit non-guarantee is a stated fact"), false);
+expect("prompt-v12-keeps-old-definition", promptV12.includes("ONLY an explicitly guaranteed minimum"), true);
+
 const pass = results.every((r) => r.pass);
 const record = { testFile: "src/extract-and-check.test.mjs", target: "src/extract-and-check.mjs", pass, results, verbatimAdopted: verbatim, runAt: new Date().toISOString() };
 console.log(JSON.stringify(record, null, 2));

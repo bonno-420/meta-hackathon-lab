@@ -1562,7 +1562,7 @@ export function liveDeps({ root, outDir, generationFile, run, imagesDir, imagesR
       const liveFile = path.join(root, extractionOutDir, "live-run.json");
       removeIfExists(liveFile);
       const ran = await textRunner([
-        path.join(here, "extract-and-check.mjs"), "--prompt", "v1.2", "--out-dir", extractionOutDir,
+        path.join(here, "extract-and-check.mjs"), "--prompt", "v1.3", "--out-dir", extractionOutDir,
         ...(origFile ? ["--original", origFile] : []),
         ...(inputId ? ["--input-id", inputId] : []),
         ...(inputVersion ? ["--input-version", inputVersion] : []),

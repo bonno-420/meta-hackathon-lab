@@ -30,12 +30,14 @@ const RATE_OUTPUT_PER_1M = 0.20;
 //                     by a rerun (steps v1, audit M5).
 // --prompt v1.1     : use prompt fact-extract-v1.1 (single-factor change:
 //                     unstated items must carry value null, never a string).
+// --prompt v1.3     : use prompt fact-extract-v1.3 (single-factor change:
+//                     the monthlyIncomeGuarantee definition, see buildMessages).
 const argv = process.argv.slice(2);
 function argValue(flag) {
   const i = argv.indexOf(flag);
   return i >= 0 && i + 1 < argv.length ? argv[i + 1] : null;
 }
-const PROMPT_VERSION = argValue("--prompt") === "v1.2" ? "fact-extract-v1.2" : argValue("--prompt") === "v1.1" ? "fact-extract-v1.1" : "fact-extract-v1";
+const PROMPT_VERSION = argValue("--prompt") === "v1.3" ? "fact-extract-v1.3" : argValue("--prompt") === "v1.2" ? "fact-extract-v1.2" : argValue("--prompt") === "v1.1" ? "fact-extract-v1.1" : "fact-extract-v1";
 // Input selection (fix F1): defaults preserve the FICT-J01 behaviour
 // exactly. --original <file>, --input-id <id> and --input-version <v>
 // let the same extraction run against a pinned posting text artifact
@@ -145,8 +147,10 @@ const E02_SUMMARY =
   "ソラノ輪具研究所（FICT-J01）の概要: 時給1,700円。勤務時間は09:00〜18:00、休憩60分、実働8時間。交通費は実費支給、月上限10,000円。勤務地は架空の青空実験区A棟。雇用形態は有期契約社員、契約期間は3か月。";
 
 export function buildMessages(original) {
-  const isV11 = PROMPT_VERSION === "fact-extract-v1.1" || PROMPT_VERSION === "fact-extract-v1.2";
+  const isV11 = PROMPT_VERSION === "fact-extract-v1.1" || PROMPT_VERSION === "fact-extract-v1.2" || PROMPT_VERSION === "fact-extract-v1.3";
   const isV12 = PROMPT_VERSION === "fact-extract-v1.2";
+  const isV13 = PROMPT_VERSION === "fact-extract-v1.3";
+  const hasPayKeys = isV12 || isV13;
   const system = [
     "You extract FACTs from a fictional job-posting original.",
     "Rules: use only what the original states. Never invent or complete unstated items.",
@@ -159,18 +163,27 @@ export function buildMessages(original) {
     isV11
       ? 'Schema: {"items":[{"key":"...","status":"stated|unstated","value":"string or null","normalized":null,"sourceLine":"L01","quote":"..."}]}'
       : 'Schema: {"items":[{"key":"...","status":"stated|unstated","value":"...","normalized":null,"sourceLine":"L01","quote":"..."}]}',
-    isV12
+    hasPayKeys
       ? "Keys: employer, jobId, workLocation, employmentType, contractPeriod, renewal, salaryHourly, monthlyIncomeGuarantee, monthlySalary, salaryDaily, salaryAnnual, workHours, breakMinutes, actualHours, monthlyDaysAssumption, transport, transportCap, housing."
       : "Keys: employer, jobId, workLocation, employmentType, contractPeriod, renewal, salaryHourly, monthlyIncomeGuarantee, workHours, breakMinutes, actualHours, monthlyDaysAssumption, transport, transportCap, housing.",
     // fact-extract-v1.2 (the user's pay-display decision, 2026-11-04):
     // pay is recorded in the form the posting states it. Before this,
     // a monthly salary had no key and the extraction flipped between
     // runs on monthlyIncomeGuarantee (FICT-J03, measured three times).
-    ...(isV12 ? [
+    // fact-extract-v1.3 (2026-11-05, loop-030) single-factor change:
+    // only the monthlyIncomeGuarantee definition line. The v1.2 wording
+    // ("ONLY an explicitly guaranteed minimum") made the model drop an
+    // explicitly stated non-guarantee ("Monthly income is not
+    // guaranteed") to unstated, contradicting the adopted reference
+    // facts (FICT-J01: stated, value 保証しない) and the generator's own
+    // definition of the key. A stated denial is a stated fact.
+    ...(hasPayKeys ? [
       "Pay keys: record the pay in the form the posting states it — salaryHourly for an hourly wage (時給), salaryDaily for a daily wage (日給), monthlySalary for a monthly salary (月給), salaryAnnual for an annual salary (年俸). Only the stated form is stated; the other pay keys are unstated.",
-      "monthlyIncomeGuarantee is ONLY an explicitly guaranteed minimum monthly income. A starting monthly salary is not a guarantee: record it as monthlySalary, never as monthlyIncomeGuarantee.",
+      isV13
+        ? "monthlyIncomeGuarantee records what the original states about a monthly income guarantee. If the original states a guaranteed minimum monthly income, record that amount. If the original explicitly states that monthly income is NOT guaranteed (月収は保証しない / monthly income is not guaranteed), record it as stated with the value 保証しない — an explicit non-guarantee is a stated fact, not an absence. A starting monthly salary by itself is neither: record it as monthlySalary, never as monthlyIncomeGuarantee."
+        : "monthlyIncomeGuarantee is ONLY an explicitly guaranteed minimum monthly income. A starting monthly salary is not a guarantee: record it as monthlySalary, never as monthlyIncomeGuarantee.",
     ] : []),
-    isV12
+    hasPayKeys
       ? "normalized: for salaryHourly, monthlySalary, salaryDaily, salaryAnnual and transportCap use the integer yen amount; for breakMinutes and actualHours use numbers; otherwise null."
       : "normalized: for salaryHourly and transportCap use the integer yen amount; for breakMinutes and actualHours use numbers; otherwise null.",
   ].join("\n");
