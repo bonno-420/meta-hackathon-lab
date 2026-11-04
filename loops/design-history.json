@@ -98,6 +98,50 @@
         "age-50s"
       ],
       "at": "2026-11-04T05:04:18.474Z"
+    },
+    {
+      "runDir": "loops/loop-027/run4",
+      "inputId": "FICT-E03",
+      "patternId": "P-WORK",
+      "paletteId": "work-1",
+      "conditionTags": [
+        "women",
+        "logistics",
+        "beauty",
+        "part-time",
+        "age-30s",
+        "age-50s"
+      ],
+      "at": "2026-11-04T06:05:45.045Z"
+    },
+    {
+      "runDir": "loops/loop-027/run7",
+      "inputId": "FICT-E03",
+      "patternId": "P-WORK",
+      "paletteId": "work-2",
+      "conditionTags": [
+        "women",
+        "beauty",
+        "part-time",
+        "age-30s",
+        "age-50s"
+      ],
+      "at": "2026-11-04T06:21:03.509Z"
+    },
+    {
+      "runDir": "loops/loop-027/run8",
+      "inputId": "FICT-E03",
+      "patternId": "P-WORK",
+      "paletteId": "work-3",
+      "conditionTags": [
+        "women",
+        "logistics",
+        "beauty",
+        "part-time",
+        "age-30s",
+        "age-50s"
+      ],
+      "at": "2026-11-04T06:38:21.885Z"
     }
   ]
 }
