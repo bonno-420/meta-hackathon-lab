@@ -22,7 +22,7 @@ Quality through controls: every stage's pass or fail is decided by that stage's 
 
 - Repository: https://github.com/bonno-420/meta-hackathon-lab
 - Live preview: https://meta-hackathon-lab-demo.pages.dev/
-- Demo video: [link added at submission]
+- Demo video: https://youtu.be/sHi0orzn3VU
 
 ## Models
 
