@@ -17,9 +17,16 @@
 // Answering "stop" is a valid result: the run stays stopped at
 // that checkpoint.
 //
-// When stdin is not a terminal (agents, scripts), none of this
-// happens: the wrapper runs the pipeline once and reports the stop
-// as the result, exactly as before, and no record is ever written.
+// The question flow works the same when the wrapper is driven
+// from a non-terminal session (an agent's chat, a script): at a
+// checkpoint the wrapper prints the checkpoint package — the
+// artifact, the question, and the selectable choices — and stops.
+// The operator presents that package to the principal; when the
+// principal answers, the operator passes the answer back with
+//   node make-lp.mjs --resume <out-dir> --answer <choiceId>
+// and the wrapper writes the record of THAT answer (never a record
+// without an answer) and continues the run. The operator carries
+// the question and the answer; the judgement is the principal's.
 // Gate stops (contradictions, verification failures) are never
 // questioned and never worked around — they are reported as
 // results in both modes.
@@ -41,7 +48,8 @@ const INTERACTIVE = Boolean(process.stdin.isTTY && process.stdout.isTTY);
 function usage() {
   console.log("Usage: node make-lp.mjs <posting.txt> [--posting-id ID] [--language English] [--audience \"...\"] [--light] [--out-dir DIR]");
   console.log("       node make-lp.mjs --resume <out-dir> [--kv-confirmation FILE]");
-  console.log("In a terminal, checkpoints open a preview page with a selectable question; the answer is recorded and the run continues.");
+  console.log("       node make-lp.mjs --resume <out-dir> --answer <choiceId> [--name \"...\"] [--note \"...\"]");
+  console.log("At a checkpoint the wrapper presents the artifact with a selectable question (a preview page in a terminal, a printed checkpoint package otherwise); the answer is recorded and the run continues.");
 }
 function argValue(name) {
   const i = args.indexOf(name);
@@ -293,7 +301,7 @@ function writeApproval(outDir, name, via) {
     basis: {
       reconciliation: fc.mode ? "entry mode の照合（run-result.json の factsComparison）" : "run-result.json の照合記録",
       verbatimCheck: fc.verbatim ? `${fc.verbatim.pass ? "pass" : "fail"}（${fc.verbatim.checked}件）` : "記録なし",
-      answeredVia: via === "preview" ? "チェックポイントのプレビューで本人が選択" : "ターミナルで本人が選択",
+      answeredVia: via === "preview" ? "チェックポイントのプレビューで本人が選択" : via === "answer" ? "チェックポイントの質問への本人の回答（操作セッション経由で受け渡し）" : "ターミナルで本人が選択",
     },
     scope: {
       covers: "stated 項目のみ",
@@ -315,7 +323,7 @@ function writeKvConfirmation(outDir, name, via) {
     sha256: first.sha256,
     confirmer: name,
     confirmedAt: nowIso(),
-    note: via === "preview" ? "チェックポイントのプレビューで本人が確認" : "ターミナルで本人が確認",
+    note: via === "preview" ? "チェックポイントのプレビューで本人が確認" : via === "answer" ? "チェックポイントの質問への本人の回答（操作セッション経由で受け渡し）" : "ターミナルで本人が確認",
   };
   const file = join(outDir, "kv-confirmation.json");
   writeFileSync(file, JSON.stringify(conf, null, 2) + "\n");
@@ -334,21 +342,139 @@ function writeJudgement(outDir, presentationFile, result, name, note) {
   writeFileSync(file, JSON.stringify(pres, null, 2) + "\n");
 }
 
+// ---------- checkpoints: one definition for both modes ----------
+// Returns the pending human checkpoint for a run result, or null
+// when the run stopped at a gate (or has no result yet). The
+// choices are the same ones the interactive preview offers.
+function pendingCheckpoint(r, absOut) {
+  if (!r) return null;
+  if (r.status === "complete" || r.status === "pending-human-confirmation") {
+    if (loadJson(join(absOut, "presentation-lp.json"))?.judgement) return null;
+    return {
+      id: "lp", title: "LPの確認",
+      question: "組み上がったLPです。内容を確認してください。",
+      artifact: `LP: ${r.lpFile ?? "lp.html（run-result.json 参照）"}`,
+      choices: [
+        { id: "confirm", label: "公開品質として確認する" },
+        { id: "close", label: "記録だけして閉じる" },
+      ],
+    };
+  }
+  if (r.stoppedAt === "approval") {
+    const facts = loadJson(join(absOut, "entry", "facts.json"));
+    const items = (facts?.items ?? []).map((i) => `  - ${i.key}: ${i.status === "stated" ? (i.value ?? i.normalized ?? "") : "（未記載）"}`);
+    return {
+      id: "approval", title: "事実の承認",
+      question: "求人票から抽出した事実です。原本と一致しているか確認してください。",
+      artifact: ["抽出された事実（entry/facts.json）:", ...items].join("\n"),
+      choices: [
+        { id: "approve", label: "承認して進める" },
+        { id: "stop", label: "止める" },
+      ],
+    };
+  }
+  if (r.stoppedAt === "key-visual" || r.stoppedAt === "key-visual-confirmation") {
+    const pres = loadJson(join(absOut, "presentation-key-visual.json"));
+    const first = pres?.presented?.[0];
+    return {
+      id: "key-visual", title: "1枚画の確認",
+      question: "LPの完成イメージ（1枚画）です。このイメージで進めていいですか。",
+      artifact: `1枚画: ${first?.file ?? "presentation-key-visual.json を参照"}`,
+      choices: [
+        { id: "confirm", label: "この1枚画で進める" },
+        { id: "stop", label: "止める" },
+      ],
+    };
+  }
+  if (r.stoppedAt === "text-checkpoint" || r.stoppedAt === "planning") {
+    const isPlanning = r.stoppedAt === "planning";
+    return {
+      id: isPlanning ? "planning" : "text", title: isPlanning ? "企画の確認" : "文章の確認",
+      question: isPlanning ? "企画です。この企画で制作を進めていいですか。" : "生成された文章です。この文章で進めていいですか。",
+      artifact: isPlanning ? "企画: presentation-planning.json を参照" : "文章: presentation-text.json を参照",
+      choices: [
+        { id: "proceed", label: isPlanning ? "この企画で進める" : "この文章で進める" },
+        { id: "stop", label: "止める" },
+      ],
+    };
+  }
+  return null;
+}
+
+// Print the checkpoint as a package the operator can present in a
+// chat: the artifact, the question, the selectable choices, and
+// the exact command that carries the principal's answer back.
+function printCheckpointPackage(absOut, outDir, r) {
+  const cp = pendingCheckpoint(r, absOut);
+  if (!cp) return false;
+  console.log(`\n[make-lp] CHECKPOINT ${cp.id}: ${cp.title}`);
+  console.log(`[make-lp] ${cp.question}`);
+  console.log(`[make-lp] --- artifact ---\n${cp.artifact}\n[make-lp] --- choices ---`);
+  cp.choices.forEach((c, i) => console.log(`[make-lp]   ${i + 1}) ${c.id} — ${c.label}`));
+  console.log(`[make-lp] answer with: node make-lp.mjs --resume ${outDir} --answer <choiceId> [--name "..."] [--note "..."]`);
+  return true;
+}
+
+// Apply the principal's answer to the pending checkpoint: write
+// the record of that answer (the same records the interactive
+// flow writes) and resume. Returns a process exit code. An answer
+// is never invented here — without one this is not called.
+function applyAnswer(absOut, outDir, savedDraft, answer) {
+  const r = loadJson(join(absOut, "run-result.json"));
+  const cp = pendingCheckpoint(r, absOut);
+  if (!cp) { console.log("[make-lp] no human checkpoint is pending (the run stopped at a gate, or has not run). The answer was not used."); return 1; }
+  const picked = cp.choices.find((c) => c.id === answer.choice);
+  if (!picked) { console.log(`[make-lp] unknown choice "${answer.choice}" for checkpoint ${cp.id}. Valid: ${cp.choices.map((c) => c.id).join(", ")}`); return 2; }
+  const resume = (extra = []) => ["src/run-demo.mjs", "--resume", join(outDir, "run-state.json"), ...(savedDraft ?? []), ...extra];
+  const name = answer.name || operatorName() || "";
+  const positive = { approval: "approve", "key-visual": "confirm", planning: "proceed", text: "proceed", lp: "confirm" }[cp.id];
+  // A name is part of the approval / key-visual / LP records (the
+  // pipeline validates it); planning and text judgements allow an
+  // empty confirmer, as in the interactive flow.
+  if (answer.choice === positive && !name && cp.id !== "text" && cp.id !== "planning") {
+    console.log("[make-lp] a name is required to write the record. Pass --name \"...\" with the answer.");
+    return 2;
+  }
+  if (name) saveOperatorName(name);
+
+  if (cp.id === "approval") {
+    if (answer.choice !== "approve") { console.log("[make-lp] 回答は「止める」のため、記録を作らずここで止まります（停止は結果です）。"); return 1; }
+    const approval = writeApproval(absOut, name, "answer");
+    console.log(`[make-lp] 承認記録を作りました: ${approval.approvalId}（${name}）`);
+    return runPipeline(resume());
+  }
+  if (cp.id === "key-visual") {
+    if (answer.choice !== "confirm") { console.log("[make-lp] 回答は「止める」のため、記録を作らずここで止まります（停止は結果です）。"); return 1; }
+    const confFile = writeKvConfirmation(absOut, name, "answer");
+    if (!confFile) { console.log("[make-lp] 提示記録がないため確認記録を作れませんでした。"); return 1; }
+    console.log(`[make-lp] 確認記録を作りました: ${confFile}`);
+    return runPipeline(resume(["--kv-confirmation", confFile]));
+  }
+  if (cp.id === "planning" || cp.id === "text") {
+    writeJudgement(absOut, cp.id === "planning" ? "presentation-planning.json" : "presentation-text.json",
+      answer.choice === "proceed" ? "confirmed" : "stopped", name, answer.note ?? "");
+    if (answer.choice !== "proceed") { console.log("[make-lp] 回答は「止める」のため、ここで止まります（停止は結果です）。"); return 1; }
+    return runPipeline(resume());
+  }
+  // lp
+  writeJudgement(absOut, "presentation-lp.json", answer.choice === "confirm" ? "confirmed" : "closed", name, answer.note ?? "");
+  console.log(`[make-lp] done. LP: ${r.lpFile ?? join(outDir, "lp.html")}（確認の記録を presentation-lp.json に残しました）`);
+  return 0;
+}
+
 // ---------- report for the non-interactive path ----------
 function report(outDir) {
-  const r = loadJson(join(outDir, "run-result.json"));
+  const absOut = resolve(ROOT, outDir);
+  const r = loadJson(join(absOut, "run-result.json"));
   if (!r) return;
   console.log(`\n[make-lp] status: ${r.status}${r.stoppedAt ? ` (stopped at: ${r.stoppedAt})` : ""}`);
   if (r.stopReason) console.log(`[make-lp] reason: ${r.stopReason}`);
-  const next = {
-    "approval": `next: a human runs this in a terminal and answers the approval question (make-lp opens the preview and writes the record of the answer), or places the record at ${join(outDir, "entry", "approval.json")}; then: node make-lp.mjs --resume ${outDir}`,
-    "key-visual": `next: a human runs this in a terminal and answers the key-visual question, or records the confirmation from ${join(outDir, "presentation-key-visual.json")}; then: node make-lp.mjs --resume ${outDir} --kv-confirmation <file>`,
-    "text-checkpoint": `next: review the presented text (${join(outDir, "presentation-text.json")}), then run: node make-lp.mjs --resume ${outDir}`,
-    "lp-checkpoint": `next: review the assembled LP, then run: node make-lp.mjs --resume ${outDir}`,
-  }[r.stoppedAt];
-  if (r.status === "complete" || r.status === "pending-human-confirmation") console.log(`[make-lp] done. LP: ${r.lpFile ?? join(outDir, "lp.html")}`);
-  else if (next) console.log(`[make-lp] ${next}`);
-  else if (r.stoppedAt) console.log("[make-lp] the pipeline stopped at a gate. Report this stop as the result; do not work around it by hand.");
+  if (r.status === "complete" || r.status === "pending-human-confirmation") {
+    if (!printCheckpointPackage(absOut, outDir, r)) console.log(`[make-lp] done. LP: ${r.lpFile ?? join(outDir, "lp.html")}`);
+    return;
+  }
+  if (printCheckpointPackage(absOut, outDir, r)) return;
+  if (r.stoppedAt) console.log("[make-lp] the pipeline stopped at a gate. Report this stop as the result; do not work around it by hand.");
 }
 
 // ---------- drive: run; in a terminal, answer checkpoints in the flow ----------
@@ -465,6 +591,17 @@ if (args[0] === "--resume") {
   const outDir = args[1];
   if (!outDir || !existsSync(join(ROOT, outDir, "run-state.json"))) fail(`no run-state.json under ${outDir ?? "(missing)"}`);
   const saved = loadJson(join(ROOT, outDir, "make-lp-args.json")) ?? { draft: [] };
+  const answerChoice = argValue("--answer");
+  if (answerChoice) {
+    // The principal's answer to the pending checkpoint, carried by
+    // whoever operates this session. Apply it to the current state
+    // first (the wrapper writes the record), then report where the
+    // run now stands — the next checkpoint package or the result.
+    const code = applyAnswer(resolve(ROOT, outDir), outDir, saved.draft ?? [],
+      { choice: answerChoice, name: argValue("--name") ?? "", note: argValue("--note") ?? "" });
+    if (code === 0 || code === 1) report(outDir);
+    process.exit(code);
+  }
   const cli = ["src/run-demo.mjs", "--resume", join(outDir, "run-state.json"), ...(saved.draft ?? [])];
   const kv = argValue("--kv-confirmation");
   if (kv) cli.push("--kv-confirmation", kv);
