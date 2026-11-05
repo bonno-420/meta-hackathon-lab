@@ -101,6 +101,21 @@ const fabricatedCheck = checkGrounding(fabricatedRun.generation, facts, original
 expect("gen-grounding-detects-fabricated-amount", fabricatedCheck.pass, false);
 expect("gen-grounding-detects-fabricated-amount-names-it", fabricatedCheck.issues.some((i) => String(i.issue).includes("1,700円")), true);
 
+// --- Grounding check: the wording checks accept the generation's
+// language. An English sentence that keeps the non-guarantee (or
+// says an unstated item is not stated) must pass; one that drops it
+// must still fail. (Found by the 2026-11-05 landing test: the
+// checks accepted only the Japanese wordings, so a correct English
+// run could never pass.) ---
+const enGuaranteeOk = checkGrounding({ sentences: [{ text: "Pay is 1,500 yen per hour. Monthly income is not guaranteed.", factKeys: ["salaryHourly", "monthlyIncomeGuarantee"], sourceLines: ["L03"] }] }, facts, original);
+expect("gen-grounding-en-nonguarantee-passes", enGuaranteeOk.issues.some((i) => String(i.issue).includes("non-guarantee wording")), false);
+const enGuaranteeBad = checkGrounding({ sentences: [{ text: "Monthly income is guaranteed.", factKeys: ["monthlyIncomeGuarantee"], sourceLines: ["L03"] }] }, facts, original);
+expect("gen-grounding-en-guarantee-without-wording-fails", enGuaranteeBad.issues.some((i) => String(i.issue).includes("non-guarantee wording")), true);
+const enUnstatedOk = checkGrounding({ sentences: [{ text: "Whether the contract is renewed is not stated.", factKeys: ["renewal"], sourceLines: ["L02"] }] }, facts, original);
+expect("gen-grounding-en-not-stated-passes", enUnstatedOk.issues.some((i) => String(i.issue).includes("without stating")), false);
+const enUnstatedBad = checkGrounding({ sentences: [{ text: "The contract can be renewed.", factKeys: ["renewal"], sourceLines: ["L02"] }] }, facts, original);
+expect("gen-grounding-en-unstated-without-marker-fails", enUnstatedBad.issues.some((i) => String(i.issue).includes("without stating")), true);
+
 // --- Generation (stubbed): the grounding check detects a sentence that
 // cites a FACT key which does not exist. ---
 const unknownKeyRun = await runGeneration({

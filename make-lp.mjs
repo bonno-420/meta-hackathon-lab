@@ -352,7 +352,7 @@ function writeJudgement(outDir, presentationFile, result, name, note) {
 function pendingCheckpoint(r, absOut) {
   if (!r) return null;
   if (r.status === "complete" || r.status === "pending-human-confirmation") {
-    if (loadJson(join(absOut, "presentation-lp.json"))?.judgement) return null;
+    if (loadJson(join(absOut, "presentation-lp.json"))?.judgement?.result) return null;
     return {
       id: "lp", title: "LPの確認",
       question: "組み上がったLPです。内容を確認してください。",

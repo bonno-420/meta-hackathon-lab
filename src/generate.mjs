@@ -213,7 +213,7 @@ export function checkGrounding(generation, facts, original, { language } = {}) {
         issues.push({ ...at, issue: `factKey ${k} is cited without its sourceLine ${item.sourceLine}` });
       }
       if (item.status === "unstated") {
-        if (!s.text.includes("未記載")) {
+        if (!s.text.includes("未記載") && !/not stated|not specified/i.test(s.text)) {
           issues.push({ ...at, issue: `unstated item ${k} is mentioned without stating 未記載` });
         }
       }
@@ -266,7 +266,7 @@ export function checkGrounding(generation, facts, original, { language } = {}) {
     if (keys.includes("monthlyDaysAssumption") && !s.text.includes("仮定") && !s.text.includes("試算") && !/assum|estimat/i.test(s.text)) {
       issues.push({ ...at, issue: "monthlyDaysAssumption is stated without marking it an assumption" });
     }
-    if (keys.includes("monthlyIncomeGuarantee") && !s.text.includes("保証しない") && !s.text.includes("保証され")) {
+    if (keys.includes("monthlyIncomeGuarantee") && !s.text.includes("保証しない") && !s.text.includes("保証され") && !/not guaranteed|no guarantee/i.test(s.text)) {
       issues.push({ ...at, issue: "monthlyIncomeGuarantee is stated without the non-guarantee wording" });
     }
   });
