@@ -37,7 +37,7 @@ import { spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { createServer } from "node:http";
-import { dirname, join, resolve, extname, sep } from "node:path";
+import { dirname, join, resolve, relative, extname, sep } from "node:path";
 import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
 
@@ -72,6 +72,9 @@ function esc(s) {
   return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 const rel = (p) => p.replace(/\\/g, "/");
+// Records store repo-relative paths. Callers pass both relative
+// and absolute paths; normalize either to a repo-relative one.
+const relRoot = (p) => rel(relative(ROOT, resolve(ROOT, p)));
 
 // ---------- operator name (asked once, kept locally, never committed) ----------
 const OPERATOR_FILE = join(ROOT, ".loopwright-operator.json");
@@ -295,8 +298,8 @@ function writeApproval(outDir, name, via) {
     approver: name,
     approvedAt: nowIso(),
     target: {
-      original: { id: original?.id ?? null, version: original?.version ?? "v1", file: rel(originalFile), sha256: sha256File(resolve(ROOT, originalFile)) },
-      facts: { factsId: facts?.factsId ?? null, factsVersion: facts?.factsVersion ?? 1, file: rel(factsFile), sha256: sha256File(resolve(ROOT, factsFile)) },
+      original: { id: original?.id ?? null, version: original?.version ?? "v1", file: relRoot(originalFile), sha256: sha256File(resolve(ROOT, originalFile)) },
+      facts: { factsId: facts?.factsId ?? null, factsVersion: facts?.factsVersion ?? 1, file: relRoot(factsFile), sha256: sha256File(resolve(ROOT, factsFile)) },
     },
     basis: {
       reconciliation: fc.mode ? "entry mode の照合（run-result.json の factsComparison）" : "run-result.json の照合記録",
@@ -327,7 +330,7 @@ function writeKvConfirmation(outDir, name, via) {
   };
   const file = join(outDir, "kv-confirmation.json");
   writeFileSync(file, JSON.stringify(conf, null, 2) + "\n");
-  return rel(file);
+  return relRoot(file);
 }
 function writeJudgement(outDir, presentationFile, result, name, note) {
   const file = join(outDir, presentationFile);
@@ -415,6 +418,14 @@ function printCheckpointPackage(absOut, outDir, r) {
   return true;
 }
 
+// run-demo expects the key-visual confirmation file on every
+// resume after the key visual has been confirmed; once the
+// wrapper has written it, it supplies it automatically.
+function kvExtra(absOut) {
+  const f = join(absOut, "kv-confirmation.json");
+  return existsSync(f) ? ["--kv-confirmation", relRoot(f)] : [];
+}
+
 // Apply the principal's answer to the pending checkpoint: write
 // the record of that answer (the same records the interactive
 // flow writes) and resume. Returns a process exit code. An answer
@@ -425,7 +436,7 @@ function applyAnswer(absOut, outDir, savedDraft, answer) {
   if (!cp) { console.log("[make-lp] no human checkpoint is pending (the run stopped at a gate, or has not run). The answer was not used."); return 1; }
   const picked = cp.choices.find((c) => c.id === answer.choice);
   if (!picked) { console.log(`[make-lp] unknown choice "${answer.choice}" for checkpoint ${cp.id}. Valid: ${cp.choices.map((c) => c.id).join(", ")}`); return 2; }
-  const resume = (extra = []) => ["src/run-demo.mjs", "--resume", join(outDir, "run-state.json"), ...(savedDraft ?? []), ...extra];
+  const resume = (extra = []) => ["src/run-demo.mjs", "--resume", join(outDir, "run-state.json"), ...(savedDraft ?? []), ...kvExtra(absOut), ...extra];
   const name = answer.name || operatorName() || "";
   const positive = { approval: "approve", "key-visual": "confirm", planning: "proceed", text: "proceed", lp: "confirm" }[cp.id];
   // A name is part of the approval / key-visual / LP records (the
@@ -490,7 +501,7 @@ async function drive(outDir, firstCli, savedDraft) {
     const r = loadJson(join(absOut, "run-result.json"));
     if (!r) return status;
     if (!INTERACTIVE) { report(absOut); return status; }
-    const resume = (extra = []) => ["src/run-demo.mjs", "--resume", join(outDir, "run-state.json"), ...(savedDraft ?? []), ...extra];
+    const resume = (extra = []) => ["src/run-demo.mjs", "--resume", join(outDir, "run-state.json"), ...(savedDraft ?? []), ...kvExtra(absOut), ...extra];
 
     if (r.status === "complete" || r.status === "pending-human-confirmation") {
       const lpRel = r.lpFile ?? join(outDir, "lp.html");
